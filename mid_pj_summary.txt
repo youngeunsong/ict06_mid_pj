@@ -1,3 +1,75 @@
+[사용 툴 버전]
+반드시 툴 버전 일치하게 설치 후 아래 팀원용 개발환경 설정 가이드를 따라서 작업해주세요. 
+
+- DBeaver : dbeaver-ce-25.3.1-x86_64-setup.exe
+- STS3: sts-3.9.18
+- Oracle: OracleXE112_Win64
+- java: jdk-11.0.29_windows-x64_bin.exe
+- Tomcat : apache-tomcat-9.0.113-windows-x64
+- Git: Git-2.53.0-64-bit
+- Python : python-3.14.3-amd64
+- PyCharm : pycharm-2025.3.2.1
+====================
+
+[팀원용 개발환경 설정 가이드]
+
+1. 깃 클론 : D:\DEV06\workspace_git_ict06 에서 마우스 우클릭 > Open git bash here >  git clone https://github.com/youngeunsong/ict06_mid_pj.git 
+
+하고 나면 ict06_mid_pj 폴더 생성됨. 
+
+2.  계정생성 - DBeaver에서 아래 쿼리 실행 (스프링 환경 테스트용 계정으로 실제 프로젝트에서는 사용하지 않을 예정)] 
+-- System 계정에서 실행
+-- 2. 계정생성(ict06_team1_midpj) 및 테이블생성
+--******************* 일반 계정 생성 =>[시스템계정(System)에서 작업 ***********
+--- 1. 계정생성
+-- create user <계정이름> identified by <계정암호> default tablespace users;
+   create user ict06_team1_midpj identified by tiger default tablespace users;
+-- 2. 사용자 권한 부여
+   grant connect, resource to ict06_team1_midpj;
+   grant create view to ict06_team1_midpj;
+   
+--  grant connect, resource,create view to ict06_team1_midpj;   
+-- 3. 락 해제
+-- alter user <계정이름> account unlock;
+    alter user ict06_team1_midpj account unlock;
+
+-- 실행결과   
+--ict06_team1_midpj이(가) 생성되었습니다.
+--Grant을(를) 성공했습니다.
+--ict06_team1_midpj이(가) 변경되었습니다.
+
+-- (+) 계정연결
+
+3. 커넥션풀 추가 : Servers > Tomcat v9.0 Server at localhost-config > context.xml
+
+ <Resource 
+	    author="Container" 
+	    driverClassName="oracle.jdbc.driver.OracleDriver" 
+	    maxActive="7" 
+	    maxWait="1000" 
+	    name="jdbc/ict06_team1_midpj" 
+	    username="ict06_team1_midpj"
+	    password="tiger" 
+	    type="javax.sql.DataSource" 
+	    url="jdbc:oracle:thin:@localhost:1521:xe" /> 
+
+4. STS3로 프로젝트 열기 : 궁금한 부분은 https://cafe.naver.com/f-e/cafes/28186338/articles/29562?menuid=444&referrerAllArticles=false&page=2 을 참고해주세요.
+	- STS3 실행 시 워크스페이스 workspace_spring_ict06 로 런치
+	- File > Open Project from File System > Directory : D:\DEV06\workspace_git_ict06\ict06_mid_pj 로 설정 (혹은 git clone한 프로젝트가 있는 폴더의 경로)
+	- 왼쪽에 ict06_mid_pj 프로젝트가 다운로드됨. 
+
+5. 깃 동기화: D:\DEV06\workspace_git_ict06\ict06_mid_pj  에서 git bash 실행. 내 작업 영역에 dev 브랜치를 동기화 
+git checkout -b dev origin/dev # dev 브랜치 생성 및 이동, origin/dev를 내 로컬 dev 브랜치에 동기화 
+
+
+
+===================
+[팀원용 테스트 코드 실행 가이드]
+1. DBeaver에서 SQL폴더의 'test.sql'을 열고 ict06_team1_midpj 계정으로 실행 (drop문 제외하고 실행)
+2. STS3에서 TestController.java 실행 -> /getAddressInfo_1 로 이동. 404 오류 없는 지 확인 
+
+===================
+[팀장용 환경설정 가이드]
 	VMWare => 삭제해도 됨
 	
 	pom.xml에 추가
@@ -17,22 +89,21 @@
 
 /////////////[ 스프링 환경 설정 ] ///////////////////////
 
-1. 커넥션풀 추가 - Servers > context.xml
+1. 커넥션풀 추가 : Servers > Tomcat v9.0 Server at localhost-config > context.xml
 
  <Resource 
 	    author="Container" 
 	    driverClassName="oracle.jdbc.driver.OracleDriver" 
 	    maxActive="7" 
 	    maxWait="1000" 
-	    name="jdbc/mybatis_ict06" 
-	    username="mybatis_ict06"
+	    name="jdbc/ict06_team1_midpj" 
+	    username="ict06_team1_midpj"
 	    password="tiger" 
 	    type="javax.sql.DataSource" 
-	    url="jdbc:oracle:thin:@localhost:1521:xe" 
-	    />       
+	    url="jdbc:oracle:thin:@localhost:1521:xe" /> 
     
   
- [ 계정생성 ] 
+ [ 계정생성 - DBeaver에서 아래 쿼리 실행 (스프링 환경 테스트용 계정으로 실제 프로젝트에서는 사용하지 않을 예정)] 
 -- System 계정에서 실행
 -- 2. 계정생성(ict06_team1_midpj) 및 테이블생성
 --******************* 일반 계정 생성 =>[시스템계정(System)에서 작업 ***********

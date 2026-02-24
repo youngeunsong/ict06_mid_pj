@@ -29,7 +29,6 @@ replay_pid*
 .metadata/
 .classpath
 .project
-.settings/
 .springBeans
 .apt_generated/
-
+target/

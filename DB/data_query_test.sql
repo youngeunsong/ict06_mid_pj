@@ -9,6 +9,7 @@ SELECT * FROM PLACE ORDER BY PLACE_ID;
 SELECT * FROM RESTAURANT ORDER BY RESTAURANT_ID;
 SELECT * FROM ACCOMMODATION ORDER BY ACCOMMODATION_ID;
 SELECT * FROM FESTIVAL ORDER BY FESTIVAL_ID;
+DELETE FROM FESTIVAL;
 
 CREATE OR REPLACE VIEW PLACE_ALL_DETAIL AS
 SELECT
@@ -84,25 +85,24 @@ ORDER BY P.PLACE_ID;
 --데이터 생성
 --------------------------------------------------
 --=====테스트 사용자 생성=====
-INSERT ALL
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user01', '1234', 'dskim@naver.com', '김다솜', '1994-03-02', 'F', '010-1111-2222', '서울시 서대문구', 1500, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user02', '1234', 'yesong@gmail.com', '송영은', '1996-07-07', 'F', '010-3333-4444', '경기도 성남시', 3000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user03', '1234', 'cbsong@gmail.com', '송창범', '2000-02-26', 'M', '010-3333-4444', '인천시 연수구', 3000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user04', '1234', 'mscho@gmail.com', '조민수', '1991-02-03', 'M', '010-3333-4444', '경기도 부천시', 170000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user05', '1234', 'jwkim@gmail.com', '김재원', '1995-05-15', 'M', '010-3333-4444', '서울시 양천구', 3000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user06', '1234', 'hjsong@gmail.com', '송혜진', '1998-11-20', 'F', '010-3333-4444', '서울시 마포구', 3000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
-    VALUES ('user07', '1234', 'jhjung@daum.net', '정준하', '2000-12-31', 'M', '010-7777-8888', '경기도 수원시', 50000, 'USER')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
-    VALUES ('admin1', 'admin1234', 'admin1@travel.com', '관리자1', '1985-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE')
-    INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
-    VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE')
+INSERT INTO MEMBER(user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user01', '1234', 'dskim@naver.com', '김다솜', '1994-03-02', 'F', '010-1111-2222', '서울시 서대문구', 1500, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user02', '1234', 'yesong@gmail.com', '송영은', '1996-07-07', 'F', '010-3333-4444', '경기도 성남시', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user03', '1234', 'cbsong@gmail.com', '송창범', '2000-02-26', 'M', '010-3333-4444', '인천시 연수구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user04', '1234', 'mscho@gmail.com', '조민수', '1991-02-03', 'M', '010-3333-4444', '경기도 부천시', 170000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user05', '1234', 'jwkim@gmail.com', '김재원', '1995-05-15', 'M', '010-3333-4444', '서울시 양천구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user06', '1234', 'hjsong@gmail.com', '송혜진', '1998-11-20', 'F', '010-3333-4444', '서울시 마포구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user07', '1234', 'jhjung@daum.net', '정준하', '2000-12-31', 'M', '010-7777-8888', '경기도 수원시', 50000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
+VALUES ('admin1', 'admin1234', 'admin1@travel.com', '관리자1', '1985-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
+VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
 SELECT * FROM MEMBER;
 
 --=====축제 티켓 샘플 데이터=====
@@ -145,20 +145,20 @@ SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
 DELETE FROM RESERVATION;
 
 -- [타겟 1] 어제 체크아웃한 숙소
-INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES (NULL, 'user01', 2, 2, 'CONFIRMED', SYSDATE-3, SYSDATE-1, SYSDATE-5);
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user01', 2, 2, 'COMPLETED', SYSDATE-3, SYSDATE-1, SYSDATE-5);
 
 -- [타겟 2] 오늘 오전 체크아웃 시점이 지난 건
-INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES (NULL, 'user02', 75, 1, 'CONFIRMED', SYSDATE-1, TRUNC(SYSDATE), SYSDATE-2);
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', 75, 1, 'COMPLETED', SYSDATE-1, TRUNC(SYSDATE), SYSDATE-2);
 
 -- [유지 1] 내일 체크아웃 예정
-INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES (NULL, 'user03', 981, 4, 'CONFIRMED', SYSDATE, SYSDATE+1, SYSDATE);
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', 981, 4, 'RESERVED', SYSDATE, SYSDATE+1, SYSDATE);
 
---[테스트 타겟 1] 이용완료 숙소 (CONFIRMED -> COMPLETED로 변경)
+--[테스트 타겟 1] 이용완료 숙소 (RESERVED -> COMPLETED로 변경)
 UPDATE RESERVATION SET STATUS = 'COMPLETED'
-WHERE STATUS = 'CONFIRMED' 
+WHERE STATUS = 'RESERVED' 
 AND CHECK_OUT < SYSDATE;
 
 --예약상태 변경(->CANCELLED)
@@ -194,15 +194,14 @@ SELECT * FROM PAYMENT;
 
 --=====리뷰 및 포인트 데이터=====
 --리뷰 작성
-INSERT ALL
-    INTO REVIEW (review_id, user_id, place_id, rating, content) 
-    VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 4, '음식은 맛있는데 주차가 조금 불편해요.')
-    INTO REVIEW (review_id, user_id, place_id, rating, content) 
-    VALUES (SEQ_REVIEW.NEXTVAL + 1, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '인생 맛집입니다! 강추!')
-    INTO REVIEW (review_id, user_id, place_id, rating, content) 
-    VALUES (SEQ_REVIEW.NEXTVAL + 2, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 2, '방음이 너무 안 돼서 잠을 설쳤어요.')
-    INTO REVIEW (review_id, user_id, place_id, rating, content) 
-    VALUES (SEQ_REVIEW.NEXTVAL + 3, 'user05', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 5, '가족들과 좋은 추억 만들고 갑니다.')
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 4, '음식은 맛있는데 주차가 조금 불편해요.');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 1, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '인생 맛집입니다! 강추!');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 2, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 2, '방음이 너무 안 돼서 잠을 설쳤어요.');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 3, 'user05', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 5, '가족들과 좋은 추억 만들고 갑니다.');
 
 -- 1) 맛집(REST) 리뷰 추가: 평점 3~5점 분포
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
@@ -242,19 +241,15 @@ ORDER BY created_at DESC;
 --포인트 적립 기준
 --(적립) 출석 체크(100포인트/일)
 INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
-VALUES ('EARN_DAILY_LOGIN', 100, '일일 출석 체크 이벤트 보상');
+VALUES ('EARN_LOGIN', 100, '일일 출석 체크 이벤트 보상');
 
 --(적립) 리뷰 작성(500포인트/건)
 INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
-VALUES ('EARN_REVIEW_REWARD', 500, '리뷰 작성 시 500포인트 적립');
+VALUES ('EARN_REVIEW', 500, '리뷰 작성 시 500포인트 적립');
 
 --(사용) 예약 결제(DEFAULT 값 0, 발생 시 값 입력하도록 세팅)
 INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
 VALUES ('USE_BOOKING', 0, '숙소/식당 예약 시 포인트 차감');
-
---(사용) 소멸 포인트(유효기간 만료)
-INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
-VALUES ('USE_EXPIRED', 0, '유효기간 경과로 인한 포인트 자동 소멸');
 
 COMMIT;
 SELECT * FROM POINT_POLICY;
@@ -267,21 +262,17 @@ SELECT * FROM POINT;
 -- 2) 개별 INSERT 실행 (각각 실행되면서 시퀀스가 1씩 올라갑니다)
 -- [시나리오 1] user01의 3일 연속 출석 체크
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
-VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_DAILY_LOGIN', 100, SYSDATE-2);
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-2);
 
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
-VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_DAILY_LOGIN', 100, SYSDATE-1);
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-1);
 
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
-VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_DAILY_LOGIN', 100, SYSDATE);
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE);
 
 -- [시나리오 2] user02가 예약 시 2000포인트 사용 (차감은 - 처리)
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
 VALUES (SEQ_POINT.NEXTVAL, 'user02', 'USE_BOOKING', -2000, CURRENT_TIMESTAMP);
-
--- [시나리오 3] user01의 포인트 유효기간 만료 소멸
-INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
-VALUES (SEQ_POINT.NEXTVAL, 'user01', 'USE_EXPIRED', -500, CURRENT_TIMESTAMP);
 
 COMMIT;
 
@@ -293,26 +284,22 @@ SELECT * FROM FAQ;
 --dataset_faq.csv 파일 import
 
 --1:1 문의
-INSERT ALL
-    INTO INQUIRY (inquiry_id, user_id, title, content, status)
-    VALUES (SEQ_INQUIRY.NEXTVAL, 'user01', '포인트 적립 누락', '리뷰 썼는데 포인트가 안 들어왔어요.', 'PENDING')
-    INTO INQUIRY (inquiry_id, user_id, title, content, status)
-    VALUES (SEQ_INQUIRY.NEXTVAL + 1, 'user03', '축제 일정 문의', '비가 와도 축제를 진행하나요?', 'ANSWERED')
-    INTO INQUIRY (inquiry_id, user_id, title, content, status)
-    VALUES (SEQ_INQUIRY.NEXTVAL + 2, 'user06', '로그인 오류', '아이디를 찾고 싶습니다.', 'PENDING')
-SELECT * FROM DUAL;
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user01', '포인트 적립 누락', '리뷰 썼는데 포인트가 안 들어왔어요.', 'PENDING');
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '축제 일정 문의', '비가 와도 축제를 진행하나요?', 'ANSWERED');
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user06', '로그인 오류', '아이디를 찾고 싶습니다.', 'PENDING');
 
 --즐겨찾기
-INSERT ALL
-    INTO FAVORITE (favorite_id, user_id, place_id)
-    VALUES (SEQ_FAVORITE.NEXTVAL, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'))
-    INTO FAVORITE (favorite_id, user_id, place_id)
-    VALUES (SEQ_FAVORITE.NEXTVAL + 1, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'))
-    INTO FAVORITE (favorite_id, user_id, place_id)
-    VALUES (SEQ_FAVORITE.NEXTVAL + 2, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'))
-    INTO FAVORITE (favorite_id, user_id, place_id)
-    VALUES (SEQ_FAVORITE.NEXTVAL + 3, 'user04', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'))
-SELECT * FROM DUAL;
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user04', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'));
 
 SELECT * FROM REVIEW;
 SELECT * FROM POINT;
@@ -374,7 +361,7 @@ FOR UPDATE; -- 다른 사용자가 동시에 수정하지 못하도록 잠금
 
 -- [Step 2] 예약 정보 등록 (Insert)
 INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, CHECK_IN, CHECK_OUT, GUEST_COUNT, STATUS, CREATED_AT)
-VALUES ('RES_' || SEQ_RES.NEXTVAL, :uid, :pid, TO_DATE(:checkin_date, 'YYYY-MM-DD'), TO_DATE(:checkout_date, 'YYYY-MM-DD'), :qty, 'CONFIRMED', CURRENT_TIMESTAMP);
+VALUES ('RES_' || SEQ_RES.NEXTVAL, :uid, :pid, TO_DATE(:checkin_date, 'YYYY-MM-DD'), TO_DATE(:checkout_date, 'YYYY-MM-DD'), :qty, 'RESERVED', CURRENT_TIMESTAMP);
 
 -- [Step 3] 실시간 재고 차감 (Update)
 UPDATE FESTIVAL_TICKET 
@@ -395,7 +382,7 @@ SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
 SELECT PLACE_ID, CHECK_IN, CHECK_OUT, STATUS
 FROM RESERVATION
 WHERE PLACE_ID = :selected_place_id
-  AND STATUS IN ('CONFIRMED', 'PENDING') -- 예약 확정 혹은 결제 대기 중인 건
+  AND STATUS IN ('RESERVED', 'PENDING') -- 예약 확정 혹은 결제 대기 중인 건
   --TRUNC(): 시간 초기화해 날짜만 비교
   --과거 예약 제외
   AND TRUNC(CHECK_IN) >= TRUNC(SYSDATE)
@@ -405,12 +392,12 @@ WHERE PLACE_ID = :selected_place_id
 SELECT CHECK_IN, CHECK_OUT, STATUS
 FROM RESERVATION
 ORDER BY CHECK_IN;
---WHERE CHECK_OUT < SYSDATE AND STATUS = 'CONFIRMED';
+--WHERE CHECK_OUT < SYSDATE AND STATUS = 'RESERVED';
 
 --[Step 2] 체크아웃 일자가 지난 확정된 예약을 '완료' 상태로 일괄 변경
 UPDATE RESERVATION
 SET STATUS = 'COMPLETED'
-WHERE CHECK_OUT < SYSDATE AND STATUS = 'CONFIRMED';
+WHERE CHECK_OUT < SYSDATE AND STATUS = 'RESERVED';
 SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
 ROLLBACK;
 
@@ -502,7 +489,7 @@ END;
 /
 
 --프로시저 실행
-CALL SP_GIVE_POINT('user01', 'EARN_REVIEW_REWARD');
+CALL SP_GIVE_POINT('user01', 'EARN_REVIEW');
 
 COMMIT;
 SELECT * FROM MEMBER;

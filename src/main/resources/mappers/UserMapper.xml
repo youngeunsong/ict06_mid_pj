@@ -8,13 +8,13 @@
   	<!-- 1. 아이디 중복 체크 -->
 	<select id="idCheck" parameterType="java.lang.String" resultType="int">
 		SELECT count(*)
-		FROM mvc_user_tbl
+		FROM MEMBER
 		WHERE user_id = #{user_id, jdbcType=VARCHAR}
 	</select>
   		
 	<!-- 2. 회원 정보 삽입 (회원가입) -->
 	<insert id="insertUser" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
-	  INSERT INTO mvc_user_tbl (
+	  INSERT INTO MEMBER (
 	    user_id, password, name, birth_date, email, phone, address, gender
 	  ) VALUES (
 	    #{user_id, jdbcType=VARCHAR},
@@ -30,7 +30,7 @@
 	
   	<!-- 3. 로그인 체크 / 회원정보 인증(수정, 탈퇴) -->
 	<select id="loginCheck" parameterType="java.util.Map" resultType="int">
-		SELECT count(*) FROM mvc_user_tbl
+		SELECT count(*) FROM MEMBER
 		 WHERE user_id = #{user_id}
 		   AND password = #{password}
 	</select>

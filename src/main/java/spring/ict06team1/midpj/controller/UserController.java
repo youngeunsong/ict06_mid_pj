@@ -137,7 +137,7 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => modifyDetailPage.do>>>");
 		
-		service.modifyDetailPage(request, response, model);
+		service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
 		
 		return "user/mypage/modifyDetailPage";
 	}

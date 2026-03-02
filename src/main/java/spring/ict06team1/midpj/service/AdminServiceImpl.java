@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
 		
 		//2) DAO 호출
 		//검색조건 담을 map 생성
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
         map.put("keyword", keyword);
         map.put("status", status);
 		

@@ -26,10 +26,10 @@
  			$('#modal_guest_count').text(data.guest_count + "명");
  			$('#modal_status').text(data.status);
  		
- 			if(data.place) {
-	 			$('#update_name').val(data.place.name);
+ 			if(data.placeDTO) {
+	 			$('#modal_name').text(data.placeDTO.name);
  			} else {
- 				$('#update_name').val();
+ 				$('#modal_name').text('');
  			}
 
  			$('#resDetailModal').modal('show');
@@ -58,10 +58,10 @@
 			$('#update_check_out').val(data.check_out);
 			$('#update_guest_count').val(data.guest_count + "명");
 			
-			if(data.place && data.place.name) {
-				$('#update_name').val(data.place.name);
+			if(data.placeDTO && data.placeDTO.name) {
+				$('#update_name').val(data.placeDTO.name);
 			} else {
-				$('#update_name').val();
+				$('#update_name').val('');
 			}
 			
 			//수정 가능 필드(예약상태)
@@ -80,7 +80,7 @@
  function updateReservationStatus() {
  	//input 박스의 value 가져오기
  	const resId = $('#update_res_id').val();
- 	const status = $('#modal_update_status').val();
+ 	const status = $('#update_status').val();
  	
  	if(!confirm("예약 상태를 변경하시겠습니까?"))
  	return;

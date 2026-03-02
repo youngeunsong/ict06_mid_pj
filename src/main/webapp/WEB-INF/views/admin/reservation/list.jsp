@@ -249,6 +249,7 @@
 			</div>
 			<div class="modal-body">
 				<table class="table table-bordered">
+				
 					<tbody>
 						<tr>
 			            <th class="table-light" style="width:20%;">예약번호</th>
@@ -351,6 +352,7 @@
 </div>
 <!-- 예약 수정 modal 끝 -->
 
+<%@ include file="/WEB-INF/views/common/footer_script.jsp" %>
 <script src="${path}/resources/js/admin/reservation.js"></script>
 </body>
 </html>

@@ -79,6 +79,14 @@
          </div>
       </div>
       
+      <!-- 관련 SQL -->
+      SQL 쿼리 : 회원 비밀번호 재확인
+  	<pre><code>
+	SELECT password
+	FROM MEMBER
+	WHERE user_id = #${'{'}userId}
+	</code></pre>
+      
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

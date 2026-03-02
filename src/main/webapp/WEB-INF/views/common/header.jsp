@@ -60,7 +60,7 @@
 		        
 			    <c:otherwise>
 			        <a class="btn btn-outline-secondary btn-sm" href="${path}/logout.do">로그아웃</a>
-			        <a class="btn btn-primary btn-sm px-3" href="${path}/main.do">마이 페이지</a>
+			        <a class="btn btn-primary btn-sm px-3" href="${path}/modifyUser.do">마이 페이지</a>
 			    </c:otherwise>
 			</c:choose>
 	      </div>

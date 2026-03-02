@@ -1,0 +1,13 @@
+package spring.ict06team1.midpj.dao;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class RestaurantDAOImpl implements RestaurantDAO {
+	
+	@Autowired
+	private SqlSession session;
+
+}

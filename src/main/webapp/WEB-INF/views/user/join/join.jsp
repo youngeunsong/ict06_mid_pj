@@ -127,6 +127,30 @@
          </div>
       </div>
       
+      <!-- 관련 SQL -->
+      SQL 쿼리 : 이메일 중복 체크 
+  	<pre><code>
+	SELECT *
+	FROM MEMBER
+	WHERE user_id = #${'{'}userId}
+	</code></pre>
+	
+     SQL 쿼리 : 회원 정보 insert
+  	<pre><code>
+  	INSERT INTO MEMBER (
+	    user_id, password, name, birth_date, email, phone, address, gender
+	  ) VALUES (
+	    #${'{'}user_id, jdbcType=VARCHAR},
+	    #${'{'}password, jdbcType=VARCHAR},
+	    #${'{'}name, jdbcType=VARCHAR},
+	    #${'{'}birth_date, jdbcType=DATE},
+	    #${'{'}email, jdbcType=VARCHAR},
+	    #${'{'}phone, jdbcType=VARCHAR},
+	    #${'{'}address, jdbcType=VARCHAR},
+	    #${'{'}gender, jdbcType=CHAR}
+	  )
+	</code></pre>
+      
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

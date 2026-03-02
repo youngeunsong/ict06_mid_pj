@@ -51,7 +51,7 @@
 	    username="ict06_team1_midpj"
 	    password="tiger" 
 	    type="javax.sql.DataSource" 
-	    url="jdbc:oracle:thin:@서버컴퓨터주소:1521:xe" /> 
+	    url="jdbc:oracle:thin:@서버컴퓨터주소:1521:xe" />
 
 4. STS3로 프로젝트 열기 : 궁금한 부분은 https://cafe.naver.com/f-e/cafes/28186338/articles/29562?menuid=444&referrerAllArticles=false&page=2 을 참고해주세요.
 	- STS3 실행 시 워크스페이스 workspace_spring_ict06 로 런치

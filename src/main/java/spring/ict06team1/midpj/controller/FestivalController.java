@@ -13,22 +13,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import spring.ict06team1.midpj.service.TestServiceImpl;
+import spring.ict06team1.midpj.service.FestivalServiceImpl;
 
 @Controller
-public class TestController {
+public class FestivalController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
-	private TestServiceImpl service;
+	private FestivalServiceImpl service;
 	
-	private static final Logger logger = LoggerFactory.getLogger(TestController.class);
-	
-	@RequestMapping("/getAddressInfo_1")
-	public String getAddressInfo_1(HttpServletRequest request, HttpServletResponse response, Model model)
+	//[festival] ----------------------------------------------------------------------------------------
+	@RequestMapping("/festival.do")	
+	public String festival(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => /getAddressInfo_1 >>>"); 
+		logger.info("<<< url => festival.do>>>");
 		
-		service.getAddressInfo_1(request, response, model); 
-		return "getAddressInfo_1"; 
+		return "user/festival/festival";
 	}
+
 }

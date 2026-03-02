@@ -1,0 +1,116 @@
+@charset "UTF-8";
+/* login.css */
+
+body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+#container {
+   width: 100%;
+   margin: 0 auto;
+}
+
+#contents {
+   max-width: 900px;
+   min-width: 900px;
+   width: 100%;
+   margin: 0 auto;
+}
+
+#section1, #section2 {
+   padding: 10px 20px 20px 0;
+   border-bottom: 5px solid #B1AEB7;
+}
+
+#s2_inner {
+   width: 100%;
+}
+
+.join {
+   display: flex;   /* 한줄(수평)로 배치 */
+   justify-content: center;   /* 가운데 배치 */
+   align-items: center;   /* 수평 - 가운데 정렬 */
+   max-width: 900px;
+   margin: 40px 10px;
+   height: auto;
+}
+
+.join th {
+   font-size: 15px;
+   font-weight: bold;
+   width: 120px;
+   height: 60px;
+   text-align: center;
+   padding-right: 10px;
+   padding-left: 20px;
+   border-bottom: 5px solid #CCC;
+   background: whitesmoke;
+   margin-right: 5px;
+}
+
+.join td {
+   padding: 10px 0px 10px 10px;
+   border-bottom: 1px solid #CCC;
+}
+
+.input {
+   width: 300px;
+   height: 40px;
+   border: 1px solid gray;
+   box-sizing: border-box;
+   padding: 0 0 0 10px;
+}
+
+.inputButton {
+   background: whitesmoke;
+   font-size: 15px;
+   padding: 5px 10px 5px 10px;
+}
+
+.login_form_area { width: 350px; margin: 50px auto; text-align: center; }
+
+@charset "UTF-8";
+
+/* 기존 스타일과 충돌 방지를 위해 아주 구체적으로 작성 */
+.login_form_area {
+    width: 350px !important;
+    margin: 80px auto !important;
+    text-align: center;
+}
+
+.login_group {
+    display: flex !important;      /* 가로 정렬 강제 */
+    align-items: center !important; /* 세로 중앙 강제 */
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: white;
+}
+
+.login_group input {
+    border: none !important;      /* 기존 검정 테두리 제거 */
+    outline: none !important;
+    flex: 1 !important;           /* 입력창이 꽉 차게 */
+    margin-left: 10px;
+    height: 25px !important;      /* 높이 조절 */
+}
+
+#togglePassword {
+    cursor: pointer;
+    color: #888;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.btn_login_submit {
+    width: 100%;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* mvc 작성전에 login.jsp에서 실행 */

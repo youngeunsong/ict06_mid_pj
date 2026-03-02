@@ -1,0 +1,70 @@
+package spring.ict06team1.midpj.dto;
+
+public class FaqDTO {
+
+	private int faq_id;
+	private String question;
+	private String answer;
+	private String category;
+	private int order_no;
+	private String visible;
+
+	public FaqDTO() {
+		super();
+	}
+
+	public FaqDTO(int faq_id, String question, String answer, String category, int order_no, String visible) {
+		super();
+		this.faq_id = faq_id;
+		this.question = question;
+		this.answer = answer;
+		this.category = category;
+		this.order_no = order_no;
+		this.visible = visible;
+	}
+	
+	public int getFaq_id() {
+		return faq_id;
+	}
+	public void setFaq_id(int faq_id) {
+		this.faq_id = faq_id;
+	}
+	public String getQuestion() {
+		return question;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public int getOrder_no() {
+		return order_no;
+	}
+	public void setOrder_no(int order_no) {
+		this.order_no = order_no;
+	}
+	public String getVisible() {
+		return visible;
+	}
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
+	@Override
+	public String toString() {
+		return "FaqDTO [faq_id=" + faq_id + ", question=" + question + ", answer=" + answer + ", category=" + category
+				+ ", order_no=" + order_no + ", visible=" + visible + "]";
+	}
+	
+
+}

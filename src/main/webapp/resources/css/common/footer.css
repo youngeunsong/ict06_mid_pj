@@ -1,0 +1,12 @@
+@charset "UTF-8";
+/* footer.css */
+
+/* 모든 css 공통 - 전체 폰트 지정 */
+body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+a {
+	text-decoration-line: none;
+	color: #000000A6;
+}

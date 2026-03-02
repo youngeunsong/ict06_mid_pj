@@ -15,7 +15,7 @@ public interface AdminDAO {
 	public ReservationDTO getReservationDetail(String reservation_id); 
 	
 	//2. 예약 변경
-	//2-1. 예약상태 변경 > 노쇼처리
+	//2-1. 예약상태 변경
 	public int modifyReservationStatus(ReservationDTO dto); 
 	
 	//3. 통계

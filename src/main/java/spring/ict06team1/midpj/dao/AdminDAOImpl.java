@@ -36,8 +36,9 @@ public class AdminDAOImpl implements AdminDAO {
 
 	@Override
 	public int modifyReservationStatus(ReservationDTO dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		System.out.println("[AdminDAOImpl - getReservationDetail()]");
+		
+		return sqlSession.getMapper(AdminDAO.class).modifyReservationStatus(dto);
 	}
 
 	@Override

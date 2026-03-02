@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import spring.ict06team1.midpj.dao.AdminDAO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.service.AdminService;
 
@@ -26,23 +26,29 @@ public class AdminController {
 
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
+	//0. ADMIN HOME
+	@GetMapping("/admin/home")
+	public String adminHome() {
+		return "admin/home";
+	}
+	
 	//1. 예약 조회
 	//1-1. 예약목록 전체 조회, 검색/필터
-	@GetMapping("/reslist.ad")
+	@GetMapping("/admin/reservation/list")
 	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException {
-		logger.info("[url => /reslist.ad]");
+		logger.info("[url => /admin/reservation/list]");
 		adminService.getReservationList(request, response, model);
 		return "admin/reservation/list";
 	}
 	
 	//1-2. 예약 상세페이지 조회
-	@GetMapping("/resdetail.ad")
+	@GetMapping("/admin/reservation/detail")
 	//페이지 이동 없이 데이터 바로 리턴
 	@ResponseBody
 	public ReservationDTO getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /resdetail.ad]");
+		logger.info("[url => /admin/reservation/detail]");
 		adminService.getReservationDetail(request, response, model);
 		ReservationDTO dto = (ReservationDTO)request.getAttribute("dto");
 			
@@ -50,15 +56,16 @@ public class AdminController {
 	}
 	
 	//2. 예약 변경
-	//2-1. 예약상태 변경 > 노쇼처리
-	@GetMapping("/resUpdateStatus.ad")
+	//2-1. 예약상태 변경
+	@PostMapping("/admin/reservation/updateStatus")
 	public String updateReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-			logger.info("<<< url => /resUpdateStatus.ad >>>");
+			logger.info("[url => /admin/reservation/updateStatus]");
 			adminService.modifyReservationStatus(request, response, model);
 			
-			String resId = request.getParameter("resId");
-			return "redirect:/admin/reservation/resDetail.ad?resId=" + resId;
+			int result = (Integer)request.getAttribute("result");
+			
+			return (result > 0) ? "success" : "fail";
 	}
 	
 	//2-2. 예약 취소

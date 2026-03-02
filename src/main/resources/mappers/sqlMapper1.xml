@@ -39,6 +39,9 @@
 			<if test="keyword != null and keyword != ''">
 				(user_id LIKE '%'||#{keyword}||'%' OR reservation_id LIKE '%'||#{keyword}||'%')
 			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
 		</where>
 		ORDER BY created_at DESC
 	</select>
@@ -52,6 +55,14 @@
 		JOIN PLACE P ON R.PLACE_ID = P.PLACE_ID
 		WHERE R.RESERVATION_ID = #{reservation_id}
 	</select>
+	
+	<!-- 2-1. 예약상태 변경 -->
+	<update id="updateReservationStatus" parameterType="map">
+		UPDATE RESERVATION
+		SET STATUS = #{status},
+			created_at = CURRENT_TIMESTAMP
+		WHERE reservation_id = #{resId}
+	</update>
 	
 	<!-- 3-1. 대시보드(기간별 집계) --><!-- 
 	<select id="getReservationStatistics" resultMap="reservationMap">

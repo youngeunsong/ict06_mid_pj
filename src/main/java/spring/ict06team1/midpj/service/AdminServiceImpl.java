@@ -26,13 +26,15 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void getReservationList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdminServiceImpl - getReservationList()]");
-		//1) parameter값 수집(검색어, 페이지 번호)
+		//1) parameter값 수집(검색어, 예약상태)
 		String keyword = request.getParameter("keyword");
+		String status = request.getParameter("status");
 		
 		//2) DAO 호출
 		//검색조건 담을 map 생성
 		Map<String, Object> map = new HashMap<>();
         map.put("keyword", keyword);
+        map.put("status", status);
 		
 		//전체 조회
 		List<ReservationDTO> list = admindao.getReservationList(map);
@@ -40,6 +42,7 @@ public class AdminServiceImpl implements AdminService {
 		
 		//3) Model에 담아서 jsp로 전달
 		model.addAttribute("list", list);
+		model.addAttribute("status", status);
 	}
 
 	//1-2. 예약 상세페이지 조회
@@ -53,10 +56,20 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	//2. 예약 변경
-	//2-1. 예약상태 변경 > 노쇼처리
+	//2-1. 예약상태 변경
 	@Override
 	public void modifyReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("[AdminServiceImpl - getReservationDetail()]");
 		
+		String resId = request.getParameter("resId");
+		String status = request.getParameter("status");
+		ReservationDTO dto = new ReservationDTO();
+		dto.setReservation_id(resId);
+		dto.setStatus(status);
+		
+		int result = admindao.modifyReservationStatus(dto);
+		
+		request.setAttribute("result", result);
 	}
 
 	//2-2. 예약 취소

@@ -74,6 +74,14 @@
          </div>
       </div>
       
+      <!-- 관련 SQL -->
+    SQL 쿼리 : 회원 탈퇴 
+   	<pre><code>
+   	UPDATE MEMBER
+    SET status = 'QUIT'
+    WHERE user_id = #${'{'}userId}
+	</code></pre>
+      
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

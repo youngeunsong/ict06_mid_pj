@@ -24,20 +24,20 @@
 <body>
 	<div class="wrap">
 		
-			
-		<c:if test="${updateCnt == 1}">
+		<!-- 1주차 시연 후 아래 주석 처리한 라인의 주석을 다시 풀고 구현하면 됩니다. -->	
+		<%-- <c:if test="${updateCnt == 1}"> --%>
 			<script type="text/javascript">
 				alert("정보 수정 성공!!");
 				window.location= "${path}/main.do";
 			</script>
-		</c:if>
+		<%-- </c:if>
 		
 		<c:if test="${updateCnt != 1}">
 			<script type="text/javascript">
 				alert("정보 수정 실패!!");
 				window.location= "${path}/modifyDetailAction.do";
 			</script>
-		</c:if>
+		</c:if> --%>
 	
 	</div>
 </body>

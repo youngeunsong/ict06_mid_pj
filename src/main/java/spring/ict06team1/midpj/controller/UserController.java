@@ -109,12 +109,12 @@ public class UserController {
 	}
 	
 	// 회원탈퇴 처리	
-	@RequestMapping("/deleteCustomerAction.do")	
-	public String deleteCustomerAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+	@RequestMapping("/deleteUserAction.do")	
+	public String deleteUserAction(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => deleteCustomerAction.do>>>");
+		logger.info("<<< url => deleteUserAction.do>>>");
 		
-		service.deleteUserAction(request, response, model);
+		// service.deleteUserAction(request, response, model);
 		
 		return "user/mypage/deleteUserAction";
 	}	
@@ -122,6 +122,15 @@ public class UserController {
 	// 5. 회원 상세 정보 조회 (마이페이지에서 사용)
 	
 	// [마이페이지] ----------------------------------------------------------------------------------------
+	// [마이페이지] 홈 
+	@RequestMapping("/myPageHome.do")	
+	public String myPageHome(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => myPageHome.do>>>");
+		
+		return "user/mypage/myPageHome";
+	}
+	
 	// [마이페이지] 회원수정 - 인증화면
 	@RequestMapping("/modifyUser.do")	
 	public String modifyUser(HttpServletRequest request, HttpServletResponse response, Model model) 
@@ -137,12 +146,64 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => modifyDetailPage.do>>>");
 		
-		service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
+		// service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
 		
 		return "user/mypage/modifyDetailPage";
 	}
-
 	
+	// [마이페이지] 회원수정 완료 
+	@RequestMapping("/modifyUserAction.do")	
+	public String modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => modifyUserAction.do>>>");
+		
+		return "user/mypage/modifyUserAction";
+	}
+	
+	// [마이페이지] 즐겨찾기 조회-> 맛집/숙소/축제 페이지로 이동
+	@RequestMapping("/viewBookmarks.do")	
+	public String viewBookmarks(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => viewBookmarks.do>>>");
+		
+		return "user/mypage/viewBookmarks";
+	}
+	
+	// [마이페이지] 예약 목록
+	@RequestMapping("/viewReservations.do")	
+	public String viewReservations(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => viewReservations.do>>>");
+		
+		return "user/mypage/viewReservations";
+	}
+	
+	// [마이페이지] 예약 상세 조회
+	@RequestMapping("/reservationDetail.do")	
+	public String reservationDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => reservationDetail.do>>>");
+		
+		return "user/mypage/reservationDetail";
+	}
+	
+	// [마이페이지] 1:1 문의목록
+	@RequestMapping("/viewInquiries.do")	
+	public String viewInquiries(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => viewInquiries.do>>>");
+		
+		return "user/mypage/viewInquiries";
+	}
+	
+	// [마이페이지] 1:1 문의목록 상세
+	@RequestMapping("/inquiryDetail.do")	
+	public String inquiryDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => inquiryDetail.do>>>");
+		
+		return "user/mypage/inquiryDetail";
+	}
 	
 	// [고객지원] ----------------------------------------------------------------------------------------
 	// [고객지원] FAQ - FAQ페이지
@@ -154,6 +215,15 @@ public class UserController {
 		return "user/faq/faq";
 	}
 	
+	// [고객지원] FAQ 상세 페이지
+	@RequestMapping("/FAQDetail.do")	
+	public String FAQDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => FAQDetail.do>>>");
+		
+		return "user/faq/faqDetail";
+	}
+	
 	// [고객지원] 1:1문의 - inquiry 페이지
 	@RequestMapping("/inquiry.do")	
 	public String inquiry(HttpServletRequest request, HttpServletResponse response, Model model) 
@@ -163,19 +233,13 @@ public class UserController {
 		return "user/inquiry/inquiry";
 	}
 	
-	// [고객지원] 공지 - notice 페이지
-	@RequestMapping("/notice.do")	
-	public String notice(HttpServletRequest request, HttpServletResponse response, Model model) 
-			throws ServletException, IOException {
-		logger.info("<<< url => notice.do>>>");
-		
-		return "user/notice/notice";
-	}
-
-	
-	
-	
-	
-	
-
+	// 커뮤니티에만 공지를 넣기로 했던 것으로 기억해서 주석 처리했습니다. 혹시 추후 기능 추가 시 주석 해제하고 사용하면 될 것 같습니다.
+//	// [고객지원] 공지 - notice 페이지
+//	@RequestMapping("/notice.do")	
+//	public String notice(HttpServletRequest request, HttpServletResponse response, Model model) 
+//			throws ServletException, IOException {
+//		logger.info("<<< url => notice.do>>>");
+//		
+//		return "user/notice/notice";
+//	}
 }

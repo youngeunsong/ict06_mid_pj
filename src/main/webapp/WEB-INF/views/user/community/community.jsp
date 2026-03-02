@@ -16,8 +16,26 @@
    <div class="wrap">
       <%@ include file="../../common/header.jsp" %>
       
-      <hr>
-      커뮤니티
+      <button type="button" class="btn_area" onclick="location.href='${path}/createBoard.co'">
+	        게시글 작성
+	  </button>
+	  
+	  <button type="button" class="btn_area" onclick="location.href='${path}/boardDetail.co'">
+	        게시글 상세 조회
+	  </button>
+      
+      <div align="center">
+			<img src="${path}/resources/images/user/community/community.png" width="100%" alt="main">
+	  </div>
+      
+      <!-- 관련 SQL -->
+		SQL 쿼리 : 커뮤니티 게시글 목록 로드 쿼리 (공지, 이벤트, 회원 게시글)
+		<pre>
+			<code>
+			<c:out value="
+			" />
+			</code>
+		</pre>
       
       <%@ include file="../../common/footer.jsp" %>
    </div>

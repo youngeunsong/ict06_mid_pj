@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>고객지원-공지 페이지</title>
+<title>예약</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
@@ -15,10 +15,24 @@
 <body>
    <div class="wrap">
       <%@ include file="../../common/header.jsp" %>
+	  
+	  <button type="button" class="btn_area" onclick="location.href='${path}/reservationAction.rv'">
+	        예약하기
+	  </button>	
       
-      <hr>
-      공지
-      
+      <div align="center">
+			<img src="${path}/resources/images/user/reservation/reservation.png" width="100%" alt="main">
+	  </div>
+	  
+	  <!-- 관련 SQL -->
+		SQL 쿼리 : 예약 추가 쿼리
+		<pre>
+			<code>
+			<c:out value="
+			" />
+			</code>
+		</pre>
+  	
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

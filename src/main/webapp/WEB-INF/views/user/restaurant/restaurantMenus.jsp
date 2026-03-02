@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>고객지원-공지 페이지</title>
+<title>맛집 페이지</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
@@ -14,12 +14,12 @@
 </head>
 <body>
    <div class="wrap">
-      <%@ include file="../../common/header.jsp" %>
-      
-      <hr>
-      공지
-      
-      <%@ include file="../../common/footer.jsp" %>
+      <button type="button" class="btn_area" onclick="location.href='${path}/restaurant.rs'">
+	        내 주변 맛집
+	  </button>	
+	  <button type="button" class="btn_area" onclick="location.href='${path}/bestRestaurants.rs'">
+	        베스트 맛집
+	  </button>	
    </div>
 </body>
 </html>

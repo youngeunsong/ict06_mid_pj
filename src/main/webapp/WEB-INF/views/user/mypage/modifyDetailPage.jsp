@@ -42,14 +42,84 @@
 <div class="wrap">
     <%@ include file="../../common/header.jsp" %>
     
+    <!-- 1주차 시연을 위한 임시 코드. 아래에 주석 처리한 코드를 추후에 살리고 기타 기능을 완성하면 될 것으로 예상. -->
     <div id="container">
-        <c:choose>
-            <c:when test="${selectCnt == 1}">
+    	<div class="modify_wrap">
+	         <h2 class="modify_title">회원정보 관리</h2>
+	         <form action="${path}/modifyUserAction.do" method="post">
+	             <table class="modify_table">
+	                 1. 기본 정보 (수정불가)
+	                 <tr>
+	                     <th>아이디</th>
+	                     <td><strong>hong</strong><input type="hidden" name="user_id" value="dto.user_id"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>현재 포인트</th>
+	                     <td class="point_text">00 P</td>
+	                 </tr>
+	                 
+	                 2. 비밀번호 수정
+	                 <tr>
+	                     <th>새 비밀번호</th>
+	                     <td><input type="password" name="password" id="password" class="input_full" placeholder="변경할 비밀번호 입력" required></td>
+	                 </tr>
+	                 <tr>
+	                     <th>새 비밀번호 확인</th>
+	                     <td><input type="password" id="password_confirm" class="input_full" placeholder="한번 더 입력해주세요" required></td>
+	                 </tr>
+	
+	                 3. 개인 신상 정보
+	                 <tr>
+	                     <th>이름</th>
+	                     <td><input type="text" name="name" value="홍길동" class="input_full"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>이메일</th>
+	                     <td><input type="email" name="email" value="hong@mail.com" class="input_full"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>휴대폰 번호</th>
+	                     <td><input type="text" name="phone" value="010-0000-0000" class="input_full"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>주소</th>
+	                     <td><input type="text" name="address" value="율도국" class="input_full"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>생년월일</th>
+	                     <td><input type="date" name="birth_date" value="생일" class="input_full"></td>
+	                 </tr>
+	                 <tr>
+	                     <th>성별</th>
+	                     <td>
+	                         <input type="radio" name="gender" value="M" checked> 남성
+	                         <input type="radio" name="gender" value="F" style="margin-left: 20px;"> 여성
+	                     </td>
+	                 </tr>
+	                 <tr>
+	                     <th>가입일</th>
+	                     <td>2026.03.02</td>
+	                 </tr>
+	             </table>
+	
+	             <div class="btn_center">
+	                 <button type="submit" class="btn_submit">수정하기</button>
+	                 <button type="button" class="btn_cancel" onclick="location.href='${path}/main.do'">취소</button>
+	             	 <button type="button" class="btn_cancel" onclick="if(confirm('정말 회원탈퇴 하시겠습니까?')) location.href='${path}/deleteUser.do'">
+				        회원탈퇴
+				     </button>	
+	             </div>
+	         </form>
+	     </div>
+    
+    
+        <%-- <c:choose>
+           <c:when test="${selectCnt == 1}">
                 <div class="modify_wrap">
                     <h2 class="modify_title">회원정보 관리</h2>
                     <form action="${path}/modifyUserAction.do" method="post" onsubmit="return validateForm();">
                         <table class="modify_table">
-                            <%-- 1. 기본 정보 (수정불가) --%>
+                            1. 기본 정보 (수정불가)
                             <tr>
                                 <th>아이디</th>
                                 <td><strong>${dto.user_id}</strong><input type="hidden" name="user_id" value="${dto.user_id}"></td>
@@ -59,7 +129,7 @@
                                 <td class="point_text">${dto.point_balance} P</td>
                             </tr>
                             
-                            <%-- 2. 비밀번호 수정 --%>
+                            2. 비밀번호 수정
                             <tr>
                                 <th>새 비밀번호</th>
                                 <td><input type="password" name="password" id="password" class="input_full" placeholder="변경할 비밀번호 입력" required></td>
@@ -69,7 +139,7 @@
                                 <td><input type="password" id="password_confirm" class="input_full" placeholder="한번 더 입력해주세요" required></td>
                             </tr>
 
-                            <%-- 3. 개인 신상 정보 [cite: 2026-02-24] --%>
+                            3. 개인 신상 정보 [cite: 2026-02-24]
                             <tr>
                                 <th>이름</th>
                                 <td><input type="text" name="name" value="${dto.name}" class="input_full"></td>
@@ -106,16 +176,34 @@
                         <div class="btn_center">
                             <button type="submit" class="btn_submit">수정하기</button>
                             <button type="button" class="btn_cancel" onclick="location.href='${path}/main.do'">취소</button>
+                        	<button type="button" class="btn_cancel" onclick="if(confirm('정말 회원탈퇴 하시겠습니까?')) location.href='${path}/deleteUser.do'">
+						        회원탈퇴
+						    </button>
                         </div>
                     </form>
                 </div>
-            </c:when>
+           </c:when> 
             
-            <c:otherwise>
+           <c:otherwise>
                 <script>alert("인증에 실패했습니다."); history.back();</script>
             </c:otherwise>
-        </c:choose>
+        </c:choose> --%>
     </div>
+    
+    <!-- 관련 SQL -->
+    SQL 쿼리 : 회원 정보 수정 
+   	<pre><code>
+    UPDATE MEMBER
+    SET
+        password = #${'{'}password},
+        email = #${'{'}email},
+        name = #${'{'}name},
+        birth_date = #${'{'}birthDate},
+        gender = #${'{'}gender},
+        phone = #${'{'}phone},
+        address = #${'{'}address}
+    WHERE user_id = #${'{'}userId}
+	</code></pre>
 
     <%@ include file="../../common/footer.jsp" %>
 </div>

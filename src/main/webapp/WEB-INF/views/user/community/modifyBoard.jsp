@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>고객지원-공지 페이지</title>
+<title>커뮤니티 페이지</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
@@ -15,9 +15,23 @@
 <body>
    <div class="wrap">
       <%@ include file="../../common/header.jsp" %>
+      <h3>게시글 수정 </h3>
+	  <button type="button" class="btn_area" onclick="location.href='${path}/modifyBoardAction.co'">
+	        게시글 수정
+	  </button>
       
-      <hr>
-      공지
+      <div align="center">
+			<img src="${path}/resources/images/user/inquiry/inquiryForm.png" width="100%" alt="main">
+	  </div>
+      
+      <!-- 관련 SQL -->
+		SQL 쿼리 : 커뮤니티 게시글 수정 사항 update 
+		<pre>
+			<code>
+			<c:out value="
+			" />
+			</code>
+		</pre>
       
       <%@ include file="../../common/footer.jsp" %>
    </div>

@@ -24,10 +24,10 @@ public class FestivalController {
 	private FestivalServiceImpl service;
 	
 	//[festival] ----------------------------------------------------------------------------------------
-	@RequestMapping("/festival.do")	
+	@RequestMapping("/festival.fe")	
 	public String festival(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => festival.do>>>");
+		logger.info("<<< url => festival.fe >>>");
 		
 		return "user/festival/festival";
 	}

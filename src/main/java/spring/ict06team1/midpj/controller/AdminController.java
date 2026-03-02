@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.ReservationDTO;
@@ -27,28 +28,34 @@ public class AdminController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	//0. ADMIN HOME
-	@GetMapping("/admin/home")
+//	@GetMapping("/admin/home")
+	@RequestMapping("/adminHome.ad")
 	public String adminHome() {
+		logger.info("[url => /adminHome.ad]");
 		return "admin/home";
 	}
 	
 	//1. 예약 조회
 	//1-1. 예약목록 전체 조회, 검색/필터
-	@GetMapping("/admin/reservation/list")
+//	@GetMapping("/admin/reservation/list")
+	@RequestMapping("/getReservationList.ad")
 	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException {
-		logger.info("[url => /admin/reservation/list]");
+//		logger.info("[url => /admin/reservation/list]");
+		logger.info("[url => /getReservationList.ad]");
 		adminService.getReservationList(request, response, model);
 		return "admin/reservation/list";
 	}
 	
 	//1-2. 예약 상세페이지 조회
-	@GetMapping("/admin/reservation/detail")
+//	@GetMapping("/admin/reservation/detail")
+	@RequestMapping("/getReservationDetail.ad")
 	//페이지 이동 없이 데이터 바로 리턴
 	@ResponseBody
 	public ReservationDTO getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /admin/reservation/detail]");
+//		logger.info("[url => /admin/reservation/detail]");
+		logger.info("[url => /getReservationDetail.ad]");
 		adminService.getReservationDetail(request, response, model);
 		ReservationDTO dto = (ReservationDTO)request.getAttribute("dto");
 			
@@ -57,10 +64,12 @@ public class AdminController {
 	
 	//2. 예약 변경
 	//2-1. 예약상태 변경
-	@PostMapping("/admin/reservation/updateStatus")
+//	@PostMapping("/admin/reservation/updateStatus")
+	@PostMapping("/updateReservationStatus.ad")
 	public String updateReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-			logger.info("[url => /admin/reservation/updateStatus]");
+//			logger.info("[url => /admin/reservation/updateStatus]");
+			logger.info("[url => /updateReservationStatus.ad]");
 			adminService.modifyReservationStatus(request, response, model);
 			
 			int result = (Integer)request.getAttribute("result");

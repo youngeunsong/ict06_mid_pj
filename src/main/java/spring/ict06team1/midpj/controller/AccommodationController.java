@@ -25,10 +25,10 @@ public class AccommodationController {
 	
 	//[accommodation] ----------------------------------------------------------------------------------------
 	//[accommodation] 숙소 페이지로 이동
-	@RequestMapping("/accommodation.do")	
+	@RequestMapping("/accommodation.ac")	
 	public String accommodation(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => accommodation.do>>>");
+		logger.info("<<< url => accommodation.ac>>>");
 		
 		return "user/accommodation/accommodation";
 	}

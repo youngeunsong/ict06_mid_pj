@@ -142,6 +142,14 @@
 	         <version>1.4</version>
 	    </dependency>
 		<!-- jdbc -->
+		
+		<!-- Jackson 라이브러리 시작(DTO->JSON 변환) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.3</version>
+		</dependency>
+		<!-- Jackson 라이브러리 끝 -->
 	
 		<!-- Test -->
 		<dependency>

@@ -2,6 +2,8 @@ package spring.ict06team1.midpj.dto;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PlaceDTO {
 
 	private int place_id;
@@ -12,6 +14,8 @@ public class PlaceDTO {
 	private int latitude;
 	private int longitude;
 	private String image_url;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
 	private Timestamp placeRegDate;
 
 	public PlaceDTO() {

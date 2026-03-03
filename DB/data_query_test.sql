@@ -2,7 +2,7 @@
 --주요기능별 SQL 쿼리 테스트
 --------------------------------------------------
 --PLACE, REST/ACC/FEST 데이터 랜덤 생성
---PLACE.sql, RESTAURANT.sql, FESTIVAL.sql, ACCOMMODATION.sql 참고 
+--PLACE.sql, RESTAURANT.sql, FESTIVAL.sql, ACCOMMODATION.sql 불러와서 실행
 
 --PLACE + REST/ACC/FEST 조인 데이터 뷰
 SELECT * FROM PLACE ORDER BY PLACE_ID;

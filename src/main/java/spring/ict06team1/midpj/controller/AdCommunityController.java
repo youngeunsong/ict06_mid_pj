@@ -20,15 +20,17 @@ import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.service.AdminService;
 
 @Controller
-public class AdminController {
+public class AdCommunityController {
 
-	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdCommunityController.class);
 
-	// 0. ADMIN HOME
-//	@GetMapping("/admin/home")
-	@RequestMapping("/adminHome.ad")
-	public String adminHome() {
-		logger.info("[url => /adminHome.ad]");
-		return "admin/home";
+	// [관리자 - 커뮤니티 관리] 홈
+	@RequestMapping("/communityHome.adco")
+	public String communityHome(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /communityHome.adco]");
+		return "admin/community/communityHome";
 	}
+	
+	
 }

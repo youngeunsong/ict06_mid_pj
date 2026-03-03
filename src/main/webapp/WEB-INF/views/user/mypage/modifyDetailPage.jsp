@@ -191,19 +191,28 @@
     </div>
     
     <!-- 관련 SQL -->
-    SQL 쿼리 : 회원 정보 수정 
+    SQL 쿼리 : 회원 상세 정보 가져오기
    	<pre><code>
-    UPDATE MEMBER
-    SET
-        password = #${'{'}password},
-        email = #${'{'}email},
-        name = #${'{'}name},
-        birth_date = #${'{'}birthDate},
-        gender = #${'{'}gender},
-        phone = #${'{'}phone},
-        address = #${'{'}address}
-    WHERE user_id = #${'{'}userId}
+     SELECT 
+           user_id, name, email, phone, 
+           role, status, joinDate, point_balance
+       FROM MEMBER
+       ORDER BY joinDate DESC
 	</code></pre>
+    
+    SQL 쿼리 : 회원 정보 수정 
+   		<pre>
+			<code>
+			<c:out escapeXml="true" value="
+     UPDATE MEMBER
+        SET email = #${'{'}email},
+            phone = #${'{'}phone},
+            address = #${'{'}address},
+            name = #${'{'}name}
+        WHERE user_id = #${'{'}user_id}
+			" />
+			</code> 
+		</pre>
 
     <%@ include file="../../common/footer.jsp" %>
 </div>

@@ -19,7 +19,8 @@
 	<!--begin::Sidebar Brand-->
 	<div class="sidebar-brand">
 	<!--begin::Brand Link-->
-		<a href="${path}/admin/home" class="brand-link">
+	<a href="${path}/adminHome.ad" class="brand-link">
+		<%-- <a href="${path}/admin/home" class="brand-link"> --%>
 			<!--begin::Brand Image-->
 			<img
 				src="${path}/resources/assets/img/AdminLTELogo.png"
@@ -29,7 +30,8 @@
 			<!--end::Brand Image-->
 			
 			<!--begin::Brand Text-->
-			<span class="brand-text fw-light">AdminLTE 4</span>
+			<!-- <span class="brand-text fw-light">AdminLTE 4</span> -->
+			<span class="brand-text fw-light">관리자 페이지</span>
 		<!--end::Brand Text-->
 		</a>
 		<!--end::Brand Link-->
@@ -48,7 +50,7 @@
 				id="navigation"
 			>
 				<li class="nav-item">
-					<a href="${path}/admin/home" class="nav-link active">
+					<a href="${path}/adminHome.ad" class="nav-link active">
 						<i class="nav-icon bi bi-speedometer"></i>
 						<p>Dashboard(통계)
 						</p>
@@ -56,7 +58,8 @@
 				</li>
 
 				<li class="nav-item">
-					<a href="#" class="nav-link" data-lte-toggle="treeview">
+					<!-- <a href="#" class="nav-link" data-lte-toggle="treeview"> -->
+					<a href="${path}/supportHome.adsp" class="nav-link" data-lte-toggle="treeview">
 						<i class="nav-icon bi bi-headset"></i>
 						<p>
 							고객지원
@@ -81,7 +84,8 @@
 				</li>
                   
 				<li class="nav-item">
-					<a href="#" class="nav-link" data-lte-toggle="treeview">
+					<%-- <a href="#" class="nav-link" data-lte-toggle="treeview"> --%>
+					<a href="${path}/getReservationList.ad" class="nav-link" data-lte-toggle="treeview">
 						<i class="nav-icon bi bi-calendar-check"></i>
 						<p>
 							예약 관리
@@ -90,7 +94,7 @@
 						</a>
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/admin/reservation/stats_dashboard" class="nav-link">
+							<a href="${path}/adminDashboard.ad" class="nav-link">
 								<i class="nav-icon bi bi-chevron-right"></i>
 								<p>예약 통계 대시보드</p>
 							</a>
@@ -105,7 +109,8 @@
 				</li>
 
 				<li class="nav-item">
-					<a href="#" class="nav-link" data-lte-toggle="treeview">
+					<a href="${path}/communityHome.adco" class="nav-link" data-lte-toggle="treeview">
+					<!-- <a href="#" class="nav-link" data-lte-toggle="treeview"> -->
 						<i class="nav-icon bi bi-chat-dots"></i>
 						<p>
 							커뮤니티 관리
@@ -129,7 +134,7 @@
 				</li>
 
 				<li class="nav-item">
-					<a href="#" class="nav-link" data-lte-toggle="treeview">
+					<a href="${path}/placeHome.adpl" class="nav-link" data-lte-toggle="treeview">
 						<i class="nav-icon bi bi-geo-alt"></i>
 						<p>
 							장소 관리

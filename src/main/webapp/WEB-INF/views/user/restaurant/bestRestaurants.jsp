@@ -24,12 +24,27 @@
 	  </div>
 	  
 	  <!-- 관련 SQL -->
-		SQL 쿼리 : 베스트 맛집 랭킹 쿼리
+		SQL 쿼리 : 베스트 맛집 랭킹 쿼리 (TOP6). 별점순 
 		<pre>
 			<code>
-			<c:out value="
+			<c:out escapeXml="true" value="
+				SELECT *
+				FROM (
+				    SELECT
+				        p.place_id,
+				        p.name,
+				        p.address,
+				        p.image_url,
+				        NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
+				    FROM place p
+				    LEFT JOIN review r
+				        ON r.place_id = p.place_id
+				    GROUP BY p.place_id, p.name, p.address, p.image_url
+				    ORDER BY NVL(AVG(r.rating), 0) DESC
+				)
+				WHERE ROWNUM <= 6;
 			" />
-			</code>
+			</code> 
 		</pre>
   	
       <%@ include file="../../common/footer.jsp" %>

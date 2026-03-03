@@ -14,10 +14,17 @@
 </head>
 <body>
    <div class="wrap">
-      <%@ include file="../../common/header.jsp" %>
+      <%@ include file="../../common/header.jsp"%>
       
-      <hr>
-      숙소
+      <%@ include file="./accommodationMenus.jsp"%>
+      
+     <button type="button" class="btn_area" onclick="location.href='${path}/accommodationDetail.ac'">
+	        숙소 이름
+	  </button>
+      
+      <div align="center">
+			<img src="${path}/resources/images/user/accommodation/accommodation.jpg" width="100%" alt="main">
+	  </div>
       
 		<!-- 관련 SQL -->
 		SQL 쿼리 : 내 주변 숙소 탐색

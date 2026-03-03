@@ -3,13 +3,13 @@ package spring.ict06team1.midpj.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import spring.ict06team1.midpj.dao.AccommodeationDAO;
+import spring.ict06team1.midpj.dao.AccommodationDAO;
 
 @Service
-public class AccommodeationServiceImpl implements AccommodeationService {
+public class AccommodationServiceImpl implements AccommodationService {
 	
 	@Autowired
-	private AccommodeationDAO dao;
+	private AccommodationDAO dao;
 	
 
 }

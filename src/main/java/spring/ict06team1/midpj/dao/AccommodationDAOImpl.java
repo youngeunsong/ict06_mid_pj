@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccommodeationDAOImpl implements AccommodeationDAO {
+public class AccommodationDAOImpl implements AccommodationDAO {
 	
 	@Autowired
 	private SqlSession session;

@@ -8,27 +8,29 @@ CREATE TABLE MEMBER (
     email			VARCHAR2(100) UNIQUE NOT NULL,
     name			VARCHAR2(50) NOT NULL,
     birth_date		DATE,
-    gender			CHAR(1) CHECK(gender IN ('M', 'F')),
+    gender			CHAR(1),
     phone			VARCHAR2(20),
     address			VARCHAR2(255),
     point_balance	NUMBER DEFAULT 0,
     role			VARCHAR2(20) DEFAULT 'USER',		--권한(일반사용자:'USER', 관리자:'ADMIN')
     status			VARCHAR2(20) DEFAULT 'ACTIVE',		--상태(active, quit 등) -> 불요시 삭제
-    created_at		TIMESTAMP DEFAULT SYSTIMESTAMP		--JAVA(DTO)에서는 joinDate로 생성
+    created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--JAVA(DTO)에서는 joinDate로 생성
+    CONSTRAINTS CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
 );
 SELECT * FROM MEMBER;
 
 -- 2. 장소 통합
 CREATE TABLE PLACE (
     place_id    NUMBER PRIMARY KEY,
-    place_type  VARCHAR2(20) NOT NULL CHECK(place_type IN ('REST','ACC','FEST')), -- 'REST', 'ACC', 'FEST' 값만 입력되는 제한조건
+    place_type  VARCHAR2(20) NOT NULL, -- 'REST', 'ACC', 'FEST' 값만 입력되는 제한조건
     name        VARCHAR2(100) NOT NULL,
     address     VARCHAR2(255),
 	view_count  NUMBER DEFAULT 0,
     latitude    NUMBER(10, 8),
     longitude   NUMBER(11, 8),
     image_url   VARCHAR2(500),
-    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 placeRegDate
+    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 placeRegDate
+    CONSTRAINTS CHK_PLACE_PLACETYPE CHECK(place_type IN ('REST','ACC','FEST'))
 );
 
 SELECT * FROM PLACE
@@ -44,7 +46,8 @@ CREATE TABLE RESTAURANT (
     description    CLOB,
     phone          VARCHAR2(20),
     category       VARCHAR2(50),
-    status         VARCHAR2(20) DEFAULT 'OPEN' CHECK(status IN('OPEN','CLOSED'))
+    status         VARCHAR2(20) DEFAULT 'OPEN',
+    CONSTRAINTS CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM RESTAURANT;
 
@@ -54,9 +57,15 @@ CREATE TABLE ACCOMMODATION (
     description      CLOB,
     phone            VARCHAR2(20),
     price            NUMBER,
-    status           VARCHAR2(20) DEFAULT 'OPEN' CHECK(status IN('OPEN','CLOSED'))
+    status			VARCHAR2(20) DEFAULT 'OPEN',
+    CONSTRAINTS CHK_ACCOMMODATION_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM ACCOMMODATION;
+
+SELECT r.*, p.name, p.address
+FROM RESERVATION r
+JOIN place p ON r.PLACE_ID = p.PLACE_ID
+WHERE r.RESERVATION_ID = 'R20260228010';
 
 -- 5. 축제 (PLACE 참조)
 CREATE TABLE FESTIVAL (
@@ -64,9 +73,13 @@ CREATE TABLE FESTIVAL (
     description		CLOB,
     start_date		DATE,					-- 축제 시작일
     end_date		DATE,					-- 축제 종료일
-    status			VARCHAR2(20) DEFAULT 'UPCOMING' CHECK(status IN('UPCOMING','ONGOING','ENDED'))
+    status			VARCHAR2(20) DEFAULT 'UPCOMING',
+	CONSTRAINTS CHK_FESTIVAL_STATUS CHECK(
+		status IN('UPCOMING','ONGOING','ENDED')
+			  AND start_date <= end_date
+		)
 );
-SELECT * FROM FESTIVAL;    
+SELECT * FROM FESTIVAL;
 
 -- 6. 축제 티켓 종류 테이블(추가?)
 CREATE TABLE FESTIVAL_TICKET (
@@ -89,9 +102,13 @@ CREATE TABLE RESERVATION (
     ticket_type		VARCHAR2(50),		-- 예약한 티켓 종류
     guest_count		NUMBER DEFAULT 1,
     request_note	CLOB,
-    status			VARCHAR2(20) DEFAULT 'RESERVED' CHECK(STATUS IN('PENDING','CONFIRMED','COMPLETED','CANCELLED','NOSHOW')),
+    status			VARCHAR2(20) DEFAULT 'PENDING',
     payment_id		VARCHAR2(50),
-    created_at		TIMESTAMP DEFAULT SYSTIMESTAMP	--DTO는 resDate
+    created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,	--DTO는 resDate
+    CONSTRAINTS CHK_RESERVATION_STATUS CHECK(
+    	STATUS IN('PENDING','RESERVED','COMPLETED','CANCELLED','NOSHOW')
+    		  AND (check_out IS NULL OR check_in <= check_out)
+    	)
 );
 SELECT * FROM RESERVATION;
 
@@ -102,8 +119,9 @@ CREATE TABLE PAYMENT (
     reservation_id VARCHAR2(50) REFERENCES RESERVATION(reservation_id),
     amount         NUMBER NOT NULL,
     payment_method VARCHAR2(50), 
-    payment_status VARCHAR2(20) CHECK(PAYMENT_STATUS IN('COMPLETED','CANCELLED')), 
-    created_at   TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 payDate
+    payment_status VARCHAR2(20), 
+    created_at   TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 payDate
+    CONSTRAINTS CHK_PAYMENT_PAYMENTSTATUS CHECK(PAYMENT_STATUS IN('PENDING','COMPLETED','CANCELLED'))
 );
 SELECT * FROM PAYMENT;
 
@@ -114,37 +132,66 @@ CREATE TABLE REVIEW (
     place_id       NUMBER REFERENCES PLACE(place_id),       -- target_id 대신 place_id 추천
     rating         NUMBER(1) CHECK(rating BETWEEN 1 AND 5),
     content        CLOB,
-    status         VARCHAR2(20) DEFAULT 'DISPLAY' CHECK(STATUS IN('DISPLAY','HIDDEN')),
-    created_at     TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 reviewDate
+    status         VARCHAR2(20) DEFAULT 'DISPLAY',
+    created_at     TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 reviewDate
+    CONSTRAINTS CHK_REVIEW_STATUS CHECK(STATUS IN('DISPLAY','HIDDEN')),
+    CONSTRAINTS CHK_REVIEW_RATING CHECK(RATING BETWEEN 1 AND 5)
 );
 SELECT * FROM REVIEW;
 
--- 10. IMAGE_STORE (다중 이미지 관리)
+-- 10. COMMUNITY(커뮤니티/사용자 게시판)
+CREATE TABLE COMMUNITY(
+	post_id			NUMBER PRIMARY KEY,
+	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+	title			VARCHAR2(200) NOT NULL,
+	content			CLOB NOT NULL,
+	category		VARCHAR2(50),
+	view_count		NUMBER DEFAULT 0,
+	status			VARCHAR2(20) DEFAULT 'DISPLAY',
+	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,
+	CONSTRAINTS CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+);
+
+-- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
+CREATE TABLE COMMUNITY_COMMENT(
+	comment_id		NUMBER PRIMARY KEY,
+	post_id			NUMBER REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
+	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+	content			VARCHAR2(1000) NOT NULL,
+	status			VARCHAR2(20) DEFAULT 'DISPLAY',
+	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,
+	CONSTRAINTS CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+);
+
+-- 12. IMAGE_STORE (다중 이미지 관리)
 CREATE TABLE IMAGE_STORE (
     image_id           NUMBER PRIMARY KEY,
     target_id          NUMBER NOT NULL, -- PLACE_ID 혹은 REVIEW_ID
     target_type        VARCHAR2(20) NOT NULL, -- 'PLACE', 'REVIEW'
     image_url          VARCHAR2(500) NOT NULL,
-    is_representative  CHAR(1) DEFAULT 'N' CHECK(IS_REPRESENTATIVE IN('Y','N')), 
+    is_representative  CHAR(1) DEFAULT 'N', 
     sort_order         NUMBER DEFAULT 0,
-    created_at         TIMESTAMP DEFAULT SYSTIMESTAMP	--DTO는 imgUploadDate
+    created_at         TIMESTAMP DEFAULT SYSTIMESTAMP,	--DTO는 imgUploadDate
+    CONSTRAINTS CHK_IMG_ISREPRESENTATIVE CHECK(IS_REPRESENTATIVE IN('Y','N'))
 );
 SELECT * FROM IMAGE_STORE;
 
--- 11. FAQ (자주 묻는 질문)
+-- 13. FAQ (자주 묻는 질문)
 CREATE TABLE FAQ (
     faq_id      NUMBER PRIMARY KEY,
+	admin_id    VARCHAR2(50) REFERENCES MEMBER(user_id), -- 관리자 user_id
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
     order_no    NUMBER DEFAULT 0,
-    visible     CHAR(1) DEFAULT 'Y' CHECK(VISIBLE IN('Y','N')),
-    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 faqRegDate
+    visible     CHAR(1) DEFAULT 'Y',
+    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
+    CONSTRAINTS CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
 SELECT * FROM FAQ;
-DROP TABLE FAQ;
 
--- 12. SURVEY (설문조사)
+-- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (
     survey_id       NUMBER PRIMARY KEY,
     user_id         VARCHAR2(50) REFERENCES MEMBER(user_id), -- 자료형 수정
@@ -157,52 +204,56 @@ CREATE TABLE SURVEY (
 );
 SELECT * FROM SURVEY;
 
--- 13. POINT_POLICY (포인트 지급 기준)
+-- 15. POINT_POLICY (포인트 지급 기준)
 CREATE TABLE POINT_POLICY (
-	POLICY_KEY VARCHAR2(50) PRIMARY KEY CHECK(POLICY_KEY IN('EARN_REVIEW_REWARD','EARN_DAILY_LOGIN','USE_BOOKING','USE_EXPIRED')),
+	POLICY_KEY VARCHAR2(50) PRIMARY KEY,
 	AMOUNT NUMBER NOT NULL,
-	DESCRIPTION VARCHAR2(100)
+	DESCRIPTION VARCHAR2(100),
+	CONSTRAINTS CHK_POINTPOLICY_POLICYKEY CHECK(POLICY_KEY IN('EARN_REVIEW','EARN_LOGIN','USE_BOOKING'))
 );
 SELECT * FROM POINT_POLICY;
 
--- 14. POINT (포인트 내역)
+-- 16. POINT (포인트 내역)
 CREATE TABLE POINT (
     point_id    NUMBER PRIMARY KEY,
     user_id     VARCHAR2(50) REFERENCES MEMBER(user_id),
     policy_key	VARCHAR2(50) REFERENCES POINT_POLICY(policy_key),
     amount      NUMBER NOT NULL,
-    type        VARCHAR2(10) CHECK(TYPE IN('EARN','USE')), -- EARN, USE
+    type        VARCHAR2(10), -- EARN, USE
     description VARCHAR2(255),
-    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 pointLogDate
+    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 pointLogDate
+    CONSTRAINTS CHK_POINT_TYPE CHECK(TYPE IN('EARN','USE'))
 );
 SELECT * FROM POINT;
 
--- 15. INQUIRY (1:1 문의)
+-- 17. INQUIRY (1:1 문의)
 CREATE TABLE INQUIRY (
     inquiry_id   NUMBER PRIMARY KEY,
     user_id      VARCHAR2(50) REFERENCES MEMBER(user_id),
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
-    status       VARCHAR2(20) DEFAULT 'PENDING' CHECK(status IN('PENDING', 'ANSWERED')), -- PENDING, ANSWERED
+    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
-    answered_at   TIMESTAMP DEFAULT SYSTIMESTAMP -- 답변 일시
+    answered_at   TIMESTAMP DEFAULT SYSTIMESTAMP, -- 답변 일시
+    CONSTRAINTS CHK_INQUIRY_STATUS CHECK(status IN('PENDING', 'ANSWERED'))
 );
 SELECT * FROM INQUIRY;
 
--- 16. NOTICE (공지사항)
+-- 18. NOTICE (공지사항)
 CREATE TABLE NOTICE (
     notice_id    NUMBER PRIMARY KEY,
     admin_id     VARCHAR2(50) REFERENCES MEMBER(user_id), -- 관리자 user_id
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
     view_count   NUMBER DEFAULT 0,
-    is_top       CHAR(1) DEFAULT 'N' CHECK(IS_TOP IN('Y','N')), -- 상단 고정 여부
-    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 noticeRegDate
+    is_top       CHAR(1) DEFAULT 'N', -- 상단 고정 여부
+    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 noticeRegDate
+    CONSTRAINTS CHK_NOTICE_ISTOP CHECK(IS_TOP IN('Y','N'))
 );
 SELECT * FROM NOTICE;
 
--- 17. FAVORITE (즐겨찾기 / 북마크)
+-- 19. FAVORITE (즐겨찾기 / 북마크)
 CREATE TABLE FAVORITE (
     favorite_id  NUMBER PRIMARY KEY,
     user_id      VARCHAR2(50) REFERENCES MEMBER(user_id),
@@ -212,7 +263,7 @@ CREATE TABLE FAVORITE (
 );
 SELECT * FROM FAVORITE;
 
--- 18. SEARCH_HISTORY(최근 검색어)
+-- 20. SEARCH_HISTORY(최근 검색어)
 CREATE TABLE SEARCH_HISTORY (
     history_id   NUMBER PRIMARY KEY,
     user_id      VARCHAR2(50) REFERENCES MEMBER(user_id),
@@ -232,6 +283,8 @@ CREATE SEQUENCE SEQ_IMAGE START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_FAQ START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_INQUIRY START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_NOTICE START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_POST START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_COMMENT START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_SURVEY START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_POINT START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_FAVORITE START WITH 1 INCREMENT BY 1;
@@ -260,7 +313,7 @@ BEFORE INSERT OR UPDATE ON FESTIVAL
 FOR EACH ROW
 BEGIN
     IF :NEW.end_date < TRUNC(SYSDATE) THEN
-        :NEW.status := 'CLOSED';
+        :NEW.status := 'ENDED';
     ELSIF :NEW.start_date > TRUNC(SYSDATE) THEN
         :NEW.status := 'UPCOMING';
     ELSE
@@ -268,7 +321,47 @@ BEGIN
     END IF;
 END;
 
---4) FAQ_ID 자동생성 트리거
+--4) FAQ, NOTICE 데이터 수정 시 admin 계정인지 검사하는 프로시저, 트리거
+--ADMIN AUTHORIZATION 트리거 생성
+CREATE OR REPLACE PROCEDURE PROC_CHECK_ADMIN_AUTH (
+    p_admin_id IN VARCHAR2
+) IS
+    v_role VARCHAR2(20);
+BEGIN
+    -- 1. 아이디 형식 체크 (admin+숫자)
+    IF NOT REGEXP_LIKE(p_admin_id, '^admin[0-9]+$') THEN
+        RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 아이디 형식이 올바르지 않습니다. (예: admin01)');
+    END IF;
+
+    -- 2. 역할(role) 체크
+    SELECT role INTO v_role FROM MEMBER WHERE user_id = p_admin_id;
+    IF v_role != 'ADMIN' THEN
+        RAISE_APPLICATION_ERROR(-20002, '오류: 관리자 권한이 없는 사용자입니다.');
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20003, '오류: 등록되지 않은 사용자입니다.');
+END;
+/
+
+-- FAQ용 트리거
+CREATE OR REPLACE TRIGGER TRG_FAQ_ADMIN_CHECK
+BEFORE INSERT OR UPDATE ON FAQ FOR EACH ROW
+BEGIN
+    PROC_CHECK_ADMIN_AUTH(:NEW.admin_id);
+END;
+/
+
+-- NOTICE용 트리거
+CREATE OR REPLACE TRIGGER TRG_NOTICE_ADMIN_CHECK
+BEFORE INSERT OR UPDATE ON NOTICE FOR EACH ROW
+BEGIN
+    PROC_CHECK_ADMIN_AUTH(:NEW.admin_id);
+END;
+/
+
+--5) FAQ_ID 자동생성 트리거
 CREATE OR REPLACE TRIGGER TRG_FAQ_ID
 BEFORE INSERT ON FAQ
 FOR EACH ROW
@@ -279,7 +372,7 @@ BEGIN
 END;
 
 --------------------------------------------------
--- 테이블 초기화용 (참조 관계 역순으로 삭제)
+-- 테이블 삭제 (참조 관계 역순)
 --------------------------------------------------
 -- 1. 자식 테이블
 DROP TABLE SEARCH_HISTORY;

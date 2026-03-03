@@ -27,22 +27,35 @@
 		SQL 쿼리 : 베스트 맛집 랭킹 쿼리 (TOP6). 별점순 
 		<pre>
 			<code>
-			<c:out escapeXml="true" value="
-				SELECT *
-				FROM (
-				    SELECT
-				        p.place_id,
-				        p.name,
-				        p.address,
-				        p.image_url,
-				        NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
-				    FROM place p
-				    LEFT JOIN review r
-				        ON r.place_id = p.place_id
+			<c:out value="
+			SELECT * FROM (
+			    SELECT 
+			        p.place_id, p.name, p.address, p.view_count, p.image_url,
+			        r.category, r.status
+			    FROM PLACE p
+			    JOIN RESTAURANT r ON p.place_id = r.restaurant_id
+			    WHERE p.place_type = 'REST' AND r.status = 'OPEN'
+			    ORDER BY p.view_count DESC, p.created_at DESC
+			) WHERE ROWNUM <= 10
+			" />
+			</code>
+		</pre>
+		SQL 쿼리 : 실시간 베스트 맛집 랭킹 쿼리
+		<pre>
+			<code>
+			<c:out value="
+				SELECT * FROM (
+				    SELECT 
+				        p.place_id, p.name, p.address, p.image_url,
+				        COUNT(v.log_id) AS weekly_views  -- 최근 7일간의 카운트
+				    FROM PLACE p
+				    JOIN PLACE_VIEW_LOG v ON p.place_id = v.place_id
+				    WHERE v.view_date >= SYSDATE - 7  -- 최근 7일 데이터만 필터링
+				      AND p.place_type = 'REST'
 				    GROUP BY p.place_id, p.name, p.address, p.image_url
-				    ORDER BY NVL(AVG(r.rating), 0) DESC
-				)
-				WHERE ROWNUM <= 6;
+				    ORDER BY weekly_views DESC
+				) WHERE ROWNUM <= 10;
+
 			" />
 			</code> 
 		</pre>

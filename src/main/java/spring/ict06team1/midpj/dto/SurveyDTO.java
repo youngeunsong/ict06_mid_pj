@@ -1,5 +1,7 @@
 package spring.ict06team1.midpj.dto;
 
+import java.sql.Timestamp;
+
 public class SurveyDTO {
 
 	private int survey_id;
@@ -9,13 +11,14 @@ public class SurveyDTO {
 	private String inconvenience;
 	private int info_reliability_score;
 	private String improvements;
+	private Timestamp surveyDate;
 
 	public SurveyDTO() {
 		super();
 	}
 
 	public SurveyDTO(int survey_id, String user_id, int nps_score, int satisfaction_score, String inconvenience,
-			int info_reliability_score, String improvements) {
+			int info_reliability_score, String improvements, Timestamp surveyDate) {
 		super();
 		this.survey_id = survey_id;
 		this.user_id = user_id;
@@ -24,6 +27,7 @@ public class SurveyDTO {
 		this.inconvenience = inconvenience;
 		this.info_reliability_score = info_reliability_score;
 		this.improvements = improvements;
+		this.surveyDate = surveyDate;
 	}
 
 	public int getSurvey_id() {
@@ -82,11 +86,20 @@ public class SurveyDTO {
 		this.improvements = improvements;
 	}
 
+	public Timestamp getSurveyDate() {
+		return surveyDate;
+	}
+
+	public void setSurveyDate(Timestamp surveyDate) {
+		this.surveyDate = surveyDate;
+	}
+
 	@Override
 	public String toString() {
 		return "SurveyDTO [survey_id=" + survey_id + ", user_id=" + user_id + ", nps_score=" + nps_score
 				+ ", satisfaction_score=" + satisfaction_score + ", inconvenience=" + inconvenience
-				+ ", info_reliability_score=" + info_reliability_score + ", improvements=" + improvements + "]";
+				+ ", info_reliability_score=" + info_reliability_score + ", improvements=" + improvements
+				+ ", surveyDate=" + surveyDate + "]";
 	}
-	
+
 }

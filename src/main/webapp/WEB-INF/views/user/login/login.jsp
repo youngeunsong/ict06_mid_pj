@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
 
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
-<script src="${path}/resources/js/user/login.js" defer></script>
 
 </head>
 <body>
@@ -30,7 +29,7 @@
 			        <div class="login_input_container">
 			        	<div class="login_group">
 			                <i class="fa-regular fa-user"></i>
-			                <input type="text" name="user_id" id="user_id" placeholder="아이디" required>
+			                <input type="text" name="user_id" id="user_id" placeholder="아이디" required autofocus>
 			            </div>
 			
 			            <div class="login_group">
@@ -59,6 +58,7 @@
 	</code></pre>
       
       <%@ include file="../../common/footer.jsp" %>
+      <script src="${path}/resources/js/user/login.js" defer></script>
    </div>
 </body>
 </html>

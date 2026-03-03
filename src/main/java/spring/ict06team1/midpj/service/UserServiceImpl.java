@@ -108,6 +108,8 @@ public class UserServiceImpl implements UserService {
 		// 세션ID 설정(중요)
 		if(selectCnt == 1) {
 			request.getSession().setAttribute("sessionID", user_id);
+			//브라우저 종료 시 세션 무효화(자동 로그아웃 처리. 30분=1800초 기준)
+			request.getSession().setMaxInactiveInterval(1800);
 			
 		}
 		model.addAttribute("selectCnt", selectCnt);

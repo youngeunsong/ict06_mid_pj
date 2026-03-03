@@ -27,9 +27,27 @@
 		SQL 쿼리 : 지역별 베스트 맛집 랭킹 쿼리
 		<pre>
 			<code>
-			<c:out value="
+			<c:out escapeXml="true" value="
+				SELECT *
+				FROM (
+				    SELECT
+				        p.place_id,
+				        p.name,
+				        p.address,
+				        p.image_url,
+				        p.view_count,
+				        NVL(AVG(r.rating), 0)  AS avg_rating,
+				        COUNT(r.review_id)     AS review_count
+				    FROM place p
+				    LEFT JOIN review r
+				        ON r.place_id = p.place_id
+				       AND r.status = 'ACTIVE'
+				    GROUP BY p.place_id, p.name, p.address, p.image_url, p.view_count
+				    ORDER BY p.view_count DESC, NVL(AVG(r.rating), 0) DESC
+				)
+				WHERE ROWNUM &lt <= 6;
 			" />
-			</code>
+			</code> <!-- &lt : < 부등호  -->
 		</pre>
   	
       <%@ include file="../../common/footer.jsp" %>

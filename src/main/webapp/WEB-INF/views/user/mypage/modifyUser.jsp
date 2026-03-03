@@ -86,6 +86,15 @@
 	FROM MEMBER
 	WHERE user_id = #${'{'}userId}
 	</code></pre>
+	
+	SQL 쿼리 : 회원정보 인증 및 회원 상세 정보 가져오기
+  		<pre>
+			<code>
+			<c:out escapeXml="true" value="
+		        SELECT * FROM MEMBER WHERE user_id = #${'{'}user_id}
+			" />
+			</code> 
+		</pre>
       
       <%@ include file="../../common/footer.jsp" %>
    </div>

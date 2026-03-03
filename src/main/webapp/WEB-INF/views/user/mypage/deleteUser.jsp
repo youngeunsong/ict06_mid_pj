@@ -76,11 +76,15 @@
       
       <!-- 관련 SQL -->
     SQL 쿼리 : 회원 탈퇴 
-   	<pre><code>
-   	UPDATE MEMBER
-    SET status = 'QUIT'
-    WHERE user_id = #${'{'}userId}
-	</code></pre>
+   		<pre>
+			<code>
+			<c:out escapeXml="true" value="
+		        UPDATE MEMBER 
+        SET status = 'OUT' 
+        WHERE user_id = #${'{'}user_id}
+			" />
+			</code> 
+		</pre>
       
       <%@ include file="../../common/footer.jsp" %>
    </div>

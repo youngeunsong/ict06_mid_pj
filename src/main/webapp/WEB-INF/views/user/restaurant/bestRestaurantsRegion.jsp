@@ -28,6 +28,19 @@
 		<pre>
 			<code>
 			<c:out value="
+			SELECT * FROM (
+			    SELECT 
+			        p.name, p.address, 
+			        ROUND(AVG(rv.rating), 1) as avg_rating,
+			        COUNT(rv.review_id) as review_cnt
+			    FROM PLACE p
+			    JOIN REVIEW rv ON p.place_id = rv.place_id
+			    WHERE p.address LIKE '%마포구%' -- 특정 지역
+			      AND p.place_type = 'REST'
+			    GROUP BY p.place_id, p.name, p.address
+			    HAVING COUNT(rv.review_id) >= 5 -- 리뷰 최소 5개 이상인 곳만
+			    ORDER BY avg_rating DESC, review_cnt DESC
+			) WHERE ROWNUM <= 10;
 			" />
 			</code>
 		</pre>

@@ -21,7 +21,7 @@
 		<!-- 웹 헤더바 s -->
 	    <div class="collapse navbar-collapse" id="topNav">
 	      <!-- 검색바 (중앙) -->
-	      <form class="d-flex flex-grow-1 mx-lg-3 my-2 my-lg-0" role="search" action="/search" method="get">
+	      <form class="d-flex flex-grow-1 mx-lg-3 my-2 my-lg-0" role="search" action="/search.do" method="get">
 	        <div class="input-group">
 	          <span class="input-group-text bg-white border-end-0">🔍</span>
 	          <input class="form-control border-start-0" type="search" name="keyword"

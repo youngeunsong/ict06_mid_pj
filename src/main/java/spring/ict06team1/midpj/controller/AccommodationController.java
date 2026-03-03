@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import spring.ict06team1.midpj.service.AccommodeationServiceImpl;
+import spring.ict06team1.midpj.service.AccommodationServiceImpl;
 
 @Controller
 public class AccommodationController {
@@ -21,7 +21,7 @@ public class AccommodationController {
 	private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 	
 	@Autowired
-	private AccommodeationServiceImpl service;
+	private AccommodationServiceImpl service;
 	
 	//[accommodation] ----------------------------------------------------------------------------------------
 	//[accommodation] 숙소 페이지로 이동

@@ -1,5 +1,5 @@
 package spring.ict06team1.midpj.dao;
 
-public interface AccommodeationDAO {
+public interface AccommodationDAO {
 
 }

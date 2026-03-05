@@ -15,7 +15,7 @@ public class PlaceDTO {
 	private int longitude;
 	private String image_url;
 	
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp placeRegDate;
 
 	public PlaceDTO() {

@@ -29,12 +29,14 @@ public class AdminServiceImpl implements AdminService {
 		//1) parameter값 수집(검색어, 예약상태)
 		String keyword = request.getParameter("keyword");
 		String status = request.getParameter("status");
+		String placeType = request.getParameter("placeType");
 		
 		//2) DAO 호출
 		//검색조건 담을 map 생성
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("keyword", keyword);
         map.put("status", status);
+        map.put("placeType", placeType);
 		
 		//전체 조회
 		List<ReservationDTO> list = admindao.getReservationList(map);
@@ -43,6 +45,7 @@ public class AdminServiceImpl implements AdminService {
 		//3) Model에 담아서 jsp로 전달
 		model.addAttribute("list", list);
 		model.addAttribute("status", status);
+		model.addAttribute("placeType", placeType);
 	}
 
 	//1-2. 예약 상세페이지 조회

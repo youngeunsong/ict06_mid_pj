@@ -24,7 +24,6 @@
 
 		<!-- ================= SIDEBAR ================= -->
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
-
 		<!-- ================= CONTENT ================= -->
 		<!-- 컨텐츠 시작 -->
 		<div class="content-wrapper">
@@ -55,8 +54,6 @@
 			</code>
 		</pre>
 	</div>
-	
-	<!-- ================= JS ================= -->
 </body>
 <!--end::Body-->
 </html>

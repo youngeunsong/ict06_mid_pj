@@ -22,7 +22,6 @@
 
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
-
 		<!-- ================= SIDEBAR ================= -->
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 

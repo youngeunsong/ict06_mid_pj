@@ -57,9 +57,7 @@
 		<!-- 관련 SQL 끝 -->
 	
 	</div>
-	<!--end::App Wrapper-->
-	
-	<!-- ================= JS ================= -->
+	<!--end::div Wrapper-->
 </body>
 <!--end::Body-->
 </html>

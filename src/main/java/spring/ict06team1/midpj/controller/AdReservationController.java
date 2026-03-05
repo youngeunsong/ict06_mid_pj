@@ -30,24 +30,21 @@ public class AdReservationController {
 	// [예약 관리]------------------------------------------
 	// 1. 예약 조회
 	// 1-1. 예약목록 전체 조회, 검색/필터
-//	@GetMapping("/admin/reservation/list")
 	@RequestMapping("/getReservationList.ad")
 	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-//		logger.info("[url => /admin/reservation/list]");
 		logger.info("[url => /getReservationList.ad]");
 		adminService.getReservationList(request, response, model);
-		return "admin/reservation/list";
+		
+		return "admin/reservation/reservationList";
 	}
 
 	// 1-2. 예약 상세페이지 조회
-//	@GetMapping("/admin/reservation/detail")
 	@RequestMapping("/getReservationDetail.ad")
 	// 페이지 이동 없이 데이터 바로 리턴
 	@ResponseBody
 	public ReservationDTO getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-//		logger.info("[url => /admin/reservation/detail]");
 		logger.info("[url => /getReservationDetail.ad]");
 		adminService.getReservationDetail(request, response, model);
 		ReservationDTO dto = (ReservationDTO) request.getAttribute("dto");
@@ -57,12 +54,10 @@ public class AdReservationController {
 
 	// 2. 예약 변경
 	// 2-1. 예약상태 변경
-//	@PostMapping("/admin/reservation/updateStatus")
 	@PostMapping("/updateReservationStatus.ad")
 	@ResponseBody
 	public String updateReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-//			logger.info("[url => /admin/reservation/updateStatus]");
 		logger.info("[url => /updateReservationStatus.ad]");
 		adminService.modifyReservationStatus(request, response, model);
 

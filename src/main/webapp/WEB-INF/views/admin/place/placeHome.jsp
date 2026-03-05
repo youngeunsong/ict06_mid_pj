@@ -23,6 +23,8 @@
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
 
+<!-- TODO: 지워도 되는 충돌 -->
+<!-- <<<<<<< HEAD -->
 		<!-- ================= SIDEBAR ================= -->
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 

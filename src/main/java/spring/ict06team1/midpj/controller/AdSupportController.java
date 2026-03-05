@@ -38,7 +38,7 @@ public class AdSupportController {
 	public String inquiryFaqList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /inquiryFaqList.adsp]");
-		return "admin/inquiryFaqList";
+		return "admin/inquiry/inquiryFaqList";
 	}
 
 	// [고객지원] 1:1 문의 상세

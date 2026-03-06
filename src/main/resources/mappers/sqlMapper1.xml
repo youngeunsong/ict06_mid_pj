@@ -34,25 +34,40 @@
 
 	<!-- 1-1. 예약목록 전체 조회 -->
 	<select id="getReservationList" parameterType="map" resultMap="reservationMap">
-		SELECT * FROM RESERVATION
+		SELECT R.reservation_id, R.user_id, R.place_id,
+			   TRUNC(R.check_in) AS check_in,
+			   TRUNC(R.check_out) AS check_out,
+			   R.visit_time, R.ticket_type, R.guest_count,
+			   R.request_note, R.status, R.payment_id, R.created_at,
+			   P.name, P.address, P.place_type
+		FROM RESERVATION R
+		LEFT JOIN PLACE P
+		ON R.place_id = P.place_id
 		<where>
 			<if test="keyword != null and keyword != ''">
-				(user_id LIKE '%'||#{keyword}||'%' OR reservation_id LIKE '%'||#{keyword}||'%')
+				(R.user_id LIKE '%'||#{keyword}||'%' OR R.reservation_id LIKE '%'||#{keyword}||'%')
 			</if>
 			<if test="status != null and status != ''">
-				AND status = #{status}
+				AND R.status = #{status}
+			</if>
+			<if test="placeType != null and placeType != ''">
+				AND P.place_type = #{placeType}
 			</if>
 		</where>
-		ORDER BY created_at DESC
+		ORDER BY R.created_at DESC
 	</select>
 	
 	<!-- 1-2. 예약 상세 조회 -->
 	<select id="getReservationDetail" parameterType="String" resultMap="reservationMap">
-		SELECT R.*,
-			   P.NAME,
-			   P.ADDRESS
+		SELECT R.reservation_id, R.user_id, R.place_id,
+			   TRUNC(R.check_in) AS check_in,
+			   TRUNC(R.check_out) AS check_out,
+			   R.visit_time, R.ticket_type, R.guest_count,
+			   R.request_note, R.status, R.payment_id, R.created_at,
+			   P.name, P.address, P.place_type
 		FROM RESERVATION R
-		JOIN PLACE P ON R.PLACE_ID = P.PLACE_ID
+		LEFT JOIN PLACE P
+		ON R.place_id = P.place_id
 		WHERE R.RESERVATION_ID = #{reservation_id}
 	</select>
 	

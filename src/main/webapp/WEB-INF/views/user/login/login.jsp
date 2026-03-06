@@ -51,11 +51,17 @@
       
       <!-- 관련 SQL -->
       SQL 쿼리 : 로그인  
-  	<pre><code>
-  	SELECT count(*) FROM MEMBER
-     WHERE user_id = #${'{'}user_id}
-	   AND password = #${'{'}password}
-	</code></pre>
+  		<pre>
+			<code>
+			<c:out escapeXml="true" value="
+		         SELECT COUNT(*) 
+        FROM MEMBER
+        WHERE user_id = #${'{'}user_id} 
+          AND password = #${'{'}password}
+          AND status = 'ACTIVE'
+			" />
+			</code> 
+		</pre>
       
       <%@ include file="../../common/footer.jsp" %>
       <script src="${path}/resources/js/user/login.js" defer></script>

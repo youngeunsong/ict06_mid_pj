@@ -41,4 +41,6 @@ public interface UserService {
     public List<MemberDTO> getUserList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
     
+
+    
 }

@@ -27,7 +27,7 @@ public class UserController {
 	@RequestMapping("/main.do")
 	public String main(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /main >>>");
+		logger.info("<<< url => /main.do >>>");
 
 		return "common/main";
 	}
@@ -233,13 +233,7 @@ public class UserController {
 		return "user/inquiry/inquiry";
 	}
 	
-	// 커뮤니티에만 공지를 넣기로 했던 것으로 기억해서 주석 처리했습니다. 혹시 추후 기능 추가 시 주석 해제하고 사용하면 될 것 같습니다.
-//	// [고객지원] 공지 - notice 페이지
-//	@RequestMapping("/notice.do")	
-//	public String notice(HttpServletRequest request, HttpServletResponse response, Model model) 
-//			throws ServletException, IOException {
-//		logger.info("<<< url => notice.do>>>");
-//		
-//		return "user/notice/notice";
-//	}
+	
+	
+
 }

@@ -10,9 +10,9 @@ public class ReservationDTO {
 	private String reservation_id;
 	private String user_id;
 	private int place_id;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Date check_in;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Date check_out;
 	private String visit_time;
 	private String ticket_type;
@@ -20,7 +20,7 @@ public class ReservationDTO {
 	private String request_note;
 	private String status;
 	private String payment_id;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp resDate;
 	private PlaceDTO placeDTO;
 

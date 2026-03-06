@@ -60,7 +60,7 @@
 		</div>
 		
 		 <!-- 관련 SQL -->
-	    SQL 쿼리 : 회원 정보 수정 
+	    SQL 쿼리 : 즐겨찾기 목록 조회 
 	   	<pre><code>
 	   	SELECT
 	        f.favorite_id,

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+/* main.css */
+
+body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+/* 최상단 버튼 css 설정 */
+.chip-tabs {
+	display: flex;
+    width: 100%;
+}
+
+.chip-tabs .btn {
+	flex: 1;
+	text-align: center;
+    border-radius: 6px;
+}
+
+.chip-tabs .btn.active {
+	background-color: #198754;
+	color: white;
+}

@@ -24,17 +24,32 @@
 	  </div>
 	  
 	  <!-- 관련 SQL -->
-		SQL 쿼리 : 테마별 맛집 랭킹 쿼리
+		SQL 쿼리 : 베스트 맛집 랭킹 쿼리 (테마별 TOP 6)
 		<pre>
 			<code>
-			<c:out value="
-				SELECT p.name, r.category, p.view_count
-				FROM PLACE p
-				JOIN RESTAURANT r ON p.place_id = r.restaurant_id
-				WHERE r.category = '#${'{'}category}'
-				ORDER BY p.view_count DESC;
+			<c:out escapeXml="true" value="
+				SELECT *
+				FROM (
+				    SELECT
+				        p.place_id,
+				        p.name,
+				        p.address,
+				        p.image_url,
+				        NVL(AVG(r.rating), 0)  AS avg_rating,
+				        COUNT(r.review_id)     AS review_count
+				    FROM place p
+				    JOIN restaurant rt
+				        ON rt.restaurant_id = p.place_id   
+				    LEFT JOIN review r
+				        ON r.place_id = p.place_id
+				       AND r.status = 'ACTIVE'            
+				    WHERE rt.category = :category          
+				    GROUP BY p.place_id, p.name, p.address, p.image_url
+				    ORDER BY NVL(AVG(r.rating), 0) DESC, COUNT(r.review_id) DESC
+				)
+				WHERE ROWNUM <= 6;
 			" />
-			</code>
+			</code> 
 		</pre>
   	
       <%@ include file="../../common/footer.jsp" %>

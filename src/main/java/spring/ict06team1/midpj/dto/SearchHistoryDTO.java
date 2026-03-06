@@ -4,10 +4,10 @@ import java.sql.Timestamp;
 
 public class SearchHistoryDTO {
 
-	private int history_id;
-	private String user_id;
-	private String keyword;
-	private Timestamp searchDate;
+	private int history_id;       // -- 검색 기록 번호 (PK, 시퀀스)
+	private String user_id;       // -- 사용자 ID(FK)  
+	private String keyword;       // -- 검색한 키워드
+	private Timestamp searchDate; // CREATED_AT -- 검색 일시 (DTO: searchDate)
 
 	public SearchHistoryDTO() {
 		super();

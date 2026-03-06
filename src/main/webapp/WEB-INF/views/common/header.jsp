@@ -21,11 +21,11 @@
 		<!-- 웹 헤더바 s -->
 	    <div class="collapse navbar-collapse" id="topNav">
 	      <!-- 검색바 (중앙) -->
-	      <form class="d-flex flex-grow-1 mx-lg-3 my-2 my-lg-0" role="search" action="/search.do" method="get">
+	      <form class="d-flex flex-grow-1 mx-lg-3 my-2 my-lg-0" role="search" action="${path}/search.do" method="get">
 	        <div class="input-group">
 	          <span class="input-group-text bg-white border-end-0">🔍</span>
-	          <input class="form-control border-start-0" type="search" name="keyword"
-	                 placeholder="맛집 · 숙소 · 축제 검색" aria-label="Search">
+		          <input class="form-control border-start-0" type="search" name="keyword"
+		                 placeholder="맛집 · 숙소 · 축제 검색" aria-label="Search">
 	        </div>
 	      </form>
 	
@@ -44,7 +44,6 @@
 	          <ul class="dropdown-menu">
 	            <li><a class="dropdown-item" href="${path}/FAQ.do">FAQ</a></li>
 	            <li><a class="dropdown-item" href="${path}/inquiry.do">1:1 문의</a></li>
-	            <%-- <li><a class="dropdown-item" href="${path}/notice.do">공지</a></li> --%> <!-- 커뮤니티 게시판의 공지만 쓰기로 했던 것으로 기억하여 주석처리 -->
 	          </ul>
 	        </li>
 	      </ul>

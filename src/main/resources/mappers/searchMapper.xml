@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="spring.ict06team1.midpj.dao.SearchDAO">  <!-- namespace="패키지명.인터페이스" -->
+  	<!-- 2-1. FESTIVAL DTO 매핑 -->
+  	<resultMap type="spring.ict06team1.midpj.dto.FestivalDTO" id="festResultMap">
+  		<result property="festival_id" column="FESTIVAL_ID"/>
+  		<result property="description" column="DESCRIPTION"/>
+  		<result property="start_date" column="START_DATE"/>
+  		<result property="end_date" column="END_DATE"/>
+  		<result property="status" column="STATUS"/>
+		
+		<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+			<result property="place_id" column="PLACE_ID"/>
+			<result property="place_type" column="PLACE_TYPE"/>
+			<result property="name" column="NAME"/>
+			<result property="address" column="ADDRESS"/>
+			<result property="view_count" column="VIEW_COUNT"/>
+			<result property="image_url" column="IMAGE_URL"/>
+			<result property="review_count" column="REVIEW_COUNT"/>
+		</association>  		
+  	</resultMap>
+  	
+  	
+  	<!-- 1. 맛집, 숙소, 축제 리스트 가져오기 -->
+	<select id="getSearchList" parameterType="java.lang.String" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+		SELECT p.PLACE_TYPE,
+		       p.NAME,
+		       p.ADDRESS,
+		       p.VIEW_COUNT,
+		       p.IMAGE_URL,
+		       COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+		FROM PLACE p
+		    LEFT JOIN REVIEW rv ON p.PLACE_ID = rv.PLACE_ID
+		WHERE (name LIKE '%'||#{keyword}||'%' OR
+		 			address LIKE '%'||#{keyword}||'%')
+		GROUP BY p.PLACE_ID,
+		         p.PLACE_TYPE,
+		         p.NAME,
+		         p.ADDRESS,
+		         p.VIEW_COUNT,
+		         p.IMAGE_URL,
+		         p.CREATED_AT
+		ORDER BY p.VIEW_COUNT DESC
+	</select>
+	
+	<!-- 2. 축제 상세 리스트 가져오기 -->
+	<select id="getFestList" parameterType="String" resultMap="festResultMap">
+		SELECT f.FESTIVAL_ID 
+			 , TO_CHAR(f.DESCRIPTION) AS DESCRIPTION
+			 , f.START_DATE 
+			 , f.END_DATE 
+			 , f.STATUS
+			 , p.PLACE_TYPE
+		     , p.NAME
+		     , p.ADDRESS
+		     , p.VIEW_COUNT
+		     , p.IMAGE_URL
+		     , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+		  FROM FESTIVAL f
+		 INNER JOIN PLACE p ON f.FESTIVAL_ID = p.PLACE_ID
+		  LEFT JOIN REVIEW rv  ON p.PLACE_ID = rv.PLACE_ID
+		 WHERE (p.NAME LIKE '%'||#{keyword}||'%' OR p.address LIKE '%'||#{keyword}||'%')
+		GROUP BY f.FESTIVAL_ID 
+		       , TO_CHAR(f.DESCRIPTION)
+		       , f.START_DATE 
+		       , f.END_DATE 
+		       , f.STATUS
+		       , p.PLACE_TYPE
+		       , p.NAME
+		       , p.ADDRESS
+		       , p.VIEW_COUNT
+		       , p.IMAGE_URL 
+		ORDER BY p.VIEW_COUNT DESC
+	</select>
+	
+	<!-- AJAX 카드 목록 -->
+	<select id="getSearchAjax" parameterType="map"
+	        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	    SELECT *
+		  FROM (
+		      SELECT innerQ.*, ROWNUM rn
+		      FROM (
+		          SELECT p.PLACE_ID
+		               , p.PLACE_TYPE
+		               , p.NAME
+		               , p.ADDRESS
+		               , p.VIEW_COUNT
+		               , p.IMAGE_URL
+		               , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+		            FROM PLACE p
+		            LEFT JOIN REVIEW rv ON p.PLACE_ID = rv.PLACE_ID
+		           WHERE (p.NAME LIKE '%'||#{keyword}||'%'
+		              OR  p.ADDRESS LIKE '%'||#{keyword}||'%')
+		          <if test="type != null and type != 'ALL'">
+		              AND p.PLACE_TYPE = #{type}
+		          </if>
+		           GROUP BY p.PLACE_ID, p.PLACE_TYPE, p.NAME,
+		                    p.ADDRESS, p.VIEW_COUNT, p.IMAGE_URL
+		          <choose>
+		              <when test="sort != null and sort == 'latest'">
+		                  ORDER BY p.PLACE_ID DESC
+		              </when>
+		              <otherwise>
+		                  ORDER BY p.VIEW_COUNT DESC
+		              </otherwise>
+		          </choose>
+		      ) innerQ
+		      WHERE ROWNUM &lt;= #{endRow}
+		  )
+		  WHERE rn &gt; #{startRow}
+	</select>
+	
+	<!-- AJAX 전체 건수 -->
+	<select id="getSearchAjaxCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	      FROM PLACE p
+	     WHERE (p.NAME    LIKE '%'||#{keyword}||'%'
+	        OR  p.ADDRESS LIKE '%'||#{keyword}||'%')
+	    <if test="type != 'ALL'">
+	        AND p.PLACE_TYPE = #{type}
+	    </if>
+	</select>
+	
+  </mapper>	

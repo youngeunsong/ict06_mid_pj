@@ -11,8 +11,8 @@ public class PlaceDTO {
 	private String name;
 	private String address;
 	private int view_count;
-	private int latitude;
-	private int longitude;
+	private int  latitude;
+	private int  longitude;
 	private String image_url;
 	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd HH:mm")
@@ -22,8 +22,8 @@ public class PlaceDTO {
 		super();
 	}
 	
-	public PlaceDTO(int place_id, String place_type, String name, String address, int view_count, int latitude,
-			int longitude, String image_url, Timestamp placeRegDate) {
+	public PlaceDTO(int place_id, String place_type, String name, String address, int view_count, int  latitude,
+			int  longitude, String image_url, Timestamp placeRegDate) {
 		super();
 		this.place_id = place_id;
 		this.place_type = place_type;
@@ -66,16 +66,16 @@ public class PlaceDTO {
 	public void setView_count(int view_count) {
 		this.view_count = view_count;
 	}
-	public int getLatitude() {
+	public int  getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(int latitude) {
+	public void setLatitude(int  latitude) {
 		this.latitude = latitude;
 	}
-	public int getLongitude() {
+	public int  getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(int longitude) {
+	public void setLongitude(int  longitude) {
 		this.longitude = longitude;
 	}
 	public String getImage_url() {

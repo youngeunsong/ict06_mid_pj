@@ -1,0 +1,613 @@
+--------------------------------------------------
+--주요기능별 SQL 쿼리 테스트
+--------------------------------------------------
+--PLACE, REST/ACC/FEST 데이터 랜덤 생성
+--PLACE.sql, RESTAURANT.sql, FESTIVAL.sql, ACCOMMODATION.sql 참고 
+
+--PLACE + REST/ACC/FEST 조인 데이터 뷰
+SELECT * FROM PLACE ORDER BY PLACE_ID;
+SELECT * FROM RESTAURANT ORDER BY RESTAURANT_ID;
+SELECT * FROM ACCOMMODATION ORDER BY ACCOMMODATION_ID;
+SELECT * FROM FESTIVAL ORDER BY FESTIVAL_ID;
+DELETE FROM FESTIVAL;
+
+CREATE OR REPLACE VIEW PLACE_ALL_DETAIL AS
+SELECT
+    -- [1] PLACE 공통 정보
+    P.PLACE_ID, 
+    P.PLACE_TYPE, 
+    P.NAME, 
+    P.ADDRESS, 
+    P.VIEW_COUNT,
+    P.LATITUDE, 
+    P.LONGITUDE, 
+    P.IMAGE_URL,
+    P.CREATED_AT,
+
+    -- [2] 타입별 설명 통합 (하나의 DESCRIPTION으로 합침)
+    CASE 
+        WHEN P.PLACE_TYPE = 'REST' THEN R.DESCRIPTION
+        WHEN P.PLACE_TYPE = 'ACC'  THEN A.DESCRIPTION
+        WHEN P.PLACE_TYPE = 'FEST' THEN F.DESCRIPTION
+    END AS DESCRIPTION,
+
+    -- [3] 타입별 연락처 통합
+    CASE 
+        WHEN P.PLACE_TYPE = 'REST' THEN R.PHONE
+        WHEN P.PLACE_TYPE = 'ACC'  THEN A.PHONE
+        ELSE NULL -- 축제는 연락처가 없을 경우 대비
+    END AS PHONE,
+
+    -- [4] 타입별 상태 통합
+    CASE 
+        WHEN P.PLACE_TYPE = 'REST' THEN R.STATUS
+        WHEN P.PLACE_TYPE = 'ACC'  THEN A.STATUS
+        WHEN P.PLACE_TYPE = 'FEST' THEN F.STATUS
+    END AS PLACE_STATUS,
+
+    -- [5] 타입별 고유 정보 (합칠 수 없는 정보들)
+    R.CATEGORY AS REST_CATEGORY,
+    A.PRICE    AS ACC_PRICE,
+    F.START_DATE AS FEST_START_DATE,
+    F.END_DATE   AS FEST_END_DATE
+
+FROM PLACE P
+LEFT JOIN RESTAURANT R ON P.PLACE_ID = R.RESTAURANT_ID
+LEFT JOIN ACCOMMODATION A ON P.PLACE_ID = A.ACCOMMODATION_ID
+LEFT JOIN FESTIVAL F ON P.PLACE_ID = F.FESTIVAL_ID;
+
+SELECT * FROM PLACE_ALL_DETAIL
+ORDER BY PLACE_ID;
+
+--(참고)PLACE+장소 타입별 조인
+SELECT P.PLACE_ID, P.NAME, P.ADDRESS, P.VIEW_COUNT,
+	   R.*
+FROM PLACE P
+JOIN RESTAURANT R ON P.PLACE_ID = R.RESTAURANT_ID
+WHERE P.PLACE_TYPE = 'REST'
+ORDER BY P.PLACE_ID;
+
+SELECT P.PLACE_ID, P.NAME, P.ADDRESS, P.VIEW_COUNT,
+	   A.*
+FROM PLACE P
+JOIN ACCOMMODATION A ON P.PLACE_ID = A.ACCOMMODATION_ID
+WHERE P.PLACE_TYPE = 'ACC'
+ORDER BY P.PLACE_ID;
+
+SELECT P.PLACE_ID, P.NAME, P.ADDRESS, P.VIEW_COUNT,
+	   F.*
+FROM PLACE P
+JOIN FESTIVAL F ON P.PLACE_ID = F.FESTIVAL_ID
+WHERE P.PLACE_TYPE = 'FEST'
+ORDER BY P.PLACE_ID;
+
+--------------------------------------------------
+--데이터 생성
+--------------------------------------------------
+--=====테스트 사용자 생성=====
+INSERT INTO MEMBER(user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user01', '1234', 'dskim@naver.com', '김다솜', '1994-03-02', 'F', '010-1111-2222', '서울시 서대문구', 1500, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user02', '1234', 'yesong@gmail.com', '송영은', '1996-07-07', 'F', '010-3333-4444', '경기도 성남시', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user03', '1234', 'cbsong@gmail.com', '송창범', '2000-02-26', 'M', '010-3333-4444', '인천시 연수구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user04', '1234', 'mscho@gmail.com', '조민수', '1991-02-03', 'M', '010-3333-4444', '경기도 부천시', 170000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user05', '1234', 'jwkim@gmail.com', '김재원', '1995-05-15', 'M', '010-3333-4444', '서울시 양천구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user06', '1234', 'hjsong@gmail.com', '송혜진', '1998-11-20', 'F', '010-3333-4444', '서울시 마포구', 3000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
+VALUES ('user07', '1234', 'jhjung@daum.net', '정준하', '2000-12-31', 'M', '010-7777-8888', '경기도 수원시', 50000, 'USER');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
+VALUES ('admin1', 'admin1234', 'admin1@travel.com', '관리자1', '1985-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
+INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
+VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
+SELECT * FROM MEMBER;
+
+--=====축제 티켓 샘플 데이터=====
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
+VALUES (SEQ_TICKET.NEXTVAL, 
+       (SELECT MIN(festival_id) FROM FESTIVAL), 
+       '1일권', 15000, 100, '강릉 커피축제 일반 입장권');
+
+-- 1) 첫 번째 축제(가장 작은 ID)에 '청소년권' 추가
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
+VALUES (SEQ_TICKET.NEXTVAL, 
+       (SELECT MIN(festival_id) FROM FESTIVAL), 
+       '청소년권', 10000, 50, '강릉 커피축제 청소년(중고생) 입장권');
+
+-- 2) 두 번째로 생성된 축제에 '종일권' 추가
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
+VALUES (SEQ_TICKET.NEXTVAL, 
+       (SELECT festival_id FROM (SELECT festival_id, ROW_NUMBER() OVER (ORDER BY festival_id) as rn FROM FESTIVAL) WHERE rn = 2), 
+       '종일권', 25000, 200, '서울 불꽃축제 유료석 종일권');
+
+-- 3) 세 번째로 생성된 축제에 '얼리버드권' 추가 (재고 적게 설정)
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
+VALUES (SEQ_TICKET.NEXTVAL, 
+       (SELECT festival_id FROM (SELECT festival_id, ROW_NUMBER() OVER (ORDER BY festival_id) as rn FROM FESTIVAL) WHERE rn = 3), 
+       '얼리버드', 12000, 10, '한정 수량 선착순 할인 티켓');
+
+-- 4) 가장 최근에 생성된 축제에 'VIP권' 추가
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
+VALUES (SEQ_TICKET.NEXTVAL, 
+       (SELECT MAX(festival_id) FROM FESTIVAL), 
+       'VIP권', 50000, 20, '전용 라운지 이용 포함 VIP 티켓');
+
+COMMIT;
+
+SELECT * FROM FESTIVAL_TICKET;
+
+--=====예약 및 결제 데이터=====
+--예약 데이터 생성
+SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
+DELETE FROM RESERVATION;
+
+SELECT check_in, TRUNC(check_in), TO_CHAR(check_in, 'YYYY-MM-DD HH24:MI:SS') FROM RESERVATION WHERE ROWNUM = 1;
+
+-- 1. [숙소] 2박 3일 여행 (기간형 막대 확인용)
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user01', 10, 2, 'RESERVED', SYSDATE+2, SYSDATE+4, SYSDATE-1);
+
+-- 2. [식당] 오늘 점심 예약 (오늘 날짜 확인용)
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', 50, 4, 'RESERVED', TRUNC(SYSDATE)+12/24, TRUNC(SYSDATE)+14/24, SYSDATE-2);
+
+-- 3. [축제] 어제 다녀온 축제 (과거/이용완료 확인용)
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', 90, 1, 'COMPLETED', SYSDATE-1, SYSDATE-1, SYSDATE-3);
+
+-- 4. [식당] 내일 저녁 결제대기 (노란색/대기 상태 확인용)
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user04', 55, 2, 'PENDING', SYSDATE+1, SYSDATE+1, SYSDATE);
+
+-- 5. [숙소] 지난주 취소 건 (빨간색/취소 상태 확인용)
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user05', 15, 2, 'CANCELLED', SYSDATE-7, SYSDATE-5, SYSDATE-10);
+
+--[테스트 타겟 1] 이용완료 숙소 (RESERVED -> COMPLETED로 변경)
+UPDATE RESERVATION SET STATUS = 'COMPLETED'
+WHERE STATUS = 'RESERVED' 
+AND CHECK_OUT < SYSDATE;
+
+--예약상태 변경(->CANCELLED)
+UPDATE RESERVATION
+SET STATUS = 'CANCELLED'
+WHERE RESERVATION_ID = 'RES_101'; -- 취소할 실제 ID 입력
+
+--예약상태 변경(체크인 날짜 지났는데 결제상태 PENDING인 경우 일괄 CANCELLED로 변경)
+UPDATE RESERVATION
+SET STATUS = 'CANCELLED'
+WHERE STATUS = 'PENDING'
+  AND CHECK_IN <= TRUNC(SYSDATE); -- 오늘 날짜 포함 이전 날짜들
+
+  
+--4) 결제 데이터 생성 (가장 최근 생성된 예약건들 연결)
+INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
+VALUES (NULL, 'user01', (SELECT MIN(reservation_id) FROM RESERVATION WHERE user_id='user01'), 150000, 'POINT', 'COMPLETED');
+
+-- [유형 1] user02: 숙소 예약, 카드 결제 완료
+INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
+VALUES (TO_CHAR(SYSDATE, 'YYYYMMDD') || '002', 'user02', 
+       (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user02'), 250000, 'CARD', 'COMPLETED');
+
+-- [유형 2] user03: 식당 예약, 카드 결제 실패/대기중
+INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
+VALUES (TO_CHAR(SYSDATE, 'YYYYMMDD') || '003', 'user03', 
+       (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user03'), 85000, 'CARD', 'CANCELLED');
+
+COMMIT;
+
+SELECT RESERVATION_ID, USER_ID, PLACE_ID, CHECK_IN, CHECK_OUT, GUEST_COUNT, STATUS, CREATED_AT FROM RESERVATION;
+SELECT * FROM PAYMENT;
+
+--=====리뷰 및 포인트 데이터=====
+--리뷰 작성
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 4, '음식은 맛있는데 주차가 조금 불편해요.');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 1, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '인생 맛집입니다! 강추!');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 2, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 2, '방음이 너무 안 돼서 잠을 설쳤어요.');
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
+VALUES (SEQ_REVIEW.NEXTVAL + 3, 'user05', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 5, '가족들과 좋은 추억 만들고 갑니다.');
+
+-- 1) 맛집(REST) 리뷰 추가: 평점 3~5점 분포
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user04', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 3, '맛은 평범한데 가격이 좀 비싸네요.');
+
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user05', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '사장님이 너무 친절하셔서 기분 좋게 먹고 왔습니다.');
+
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user06', (SELECT MAX(place_id) FROM PLACE WHERE place_type='REST'), 4, '웨이팅은 길었지만 기다린 보람이 있는 맛입니다.');
+
+-- 2) 숙소(ACC) 리뷰 추가: 평점 1~4점 분포 (불만 사항 포함)
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user01', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 1, '사진이랑 너무 달라요. 청결 상태가 최악입니다.');
+
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_id > 100 AND place_type='ACC'), 4, '전반적으로 깔끔하고 접근성이 좋습니다.');
+
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user07', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'), 3, '가격 대비 평범합니다. 재방문 의사는 글쎄요.');
+
+-- 3) 축제(FEST) 리뷰 추가: 평점 4~5점 분포
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'), 5, '아이들이 너무 좋아해요! 내년에도 또 오고 싶네요.');
+
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 4, '볼거리가 풍성해서 즐거웠습니다. 주차만 좀 더 편했으면.');
+
+COMMIT;
+
+--특정 평점 이하만 모아보기(예: 1~2점)
+SELECT user_id, rating, content, created_at
+FROM REVIEW
+WHERE rating <= 2
+ORDER BY created_at DESC;
+
+--포인트 적립 기준
+--(적립) 출석 체크(100포인트/일)
+INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
+VALUES ('EARN_LOGIN', 100, '일일 출석 체크 이벤트 보상');
+
+--(적립) 리뷰 작성(500포인트/건)
+INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
+VALUES ('EARN_REVIEW', 500, '리뷰 작성 시 500포인트 적립');
+
+--(사용) 예약 결제(DEFAULT 값 0, 발생 시 값 입력하도록 세팅)
+INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
+VALUES ('USE_BOOKING', 0, '숙소/식당 예약 시 포인트 차감');
+
+COMMIT;
+SELECT * FROM POINT_POLICY;
+
+-- 포인트 적립 이력
+-- 1) 기존 충돌 데이터가 있을 수 있으니 정리 (필요 시)
+DELETE FROM POINT;
+SELECT * FROM POINT;
+
+-- 2) 개별 INSERT 실행 (각각 실행되면서 시퀀스가 1씩 올라갑니다)
+-- [시나리오 1] user01의 3일 연속 출석 체크
+INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-2);
+
+INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-1);
+
+INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
+VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE);
+
+-- [시나리오 2] user02가 예약 시 2000포인트 사용 (차감은 - 처리)
+INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
+VALUES (SEQ_POINT.NEXTVAL, 'user02', 'USE_BOOKING', -2000, CURRENT_TIMESTAMP);
+
+COMMIT;
+
+SELECT * FROM POINT ORDER BY point_id DESC;
+
+--=====고객문의 및 즐겨찾기 데이터=====
+--FAQ
+SELECT * FROM FAQ;
+--dataset_faq.csv 파일 import
+
+--1:1 문의
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user01', '포인트 적립 누락', '리뷰 썼는데 포인트가 안 들어왔어요.', 'PENDING');
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '축제 일정 문의', '비가 와도 축제를 진행하나요?', 'ANSWERED');
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user06', '로그인 오류', '아이디를 찾고 싶습니다.', 'PENDING');
+
+--즐겨찾기
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'));
+INSERT INTO FAVORITE (favorite_id, user_id, place_id)
+VALUES (SEQ_FAVORITE.NEXTVAL, 'user04', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'));
+
+SELECT * FROM REVIEW;
+SELECT * FROM POINT;
+SELECT * FROM INQUIRY;
+SELECT * FROM FAVORITE;
+
+--------------------------------------------------
+--실행 테스트
+--------------------------------------------------
+--데이터 확인
+SELECT * FROM PLACE;	--1000건
+
+SELECT * FROM PLACE WHERE place_type='REST' ORDER BY PLACE_ID;	--563건	
+SELECT * FROM PLACE WHERE place_type='ACC' ORDER BY PLACE_ID;	--288건
+SELECT * FROM PLACE WHERE place_type='FEST'ORDER BY PLACE_ID;	--149건
+
+SELECT * FROM RESTAURANT;	--563
+SELECT * FROM ACCOMMODATION;	--288
+SELECT * FROM FESTIVAL;	--149
+
+
+--1) 장소 통합 검색
+-- [주요기능 1] 장소 통합 검색: 뷰(View)를 활용한 다중 테이블 데이터 집계
+SELECT 
+    V.PLACE_ID, 
+    V.NAME, 
+    V.PLACE_TYPE,
+    CASE 
+        WHEN V.PLACE_TYPE = 'ACC'  THEN TO_CHAR(V.ACC_PRICE, 'FM999,999') || '원'
+        WHEN V.PLACE_TYPE = 'REST' THEN V.REST_CATEGORY
+        WHEN V.PLACE_TYPE = 'FEST' THEN TO_CHAR(V.FEST_START_DATE, 'YYYY-MM-DD')
+        ELSE '정보 없음'
+    END AS ADDI_INFO,
+    NVL(AVG(R.RATING), 0) AS AVG_RATING,
+    COUNT(R.REVIEW_ID)    AS REVIEW_CNT
+FROM PLACE_ALL_DETAIL V
+LEFT JOIN REVIEW R ON V.PLACE_ID = R.PLACE_ID
+WHERE V.ADDRESS LIKE '%강릉%' 
+GROUP BY 
+    V.PLACE_ID,
+    V.NAME,
+    V.PLACE_TYPE,
+    V.ACC_PRICE,
+    V.REST_CATEGORY,
+    V.FEST_START_DATE
+ORDER BY AVG_RATING DESC;
+
+--2) 예약
+SELECT * FROM FESTIVAL_TICKET;
+SELECT * FROM RESERVATION;
+
+-- [Step 1] 재고 검증 및 행 잠금 (동시 예약 방지)
+SELECT TICKET_ID, DESCRIPTION FROM FESTIVAL_TICKET;
+SELECT STOCK FROM FESTIVAL_TICKET 
+WHERE TICKET_ID = :tid AND STOCK >= :qty 
+FOR UPDATE; -- 다른 사용자가 동시에 수정하지 못하도록 잠금
+--parameter value 입력 => :tid=TICKET_ID 값, :qty=구입할 개수(STOCK 이하여야 함)
+
+
+-- [Step 2] 예약 정보 등록 (Insert)
+INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, CHECK_IN, CHECK_OUT, GUEST_COUNT, STATUS, CREATED_AT)
+VALUES ('RES_' || SEQ_RES.NEXTVAL, :uid, :pid, TO_DATE(:checkin_date, 'YYYY-MM-DD'), TO_DATE(:checkout_date, 'YYYY-MM-DD'), :qty, 'RESERVED', CURRENT_TIMESTAMP);
+
+-- [Step 3] 실시간 재고 차감 (Update)
+UPDATE FESTIVAL_TICKET 
+SET STOCK = STOCK - :qty
+WHERE TICKET_ID = :tid;
+
+--모든 과정 성공 시 COMMIT, 하나라도 실패 시 ROLLBACK 처리
+--COMMIT하면 재고 차감 반영, 잠금 해제(FOR UPDATE)되어 다른 사용자가 해당 티켓 예약에 접근 가능
+COMMIT;
+ROLLBACK;
+
+--3) 예약처리 및 현황
+SELECT * FROM PLACE ORDER BY PLACE_ID;
+SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
+
+--[Step 1] 사용자가 선택한 숙소(place_id)의 특정 기간 내 예약 현황 조회
+--(캘린더에 '예약 불가' 표시를 하기 위한 데이터 추출)
+SELECT PLACE_ID, CHECK_IN, CHECK_OUT, STATUS
+FROM RESERVATION
+WHERE PLACE_ID = :selected_place_id
+  AND STATUS IN ('RESERVED', 'PENDING') -- 예약 확정 혹은 결제 대기 중인 건
+  --TRUNC(): 시간 초기화해 날짜만 비교
+  --과거 예약 제외
+  AND TRUNC(CHECK_IN) >= TRUNC(SYSDATE)
+ ORDER BY CHECK_IN ASC;
+ 
+--(참고)관리자 페이지에서 예약내역 전체 조회
+SELECT CHECK_IN, CHECK_OUT, STATUS
+FROM RESERVATION
+ORDER BY CHECK_IN;
+--WHERE CHECK_OUT < SYSDATE AND STATUS = 'RESERVED';
+
+--[Step 2] 체크아웃 일자가 지난 확정된 예약을 '완료' 상태로 일괄 변경
+UPDATE RESERVATION
+SET STATUS = 'COMPLETED'
+WHERE CHECK_OUT < SYSDATE AND STATUS = 'RESERVED';
+SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
+ROLLBACK;
+
+COMMIT;
+
+--[Step 3] 마이페이지용 통합 정보 조회(Join)
+--사용자 마이페이지에서 예약건별 상세 내역 조회
+SELECT 
+    R.RESERVATION_ID,
+    V.NAME AS PLACE_NAME,
+    V.PLACE_TYPE,
+    R.CHECK_IN,
+    R.CHECK_OUT,
+    R.STATUS AS RESERVATION_STATUS,
+    -- 이용 완료된(COMPLETED) 건에 대해서만 리뷰 작성 버튼 활성화 로직용
+    CASE WHEN R.STATUS = 'COMPLETED' THEN 'Y' ELSE 'N' END AS REVIEW_ELIGIBLE
+FROM RESERVATION R
+JOIN MEMBER M ON R.USER_ID = M.USER_ID
+JOIN PLACE_ALL_DETAIL V ON R.PLACE_ID = V.PLACE_ID -- 통합 뷰와 조인
+WHERE M.USER_ID = :logined_user_id
+ORDER BY R.CREATED_AT DESC;
+
+--4) 포인트
+SELECT * FROM MEMBER WHERE USER_ID = 'user01';
+SELECT * FROM POINT;
+
+--[Step 0-테스트 타겟] 존재하지 않는 ID(ghost_user)로 테스트하면 에러(ORA-02291)가 나야 정상
+INSERT INTO POINT (POINT_ID, USER_ID, AMOUNT, TYPE, DESCRIPTION)
+VALUES (SEQ_POINT.NEXTVAL, 'ghost_user', 500, 'EARN', '유령 회원 적립 시도');
+
+--[Step 1] 포인트 변동 이벤트 발생
+--(EARN case) 리뷰작성으로 적립
+INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS, CREATED_AT)
+VALUES (SEQ_REVIEW.NEXTVAL, 'user01', 101, 5, '숙소가 너무 깨끗하고 좋았어요!', 'DISPLAY', CURRENT_TIMESTAMP);
+
+--[Step 2,3] 포인트 log 생성 + 사용자 잔액 업데이트(트랜잭션;PL/SQL 사용)
+--테스트용 데이터
+CREATE OR REPLACE PROCEDURE SP_GIVE_POINT (
+    p_user_id IN VARCHAR2,
+    p_policy_key IN VARCHAR2
+) AS
+    v_amount NUMBER := 0;
+    v_user_exists NUMBER := 0;
+    v_current_balance NUMBER := 0;
+BEGIN
+    -- [1] 사용자 존재 여부 확인
+    SELECT COUNT(*) INTO v_user_exists FROM MEMBER WHERE USER_ID = p_user_id;
+    
+    IF v_user_exists = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('오류: 존재하지 않는 사용자 ID입니다.');
+        RETURN;
+    END IF;
+    
+    -- [2] 포인트 정책 금액 가져오기
+    SELECT AMOUNT INTO v_amount
+    FROM POINT_POLICY
+    WHERE POLICY_KEY = p_policy_key;
+    
+    -- [3] 잔액 부족 체크 (차감일 경우만)
+    -- 정책 키가 'USE_'로 시작하거나 금액(v_amount)이 음수인 경우 체크
+    SELECT NVL(POINT_BALANCE, 0) INTO v_current_balance 
+    FROM MEMBER WHERE USER_ID = p_user_id;
+
+    IF v_amount < 0 AND ABS(v_amount) > v_current_balance THEN
+        DBMS_OUTPUT.PUT_LINE('오류: 포인트 잔액 부족 (현재: ' || v_current_balance || ')');
+        RETURN;
+    END IF;
+
+    -- [4] 포인트 로그(POINT) 남기기
+    INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT)
+    VALUES (SEQ_POINT.NEXTVAL, p_user_id, p_policy_key, v_amount);
+
+    -- [5] 사용자 잔액(MEMBER) 업데이트
+    UPDATE MEMBER
+    SET POINT_BALANCE = NVL(POINT_BALANCE, 0) + v_amount
+    WHERE USER_ID = p_user_id;
+    
+    COMMIT; -- 모든 작업 성공 시 확정
+    DBMS_OUTPUT.PUT_LINE(p_user_id || '님 처리 완료. 변동금액: ' || v_amount);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('오류: 존재하지 않는 정책 키입니다: ' || p_policy_key);
+        ROLLBACK;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('알 수 없는 오류: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+--프로시저 실행
+CALL SP_GIVE_POINT('user01', 'EARN_REVIEW');
+
+COMMIT;
+SELECT * FROM MEMBER;
+
+--========================================
+--5) 통계
+--당일 주요 지표 집계 (신규가입자수, 예약건수, 매출액, 답변 대기중인 문의건수)
+SELECT
+    (SELECT COUNT(*) FROM MEMBER WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS NEW_USERS,
+    (SELECT COUNT(*) FROM RESERVATION WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS TODAY_RESERVATIONS,
+    (SELECT SUM(AMOUNT) FROM PAYMENT WHERE TRUNC(created_at) = TRUNC(SYSDATE) AND PAYMENT_STATUS = 'COMPLETED') AS TODAY_REVENUE,
+    (SELECT COUNT(*) FROM INQUIRY WHERE STATUS = 'PENDING') AS UNANSWERED_INQUIRIES
+FROM DUAL;
+
+--장소 유형별 누적 예약 건수 및 총 매출액
+SELECT 
+    -- 1. 장소 유형 표시 (NVL로 혹시 모를 NULL 방지)
+    NVL(P.PLACE_TYPE, '기타') AS "장소 유형", 
+    
+    -- 2. 해당 유형의 총 예약 건수
+    COUNT(R.RESERVATION_ID) AS "예약 건수",
+    
+    -- 3. 해당 유형의 매출 합계 (0원 처리 및 포맷팅)
+    TO_CHAR(NVL(SUM(PAY.AMOUNT), 0), 'L999,999,999') AS "총 매출액"
+FROM PLACE P
+LEFT JOIN RESERVATION R ON P.PLACE_ID = R.PLACE_ID
+LEFT JOIN PAYMENT PAY ON R.RESERVATION_ID = PAY.RESERVATION_ID 
+                      AND PAY.PAYMENT_STATUS = 'COMPLETED'
+GROUP BY P.PLACE_TYPE
+ORDER BY SUM(PAY.AMOUNT) DESC NULLS LAST;
+--========================================
+--6) 관리
+-- 전체 예약 내역 조회 (유저 정보 + 장소 정보 + 결제 수단 포함)
+SELECT 
+    R.RESERVATION_ID, 
+    M.NAME AS USER_NAME, 
+    P.NAME AS PLACE_NAME, 
+    P.PLACE_TYPE,
+    R.CHECK_IN, 
+    R.STATUS AS RES_STATUS,
+    PAY.PAYMENT_METHOD, 
+    PAY.AMOUNT
+FROM RESERVATION R
+JOIN MEMBER M ON R.USER_ID = M.USER_ID
+JOIN PLACE P ON R.PLACE_ID = P.PLACE_ID
+LEFT JOIN PAYMENT PAY ON R.RESERVATION_ID = PAY.RESERVATION_ID
+ORDER BY R.CREATED_AT DESC;
+
+--사용자 문의 대응
+--1:1문의 데이터
+--SELECT SEQ_INQUIRY.NEXTVAL FROM DUAL;
+INSERT INTO INQUIRY(INQUIRY_ID, USER_ID, TITLE, CONTENT, STATUS, CREATED_AT)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user02', '결제 취소 확인 부탁드려요', '카드로 결제했는데 취소됐나요?', 'PENDING', SYSDATE-1);
+INSERT INTO INQUIRY(INQUIRY_ID, USER_ID, TITLE, CONTENT, STATUS, CREATED_AT)
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '숙소 위치 문의', '주차장이 넓은가요?', 'ANSWERED', SYSDATE-2);
+SELECT * FROM INQUIRY;
+
+--답변 대기(PENDING) 상태인 문의와 해당 유저의 중요 정보 연동(최근 예약 정보 등)
+SELECT 
+    I.INQUIRY_ID,
+    I.USER_ID,
+    M.NAME AS USER_NAME,
+    I.TITLE AS INQUIRY_TITLE,
+    I.ADMIN_REPLY AS ADMIN_REPLY,
+    -- 서브쿼리를 이용해 해당 유저가 실제 예약을 했던 유저인지 확인 (우선순위 파악)
+    (SELECT COUNT(*) FROM RESERVATION WHERE USER_ID = I.USER_ID) AS TOTAL_RES_COUNT,
+    I.CREATED_AT,
+    I.STATUS
+FROM INQUIRY I
+JOIN MEMBER M ON I.USER_ID = M.USER_ID
+WHERE I.STATUS = 'PENDING'
+ORDER BY I.CREATED_AT ASC; --오래된 문의부터 처리
+
+SELECT * FROM INQUIRY;
+
+--========================================
+--3. 예약 및 재고 차감 테스트
+--변수 자리에 실제 값 대입 (TICKET_ID: 10, USER_ID: 'user01')
+--[Step 1~3 실행 후]
+SELECT * FROM RESERVATION;
+SELECT * FROM FESTIVAL_TICKET WHERE TICKET_ID = 10; -- 재고 줄었는지 확인
+
+--4. 리뷰 및 별점 데이터 생성
+INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user01', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLACE_TYPE='ACC'), 5, '침구가 너무 폭신해요!', 'DISPLAY');
+   
+INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLACE_TYPE='ACC'), 3, '뷰는 좋지만 주차가 힘들어요.', 'DISPLAY');
+    
+INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user03', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLACE_TYPE='REST'), 4, '음식이 깔끔하고 맛있습니다.', 'DISPLAY');
+
+SELECT * FROM REVIEW;
+
+--4. 리뷰 및 포인트 적립 테스트
+-- [검증 1] 작성된 리뷰와 해당 장소 정보 확인
+SELECT 
+    R.REVIEW_ID, M.NAME AS WRITER, P.NAME AS PLACE_NAME, R.RATING, R.CONTENT
+FROM REVIEW R
+JOIN MEMBER M ON R.USER_ID = M.USER_ID
+JOIN PLACE P ON R.PLACE_ID = P.PLACE_ID
+WHERE M.USER_ID = 'user01';
+
+-- [검증 2] 포인트 적립 이력 및 현재 잔액 통합 조회
+SELECT 
+    M.USER_ID, M.NAME, M.POINT_BALANCE AS CURRENT_BALANCE,
+    P.TYPE, P.AMOUNT, P.DESCRIPTION, P.CREATED_AT
+FROM MEMBER M
+JOIN POINT P ON M.USER_ID = P.USER_ID
+WHERE M.USER_ID = 'user01'
+ORDER BY P.CREATED_AT DESC;

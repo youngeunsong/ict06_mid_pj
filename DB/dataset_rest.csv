@@ -1,0 +1,564 @@
+restaurant_id,description,phone,category,status
+2,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.",754-242-6088,일식,CLOSED
+4,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.,176-871-7933,일식,CLOSED
+5,Etiam vel augue.,200-113-1273,일식,CLOSED
+7,Donec quis orci eget orci vehicula condimentum.,131-584-3084,기타,CLOSED
+8,Donec quis orci eget orci vehicula condimentum.,290-945-0536,일식,OPEN
+9,Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.,919-130-5076,카페/디저트,CLOSED
+10,Nulla mollis molestie lorem.,507-664-6563,카페/디저트,CLOSED
+19,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",429-700-1131,일식,CLOSED
+20,Duis ac nibh.,594-676-6092,한식,OPEN
+21,"Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",511-106-8822,한식,CLOSED
+24,Nulla suscipit ligula in lacus.,806-828-6644,양식,OPEN
+27,In quis justo.,215-534-0724,카페/디저트,OPEN
+28,"Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",207-776-0065,한식,CLOSED
+29,Sed accumsan felis. Ut at dolor quis odio consequat varius.,366-669-6742,카페/디저트,OPEN
+30,Nulla tempus.,515-428-8080,일식,OPEN
+32,Morbi non lectus.,303-307-3812,한식,OPEN
+33,Aenean auctor gravida sem.,439-132-7347,양식,CLOSED
+37,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",904-385-2859,기타,OPEN
+38,Nunc rhoncus dui vel sem. Sed sagittis.,298-920-7681,카페/디저트,CLOSED
+39,Phasellus id sapien in sapien iaculis congue.,775-453-4147,한식,OPEN
+41,Aliquam non mauris.,508-237-8984,기타,CLOSED
+42,Praesent blandit.,884-481-3776,기타,CLOSED
+43,Donec semper sapien a libero. Nam dui.,989-442-9487,중식,OPEN
+44,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",261-801-4351,양식,OPEN
+45,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,276-738-6250,카페/디저트,CLOSED
+48,Aenean fermentum. Donec ut mauris eget massa tempor convallis.,980-418-6379,한식,CLOSED
+51,"Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",136-127-9859,양식,CLOSED
+56,Donec dapibus. Duis at velit eu est congue elementum.,860-164-9582,한식,CLOSED
+57,In hac habitasse platea dictumst.,438-662-3216,일식,CLOSED
+58,Praesent lectus.,255-143-2362,한식,CLOSED
+60,Quisque ut erat.,606-418-9910,일식,OPEN
+61,In blandit ultrices enim.,441-460-0697,일식,CLOSED
+65,Pellentesque at nulla.,167-870-2462,카페/디저트,CLOSED
+66,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",923-558-1684,양식,OPEN
+70,Etiam faucibus cursus urna.,453-249-8185,기타,CLOSED
+72,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,907-644-9951,기타,CLOSED
+73,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",253-985-8505,한식,OPEN
+75,Pellentesque ultrices mattis odio.,958-284-3690,한식,CLOSED
+76,Phasellus in felis.,689-293-1192,한식,CLOSED
+79,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",277-909-9895,한식,OPEN
+80,"Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",869-990-1149,양식,OPEN
+83,Donec semper sapien a libero. Nam dui.,389-308-9875,일식,CLOSED
+84,Aenean auctor gravida sem.,330-520-5077,양식,CLOSED
+86,Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.,822-495-4781,기타,OPEN
+88,Etiam faucibus cursus urna. Ut tellus.,246-609-8133,양식,CLOSED
+89,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",184-275-0851,한식,CLOSED
+91,Donec semper sapien a libero.,489-403-4233,카페/디저트,CLOSED
+94,Fusce consequat. Nulla nisl.,623-495-8227,기타,CLOSED
+95,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,748-468-1859,한식,CLOSED
+97,Nunc purus. Phasellus in felis.,429-162-3020,양식,OPEN
+98,"Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",746-150-2700,양식,CLOSED
+99,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",343-900-8829,한식,CLOSED
+102,Integer non velit.,559-660-1605,한식,CLOSED
+104,Nulla mollis molestie lorem. Quisque ut erat.,443-383-5489,양식,OPEN
+105,Nullam molestie nibh in lectus.,747-133-8421,한식,CLOSED
+108,Etiam justo. Etiam pretium iaculis justo.,845-138-4330,한식,OPEN
+111,Sed sagittis.,392-694-0027,한식,CLOSED
+112,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",895-634-9063,한식,CLOSED
+113,Vivamus in felis eu sapien cursus vestibulum. Proin eu mi.,703-938-3210,일식,CLOSED
+115,Mauris ullamcorper purus sit amet nulla.,167-245-8053,한식,OPEN
+116,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis.",262-552-4037,중식,OPEN
+117,In hac habitasse platea dictumst.,985-836-8570,중식,CLOSED
+120,Curabitur gravida nisi at nibh.,140-104-8639,카페/디저트,OPEN
+121,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",997-441-7766,일식,OPEN
+122,Integer a nibh. In quis justo.,119-641-4347,중식,OPEN
+123,Suspendisse accumsan tortor quis turpis.,695-505-1703,중식,OPEN
+124,Cras pellentesque volutpat dui.,885-453-7968,한식,CLOSED
+125,Suspendisse accumsan tortor quis turpis. Sed ante.,835-213-4608,카페/디저트,OPEN
+126,Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.,159-815-9702,중식,CLOSED
+128,Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet.,754-336-7231,한식,OPEN
+129,Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.,611-633-0549,한식,OPEN
+130,In hac habitasse platea dictumst.,232-841-8807,한식,CLOSED
+131,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",910-363-1561,한식,CLOSED
+132,Phasellus in felis. Donec semper sapien a libero.,958-745-9660,한식,CLOSED
+134,Phasellus in felis.,671-655-9911,카페/디저트,CLOSED
+135,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",845-345-4227,카페/디저트,CLOSED
+136,In congue. Etiam justo.,966-828-3341,한식,OPEN
+143,Aliquam non mauris.,652-560-5152,한식,OPEN
+144,Duis bibendum.,881-156-9778,한식,CLOSED
+145,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",636-947-8782,한식,OPEN
+153,Sed ante. Vivamus tortor.,242-422-1382,양식,CLOSED
+154,Nulla suscipit ligula in lacus.,234-988-0270,한식,CLOSED
+156,Cras in purus eu magna vulputate luctus.,996-544-6643,카페/디저트,CLOSED
+158,Vivamus vestibulum sagittis sapien.,309-957-1670,한식,OPEN
+160,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",998-415-8981,일식,CLOSED
+162,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",202-938-4190,카페/디저트,CLOSED
+163,"Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",981-398-6831,중식,CLOSED
+164,Nulla justo.,705-372-7171,일식,OPEN
+166,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.",940-544-7273,한식,OPEN
+168,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.",839-456-6789,한식,CLOSED
+171,"Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",245-418-1756,한식,CLOSED
+172,Pellentesque at nulla. Suspendisse potenti.,815-640-9879,카페/디저트,OPEN
+173,Praesent blandit. Nam nulla.,697-865-3129,양식,OPEN
+174,Pellentesque at nulla.,522-957-6200,일식,OPEN
+178,In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.,874-476-1562,한식,CLOSED
+179,In sagittis dui vel nisl. Duis ac nibh.,515-325-3683,한식,CLOSED
+180,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.,353-297-0410,한식,OPEN
+182,Aliquam non mauris.,294-642-4875,한식,CLOSED
+185,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.",500-623-7833,한식,CLOSED
+188,Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum.,384-776-1763,일식,CLOSED
+191,Etiam pretium iaculis justo. In hac habitasse platea dictumst.,773-441-0611,일식,CLOSED
+192,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.",792-951-4854,카페/디저트,OPEN
+194,Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend.,904-686-7255,양식,OPEN
+195,Morbi non quam nec dui luctus rutrum.,940-802-4337,한식,OPEN
+196,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",976-133-4026,일식,CLOSED
+197,Integer ac leo.,204-763-2933,양식,CLOSED
+198,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,758-191-9435,기타,OPEN
+199,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",260-646-7015,일식,CLOSED
+200,In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.,660-495-0539,카페/디저트,OPEN
+201,Morbi non quam nec dui luctus rutrum. Nulla tellus.,563-194-0107,카페/디저트,OPEN
+202,Nulla tellus.,545-212-7623,양식,OPEN
+203,Aliquam sit amet diam in magna bibendum imperdiet.,679-818-7592,양식,OPEN
+204,"Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",788-435-9760,일식,CLOSED
+207,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.",211-922-4869,일식,CLOSED
+208,Nulla ut erat id mauris vulputate elementum. Nullam varius.,828-124-3991,일식,OPEN
+214,"Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",262-413-7806,양식,CLOSED
+215,"Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",925-732-0300,한식,OPEN
+217,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.",431-840-6429,카페/디저트,CLOSED
+221,Aliquam erat volutpat.,903-636-4897,카페/디저트,OPEN
+223,Morbi ut odio.,465-589-9600,일식,OPEN
+224,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.,294-273-8671,한식,CLOSED
+225,"In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",838-370-4655,한식,CLOSED
+226,Aenean sit amet justo.,818-875-5516,일식,OPEN
+227,"Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",731-921-3885,한식,OPEN
+230,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",625-186-0056,양식,OPEN
+231,Curabitur in libero ut massa volutpat convallis.,242-733-3135,카페/디저트,CLOSED
+232,Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.,383-618-2052,한식,OPEN
+233,"Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",228-367-1772,중식,OPEN
+234,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",689-668-8060,카페/디저트,CLOSED
+235,Nulla mollis molestie lorem. Quisque ut erat.,586-703-8638,카페/디저트,CLOSED
+237,Nullam sit amet turpis elementum ligula vehicula consequat.,506-991-4141,중식,CLOSED
+240,In sagittis dui vel nisl. Duis ac nibh.,162-974-1146,일식,OPEN
+243,Morbi porttitor lorem id ligula.,535-123-6433,한식,OPEN
+244,Cras in purus eu magna vulputate luctus.,732-122-8020,기타,CLOSED
+249,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.",631-317-5266,한식,OPEN
+250,"In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",745-839-3463,한식,OPEN
+251,Praesent blandit lacinia erat.,112-907-3917,한식,CLOSED
+252,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor.,486-198-5188,기타,OPEN
+254,Sed ante. Vivamus tortor.,271-834-6072,중식,CLOSED
+256,Phasellus id sapien in sapien iaculis congue.,603-306-7928,한식,CLOSED
+261,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.,916-858-2105,양식,CLOSED
+264,"Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",735-935-4689,한식,OPEN
+266,Sed accumsan felis.,259-412-0450,양식,OPEN
+268,Fusce consequat. Nulla nisl.,751-755-4723,카페/디저트,CLOSED
+269,Vestibulum ac est lacinia nisi venenatis tristique.,847-246-7939,한식,CLOSED
+271,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.",217-957-0905,기타,OPEN
+275,Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.,300-909-4630,기타,CLOSED
+277,Integer tincidunt ante vel ipsum.,335-427-9318,기타,OPEN
+278,Phasellus sit amet erat. Nulla tempus.,561-482-5578,한식,CLOSED
+279,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",952-664-4450,양식,CLOSED
+280,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",911-612-7304,기타,CLOSED
+282,Morbi vel lectus in quam fringilla rhoncus.,161-220-3775,중식,CLOSED
+283,Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.,782-881-0762,카페/디저트,OPEN
+284,"In est risus, auctor sed, tristique in, tempus sit amet, sem.",506-113-1595,한식,OPEN
+286,Vivamus in felis eu sapien cursus vestibulum. Proin eu mi.,919-835-8783,양식,OPEN
+290,Integer ac neque. Duis bibendum.,417-561-8698,한식,OPEN
+291,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,166-685-2204,카페/디저트,CLOSED
+294,Ut tellus. Nulla ut erat id mauris vulputate elementum.,424-462-1786,양식,OPEN
+296,Ut at dolor quis odio consequat varius.,286-780-4955,일식,OPEN
+297,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",157-365-1485,기타,CLOSED
+299,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,289-541-2565,한식,CLOSED
+301,Suspendisse potenti.,613-663-5207,한식,CLOSED
+302,Vivamus vestibulum sagittis sapien.,138-741-5164,한식,CLOSED
+303,Etiam faucibus cursus urna. Ut tellus.,599-828-1214,카페/디저트,CLOSED
+307,Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.,880-232-8043,카페/디저트,OPEN
+308,Nunc purus.,202-611-3044,중식,OPEN
+309,Vestibulum rutrum rutrum neque.,856-148-0821,한식,OPEN
+310,Suspendisse potenti. Cras in purus eu magna vulputate luctus.,743-530-3007,중식,CLOSED
+312,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.",968-236-9300,한식,CLOSED
+314,Mauris lacinia sapien quis libero.,254-422-4458,한식,CLOSED
+316,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.,325-453-4532,기타,CLOSED
+317,"Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",315-639-9733,한식,CLOSED
+320,Vivamus in felis eu sapien cursus vestibulum. Proin eu mi.,706-457-5646,한식,OPEN
+321,Suspendisse accumsan tortor quis turpis. Sed ante.,826-647-1916,카페/디저트,OPEN
+323,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.",148-722-7710,카페/디저트,CLOSED
+328,Pellentesque viverra pede ac diam.,637-660-7788,카페/디저트,OPEN
+329,Etiam vel augue.,181-844-2081,양식,CLOSED
+330,Nulla facilisi. Cras non velit nec nisi vulputate nonummy.,833-762-1424,일식,OPEN
+332,In sagittis dui vel nisl. Duis ac nibh.,610-995-1907,양식,OPEN
+333,Nam nulla.,265-485-7202,한식,CLOSED
+335,"Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",457-781-7905,중식,OPEN
+337,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",577-926-2142,기타,OPEN
+339,Curabitur convallis.,631-449-5253,양식,CLOSED
+340,Suspendisse potenti.,650-876-7960,한식,OPEN
+343,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam. Nam tristique tortor eu pede.",297-828-2080,일식,CLOSED
+345,Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.,868-542-7064,카페/디저트,OPEN
+347,Donec ut mauris eget massa tempor convallis.,770-340-1838,기타,OPEN
+348,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.,599-116-9999,카페/디저트,CLOSED
+350,Sed sagittis.,870-903-2242,한식,CLOSED
+351,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",262-836-1707,양식,OPEN
+352,Fusce consequat. Nulla nisl.,886-651-1939,일식,OPEN
+353,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",329-300-9963,일식,CLOSED
+354,Nulla justo. Aliquam quis turpis eget elit sodales scelerisque.,629-459-9541,한식,CLOSED
+355,Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.,341-166-9665,양식,CLOSED
+356,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.",830-217-1163,기타,CLOSED
+357,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",362-807-9587,카페/디저트,OPEN
+359,"Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.",989-677-6123,한식,CLOSED
+361,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",505-720-6580,한식,OPEN
+363,Suspendisse accumsan tortor quis turpis. Sed ante.,771-368-1582,카페/디저트,OPEN
+364,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",634-521-1782,양식,OPEN
+365,Donec ut dolor.,168-181-3117,카페/디저트,CLOSED
+366,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.",339-160-0045,한식,CLOSED
+367,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",200-506-6350,카페/디저트,CLOSED
+368,Aenean lectus.,276-467-1149,일식,OPEN
+369,"Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",395-503-9073,일식,OPEN
+370,Nulla nisl.,644-435-9660,기타,CLOSED
+372,In congue.,267-167-7437,카페/디저트,CLOSED
+373,Sed sagittis.,467-767-5545,한식,OPEN
+376,In quis justo. Maecenas rhoncus aliquam lacus.,926-910-6860,한식,CLOSED
+378,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",375-493-9729,기타,CLOSED
+379,Nulla mollis molestie lorem. Quisque ut erat.,966-418-7395,한식,OPEN
+380,Ut tellus.,765-105-2385,한식,OPEN
+384,Aliquam quis turpis eget elit sodales scelerisque.,653-486-3704,카페/디저트,CLOSED
+386,Fusce consequat. Nulla nisl.,245-161-6983,한식,CLOSED
+388,Nulla ut erat id mauris vulputate elementum. Nullam varius.,898-325-6122,일식,CLOSED
+392,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",963-214-9328,일식,OPEN
+393,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",207-577-6106,카페/디저트,OPEN
+394,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",809-216-3922,양식,CLOSED
+395,Praesent blandit lacinia erat.,299-269-5417,일식,CLOSED
+400,Nulla nisl. Nunc nisl.,428-786-5563,한식,OPEN
+401,Quisque ut erat. Curabitur gravida nisi at nibh.,799-120-7294,기타,OPEN
+402,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",695-452-7432,카페/디저트,CLOSED
+403,Proin at turpis a pede posuere nonummy.,448-538-4502,양식,CLOSED
+408,Donec posuere metus vitae ipsum.,859-689-5196,한식,OPEN
+409,In hac habitasse platea dictumst.,746-708-0169,양식,CLOSED
+411,Ut at dolor quis odio consequat varius.,428-951-0163,일식,CLOSED
+412,"In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",440-818-6413,한식,OPEN
+415,Nulla suscipit ligula in lacus.,548-372-6187,일식,OPEN
+416,Vestibulum sed magna at nunc commodo placerat. Praesent blandit.,424-238-8860,한식,CLOSED
+418,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.,842-900-3907,일식,OPEN
+421,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",414-379-3525,중식,OPEN
+423,Nulla ut erat id mauris vulputate elementum. Nullam varius.,145-487-7416,카페/디저트,CLOSED
+424,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",346-929-9181,카페/디저트,OPEN
+425,Ut at dolor quis odio consequat varius.,233-800-1069,카페/디저트,OPEN
+430,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,207-316-1678,일식,OPEN
+431,Pellentesque ultrices mattis odio.,321-154-3020,일식,CLOSED
+432,Aliquam sit amet diam in magna bibendum imperdiet.,138-462-0501,카페/디저트,CLOSED
+433,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",951-683-2133,일식,OPEN
+436,Donec posuere metus vitae ipsum.,140-525-2414,한식,CLOSED
+437,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",692-470-4795,양식,CLOSED
+438,Nulla tellus.,821-436-2199,일식,OPEN
+439,Duis consequat dui nec nisi volutpat eleifend.,619-399-5409,한식,CLOSED
+440,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",706-871-8306,일식,OPEN
+442,Praesent blandit.,574-920-1918,양식,CLOSED
+445,Etiam faucibus cursus urna. Ut tellus.,145-777-3059,한식,OPEN
+447,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat.,437-866-7347,양식,OPEN
+449,"Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",475-734-1894,양식,CLOSED
+450,Morbi a ipsum. Integer a nibh.,951-215-7454,양식,OPEN
+451,Curabitur in libero ut massa volutpat convallis.,657-608-7393,일식,OPEN
+452,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.",886-733-2374,일식,CLOSED
+453,Suspendisse potenti. In eleifend quam a odio.,575-151-5476,양식,OPEN
+454,Fusce consequat. Nulla nisl.,480-629-2160,카페/디저트,CLOSED
+455,Quisque ut erat. Curabitur gravida nisi at nibh.,876-613-6398,일식,CLOSED
+456,Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.,330-275-5073,중식,OPEN
+457,Suspendisse accumsan tortor quis turpis.,465-348-2119,한식,OPEN
+458,Aliquam erat volutpat.,425-623-5676,일식,OPEN
+460,Aenean fermentum. Donec ut mauris eget massa tempor convallis.,394-536-5462,한식,OPEN
+462,Pellentesque ultrices mattis odio.,269-686-2612,일식,CLOSED
+465,"In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc.",238-753-5616,일식,OPEN
+466,"Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",769-729-8292,일식,CLOSED
+467,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",723-535-9112,일식,CLOSED
+468,Vivamus in felis eu sapien cursus vestibulum. Proin eu mi.,530-610-2015,한식,CLOSED
+470,Vivamus in felis eu sapien cursus vestibulum.,502-372-9773,한식,CLOSED
+471,Donec quis orci eget orci vehicula condimentum.,393-717-9959,양식,CLOSED
+474,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy.,841-729-8863,일식,CLOSED
+476,Aliquam sit amet diam in magna bibendum imperdiet.,917-641-1403,기타,OPEN
+477,Maecenas pulvinar lobortis est. Phasellus sit amet erat.,487-731-9556,한식,OPEN
+478,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",572-392-7880,한식,OPEN
+480,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",832-655-2457,한식,CLOSED
+481,Etiam justo. Etiam pretium iaculis justo.,451-802-6982,양식,CLOSED
+483,Nulla ut erat id mauris vulputate elementum.,169-723-4157,중식,CLOSED
+485,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",512-631-1570,일식,OPEN
+486,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.",266-295-4311,양식,CLOSED
+487,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.,812-442-5886,기타,CLOSED
+488,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",513-886-9410,중식,OPEN
+489,Maecenas rhoncus aliquam lacus.,254-957-5899,한식,CLOSED
+490,Suspendisse accumsan tortor quis turpis. Sed ante.,902-919-2323,일식,OPEN
+491,Curabitur gravida nisi at nibh.,337-477-4750,카페/디저트,CLOSED
+492,Morbi porttitor lorem id ligula.,741-895-2588,기타,OPEN
+493,Proin eu mi.,452-749-4689,카페/디저트,OPEN
+500,Donec posuere metus vitae ipsum.,566-845-8233,카페/디저트,OPEN
+501,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",234-327-4450,기타,CLOSED
+502,Morbi non lectus.,149-818-8952,한식,OPEN
+504,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,160-977-1757,한식,OPEN
+507,Donec dapibus. Duis at velit eu est congue elementum.,299-887-0742,한식,OPEN
+509,Suspendisse accumsan tortor quis turpis.,854-659-8270,한식,OPEN
+513,Nulla tellus. In sagittis dui vel nisl.,524-137-8654,양식,OPEN
+514,Donec posuere metus vitae ipsum. Aliquam non mauris.,147-858-5084,일식,OPEN
+515,In eleifend quam a odio.,670-666-3354,일식,OPEN
+516,Etiam faucibus cursus urna. Ut tellus.,575-964-5772,중식,CLOSED
+518,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",834-241-6832,한식,CLOSED
+519,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",478-941-7311,카페/디저트,CLOSED
+521,Aenean lectus. Pellentesque eget nunc.,977-582-1162,일식,CLOSED
+524,Vivamus vel nulla eget eros elementum pellentesque.,861-355-8827,기타,OPEN
+525,In hac habitasse platea dictumst.,259-394-0634,중식,CLOSED
+526,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",799-893-4794,카페/디저트,OPEN
+527,Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.,682-302-8095,카페/디저트,OPEN
+529,"Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",895-911-2609,양식,OPEN
+532,Pellentesque ultrices mattis odio. Donec vitae nisi.,920-751-3162,기타,CLOSED
+534,In hac habitasse platea dictumst.,632-152-7271,한식,OPEN
+535,"Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",863-317-6636,한식,OPEN
+537,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,927-739-8052,일식,OPEN
+539,"Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",421-946-7450,한식,OPEN
+540,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",801-278-9820,카페/디저트,CLOSED
+544,Mauris sit amet eros.,635-623-8716,일식,OPEN
+545,Fusce posuere felis sed lacus.,955-293-0824,일식,CLOSED
+547,"In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",984-873-3189,한식,CLOSED
+551,Nam dui.,510-643-8532,중식,CLOSED
+552,"Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",650-210-7376,일식,OPEN
+554,"Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",606-858-8728,양식,CLOSED
+556,"Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",395-455-3251,카페/디저트,CLOSED
+557,Duis at velit eu est congue elementum. In hac habitasse platea dictumst.,511-366-4644,양식,OPEN
+558,Mauris sit amet eros.,930-615-1595,카페/디저트,OPEN
+559,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",395-439-6225,한식,OPEN
+560,Integer non velit.,151-497-5395,한식,CLOSED
+562,Nunc purus.,277-588-8033,일식,CLOSED
+563,Fusce posuere felis sed lacus.,461-598-1130,카페/디저트,OPEN
+565,"Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",760-114-0504,양식,OPEN
+566,In hac habitasse platea dictumst. Etiam faucibus cursus urna.,310-829-4539,양식,CLOSED
+567,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",626-704-5596,카페/디저트,CLOSED
+570,Nulla mollis molestie lorem.,368-344-4086,한식,CLOSED
+576,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",990-521-2455,카페/디저트,CLOSED
+579,Pellentesque at nulla.,649-358-7938,일식,CLOSED
+580,Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat.,600-534-8190,한식,OPEN
+581,Praesent lectus.,730-926-8267,일식,CLOSED
+582,Mauris lacinia sapien quis libero.,863-691-1195,한식,CLOSED
+583,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,323-475-7006,한식,OPEN
+587,Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.,561-668-2818,한식,OPEN
+589,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",366-753-5639,일식,OPEN
+591,Phasellus in felis. Donec semper sapien a libero.,387-473-6779,양식,OPEN
+593,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.",258-878-3620,중식,OPEN
+594,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",803-880-8955,카페/디저트,CLOSED
+595,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",960-981-6845,일식,OPEN
+596,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",547-588-4131,한식,CLOSED
+597,"In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",320-471-4374,한식,CLOSED
+598,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",746-471-4290,일식,CLOSED
+601,Vivamus tortor.,775-965-7406,기타,OPEN
+603,Fusce consequat. Nulla nisl.,866-933-7666,카페/디저트,CLOSED
+604,Etiam justo.,394-230-9321,카페/디저트,CLOSED
+606,Curabitur convallis.,641-916-3332,기타,CLOSED
+607,Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.,563-821-7473,기타,CLOSED
+608,Aliquam sit amet diam in magna bibendum imperdiet.,337-379-4416,양식,OPEN
+610,Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.,658-391-4612,카페/디저트,CLOSED
+612,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.",847-439-6064,중식,CLOSED
+613,Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat.,202-905-8262,양식,OPEN
+614,Nam dui.,729-205-2969,카페/디저트,CLOSED
+616,Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.,467-329-3673,양식,OPEN
+620,Vivamus tortor.,603-667-6600,한식,CLOSED
+625,Etiam justo. Etiam pretium iaculis justo.,917-806-9540,일식,CLOSED
+626,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat.,347-460-9551,일식,CLOSED
+627,Duis mattis egestas metus. Aenean fermentum.,583-596-0211,한식,CLOSED
+629,Integer a nibh. In quis justo.,418-743-7471,한식,CLOSED
+630,Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.,651-534-6498,한식,OPEN
+631,Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.,567-348-2327,한식,OPEN
+632,Sed ante. Vivamus tortor.,864-250-6709,양식,CLOSED
+633,Proin risus. Praesent lectus.,651-988-4631,양식,OPEN
+635,Nulla ut erat id mauris vulputate elementum. Nullam varius.,761-122-3382,한식,CLOSED
+636,"Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",922-880-9037,한식,CLOSED
+638,Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.,906-862-7939,양식,OPEN
+640,Vestibulum sed magna at nunc commodo placerat.,696-885-0167,양식,CLOSED
+645,Morbi quis tortor id nulla ultrices aliquet.,376-635-1536,중식,OPEN
+646,Morbi non quam nec dui luctus rutrum. Nulla tellus.,308-574-3211,일식,OPEN
+647,Aliquam erat volutpat.,939-246-1414,한식,CLOSED
+650,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.,219-600-7649,중식,CLOSED
+652,Aliquam sit amet diam in magna bibendum imperdiet.,862-791-2289,한식,CLOSED
+653,Ut at dolor quis odio consequat varius.,980-833-3837,일식,CLOSED
+654,Curabitur at ipsum ac tellus semper interdum.,526-423-2642,일식,OPEN
+657,"Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",783-585-6797,일식,CLOSED
+661,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",806-783-8175,일식,CLOSED
+662,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem.,615-423-5254,중식,CLOSED
+663,Sed accumsan felis. Ut at dolor quis odio consequat varius.,234-484-6548,한식,OPEN
+664,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",330-341-5393,카페/디저트,CLOSED
+665,Aliquam sit amet diam in magna bibendum imperdiet.,996-720-0451,일식,OPEN
+668,Nunc purus.,419-721-1268,한식,CLOSED
+669,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,277-781-5717,중식,OPEN
+670,Integer ac leo. Pellentesque ultrices mattis odio.,436-859-0645,카페/디저트,CLOSED
+673,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",732-396-6991,중식,OPEN
+676,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",761-630-6631,한식,OPEN
+677,Nulla nisl.,669-824-0602,카페/디저트,CLOSED
+679,"Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.",986-888-4558,한식,CLOSED
+680,Vestibulum rutrum rutrum neque.,364-559-1823,카페/디저트,OPEN
+683,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",583-523-6500,양식,OPEN
+684,Pellentesque viverra pede ac diam.,939-402-1684,일식,OPEN
+685,In hac habitasse platea dictumst.,444-310-5232,카페/디저트,OPEN
+688,Vestibulum sed magna at nunc commodo placerat.,608-583-4254,카페/디저트,OPEN
+690,Aliquam erat volutpat. In congue.,434-659-3875,카페/디저트,OPEN
+691,Praesent blandit.,480-664-9370,양식,CLOSED
+692,Maecenas ut massa quis augue luctus tincidunt.,182-386-4492,카페/디저트,OPEN
+694,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",974-837-8448,한식,OPEN
+695,Donec posuere metus vitae ipsum.,906-479-5508,카페/디저트,OPEN
+696,Donec quis orci eget orci vehicula condimentum.,375-848-8780,기타,OPEN
+697,Nam tristique tortor eu pede.,581-383-1240,양식,CLOSED
+701,Proin interdum mauris non ligula pellentesque ultrices.,807-711-6484,일식,CLOSED
+702,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",422-282-1353,기타,CLOSED
+708,Suspendisse potenti. Nullam porttitor lacus at turpis.,286-727-3346,일식,OPEN
+709,Nulla ut erat id mauris vulputate elementum.,532-772-3833,중식,OPEN
+711,Donec ut dolor.,925-598-4909,한식,CLOSED
+712,Vestibulum sed magna at nunc commodo placerat. Praesent blandit.,487-367-7848,한식,OPEN
+714,"Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",706-250-8279,양식,OPEN
+715,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",754-833-0745,한식,OPEN
+718,"Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",475-975-4167,일식,OPEN
+720,"Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",168-807-4702,중식,CLOSED
+723,Donec dapibus.,738-822-3004,한식,CLOSED
+725,Duis mattis egestas metus.,201-161-8479,일식,CLOSED
+726,Aenean sit amet justo. Morbi ut odio.,309-411-9836,한식,OPEN
+727,In blandit ultrices enim.,138-760-9807,한식,OPEN
+729,Donec posuere metus vitae ipsum. Aliquam non mauris.,839-612-6028,한식,OPEN
+730,Nulla ut erat id mauris vulputate elementum. Nullam varius.,963-444-0901,카페/디저트,OPEN
+733,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",690-625-1615,양식,OPEN
+735,Aliquam quis turpis eget elit sodales scelerisque.,649-844-1254,일식,CLOSED
+737,Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.,800-894-9958,한식,OPEN
+739,Mauris sit amet eros.,689-821-0323,한식,CLOSED
+740,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",410-694-2761,한식,OPEN
+741,Nunc purus.,527-573-6411,양식,OPEN
+745,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",307-181-6388,한식,OPEN
+746,Cras pellentesque volutpat dui.,977-795-8785,기타,CLOSED
+747,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",319-327-2163,양식,OPEN
+750,Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat.,120-398-5029,한식,CLOSED
+753,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",912-434-0077,일식,OPEN
+754,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",901-857-2113,한식,CLOSED
+758,Proin at turpis a pede posuere nonummy.,983-478-6628,일식,OPEN
+759,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",366-250-3240,기타,CLOSED
+761,Pellentesque viverra pede ac diam.,944-385-4288,카페/디저트,OPEN
+762,Ut at dolor quis odio consequat varius.,916-438-0515,양식,OPEN
+763,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",397-561-3088,카페/디저트,CLOSED
+764,Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.,242-667-5586,양식,OPEN
+767,Nulla justo. Aliquam quis turpis eget elit sodales scelerisque.,716-245-6719,기타,CLOSED
+769,In hac habitasse platea dictumst.,957-856-3841,양식,OPEN
+770,Nunc rhoncus dui vel sem. Sed sagittis.,150-822-4777,중식,OPEN
+773,In eleifend quam a odio.,631-941-7853,일식,OPEN
+774,Nunc rhoncus dui vel sem.,230-832-8679,카페/디저트,CLOSED
+775,Duis bibendum. Morbi non quam nec dui luctus rutrum.,340-375-4641,기타,OPEN
+776,Phasellus sit amet erat.,344-455-4837,카페/디저트,CLOSED
+777,Duis at velit eu est congue elementum.,329-964-4280,한식,CLOSED
+778,Aenean lectus.,915-844-1630,한식,CLOSED
+780,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",497-441-6328,양식,CLOSED
+784,Nulla mollis molestie lorem. Quisque ut erat.,614-122-5116,한식,CLOSED
+785,Vestibulum ac est lacinia nisi venenatis tristique.,647-201-9026,일식,OPEN
+786,"Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",437-717-6651,카페/디저트,CLOSED
+788,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",883-263-8256,중식,CLOSED
+789,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.",366-235-9456,일식,CLOSED
+790,Vivamus vel nulla eget eros elementum pellentesque.,920-160-8744,카페/디저트,CLOSED
+793,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam. Nam tristique tortor eu pede.",727-238-1336,일식,CLOSED
+794,"Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",231-212-1209,일식,OPEN
+795,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.,620-547-6550,양식,CLOSED
+796,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,720-319-1953,한식,CLOSED
+799,Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.,418-465-6788,양식,CLOSED
+800,Aenean sit amet justo.,178-558-5254,일식,OPEN
+801,Aliquam sit amet diam in magna bibendum imperdiet.,522-843-0532,카페/디저트,OPEN
+802,Quisque id justo sit amet sapien dignissim vestibulum.,834-345-2301,기타,OPEN
+804,Morbi a ipsum. Integer a nibh.,100-377-7330,기타,CLOSED
+805,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy.,762-857-6914,일식,OPEN
+807,"Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",224-803-2378,일식,CLOSED
+808,Nam nulla.,246-230-3130,한식,CLOSED
+810,Suspendisse potenti. Cras in purus eu magna vulputate luctus.,229-175-1637,한식,CLOSED
+815,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",652-309-9824,카페/디저트,CLOSED
+816,Nulla facilisi. Cras non velit nec nisi vulputate nonummy.,132-307-1869,한식,OPEN
+818,Nullam sit amet turpis elementum ligula vehicula consequat.,560-677-1172,한식,OPEN
+819,Integer ac neque. Duis bibendum.,442-968-2169,한식,OPEN
+820,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",371-830-3825,중식,OPEN
+822,Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.,670-948-1586,양식,CLOSED
+823,Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.,284-580-4448,한식,OPEN
+824,Etiam pretium iaculis justo.,536-430-7861,기타,OPEN
+826,Donec dapibus. Duis at velit eu est congue elementum.,363-464-7505,일식,OPEN
+828,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam. Nam tristique tortor eu pede.",781-135-4349,한식,OPEN
+829,Nullam varius.,474-948-9306,일식,CLOSED
+831,"Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",579-569-1025,카페/디저트,OPEN
+832,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",898-195-4532,일식,OPEN
+836,Duis aliquam convallis nunc.,163-715-3497,카페/디저트,CLOSED
+840,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat.,820-391-7207,양식,CLOSED
+843,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",497-794-4488,양식,CLOSED
+846,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.",433-562-7920,기타,OPEN
+847,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros.,657-258-5204,한식,CLOSED
+851,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",686-318-2463,카페/디저트,OPEN
+852,Aenean lectus. Pellentesque eget nunc.,783-160-1261,한식,OPEN
+854,Quisque ut erat.,607-443-5871,한식,CLOSED
+856,Integer ac neque. Duis bibendum.,763-228-9379,한식,CLOSED
+857,Aenean lectus.,913-734-2497,카페/디저트,OPEN
+858,Integer non velit.,789-786-7202,양식,CLOSED
+860,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.,921-378-7056,카페/디저트,CLOSED
+863,Vivamus in felis eu sapien cursus vestibulum.,319-206-4769,한식,CLOSED
+865,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",727-349-4146,카페/디저트,OPEN
+866,Nullam molestie nibh in lectus. Pellentesque at nulla.,794-117-5594,일식,CLOSED
+869,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",752-687-6644,양식,CLOSED
+870,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",821-279-2100,기타,CLOSED
+871,In sagittis dui vel nisl.,225-352-5090,기타,OPEN
+872,"Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum.",240-778-9414,카페/디저트,CLOSED
+874,Nulla tellus.,613-578-4182,한식,CLOSED
+875,Integer ac neque. Duis bibendum.,669-231-8044,카페/디저트,CLOSED
+876,Duis mattis egestas metus. Aenean fermentum.,821-153-4438,양식,OPEN
+878,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.",324-142-4256,한식,OPEN
+879,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.",461-502-4312,카페/디저트,CLOSED
+880,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.",579-265-1429,한식,CLOSED
+882,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit.,814-408-4275,한식,CLOSED
+883,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",735-997-1453,한식,OPEN
+884,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",285-716-6262,카페/디저트,CLOSED
+885,"In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",161-756-1517,한식,CLOSED
+886,Duis bibendum. Morbi non quam nec dui luctus rutrum.,997-182-8010,일식,OPEN
+887,Integer a nibh. In quis justo.,971-682-0855,카페/디저트,OPEN
+888,Maecenas rhoncus aliquam lacus.,781-353-3305,양식,CLOSED
+891,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.",146-287-6353,양식,OPEN
+893,Suspendisse accumsan tortor quis turpis.,255-340-9091,카페/디저트,OPEN
+894,In eleifend quam a odio.,380-349-7845,일식,OPEN
+895,Curabitur in libero ut massa volutpat convallis.,788-812-7405,양식,OPEN
+896,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.,776-982-6280,일식,CLOSED
+897,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",760-597-4630,양식,CLOSED
+898,Phasellus id sapien in sapien iaculis congue.,877-493-8878,한식,OPEN
+900,Aenean sit amet justo.,733-790-5563,카페/디저트,OPEN
+901,Pellentesque ultrices mattis odio. Donec vitae nisi.,405-369-2258,카페/디저트,OPEN
+903,"Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.",740-386-5707,한식,OPEN
+904,Suspendisse accumsan tortor quis turpis.,584-451-8004,양식,OPEN
+905,Integer a nibh.,291-749-4110,기타,CLOSED
+907,Duis consequat dui nec nisi volutpat eleifend.,511-642-1184,일식,CLOSED
+908,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.,847-560-4573,일식,OPEN
+910,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",131-353-2641,일식,CLOSED
+915,In hac habitasse platea dictumst. Etiam faucibus cursus urna.,515-286-2570,중식,OPEN
+916,Quisque ut erat.,361-820-7179,카페/디저트,OPEN
+917,"Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",808-627-3857,카페/디저트,OPEN
+918,In sagittis dui vel nisl.,791-316-1965,한식,OPEN
+919,Integer non velit.,397-142-1187,일식,OPEN
+925,Donec semper sapien a libero. Nam dui.,839-684-8519,양식,OPEN
+927,Nam dui.,547-184-1586,한식,CLOSED
+928,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",765-160-2070,카페/디저트,CLOSED
+931,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus.",663-699-3077,한식,OPEN
+932,Nunc rhoncus dui vel sem. Sed sagittis.,212-647-5557,한식,OPEN
+936,Aenean fermentum.,438-633-4163,일식,OPEN
+937,Quisque porta volutpat erat.,637-206-2925,일식,OPEN
+938,Aenean sit amet justo.,308-735-9086,한식,OPEN
+939,Nulla tellus. In sagittis dui vel nisl.,321-917-7486,한식,CLOSED
+940,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",951-355-1307,기타,CLOSED
+941,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",983-337-9032,일식,CLOSED
+943,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",721-291-4946,카페/디저트,OPEN
+944,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",322-640-5119,일식,OPEN
+945,Nulla facilisi. Cras non velit nec nisi vulputate nonummy.,657-347-6968,한식,CLOSED
+949,"In est risus, auctor sed, tristique in, tempus sit amet, sem.",473-301-0592,기타,CLOSED
+951,Etiam justo.,739-371-3542,카페/디저트,OPEN
+952,Vestibulum rutrum rutrum neque.,815-865-9296,일식,CLOSED
+953,Phasellus sit amet erat. Nulla tempus.,172-528-7902,카페/디저트,OPEN
+956,Praesent blandit. Nam nulla.,228-731-3586,한식,OPEN
+957,Cras pellentesque volutpat dui.,724-970-4121,양식,OPEN
+958,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",559-612-4515,카페/디저트,CLOSED
+959,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",318-730-5333,일식,OPEN
+964,"Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",924-281-9831,일식,CLOSED
+969,Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.,355-383-9485,일식,OPEN
+973,Sed vel enim sit amet nunc viverra dapibus.,120-793-5866,카페/디저트,OPEN
+975,Praesent blandit. Nam nulla.,153-539-2046,일식,OPEN
+977,Donec semper sapien a libero. Nam dui.,289-395-9482,양식,CLOSED
+978,Sed sagittis.,715-845-8066,카페/디저트,OPEN
+979,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",256-684-4429,카페/디저트,CLOSED
+982,Vestibulum sed magna at nunc commodo placerat.,133-154-8471,한식,CLOSED
+984,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",756-688-5237,중식,CLOSED
+985,Nulla ac enim.,823-237-1863,양식,OPEN
+986,Duis at velit eu est congue elementum. In hac habitasse platea dictumst.,448-370-7880,중식,OPEN
+987,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,813-855-1369,일식,OPEN
+989,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.",137-970-2741,기타,OPEN
+991,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy.,381-940-8336,일식,OPEN
+993,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",294-355-6281,양식,OPEN
+994,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",921-258-3794,일식,OPEN
+995,Phasellus in felis. Donec semper sapien a libero.,696-873-8656,중식,OPEN
+996,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.",107-999-4138,카페/디저트,OPEN
+997,Proin at turpis a pede posuere nonummy.,118-634-2991,일식,CLOSED
+998,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",464-467-6013,양식,CLOSED
+999,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",918-841-9963,양식,CLOSED

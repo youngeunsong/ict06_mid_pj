@@ -1,0 +1,20 @@
+dataset_xxx 설명
+
+1. 기본설명
+●DB 폴더 내 dataset_xxx 형태의 파일은 전부 SQL 쿼리 테스트를 위해 생성한 랜덤한 데이터입니다.
+●프로젝트 최종 제출 시 그대로 입력해 사용해도 되는 데이터와 그렇지 않은 데이터가 있으므로 참고하여 활용해주세요.
+
+2. 확장자별 용도
+●기본적으로 DBeaver에 data를 넣을 때는 확장자 .sql 파일을 활용해주세요.
+(확장성이 좋은 csv 파일은 만일을 대비해 생성해둔 것입니다.)
+
+3. dataset_faq.csv
+●테스트를 위해 FAQ 목록을 생성한 파일이고, csv이지만 DBeaver에서 import해 데이터를 생성할 수 있습니다.
+●import 방법
+   1) DBeaver에서 작업할 계정 선택(ICT06_TEAM1_MIDPJ)
+   2) 화면 좌측 Database Navigator > 데이터를 넣고 싶은 테이블 우클릭(여기서는 FAQ 테이블) > 데이터 가져오기
+   3) Import source - CSV에서 가져오기 > 다음
+   4) Input files > 상단 Browse > import할 csv 파일 선택(여기서는 dataset_faq.csv)
+     > 하단 Importer settings 에서 인코딩: utf-8, 컬럼 구분자: ,(콤마), 날짜/시간 형식: yyyy-MM-dd HH:mm:ss 로 변경
+   5) Source > csv 파일명 토글 선택 > Source와 Target명 연동 제대로 되어있는지 확인
+   6) 진행(P) 클릭하면 import 완료

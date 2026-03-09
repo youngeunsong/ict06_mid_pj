@@ -12,12 +12,13 @@
 	 	<result property="check_in" column="check_in"/>
 	 	<result property="check_out" column="check_out"/>
 	 	<result property="visit_time" column="visit_time"/>
-	 	<result property="ticket_type" column="ticket_type"/>
+	 	<result property="ticket_id" column="ticket_id"/>
 	 	<result property="guest_count" column="guest_count"/>
 	 	<result property="request_note" column="request_note"/>
 	 	<result property="status" column="status"/>
 	 	<result property="payment_id" column="payment_id"/>
 	 	<result property="resDate" column="created_at"/>
+	 	<result property="resUpdateDate" column="updated_at"/>
 	 	
 	 	<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
 	 		<id property="place_id" column="place_id"></id>
@@ -29,6 +30,7 @@
 	 		<result property="longitude" column="longitude"></result>
 	 		<result property="image_url" column="image_url"></result>
 	 		<result property="placeRegDate" column="created_at"></result>
+	 		<result property="placeUpdateDate" column="updated_at"></result>
 	 	</association>
 	 </resultMap>
 
@@ -40,7 +42,7 @@
 				SELECT R.reservation_id, R.user_id, R.place_id,
 					TRUNC(R.check_in) AS check_in,
 					TRUNC(R.check_out) AS check_out,
-					R.visit_time, R.ticket_type, R.guest_count,
+					R.visit_time, R.guest_count,
 					R.request_note, R.status, R.payment_id, R.created_at,
 					P.name, P.address, P.place_type
 				FROM RESERVATION R
@@ -80,7 +82,7 @@
 		SELECT R.reservation_id, R.user_id, R.place_id,
 			   TRUNC(R.check_in) AS check_in,
 			   TRUNC(R.check_out) AS check_out,
-			   R.visit_time, R.ticket_type, R.guest_count,
+			   R.visit_time, R.guest_count,
 			   R.request_note, R.status, R.payment_id, R.created_at,
 			   P.name, P.address, P.place_type
 		FROM RESERVATION R

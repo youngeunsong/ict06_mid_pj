@@ -1,4 +1,4 @@
-dataset_xxx 설명
+dataset 파일 설명
 
 1. 기본설명
 ●DB 폴더 내 dataset_xxx 형태의 파일은 전부 SQL 쿼리 테스트를 위해 생성한 랜덤한 데이터입니다.

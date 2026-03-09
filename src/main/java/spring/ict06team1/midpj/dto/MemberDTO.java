@@ -17,13 +17,15 @@ public class MemberDTO {
 	private String role;
 	private String status;
 	private Timestamp joinDate;
+	private Timestamp updateDate;	//추가
 	
 	public MemberDTO() {
 		super();
 	}
-	
+
 	public MemberDTO(String user_id, String password, String email, String name, Date birth_date, String gender,
-			String phone, String address, int point_balance, String role, String status, Timestamp joinDate) {
+			String phone, String address, int point_balance, String role, String status, Timestamp joinDate,
+			Timestamp updateDate) {
 		super();
 		this.user_id = user_id;
 		this.password = password;
@@ -37,8 +39,9 @@ public class MemberDTO {
 		this.role = role;
 		this.status = status;
 		this.joinDate = joinDate;
+		this.updateDate = updateDate;
 	}
-	
+
 	public String getUser_id() {
 		return user_id;
 	}
@@ -135,12 +138,20 @@ public class MemberDTO {
 		this.joinDate = joinDate;
 	}
 
+	public Timestamp getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Timestamp updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberDTO [user_id=" + user_id + ", password=" + password + ", email=" + email + ", name=" + name
 				+ ", birth_date=" + birth_date + ", gender=" + gender + ", phone=" + phone + ", address=" + address
 				+ ", point_balance=" + point_balance + ", role=" + role + ", status=" + status + ", joinDate="
-				+ joinDate + "]";
+				+ joinDate + ", updateDate=" + updateDate + "]";
 	}
 	
 }

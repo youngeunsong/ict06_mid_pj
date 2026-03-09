@@ -9,7 +9,7 @@
 	  <div class="container-fluid px-4">
 	
 	    <!-- 로고 -->
-	    <a class="navbar-brand fw-bold me-3" href="${path}/main.do">
+	    <a class="navbar-brand font-weight-bold me-3" href="${path}/main.do">
 	      맛침내
 	    </a>
 	

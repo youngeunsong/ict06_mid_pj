@@ -11,19 +11,20 @@ public class PlaceDTO {
 	private String name;
 	private String address;
 	private int view_count;
-	private int latitude;
-	private int longitude;
+	private double latitude;
+	private double longitude;
 	private String image_url;
-	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp placeRegDate;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
+	private Timestamp placeUpdateDate;
 
 	public PlaceDTO() {
 		super();
 	}
-	
-	public PlaceDTO(int place_id, String place_type, String name, String address, int view_count, int latitude,
-			int longitude, String image_url, Timestamp placeRegDate) {
+
+	public PlaceDTO(int place_id, String place_type, String name, String address, int view_count, double latitude,
+			double longitude, String image_url, Timestamp placeRegDate, Timestamp placeUpdateDate) {
 		super();
 		this.place_id = place_id;
 		this.place_type = place_type;
@@ -34,68 +35,95 @@ public class PlaceDTO {
 		this.longitude = longitude;
 		this.image_url = image_url;
 		this.placeRegDate = placeRegDate;
+		this.placeUpdateDate = placeUpdateDate;
 	}
-	
+
 	public int getPlace_id() {
 		return place_id;
 	}
+
 	public void setPlace_id(int place_id) {
 		this.place_id = place_id;
 	}
+
 	public String getPlace_type() {
 		return place_type;
 	}
+
 	public void setPlace_type(String place_type) {
 		this.place_type = place_type;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getAddress() {
 		return address;
 	}
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	public int getView_count() {
 		return view_count;
 	}
+
 	public void setView_count(int view_count) {
 		this.view_count = view_count;
 	}
-	public int getLatitude() {
+
+	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(int latitude) {
+
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	public int getLongitude() {
+
+	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(int longitude) {
+
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+
 	public String getImage_url() {
 		return image_url;
 	}
+
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
+
 	public Timestamp getPlaceRegDate() {
 		return placeRegDate;
 	}
+
 	public void setPlaceRegDate(Timestamp placeRegDate) {
 		this.placeRegDate = placeRegDate;
+	}
+
+	public Timestamp getPlaceUpdateDate() {
+		return placeUpdateDate;
+	}
+
+	public void setPlaceUpdateDate(Timestamp placeUpdateDate) {
+		this.placeUpdateDate = placeUpdateDate;
 	}
 
 	@Override
 	public String toString() {
 		return "PlaceDTO [place_id=" + place_id + ", place_type=" + place_type + ", name=" + name + ", address="
 				+ address + ", view_count=" + view_count + ", latitude=" + latitude + ", longitude=" + longitude
-				+ ", image_url=" + image_url + ", placeRegDate=" + placeRegDate + "]";
+				+ ", image_url=" + image_url + ", placeRegDate=" + placeRegDate + ", placeUpdateDate=" + placeUpdateDate
+				+ "]";
 	}
 	
 }

@@ -15,13 +15,15 @@ public class ReservationDTO {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Date check_out;
 	private String visit_time;
-	private String ticket_type;
+	private int ticket_id;
 	private int guest_count;
 	private String request_note;
 	private String status;
 	private String payment_id;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp resDate;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
+	private Timestamp resUpdateDate;
 	private PlaceDTO placeDTO;
 
 	public ReservationDTO() {
@@ -29,8 +31,8 @@ public class ReservationDTO {
 	}
 
 	public ReservationDTO(String reservation_id, String user_id, int place_id, Date check_in, Date check_out,
-			String visit_time, String ticket_type, int guest_count, String request_note, String status,
-			String payment_id, Timestamp resDate, PlaceDTO placeDTO) {
+			String visit_time, int ticket_id, int guest_count, String request_note, String status, String payment_id,
+			Timestamp resDate, Timestamp resUpdateDate, PlaceDTO placeDTO) {
 		super();
 		this.reservation_id = reservation_id;
 		this.user_id = user_id;
@@ -38,12 +40,13 @@ public class ReservationDTO {
 		this.check_in = check_in;
 		this.check_out = check_out;
 		this.visit_time = visit_time;
-		this.ticket_type = ticket_type;
+		this.ticket_id = ticket_id;
 		this.guest_count = guest_count;
 		this.request_note = request_note;
 		this.status = status;
 		this.payment_id = payment_id;
 		this.resDate = resDate;
+		this.resUpdateDate = resUpdateDate;
 		this.placeDTO = placeDTO;
 	}
 
@@ -95,12 +98,12 @@ public class ReservationDTO {
 		this.visit_time = visit_time;
 	}
 
-	public String getTicket_type() {
-		return ticket_type;
+	public int getTicket_id() {
+		return ticket_id;
 	}
 
-	public void setTicket_type(String ticket_type) {
-		this.ticket_type = ticket_type;
+	public void setTicket_id(int ticket_id) {
+		this.ticket_id = ticket_id;
 	}
 
 	public int getGuest_count() {
@@ -143,6 +146,14 @@ public class ReservationDTO {
 		this.resDate = resDate;
 	}
 
+	public Timestamp getResUpdateDate() {
+		return resUpdateDate;
+	}
+
+	public void setResUpdateDate(Timestamp resUpdateDate) {
+		this.resUpdateDate = resUpdateDate;
+	}
+
 	public PlaceDTO getPlaceDTO() {
 		return placeDTO;
 	}
@@ -154,10 +165,10 @@ public class ReservationDTO {
 	@Override
 	public String toString() {
 		return "ReservationDTO [reservation_id=" + reservation_id + ", user_id=" + user_id + ", place_id=" + place_id
-				+ ", check_in=" + check_in + ", check_out=" + check_out + ", visit_time=" + visit_time
-				+ ", ticket_type=" + ticket_type + ", guest_count=" + guest_count + ", request_note=" + request_note
-				+ ", status=" + status + ", payment_id=" + payment_id + ", resDate=" + resDate + ", placeDTO="
-				+ placeDTO + "]";
+				+ ", check_in=" + check_in + ", check_out=" + check_out + ", visit_time=" + visit_time + ", ticket_id="
+				+ ticket_id + ", guest_count=" + guest_count + ", request_note=" + request_note + ", status=" + status
+				+ ", payment_id=" + payment_id + ", resDate=" + resDate + ", resUpdateDate=" + resUpdateDate
+				+ ", placeDTO=" + placeDTO + "]";
 	}
 
 }

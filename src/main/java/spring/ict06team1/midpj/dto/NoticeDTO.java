@@ -2,9 +2,9 @@ package spring.ict06team1.midpj.dto;
 
 import java.sql.Timestamp;
 
-public class NoticeEventDTO {
+public class NoticeDTO {
 
-	private int notice_event_id;
+	private int notice_id;
 	private String admin_id;
 	private String category;
 	private String title;
@@ -14,14 +14,14 @@ public class NoticeEventDTO {
 	private String is_top;
 	private Timestamp regDate;
 
-	public NoticeEventDTO() {
+	public NoticeDTO() {
 		super();
 	}
 
-	public NoticeEventDTO(int notice_event_id, String admin_id, String category, String title, String content,
-			String image_url, int view_count, String is_top, Timestamp regDate) {
+	public NoticeDTO(int notice_id, String admin_id, String category, String title, String content, String image_url,
+			int view_count, String is_top, Timestamp regDate) {
 		super();
-		this.notice_event_id = notice_event_id;
+		this.notice_id = notice_id;
 		this.admin_id = admin_id;
 		this.category = category;
 		this.title = title;
@@ -32,12 +32,12 @@ public class NoticeEventDTO {
 		this.regDate = regDate;
 	}
 
-	public int getNotice_event_id() {
-		return notice_event_id;
+	public int getNotice_id() {
+		return notice_id;
 	}
 
-	public void setNotice_event_id(int notice_event_id) {
-		this.notice_event_id = notice_event_id;
+	public void setNotice_id(int notice_id) {
+		this.notice_id = notice_id;
 	}
 
 	public String getAdmin_id() {
@@ -106,9 +106,9 @@ public class NoticeEventDTO {
 
 	@Override
 	public String toString() {
-		return "NoticeEventDTO [notice_event_id=" + notice_event_id + ", admin_id=" + admin_id + ", category="
-				+ category + ", title=" + title + ", content=" + content + ", image_url=" + image_url + ", view_count="
-				+ view_count + ", is_top=" + is_top + ", regDate=" + regDate + "]";
+		return "NoticeDTO [notice_id=" + notice_id + ", admin_id=" + admin_id + ", category=" + category + ", title="
+				+ title + ", content=" + content + ", image_url=" + image_url + ", view_count=" + view_count
+				+ ", is_top=" + is_top + ", regDate=" + regDate + "]";
 	}
-	
+
 }

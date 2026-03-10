@@ -83,11 +83,18 @@
 							<div class="filter-row">
 								<span class="filter-row-label">축제 상태</span>
 								<div style="display:flex; gap:4px;"> 
-									<span class="tag tag-success" data-value="UPCOMING" onclick="toggleTag(this)">확정</span> <!-- TODO: 함수 작동 테스트  -->
-									<span class="tag tag-warning" data-value="PENDING" onclick="toggleTag(this)">결제대기</span> <!-- TODO: 함 -->
-									<span class="tag tag-danger" data-value="CANCELLED" onclick="toggleTag(this)">취소</span>
-									<span class="tag tag-secondary" data-value="COMPLETED" onclick="toggleTag(this)">이용완료</span>
+									<span class="tag tag-success" data-value="UPCOMING" onclick="toggleTag(this)">시작 전</span> <!-- TODO: 함수 작동 테스트  -->
+									<span class="tag tag-warning" data-value="ONGOING" onclick="toggleTag(this)">진행 중</span> <!-- TODO: 함수 작동 테스트 -->
+s									<span class="tag tag-secondary" data-value="ENDED" onclick="toggleTag(this)">종료</span> <!-- TODO: 함수 작동 테스트 -->
 								</div>
+							</div>
+							
+							<%-- ===== 필터 검색버튼 ===== --%>
+							<div class="filter-row">
+								<span class="filter-row-label"></span>
+								<button type="button" class="btn btn-dark btn-filter-search" onclick="filterData()"> <!-- TODO: 함수 작동 테스트 -->
+									<i class="bi bi-search mr-1"></i>검색
+								</button>
 							</div>
 						</div>
 					</div>

@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.ReservationDTO;
-import spring.ict06team1.midpj.service.AdminService;
+import spring.ict06team1.midpj.service.AdReservationService;
 
 @Controller
 public class AdReservationController {
 
 	@Autowired
-	private AdminService adminService;
+	private AdReservationService adResService;
 
 	private static final Logger logger = LoggerFactory.getLogger(AdReservationController.class);
 
@@ -34,7 +34,7 @@ public class AdReservationController {
 	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /getReservationList.ad]");
-		adminService.getReservationList(request, response, model);
+		adResService.getReservationList(request, response, model);
 		
 		return "admin/reservation/reservationList";
 	}
@@ -46,20 +46,20 @@ public class AdReservationController {
 	public ReservationDTO getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /getReservationDetail.ad]");
-		adminService.getReservationDetail(request, response, model);
+		adResService.getReservationDetail(request, response, model);
 		ReservationDTO dto = (ReservationDTO) request.getAttribute("dto");
 
 		return dto;
 	}
 
 	// 2. 예약 변경
-	// 2-1. 예약상태 변경
-	@PostMapping("/updateReservationStatus.ad")
+	// 2-1. 예약 수정
+	@PostMapping("/updateReservation.ad")
 	@ResponseBody
-	public String updateReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String updateReservation(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /updateReservationStatus.ad]");
-		adminService.modifyReservationStatus(request, response, model);
+		logger.info("[url => /updateReservation.ad]");
+		adResService.modifyReservation(request, response, model);
 
 		int result = (Integer) request.getAttribute("result");
 
@@ -71,18 +71,18 @@ public class AdReservationController {
 	public String cancelReservation(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => /resCancel.ad >>>");
-		adminService.cancelReservation(request, response, model);
+		adResService.cancelReservation(request, response, model);
 
 		return "redirect:/admin/reservation/reslist.ad";
 	}
 
 	// 3. 통계
 	// 3-1. 대시보드(기간별 집계)
-	@GetMapping("/adminDashboard.ad")
+	@GetMapping("/resDashboard.ad")
 	public String getDashboard(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /adminDashboard.ad >>>");
-//		adminService.getReservationStatistics(request, response, model);
+		logger.info("<<< url => /resDashboard.ad >>>");
+		adResService.getDashboard(request, response, model);
 
 		return "admin/reservation/dashboard";
 	}

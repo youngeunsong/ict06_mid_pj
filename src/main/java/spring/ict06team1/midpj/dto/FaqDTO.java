@@ -12,13 +12,14 @@ public class FaqDTO {
 	private int order_no;
 	private String visible;
 	private Timestamp faqRegDate;
+	private Timestamp faqUpdateDate;
 	
 	public FaqDTO() {
 		super();
 	}
 
 	public FaqDTO(int faq_id, String admin_id, String question, String answer, String category, int order_no,
-			String visible, Timestamp faqRegDate) {
+			String visible, Timestamp faqRegDate, Timestamp faqUpdateDate) {
 		super();
 		this.faq_id = faq_id;
 		this.admin_id = admin_id;
@@ -28,6 +29,7 @@ public class FaqDTO {
 		this.order_no = order_no;
 		this.visible = visible;
 		this.faqRegDate = faqRegDate;
+		this.faqUpdateDate = faqUpdateDate;
 	}
 
 	public int getFaq_id() {
@@ -94,11 +96,19 @@ public class FaqDTO {
 		this.faqRegDate = faqRegDate;
 	}
 
+	public Timestamp getFaqUpdateDate() {
+		return faqUpdateDate;
+	}
+
+	public void setFaqUpdateDate(Timestamp faqUpdateDate) {
+		this.faqUpdateDate = faqUpdateDate;
+	}
+
 	@Override
 	public String toString() {
 		return "FaqDTO [faq_id=" + faq_id + ", admin_id=" + admin_id + ", question=" + question + ", answer=" + answer
 				+ ", category=" + category + ", order_no=" + order_no + ", visible=" + visible + ", faqRegDate="
-				+ faqRegDate + "]";
+				+ faqRegDate + ", faqUpdateDate=" + faqUpdateDate + "]";
 	}
 
 }

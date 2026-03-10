@@ -138,7 +138,7 @@
 					</a>
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
-						<a href="${path}/admin/place/restaurant" class="nav-link">
+						<a href="${path}/admin/place/restaurant.ad" class="nav-link">
 							<i class="nav-icon bi bi-chevron-right"></i>
 							<p>맛집</p>
 						</a>

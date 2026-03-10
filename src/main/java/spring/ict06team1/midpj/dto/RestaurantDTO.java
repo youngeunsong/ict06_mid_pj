@@ -7,20 +7,33 @@ public class RestaurantDTO {
 	private String phone;
 	private String category;
 	private String status;
+	
+	//추가사항
+	private String opentime;
+	private String restdate;
+	private String parking;
+	private String areaCode;
 
 	public RestaurantDTO() {
 		super();
 	}
 
-	public RestaurantDTO(int restaurant_id, String description, String phone, String category, String status) {
+	
+	public RestaurantDTO(int restaurant_id, String description, String phone, String category, String status,
+			String opentime, String restdate, String parking, String areaCode) {
 		super();
 		this.restaurant_id = restaurant_id;
 		this.description = description;
 		this.phone = phone;
 		this.category = category;
 		this.status = status;
+		this.opentime = opentime;
+		this.restdate = restdate;
+		this.parking = parking;
+		this.areaCode = areaCode;
 	}
-	
+
+
 	public int getRestaurant_id() {
 		return restaurant_id;
 	}
@@ -52,10 +65,44 @@ public class RestaurantDTO {
 		this.status = status;
 	}
 
+	public String getOpentime() {
+		return opentime;
+	}
+
+	public void setOpentime(String opentime) {
+		this.opentime = opentime;
+	}
+
+	public String getRestdate() {
+		return restdate;
+	}
+
+	public void setRestdate(String restdate) {
+		this.restdate = restdate;
+	}
+
+	public String getParking() {
+		return parking;
+	}
+
+	public void setParking(String parking) {
+		this.parking = parking;
+	}
+
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+
+
 	@Override
 	public String toString() {
 		return "RestaurantDTO [restaurant_id=" + restaurant_id + ", description=" + description + ", phone=" + phone
-				+ ", category=" + category + ", status=" + status + "]";
+				+ ", category=" + category + ", status=" + status + ", opentime=" + opentime + ", restdate=" + restdate
+				+ ", parking=" + parking + ", areaCode=" + areaCode + "]";
 	}
 	
 }

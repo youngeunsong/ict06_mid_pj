@@ -6,7 +6,7 @@
 		<small class="text-muted">Total <b>${totalCount}</b>entries</small>
 		<nav>
 			<ul class="pagination pagination-sm m-0">
-				<c:if test="${paging.startPage} > paging.pageBlock">
+				<c:if test="${paging.startPage > paging.pageBlock}">
 					<li class="page-item">
 						<a class="page-link border-0 bg-light mx-1" href="?pageNum=${paging.prev}">Previous</a>
 					</li>

@@ -3,6 +3,7 @@
 
 -- 1. 회원
 CREATE TABLE MEMBER (
+
     user_id			VARCHAR2(50) PRIMARY KEY,
     password		VARCHAR2(255) NOT NULL,
     email			VARCHAR2(100) UNIQUE NOT NULL,
@@ -18,6 +19,8 @@ CREATE TABLE MEMBER (
     CONSTRAINTS CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
 );
 SELECT * FROM MEMBER;
+INSERT INTO MEMBER (user_id, password, email, name)
+VALUES (admin1, admin1234, unick123@nate.com, admin);
 
 -- 2. 장소 통합
 CREATE TABLE PLACE (
@@ -32,13 +35,9 @@ CREATE TABLE PLACE (
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 placeRegDate
     CONSTRAINTS CHK_PLACE_PLACETYPE CHECK(place_type IN ('REST','ACC','FEST'))
 );
-DROP SEQUENCE place_id_seq;
-CREATE SEQUENCE place_id_seq
-START WITH 1      -- 1부터 시작
-INCREMENT BY 1    -- 1씩 증가
-NOCACHE;          -- 번호 건너뜀 방지
 
-SELECT * FROM PLACE ;
+SELECT * FROM PLACE WHERE place_id = 3588065;
+
 WHERE place_type = 'REST'; --563건
 SELECT * FROM PLACE
 WHERE place_type = 'ACC'; --288건
@@ -52,14 +51,9 @@ CREATE TABLE RESTAURANT (
     phone          VARCHAR2(20),
     category       VARCHAR2(50),
     status         VARCHAR2(20) DEFAULT 'OPEN',
-    opentime       VARCHAR2(400),
-    restdate       VARCHAR2(400),
-    parking        VARCHAR2(400),
-    areacode       VARCHAR2(400),
     CONSTRAINTS CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM RESTAURANT;
-
 
 -- 4. 숙소 (PLACE 참조)
 CREATE TABLE ACCOMMODATION (

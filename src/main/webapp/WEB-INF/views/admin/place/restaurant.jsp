@@ -272,7 +272,7 @@
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 	<div class="app-wrapper">
 		<!--begin::Sidebar-->
-		<%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 		<!--end::Sidebar-->
 		
 		<main class="app-main">
@@ -386,7 +386,7 @@
 	</main>
 </div>
 
-<%@ include file="/WEB-INF/views/common/footer_script.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 
 <!-- 등록성공여부 확인 알림창 -->
 <c:if test="${insertCnt == 1}">

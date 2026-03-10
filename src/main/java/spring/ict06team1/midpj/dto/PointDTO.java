@@ -1,5 +1,7 @@
 package spring.ict06team1.midpj.dto;
 
+import java.sql.Timestamp;
+
 public class PointDTO {
 
 	private int point_id;
@@ -8,14 +10,14 @@ public class PointDTO {
 	private int amount;
 	private String type;
 	private String description;
-	private String pointLogDate;
+	private Timestamp pointLogDate;
 
 	public PointDTO() {
 		super();
 	}
 	
 	public PointDTO(int point_id, String user_id, String policy_key, int amount, String type, String description,
-			String pointLogDate) {
+			Timestamp pointLogDate) {
 		super();
 		this.point_id = point_id;
 		this.user_id = user_id;
@@ -25,7 +27,7 @@ public class PointDTO {
 		this.description = description;
 		this.pointLogDate = pointLogDate;
 	}
-	
+
 	public int getPoint_id() {
 		return point_id;
 	}
@@ -74,11 +76,11 @@ public class PointDTO {
 		this.description = description;
 	}
 
-	public String getPointLogDate() {
+	public Timestamp getPointLogDate() {
 		return pointLogDate;
 	}
 
-	public void setPointLogDate(String pointLogDate) {
+	public void setPointLogDate(Timestamp pointLogDate) {
 		this.pointLogDate = pointLogDate;
 	}
 

@@ -142,19 +142,194 @@ SELECT * FROM FESTIVAL_TICKET;
 --=====예약 및 결제 데이터=====
 --예약 데이터 생성
 SELECT * FROM RESERVATION ORDER BY RESERVATION_ID;
-DELETE FROM RESERVATION;
+DELETE FROM RESERVATION ON DELETE CASCADE;
 
--- [타겟 1] 어제 체크아웃한 숙소
-INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES ('user01', 2, 2, 'COMPLETED', SYSDATE-3, SYSDATE-1, SYSDATE-5);
+SELECT check_in, TRUNC(check_in), TO_CHAR(check_in, 'YYYY-MM-DD HH24:MI:SS') FROM RESERVATION WHERE ROWNUM = 1;
 
--- [타겟 2] 오늘 오전 체크아웃 시점이 지난 건
-INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES ('user02', 75, 1, 'COMPLETED', SYSDATE-1, TRUNC(SYSDATE), SYSDATE-2);
+-- =============================================
+-- 예약 테스트 데이터 50건
+-- status: PENDING/RESERVED/COMPLETED/CANCELLED/NOSHOW 분포
+-- user: user01~user07 분포
+-- 날짜: 과거/현재/미래 분포
+-- 축제 티켓 포함
+-- =============================================
 
--- [유지 1] 내일 체크아웃 예정
+-- [맛집 예약 - COMPLETED (과거)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 2, 'COMPLETED', SYSDATE-30, '12:00', SYSDATE-32);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='REST'), 4, 'COMPLETED', SYSDATE-25, '18:30', SYSDATE-27);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+2 FROM PLACE WHERE place_type='REST'), 2, 'COMPLETED', SYSDATE-20, '19:00', SYSDATE-22);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='REST'), 3, 'COMPLETED', SYSDATE-15, '12:30', SYSDATE-17);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='REST'), 2, 'COMPLETED', SYSDATE-10, '13:00', SYSDATE-12);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+5 FROM PLACE WHERE place_type='REST'), 5, 'COMPLETED', SYSDATE-8, '19:30', SYSDATE-10);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+6 FROM PLACE WHERE place_type='REST'), 2, 'COMPLETED', SYSDATE-5, '12:00', SYSDATE-7);
+
+-- [맛집 예약 - CANCELLED (과거)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id)+7 FROM PLACE WHERE place_type='REST'), 2, 'CANCELLED', SYSDATE-18, '18:00', SYSDATE-20);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+8 FROM PLACE WHERE place_type='REST'), 3, 'CANCELLED', SYSDATE-12, '13:00', SYSDATE-14);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+9 FROM PLACE WHERE place_type='REST'), 2, 'CANCELLED', SYSDATE-6, '19:00', SYSDATE-8);
+
+-- [맛집 예약 - PENDING/RESERVED (미래)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+10 FROM PLACE WHERE place_type='REST'), 2, 'PENDING', SYSDATE+3, '12:00', SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+11 FROM PLACE WHERE place_type='REST'), 4, 'RESERVED', SYSDATE+5, '18:30', SYSDATE-1);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+12 FROM PLACE WHERE place_type='REST'), 2, 'PENDING', SYSDATE+7, '19:00', SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+13 FROM PLACE WHERE place_type='REST'), 3, 'RESERVED', SYSDATE+10, '12:30', SYSDATE-2);
+
+-- [숙소 예약 - COMPLETED (과거)]
 INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
-VALUES ('user03', 6, 4, 'RESERVED', SYSDATE, SYSDATE+1, SYSDATE-2);
+VALUES ('user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'), 2, 'COMPLETED', SYSDATE-40, SYSDATE-38, SYSDATE-42);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='ACC'), 3, 'COMPLETED', SYSDATE-35, SYSDATE-33, SYSDATE-37);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+2 FROM PLACE WHERE place_type='ACC'), 2, 'COMPLETED', SYSDATE-28, SYSDATE-26, SYSDATE-30);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='ACC'), 4, 'COMPLETED', SYSDATE-21, SYSDATE-19, SYSDATE-23);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='ACC'), 2, 'COMPLETED', SYSDATE-14, SYSDATE-12, SYSDATE-16);
+
+-- [숙소 예약 - CANCELLED]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+5 FROM PLACE WHERE place_type='ACC'), 2, 'CANCELLED', SYSDATE-10, SYSDATE-8, SYSDATE-12);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+6 FROM PLACE WHERE place_type='ACC'), 3, 'CANCELLED', SYSDATE-5, SYSDATE-3, SYSDATE-7);
+
+-- [숙소 예약 - NOSHOW]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id)+7 FROM PLACE WHERE place_type='ACC'), 2, 'NOSHOW', SYSDATE-7, SYSDATE-5, SYSDATE-9);
+
+-- [숙소 예약 - PENDING/RESERVED (미래)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+8 FROM PLACE WHERE place_type='ACC'), 2, 'PENDING', SYSDATE+5, SYSDATE+7, SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+9 FROM PLACE WHERE place_type='ACC'), 4, 'RESERVED', SYSDATE+8, SYSDATE+10, SYSDATE-1);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+10 FROM PLACE WHERE place_type='ACC'), 2, 'PENDING', SYSDATE+12, SYSDATE+14, SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+11 FROM PLACE WHERE place_type='ACC'), 3, 'RESERVED', SYSDATE+15, SYSDATE+17, SYSDATE-2);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+12 FROM PLACE WHERE place_type='ACC'), 2, 'RESERVED', SYSDATE+20, SYSDATE+22, SYSDATE-3);
+
+-- [숙소 예약 - 현재 체크인 중 (RESERVED)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+13 FROM PLACE WHERE place_type='ACC'), 2, 'RESERVED', SYSDATE-1, SYSDATE+1, SYSDATE-3);
+
+-- [축제 예약 - 티켓 포함, COMPLETED (과거)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id) FROM FESTIVAL_TICKET), 2, 'COMPLETED', SYSDATE-45, SYSDATE-45, SYSDATE-47);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id) FROM FESTIVAL_TICKET), 3, 'COMPLETED', SYSDATE-30, SYSDATE-30, SYSDATE-32);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+1 FROM FESTIVAL_TICKET), 4, 'COMPLETED', SYSDATE-20, SYSDATE-20, SYSDATE-22);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+1 FROM FESTIVAL_TICKET), 2, 'CANCELLED', SYSDATE-15, SYSDATE-15, SYSDATE-17);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+2 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+2 FROM FESTIVAL_TICKET), 2, 'COMPLETED', SYSDATE-10, SYSDATE-10, SYSDATE-12);
+
+-- [축제 예약 - 티켓 포함, PENDING/RESERVED (미래)]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+3 FROM FESTIVAL_TICKET), 3, 'PENDING', SYSDATE+5, SYSDATE+5, SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+3 FROM FESTIVAL_TICKET), 2, 'RESERVED', SYSDATE+10, SYSDATE+10, SYSDATE-1);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id) FROM FESTIVAL_TICKET), 4, 'PENDING', SYSDATE+15, SYSDATE+15, SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+1 FROM FESTIVAL_TICKET), 2, 'RESERVED', SYSDATE+20, SYSDATE+20, SYSDATE-2);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, TICKET_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+5 FROM PLACE WHERE place_type='FEST'),
+        (SELECT MIN(ticket_id)+2 FROM FESTIVAL_TICKET), 3, 'PENDING', SYSDATE+25, SYSDATE+25, SYSDATE);
+
+-- [이번달 집중 데이터 - 대시보드 월별 추이용]
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 2, 'RESERVED', SYSDATE+2, '18:00', SYSDATE-3);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id) FROM PLACE WHERE place_type='ACC'), 3, 'RESERVED', SYSDATE+3, SYSDATE+5, SYSDATE-2);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='REST'), 2, 'PENDING', SYSDATE+1, '12:00', SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user07', (SELECT MIN(place_id)+1 FROM PLACE WHERE place_type='ACC'), 4, 'PENDING', SYSDATE+4, SYSDATE+6, SYSDATE);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user01', (SELECT MIN(place_id)+2 FROM PLACE WHERE place_type='REST'), 2, 'RESERVED', SYSDATE+6, '19:00', SYSDATE-1);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user02', (SELECT MIN(place_id)+2 FROM PLACE WHERE place_type='ACC'), 2, 'RESERVED', SYSDATE+8, SYSDATE+10, SYSDATE-2);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user03', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='REST'), 3, 'CANCELLED', SYSDATE-2, '13:00', SYSDATE-4);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user04', (SELECT MIN(place_id)+3 FROM PLACE WHERE place_type='ACC'), 2, 'CANCELLED', SYSDATE-3, SYSDATE-1, SYSDATE-5);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)
+VALUES ('user05', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='REST'), 4, 'COMPLETED', SYSDATE-4, '12:30', SYSDATE-6);
+
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, CHECK_OUT, CREATED_AT)
+VALUES ('user06', (SELECT MIN(place_id)+4 FROM PLACE WHERE place_type='ACC'), 2, 'COMPLETED', SYSDATE-5, SYSDATE-3, SYSDATE-7);
+
+COMMIT;
+
+--전체 예약내역 확인
+SELECT RESERVATION_ID, USER_ID, PLACE_ID, TICKET_ID, STATUS, CHECK_IN, CHECK_OUT, VISIT_TIME, CREATED_AT
+FROM RESERVATION
+ORDER BY CREATED_AT DESC;
+
+--예약상태별 예약건수 확인
+SELECT STATUS, COUNT(*) AS CNT FROM RESERVATION GROUP BY STATUS ORDER BY STATUS;
+--사용자(user_id)별 예약건수 확인
+SELECT U.USER_ID, COUNT(*) AS CNT FROM RESERVATION U GROUP BY U.USER_ID ORDER BY U.USER_ID;
 
 --[테스트 타겟 1] 이용완료 숙소 (RESERVED -> COMPLETED로 변경)
 UPDATE RESERVATION SET STATUS = 'COMPLETED'
@@ -164,7 +339,7 @@ AND CHECK_OUT < SYSDATE;
 --예약상태 변경(->CANCELLED)
 UPDATE RESERVATION
 SET STATUS = 'CANCELLED'
-WHERE RESERVATION_ID = 'RES_101'; -- 취소할 실제 ID 입력
+WHERE RESERVATION_ID = 'xxx'; -- 취소할 실제 ID 입력
 
 --예약상태 변경(체크인 날짜 지났는데 결제상태 PENDING인 경우 일괄 CANCELLED로 변경)
 UPDATE RESERVATION
@@ -174,18 +349,16 @@ WHERE STATUS = 'PENDING'
 
   
 --4) 결제 데이터 생성 (가장 최근 생성된 예약건들 연결)
-INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
-VALUES (NULL, 'user01', (SELECT MIN(reservation_id) FROM RESERVATION WHERE user_id='user01'), 150000, 'POINT', 'COMPLETED');
+INSERT INTO PAYMENT (user_id, reservation_id, amount, payment_method, payment_status)
+VALUES ('user01', (SELECT MIN(reservation_id) FROM RESERVATION WHERE user_id='user01'), 150000, 'POINT', 'COMPLETED');
 
 -- [유형 1] user02: 숙소 예약, 카드 결제 완료
-INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
-VALUES (TO_CHAR(SYSDATE, 'YYYYMMDD') || '002', 'user02', 
-       (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user02'), 250000, 'CARD', 'COMPLETED');
+INSERT INTO PAYMENT (user_id, reservation_id, amount, payment_method, payment_status)
+VALUES ('user02', (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user02'), 250000, 'CARD', 'COMPLETED');
 
 -- [유형 2] user03: 식당 예약, 카드 결제 실패/대기중
-INSERT INTO PAYMENT (payment_id, user_id, reservation_id, amount, payment_method, payment_status)
-VALUES (TO_CHAR(SYSDATE, 'YYYYMMDD') || '003', 'user03', 
-       (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user03'), 85000, 'CARD', 'CANCELLED');
+INSERT INTO PAYMENT (user_id, reservation_id, amount, payment_method, payment_status)
+VALUES ('user03', (SELECT MAX(reservation_id) FROM RESERVATION WHERE user_id='user03'), 85000, 'CARD', 'CANCELLED');
 
 COMMIT;
 
@@ -197,11 +370,11 @@ SELECT * FROM PAYMENT;
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
 VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 4, '음식은 맛있는데 주차가 조금 불편해요.');
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
-VALUES (SEQ_REVIEW.NEXTVAL + 1, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '인생 맛집입니다! 강추!');
+VALUES (SEQ_REVIEW.NEXTVAL, 'user03', (SELECT MIN(place_id) FROM PLACE WHERE place_type='REST'), 5, '인생 맛집입니다! 강추!');
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
-VALUES (SEQ_REVIEW.NEXTVAL + 2, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 2, '방음이 너무 안 돼서 잠을 설쳤어요.');
+VALUES (SEQ_REVIEW.NEXTVAL, 'user04', (SELECT MAX(place_id) FROM PLACE WHERE place_type='ACC'), 2, '방음이 너무 안 돼서 잠을 설쳤어요.');
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content) 
-VALUES (SEQ_REVIEW.NEXTVAL + 3, 'user05', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 5, '가족들과 좋은 추억 만들고 갑니다.');
+VALUES (SEQ_REVIEW.NEXTVAL, 'user05', (SELECT MAX(place_id) FROM PLACE WHERE place_type='FEST'), 5, '가족들과 좋은 추억 만들고 갑니다.');
 
 -- 1) 맛집(REST) 리뷰 추가: 평점 3~5점 분포
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
@@ -287,7 +460,7 @@ SELECT * FROM FAQ;
 INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
 VALUES (SEQ_INQUIRY.NEXTVAL, 'user01', '포인트 적립 누락', '리뷰 썼는데 포인트가 안 들어왔어요.', 'PENDING');
 INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
-VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '축제 일정 문의', '비가 와도 축제를 진행하나요?', 'ANSWERED');
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '축제 일정 문의', '비가 와도 축제를 진행하나요?', 'PENDING');
 INSERT INTO INQUIRY (inquiry_id, user_id, title, content, status)
 VALUES (SEQ_INQUIRY.NEXTVAL, 'user06', '로그인 오류', '아이디를 찾고 싶습니다.', 'PENDING');
 
@@ -360,8 +533,8 @@ FOR UPDATE; -- 다른 사용자가 동시에 수정하지 못하도록 잠금
 
 
 -- [Step 2] 예약 정보 등록 (Insert)
-INSERT INTO RESERVATION (RESERVATION_ID, USER_ID, PLACE_ID, CHECK_IN, CHECK_OUT, GUEST_COUNT, STATUS, CREATED_AT)
-VALUES ('RES_' || SEQ_RES.NEXTVAL, :uid, :pid, TO_DATE(:checkin_date, 'YYYY-MM-DD'), TO_DATE(:checkout_date, 'YYYY-MM-DD'), :qty, 'RESERVED', CURRENT_TIMESTAMP);
+INSERT INTO RESERVATION (USER_ID, PLACE_ID, CHECK_IN, CHECK_OUT, GUEST_COUNT, STATUS, CREATED_AT)
+VALUES (:uid, :pid, TO_DATE(:checkin_date, 'YYYY-MM-DD'), TO_DATE(:checkout_date, 'YYYY-MM-DD'), :qty, 'RESERVED', CURRENT_TIMESTAMP);
 
 -- [Step 3] 실시간 재고 차감 (Update)
 UPDATE FESTIVAL_TICKET 
@@ -433,49 +606,47 @@ VALUES (SEQ_POINT.NEXTVAL, 'ghost_user', 500, 'EARN', '유령 회원 적립 시�
 INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS, CREATED_AT)
 VALUES (SEQ_REVIEW.NEXTVAL, 'user01', 101, 5, '숙소가 너무 깨끗하고 좋았어요!', 'DISPLAY', CURRENT_TIMESTAMP);
 
---[Step 2,3] 포인트 log 생성 + 사용자 잔액 업데이트(트랜잭션;PL/SQL 사용)
---테스트용 데이터
+--포인트 log 생성 + 사용자 잔액 업데이트(트랜잭션;PL/SQL 사용)
+--create_tables.sql의 '7) 포인트 트리거' 세팅 참고 (최초 트리거 1회 생성 후 프로시저 실행해야 포인트 트랜잭션 수행됨)
+ 
+-- 프로시저: 검증 + INSERT만 담당
 CREATE OR REPLACE PROCEDURE SP_GIVE_POINT (
-    p_user_id IN VARCHAR2,
+    p_user_id    IN VARCHAR2,
     p_policy_key IN VARCHAR2
 ) AS
-    v_amount NUMBER := 0;
-    v_user_exists NUMBER := 0;
+    v_amount          NUMBER := 0;
+    v_user_exists     NUMBER := 0;
     v_current_balance NUMBER := 0;
 BEGIN
     -- [1] 사용자 존재 여부 확인
-    SELECT COUNT(*) INTO v_user_exists FROM MEMBER WHERE USER_ID = p_user_id;
-    
+    SELECT COUNT(*) INTO v_user_exists
+    FROM MEMBER WHERE USER_ID = p_user_id;
+
     IF v_user_exists = 0 THEN
         DBMS_OUTPUT.PUT_LINE('오류: 존재하지 않는 사용자 ID입니다.');
         RETURN;
     END IF;
-    
+
     -- [2] 포인트 정책 금액 가져오기
     SELECT AMOUNT INTO v_amount
-    FROM POINT_POLICY
-    WHERE POLICY_KEY = p_policy_key;
-    
-    -- [3] 잔액 부족 체크 (차감일 경우만)
-    -- 정책 키가 'USE_'로 시작하거나 금액(v_amount)이 음수인 경우 체크
-    SELECT NVL(POINT_BALANCE, 0) INTO v_current_balance 
-    FROM MEMBER WHERE USER_ID = p_user_id;
+    FROM POINT_POLICY WHERE POLICY_KEY = p_policy_key;
 
-    IF v_amount < 0 AND ABS(v_amount) > v_current_balance THEN
-        DBMS_OUTPUT.PUT_LINE('오류: 포인트 잔액 부족 (현재: ' || v_current_balance || ')');
-        RETURN;
+    -- [3] 잔액 부족 체크 (USE일 때만)
+    IF p_policy_key LIKE 'USE%' THEN
+        SELECT NVL(POINT_BALANCE, 0) INTO v_current_balance
+        FROM MEMBER WHERE USER_ID = p_user_id;
+
+        IF ABS(v_amount) > v_current_balance THEN
+            DBMS_OUTPUT.PUT_LINE('오류: 포인트 잔액 부족 (현재: ' || v_current_balance || ')');
+            RETURN;
+        END IF;
     END IF;
 
-    -- [4] 포인트 로그(POINT) 남기기
+    -- [4] INSERT → type 세팅, 잔액 계산은 트리거가 자동 처리
     INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT)
     VALUES (SEQ_POINT.NEXTVAL, p_user_id, p_policy_key, v_amount);
 
-    -- [5] 사용자 잔액(MEMBER) 업데이트
-    UPDATE MEMBER
-    SET POINT_BALANCE = NVL(POINT_BALANCE, 0) + v_amount
-    WHERE USER_ID = p_user_id;
-    
-    COMMIT; -- 모든 작업 성공 시 확정
+    COMMIT;
     DBMS_OUTPUT.PUT_LINE(p_user_id || '님 처리 완료. 변동금액: ' || v_amount);
 
 EXCEPTION
@@ -488,7 +659,7 @@ EXCEPTION
 END;
 /
 
---프로시저 실행
+-- 프로시저 실행
 CALL SP_GIVE_POINT('user01', 'EARN_REVIEW');
 
 COMMIT;
@@ -544,7 +715,9 @@ ORDER BY R.CREATED_AT DESC;
 INSERT INTO INQUIRY(INQUIRY_ID, USER_ID, TITLE, CONTENT, STATUS, CREATED_AT)
 VALUES (SEQ_INQUIRY.NEXTVAL, 'user02', '결제 취소 확인 부탁드려요', '카드로 결제했는데 취소됐나요?', 'PENDING', SYSDATE-1);
 INSERT INTO INQUIRY(INQUIRY_ID, USER_ID, TITLE, CONTENT, STATUS, CREATED_AT)
-VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '숙소 위치 문의', '주차장이 넓은가요?', 'ANSWERED', SYSDATE-2);
+VALUES (SEQ_INQUIRY.NEXTVAL, 'user03', '숙소 위치 문의', '주차장이 넓은가요?', 'PENDING', SYSDATE-2);
+UPDATE INQUIRY SET STATUS = 'ANSWERED', ADMIN_REPLY = '답변 내용'
+WHERE INQUIRY_ID = 2;
 SELECT * FROM INQUIRY;
 
 --답변 대기(PENDING) 상태인 문의와 해당 유저의 중요 정보 연동(최근 예약 정보 등)

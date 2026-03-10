@@ -27,22 +27,27 @@
 		SQL 쿼리 : 지역별 베스트 맛집 랭킹 쿼리
 		<pre>
 			<code>
-			<c:out value="
-			SELECT * FROM (
-			    SELECT 
-			        p.name, p.address, 
-			        ROUND(AVG(rv.rating), 1) as avg_rating,
-			        COUNT(rv.review_id) as review_cnt
-			    FROM PLACE p
-			    JOIN REVIEW rv ON p.place_id = rv.place_id
-			    WHERE p.address LIKE '%마포구%' -- 특정 지역
-			      AND p.place_type = 'REST'
-			    GROUP BY p.place_id, p.name, p.address
-			    HAVING COUNT(rv.review_id) >= 5 -- 리뷰 최소 5개 이상인 곳만
-			    ORDER BY avg_rating DESC, review_cnt DESC
-			) WHERE ROWNUM <= 10;
+			<c:out escapeXml="true" value="
+				SELECT *
+				FROM (
+				    SELECT
+				        p.place_id,
+				        p.name,
+				        p.address,
+				        p.image_url,
+				        p.view_count,
+				        NVL(AVG(r.rating), 0)  AS avg_rating,
+				        COUNT(r.review_id)     AS review_count
+				    FROM place p
+				    LEFT JOIN review r
+				        ON r.place_id = p.place_id
+				       AND r.status = 'ACTIVE'
+				    GROUP BY p.place_id, p.name, p.address, p.image_url, p.view_count
+				    ORDER BY p.view_count DESC, NVL(AVG(r.rating), 0) DESC
+				)
+				WHERE ROWNUM &lt <= 6;
 			" />
-			</code>
+			</code> <!-- &lt : < 부등호  -->
 		</pre>
   	
       <%@ include file="../../common/footer.jsp" %>

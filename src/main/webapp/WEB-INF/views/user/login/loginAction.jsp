@@ -1,12 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
-
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>로그인 처리</title>
-
 </head>
 <body>
 
@@ -24,7 +22,9 @@
         <%-- 2. 로그인 실패 시 --%>
         <c:otherwise>
             <script type="text/javascript">
-                alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+
+                alert("아이디 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+                
                 // 이전 로그인 폼 페이지로 이동 (입력했던 정보 유지)
                 history.back();
             </script>

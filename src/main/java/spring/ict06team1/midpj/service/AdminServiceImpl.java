@@ -25,84 +25,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import spring.ict06team1.midpj.dao.AdminDAOImpl;
 import spring.ict06team1.midpj.dto.PlaceDTO;
-import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.page.Paging;
-
-
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AdminDAOImpl admindao;
-
-	//1. 예약 조회
-	//1-1. 예약목록 전체 조회, 검색/필터
-	@Override
-	public void getReservationList(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("[AdminServiceImpl - getReservationList()]");
-		//1) parameter값 수집(검색어, 예약상태)
-		String keyword = request.getParameter("keyword");
-		String status = request.getParameter("status");
-		
-		//2) DAO 호출
-		//검색조건 담을 map 생성
-		Map<String, Object> map = new HashMap<String, Object>();
-        map.put("keyword", keyword);
-        map.put("status", status);
-		
-		//전체 조회
-		List<ReservationDTO> list = admindao.getReservationList(map);
-		System.out.println("전체 데이터 수: " + (list != null ? list.size() : 0));
-		
-		//3) Model에 담아서 jsp로 전달
-		model.addAttribute("list", list);
-		model.addAttribute("status", status);
-	}
-
-	//1-2. 예약 상세페이지 조회
-	@Override
-	public void getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("[AdminServiceImpl - getReservationDetail()]");
-		
-		String resId = request.getParameter("resId");
-		ReservationDTO dto = admindao.getReservationDetail(resId);
-		request.setAttribute("dto", dto);
-	}
-
-	//2. 예약 변경
-	//2-1. 예약상태 변경
-	@Override
-	public void modifyReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("[AdminServiceImpl - getReservationDetail()]");
-		
-		String resId = request.getParameter("resId");
-		String status = request.getParameter("status");
-		ReservationDTO dto = new ReservationDTO();
-		dto.setReservation_id(resId);
-		dto.setStatus(status);
-		
-		int result = admindao.modifyReservationStatus(dto);
-		
-		request.setAttribute("result", result);
-	}
-
-	//2-2. 예약 취소
-	@Override
-	public void cancelReservation(HttpServletRequest request, HttpServletResponse response, Model model) {
-		
-	}
-
-	//3. 통계
-	//3-1. 대시보드(기간별 집계)
-	@Override
-	public void getReservationStatistics(HttpServletRequest request, HttpServletResponse response, Model model) {
-		Map<String, Object> statistics = admindao.getReservationStatistics();
-		model.addAttribute("statistics", statistics);
-	}
-
-	
 	
 	//------------------------------------------------------------------------------------------
 	//맛집 기본데이터 등록
@@ -124,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
 	    ObjectMapper mapper = new ObjectMapper();
 
 	    try {
-	        // 1️⃣ 지역 기반 목록 조회
+	        //1. 지역 기반 목록 조회
 	        String url = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2?serviceKey=" + serviceKey
 	                + "&areaCode=" + areaCode
 	                + "&contentTypeId=39"
@@ -184,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
 	    model.addAttribute("countRes", successCountRes);
 	}
 	
-	// ✅ [메서드 추가] 소개 정보 조회 (영업시간, 휴무일, 주차시설 등)
+	// [메서드 추가] 소개 정보 조회 (영업시간, 휴무일, 주차시설 등)
 	@Override
 	public void testRegisterIntro(String contentId, RestaurantDTO rdto) {
 		
@@ -221,7 +151,7 @@ public class AdminServiceImpl implements AdminService {
 	    }
 	}
 
-	// ✅ 2. 수정된 공통 상세 정보 메서드 (YN 파라미터 모두 제거)
+	// 2. 수정된 공통 상세 정보 메서드 (YN 파라미터 모두 제거)
 	@Override
 	public void testRegisterDetail(String contentId, RestaurantDTO rdto) {
 	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
@@ -231,7 +161,7 @@ public class AdminServiceImpl implements AdminService {
 	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); 
 	    restTemplate.setUriTemplateHandler(factory);
 
-	    // 💡 중요: 최신 매뉴얼 규격에 따라 모든 YN 파라미터를 삭제했습니다.
+	    // 중요: 최신 매뉴얼 규격에 따라 모든 YN 파라미터를 삭제했습니다.
 	    String url = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?serviceKey=" + serviceKey
 	            + "&contentId=" + contentId
 	            + "&MobileOS=ETC&MobileApp=AppTest&_type=json";
@@ -531,12 +461,11 @@ public class AdminServiceImpl implements AdminService {
 		
 	//-------------------------------------
 		//3단계. 화면에서 입력한 값을 가져와라 dto에 setter로 값을 담아라
-		//3-1. ProductDTO 생성
-		PlaceDTO pdto = new PlaceDTO();
-		RestaurantDTO rdto =new RestaurantDTO();
-		//5단계. 상품등록
-		
+		//3-1. RestaurantDTO 생성
 		PlaceDTO pDto = new PlaceDTO();
+		RestaurantDTO rDto = new RestaurantDTO();
+		
+		//5단계. 맛집등록
 		pDto.setPlace_id(Integer.parseInt((request.getParameter("place_id"))));
 	    pDto.setPlace_type("rest"); // 고정값
 	    pDto.setName(request.getParameter("pdName"));
@@ -546,7 +475,6 @@ public class AdminServiceImpl implements AdminService {
 	    pDto.setLongitude(Double.parseDouble(request.getParameter("longitude")));
 	    pDto.setView_count(0); // 초기값
 	    
-	    RestaurantDTO rDto = new RestaurantDTO();
 	    rDto.setRestaurant_id(Integer.parseInt((request.getParameter("place_id"))));
 	    rDto.setPhone(request.getParameter("phone"));
 	    rDto.setCategory(request.getParameter("category"));

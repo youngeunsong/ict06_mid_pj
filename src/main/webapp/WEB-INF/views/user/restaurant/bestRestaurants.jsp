@@ -24,7 +24,7 @@
 	  </div>
 	  
 	  <!-- 관련 SQL -->
-		SQL 쿼리 : 베스트 맛집 랭킹 쿼리
+		SQL 쿼리 : 베스트 맛집 랭킹 쿼리 (TOP6). 별점순 
 		<pre>
 			<code>
 			<c:out value="
@@ -55,8 +55,9 @@
 				    GROUP BY p.place_id, p.name, p.address, p.image_url
 				    ORDER BY weekly_views DESC
 				) WHERE ROWNUM <= 10;
+
 			" />
-			</code>
+			</code> 
 		</pre>
   	
       <%@ include file="../../common/footer.jsp" %>

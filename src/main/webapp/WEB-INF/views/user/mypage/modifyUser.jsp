@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
-
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +9,10 @@
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
-
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="${path}/resources/css/common/header.css">
+<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
 
 <style>
     .modify_auth_box {
@@ -43,7 +44,6 @@
     }
     .btn_auth:hover { background-color: #f91a32; }
 </style>
-
 </head>
 <body>
    <div class="wrap">
@@ -79,6 +79,7 @@
          </div>
       </div>
       
+
       <!-- 관련 SQL -->
       SQL 쿼리 : 회원 비밀번호 재확인
   	<pre><code>
@@ -86,6 +87,16 @@
 	FROM MEMBER
 	WHERE user_id = #${'{'}userId}
 	</code></pre>
+	
+	SQL 쿼리 : 회원정보 인증 및 회원 상세 정보 가져오기
+  		<pre>
+			<code>
+			<c:out escapeXml="true" value="
+		        SELECT * FROM MEMBER WHERE user_id = #${'{'}user_id}
+			" />
+			</code> 
+		</pre>
+      <!-- 관련 SQL -->
       
       <%@ include file="../../common/footer.jsp" %>
    </div>

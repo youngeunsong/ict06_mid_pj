@@ -1,7 +1,6 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -20,88 +19,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import spring.ict06team1.midpj.dto.PlaceDTO;
-import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.service.AdminService;
 
 @Controller
 public class AdminController {
-
+	
 	@Autowired
 	private AdminService adminService;
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-	//0. ADMIN HOME
-//	@GetMapping("/admin/home")
+	// 0. ADMIN HOME
 	@RequestMapping("/adminHome.ad")
-	public String adminHome() {
+	public String adminHome(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
 		logger.info("[url => /adminHome.ad]");
-		return "admin/home";
+//		return "admin/home";
+		return "admin/adminHome";
 	}
 	
-	//1. 예약 조회
-	//1-1. 예약목록 전체 조회, 검색/필터
-//	@GetMapping("/admin/reservation/list")
-	@RequestMapping("/getReservationList.ad")
-	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
-		throws ServletException, IOException {
-//		logger.info("[url => /admin/reservation/list]");
-		logger.info("[url => /getReservationList.ad]");
-		adminService.getReservationList(request, response, model);
-		return "admin/reservation/list";
-	}
-	
-	//1-2. 예약 상세페이지 조회
-//	@GetMapping("/admin/reservation/detail")
-	@RequestMapping("/getReservationDetail.ad")
-	//페이지 이동 없이 데이터 바로 리턴
-	@ResponseBody
-	public ReservationDTO getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+	// Sample page 테스트
+	@RequestMapping("/adminSample.ad")
+	public String adminSample(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-//		logger.info("[url => /admin/reservation/detail]");
-		logger.info("[url => /getReservationDetail.ad]");
-		adminService.getReservationDetail(request, response, model);
-		ReservationDTO dto = (ReservationDTO)request.getAttribute("dto");
-			
-		return dto;
-	}
-	
-	//2. 예약 변경
-	//2-1. 예약상태 변경
-//	@PostMapping("/admin/reservation/updateStatus")
-	@PostMapping("/updateReservationStatus.ad")
-	@ResponseBody
-	public String updateReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-//			logger.info("[url => /admin/reservation/updateStatus]");
-			logger.info("[url => /updateReservationStatus.ad]");
-			adminService.modifyReservationStatus(request, response, model);
-			
-			int result = (Integer)request.getAttribute("result");
-			
-			return (result > 0) ? "success" : "fail";
-	}
-	
-	//2-2. 예약 취소
-	@GetMapping("/resCancel.ad")
-	public String cancelReservation(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-			logger.info("<<< url => /resCancel.ad >>>");
-			adminService.cancelReservation(request, response, model);
-			
-			return "redirect:/admin/reservation/reslist.ad";
-	}
-	
-	//3. 통계
-	//3-1. 대시보드(기간별 집계)
-	@GetMapping("/adminDashboard.ad")
-	public String getDashboard(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-			logger.info("<<< url => /adminDashboard.ad >>>");
-			adminService.getReservationStatistics(request, response, model);
-			
-			return "admin/reservation/dashboard";
+		logger.info("[url => /adminSample.ad]");
+		return "admin/adminSample";
 	}
 	
 	@GetMapping("/restaurant.ad")

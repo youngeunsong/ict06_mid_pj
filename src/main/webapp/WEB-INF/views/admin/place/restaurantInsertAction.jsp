@@ -36,7 +36,7 @@
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
-        <%@ include file="/WEB-INF/views/common/sidebar.jsp" %>
+        <%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
         
         <main class="app-main p-4">
             <div class="container-fluid">
@@ -210,6 +210,6 @@
 };
 </script> -->
 
-<%@ include file="/WEB-INF/views/common/footer_script.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </body>
 </html>

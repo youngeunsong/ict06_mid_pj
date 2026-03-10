@@ -1,32 +1,17 @@
 package spring.ict06team1.midpj.service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Service
 public interface AdminService {
-
-	public void getReservationList(HttpServletRequest request, HttpServletResponse response, Model model);
-
-	public void getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model);
-
-	public void modifyReservationStatus(HttpServletRequest request, HttpServletResponse response, Model model);
-
-	public void cancelReservation(HttpServletRequest request, HttpServletResponse response, Model model);
-
-	public void getReservationStatistics(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 	public void getRestaurant_list(HttpServletRequest request, HttpServletResponse response, Model model);
 	
@@ -47,5 +32,4 @@ public interface AdminService {
 	public void testRegisterIntro(String contentId, RestaurantDTO rdto);
 	
 	public void testRegisterDetail(String contentId, RestaurantDTO rdto); 
-	
 }

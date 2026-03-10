@@ -1,10 +1,13 @@
 @charset "UTF-8";
 /* join.css */
 
+
 /* 모든 css 공통 - 전체 폰트 지정 */
 body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
+
+
 
 #container {
    width: 100%;
@@ -68,6 +71,74 @@ body {
    padding: 5px 10px 5px 10px;
 }
 
+/* 조민수 - 회원가입/로그인에 필요한 로직 유지부탁드립니다!! */
+/* join.css 에 추가시작 */
 
+.pwd_container input {
+    width: 100%; /* 부모 너비에 맞춤 */
+    padding-right: 35px; /* 아이콘이 들어갈 자리 확보 */
+    box-sizing: border-box;
+}
+
+.togglePwd {
+    color: #ccc;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.togglePwd:hover {
+    color: #666;
+}
+
+/* 중복확인 버튼 좌우로 흔들리는 애니메이션 */
+@keyframes shake-animation {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+    100% { transform: translateX(0); }
+}
+
+/* 흔들림 효과 클래스 */
+.apply-shake {
+    animation: shake-animation 0.4s ease-in-out;
+    background-color: #ff4d4d !important; /* 일시적으로 더 진한 빨간색 */
+    color: white !important;
+    border: 2px solid #b30000 !important;
+    transition: background-color 0.3s;
+}
+
+/* 비밀번호 실시간 체크 기본 스타일 */
+#pwd_guide span {
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+
+/* 유효성 통과 시 파란색 */
+#pwd_check_list span.active {
+    color: #007bff !important;
+    font-weight: bold;
+}
+
+/* 비밀번호 일치 시 강조 하이라이트 */
+.input-match-highlight {
+    border: 2px solid #007bff !important;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    background-color: #f0f7ff !important;
+    transition: all 0.3s ease;
+}
+
+/* 일치 메시지 강조 */
+.match-success {
+    color: #007bff !important;
+    font-weight: bold;
+}
+
+/* 아이디 가이드 문구 스타일 */
+#id_guide {
+    color: #888;
+}
+/* join.css 에 추가끝 */
 
 /* mvc 작성전에 join.jsp에서 실행 */

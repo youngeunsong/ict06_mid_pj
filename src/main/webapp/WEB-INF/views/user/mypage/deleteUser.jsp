@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
 
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +11,8 @@
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css"> <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
 
+<link rel="stylesheet" href="${path}/resources/css/common/header.css">
+<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
 <style>
     .delete_info {
         background-color: #f8f8f8;
@@ -36,7 +38,6 @@
     }
     .btn_delete:hover { background-color: #f91a32; } /* 하버 시 빨간색 */
 </style>
-
 </head>
 <body>
    <div class="wrap">
@@ -85,7 +86,7 @@
 			" />
 			</code> 
 		</pre>
-      
+     <!-- 관련 SQL -->
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

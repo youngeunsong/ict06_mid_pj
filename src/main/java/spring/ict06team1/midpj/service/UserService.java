@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,11 +37,5 @@ public interface UserService {
     // 6. 회원정보 수정 
     public int modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
-    
-    // 7. 전체 회원 목록 조회 (관리자 페이지용)
-    public List<MemberDTO> getUserList(HttpServletRequest request, HttpServletResponse response, Model model)
-		throws ServletException, IOException;
-    
-
     
 }

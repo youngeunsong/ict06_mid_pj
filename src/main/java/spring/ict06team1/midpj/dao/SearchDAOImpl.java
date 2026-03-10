@@ -11,53 +11,101 @@ import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 
 @Repository
-public class SearchDAOImpl implements SearchDAO{
+public class SearchDAOImpl implements SearchDAO {
 
 	@Autowired
 	private SqlSession sqlSession;
-	
-	private static final String namespace = "spring.ict06team1.midpj.dao.SearchDAO.";
 
-	//1. 맛집, 숙소, 축제 리스트 가져오기
+	// [검색 결과] -----------------------------------------------------------
+	// 1. 검색어 기준 장소 목록
 	@Override
 	public List<PlaceDTO> getSearchList(String keyword) {
 		System.out.println("[SearchDAOImpl - getSearchList()]");
-		
+
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		List<PlaceDTO> list = dao.getSearchList(keyword);
-		
-		return list;
+		return dao.getSearchList(keyword);
 	}
 
-	//2. 축제 상세 리스트 가져오기
+	// 2. 검색어 기준 축제 목록
 	@Override
 	public List<FestivalDTO> getFestList(String keyword) {
 		System.out.println("[SearchDAOImpl - getFestList()]");
-		
+
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		List<FestivalDTO> festList = dao.getFestList(keyword);
-		
-		return festList;
+		return dao.getFestList(keyword);
 	}
 
+	// 3. 검색어 기준 장소별 리뷰 통계
+	@Override
+	public List<Map<String, Object>> getPlaceReviewStats(String keyword) {
+		System.out.println("[SearchDAOImpl - getPlaceReviewStats()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.getPlaceReviewStats(keyword);
+	}
+
+	// [즐겨찾기] -----------------------------------------------------------
+	// 1. 즐겨찾기 여부 확인
+	@Override
+	public int checkFavorite(Map<String, Object> checkFavorite) {
+		System.out.println("[SearchDAOImpl - checkFavorite()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.checkFavorite(checkFavorite);
+	}
+
+	// 2. 즐겨찾기 추가
+	@Override
+	public int addFavorite(Map<String, Object> addFavorite) {
+		System.out.println("[SearchDAOImpl - addFavorite()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.addFavorite(addFavorite);
+	}
+
+	// 3. 즐겨찾기 삭제
+	@Override
+	public int deleteFavorite(Map<String, Object> deleteFavorite) {
+		System.out.println("[SearchDAOImpl - deleteFavorite()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.deleteFavorite(deleteFavorite);
+	}
+
+	// 4. 즐겨찾기 한 정보 끌고오기
+	@Override
+	public List<Integer> getFavoritePlaceIds(String user_id) {
+		System.out.println("[SearchDAOImpl - getFavoritePlaceIds()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.getFavoritePlaceIds(user_id);
+	}
+
+	// [AJAX] -----------------------------------------------------------
+	// 1. AJAX 카드 목록
 	@Override
 	public List<PlaceDTO> getSearchAjax(Map<String, Object> param) {
 		System.out.println("[SearchDAOImpl - getSearchAjax()]");
-		
+
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		List<PlaceDTO> list = dao.getSearchAjax(param);
-		
-		return list;
+		return dao.getSearchAjax(param);
 	}
 
+	// 2. AJAX 전체 건수
 	@Override
 	public int getSearchAjaxCount(Map<String, Object> param) {
-		
 		System.out.println("[SearchDAOImpl - getSearchAjaxCount()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		int totalCnt = dao.getSearchAjaxCount(param);
-		
-		return totalCnt;
+		return dao.getSearchAjaxCount(param);
+	}
+
+	// 3. AJAX 목록 대상 장소들의 리뷰 통계
+	@Override
+	public List<Map<String, Object>> getSearchAjaxReviewStats(Map<String, Object> param) {
+		System.out.println("[SearchDAOImpl - getSearchAjaxReviewStats()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		return dao.getSearchAjaxReviewStats(param);
 	}
 }

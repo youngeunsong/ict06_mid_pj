@@ -1,6 +1,579 @@
 @charset "UTF-8";
 /* main.css */
 
+:root {
+  --primary: #00c473;
+  --primary-dark: #00a85e;
+  --accent: #ff6b35;
+  --text-main: #1a1a2e;
+  --text-sub: #555;
+  --bg-light: #f8f9fa;
+  --card-radius: 12px;
+}
+
 body {
-    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  color: var(--text-main);
+  background: #fff;
+}
+
+/* ──────────────────────────────────────
+   1. HERO CAROUSEL
+────────────────────────────────────── */
+#heroCarousel .carousel-item {
+  height: 420px;
+}
+#heroCarousel .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#heroCarousel .carousel-caption {
+  bottom: 30px;
+  left: 5%;
+  text-align: left;
+  text-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+#heroCarousel .carousel-caption h5 {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+#heroCarousel .carousel-caption p {
+  font-size: .95rem;
+  opacity: .9;
+}
+
+.hero-thumbs {
+  display: flex;
+  gap: 6px;
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+}
+.hero-thumb {
+  width: 90px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.hero-thumb.active,
+.hero-thumb:hover {
+  border-color: var(--primary);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: drop-shadow(0 0 2px rgba(0,0,0,.6));
+}
+
+/* ──────────────────────────────────────
+   SECTION COMMON
+────────────────────────────────────── */
+.section-wrap {
+  padding: 48px 0 40px;
+}
+.section-wrap + .section-wrap {
+  border-top: 8px solid var(--bg-light);
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .badge-new {
+  font-size: .65rem;
+  background: var(--primary);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.section-subtitle {
+  font-size: .82rem;
+  color: var(--text-sub);
+  margin-top: 3px;
+}
+.view-all {
+  font-size: .82rem;
+  color: var(--text-sub);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.view-all:hover {
+  color: var(--primary);
+}
+
+/* ──────────────────────────────────────
+   2. 금주의 TOP10
+────────────────────────────────────── */
+.section-carousel-wrap {
+  position: relative;
+}
+
+.section-carousel-wrap .scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.section-carousel-wrap .scroll-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.scroll-btn.prev {
+  left: -18px;
+}
+.scroll-btn.next {
+  right: -18px;
+}
+
+/* viewport */
+.top10-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* row */
+#top10Row {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+/* card width: 고정폭으로 계산 안정화 */
+.top10-card-wrap {
+  flex: 0 0 246px;
+  width: 246px;
+}
+
+/* 카드 */
+.top10-card-wrap .place-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  transition: transform .2s, box-shadow .2s;
+  height: 100%;
+}
+.top10-card-wrap .place-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.13);
+  color: inherit;
+}
+
+/* 썸네일 */
+.place-card__thumb-wrap {
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+.place-card__thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s;
+}
+.top10-card-wrap .place-card:hover .place-card__thumb-wrap img {
+  transform: scale(1.06);
+}
+
+/* 순위 */
+.rank-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 3;
+}
+.rank-badge.top1 { background: var(--primary); }
+.rank-badge.top2 { background: #f5a623; }
+.rank-badge.top3 { background: #e05a5a; }
+
+/* 카드 body */
+.place-card__body {
+  padding: 12px 14px 14px;
+}
+.place-card__title {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.place-card__address {
+  font-size: .8rem;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.place-card__price {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 10px;
+}
+
+/* dot pager */
+.dot-pager {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+.dot-pager span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  display: inline-block;
+  transition: background .2s ease;
+}
+.dot-pager span.active {
+  background: var(--primary);
+}
+
+/* ──────────────────────────────────────
+   3. BEST 추천
+────────────────────────────────────── */
+.best-tabs .nav-link {
+  font-size: .85rem;
+  color: var(--text-sub);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.best-tabs .nav-link.active,
+.best-tabs .nav-link:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.best-tabs .nav-link.active {
+  font-weight: 600;
+}
+
+.best-feature-banner {
+  background: linear-gradient(135deg, #0e3d2b 0%, #155e3e 60%, #1e7a52 100%);
+  border-radius: var(--card-radius);
+  padding: 28px 28px 24px;
+  color: #fff;
+  height: 100%;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.best-feature-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255,255,255,.05);
+  border-radius: 50%;
+}
+.best-feature-banner .quote-icon {
+  font-size: 2rem;
+  color: var(--primary);
+  line-height: 1;
+}
+.best-feature-banner .feature-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.65;
+  margin: 8px 0 0;
+}
+.best-feature-banner .feature-img-wrap {
+  margin-top: 10px;
+}
+.best-feature-banner .feature-img-wrap img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.best-feature-banner .btn-more {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 20px;
+  margin-top: 16px;
+  align-self: flex-start;
+  transition: background .2s;
+  cursor: pointer;
+}
+.best-feature-banner .btn-more:hover {
+  background: var(--primary-dark);
+}
+
+.best-sub-card {
+  border: none;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+}
+.best-sub-card .img-wrap {
+  height: 150px;
+  overflow: hidden;
+}
+.best-sub-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.best-sub-card:hover .img-wrap img {
+  transform: scale(1.06);
+}
+.best-sub-card .card-body {
+  padding: 10px 12px 12px;
+}
+.best-sub-card .card-title {
+  font-size: .85rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.best-sub-card .card-region {
+  font-size: .75rem;
+  color: var(--text-sub);
+}
+.best-sub-card .card-price {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-top: 4px;
+}
+.best-sub-card .discount-badge {
+  font-size: .7rem;
+  background: #ff6b35;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+/* ──────────────────────────────────────
+   4. 축제
+────────────────────────────────────── */
+.festival-section {
+  background: var(--bg-light);
+}
+.festival-card {
+  border: none;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: #fff;
+  transition: transform .2s, box-shadow .2s;
+}
+.festival-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+}
+.festival-card .img-wrap {
+  height: 140px;
+  overflow: hidden;
+  position: relative;
+}
+.festival-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.festival-card:hover .img-wrap img {
+  transform: scale(1.07);
+}
+.festival-card .period-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  font-size: .7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.festival-card .card-body {
+  padding: 10px 12px 14px;
+}
+.festival-card .card-title {
+  font-size: .87rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.festival-card .card-loc {
+  font-size: .75rem;
+  color: var(--text-sub);
+}
+.festival-card .card-loc i {
+  margin-right: 3px;
+  color: var(--primary);
+}
+
+/* ──────────────────────────────────────
+   5. 공지사항
+────────────────────────────────────── */
+.notice-section {
+  padding: 40px 0;
+}
+.notice-tabs .nav-link {
+  font-size: .83rem;
+  color: var(--text-sub);
+  padding: 4px 12px;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+}
+.notice-tabs .nav-link.active {
+  color: var(--text-main);
+  font-weight: 600;
+  border-bottom-color: var(--primary);
+  background: none;
+}
+.notice-table td {
+  padding: 10px 8px;
+  font-size: .85rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+}
+.notice-table tr:hover td {
+  background: #fafafa;
+}
+.notice-table .notice-title {
+  cursor: pointer;
+  color: var(--text-main);
+  text-decoration: none;
+}
+.notice-table .notice-title:hover {
+  color: var(--primary);
+}
+.notice-table .date-col {
+  color: var(--text-sub);
+  white-space: nowrap;
+  font-size: .8rem;
+}
+.notice-new {
+  font-size: .65rem;
+  background: #ff3f3f;
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ──────────────────────────────────────
+   6. 프로모션 배너
+────────────────────────────────────── */
+.promo-banner {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  height: 110px;
+  position: relative;
+  cursor: pointer;
+}
+.promo-banner .promo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 22px;
+}
+.promo-banner-a {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.promo-banner-b {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.promo-banner .promo-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.4;
+}
+.promo-banner .promo-sub {
+  font-size: .78rem;
+  color: rgba(255,255,255,.85);
+  margin-top: 3px;
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+  .top10-card-wrap {
+    flex: 0 0 220px;
+    width: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .top10-card-wrap {
+    flex: 0 0 200px;
+    width: 200px;
+  }
+
+  #heroCarousel .carousel-item {
+    height: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top10-card-wrap {
+    flex: 0 0 180px;
+    width: 180px;
+  }
+
+  .place-card__thumb-wrap {
+    height: 145px;
+  }
+
+  #heroCarousel .carousel-item {
+    height: 300px;
+  }
+
+  .hero-thumbs {
+    display: none !important;
+  }
 }

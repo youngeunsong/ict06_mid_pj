@@ -12,7 +12,10 @@ public interface SearchService {
 	//1. 검색 키워드 별 [맛집, 숙소, 축제] 리스트
 	public void getSearchList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
-	//
+	//2. 즐겨찾기에 추가하기
+	public Map<String, Object> toggleFavorite(HttpServletRequest request);
+	
+	//AJAX
 	public Map<String, Object> getSearchAjax(String keyword, String type, String sort, int page);
 	
 }

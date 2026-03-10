@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spring.ict06team1.midpj.dao.MainDAO">
+
+	<!-- Accommodation DTO 매핑 -->
+  	<resultMap id="accResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
+	    <id property="accommodation_id" column="ACCOMMODATION_ID"/>
+	    <result property="description" column="DESCRIPTION"/>
+	    <result property="phone" column="PHONE"/>
+	    <result property="price" column="PRICE"/>
+	    <result property="status" column="ACC_STATUS"/>
+	
+	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	        <id property="place_id" column="PLACE_ID"/>
+	        <result property="place_type" column="PLACE_TYPE"/>
+	        <result property="name" column="NAME"/>
+	        <result property="address" column="ADDRESS"/>
+	        <result property="view_count" column="VIEW_COUNT"/>
+	        <result property="image_url" column="IMAGE_URL"/>
+	        <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+	    </association>
+	</resultMap>
+
+    <select id="getTop10ByREST" parameterType="string" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	    SELECT *
+	    FROM (
+	        SELECT p.PLACE_ID
+	             , p.PLACE_TYPE
+	             , p.NAME
+	             , p.ADDRESS
+	             , p.VIEW_COUNT
+	             , p.IMAGE_URL
+	             , p.CREATED_AT AS placeRegDate
+	        FROM PLACE p
+	        WHERE p.PLACE_TYPE = 'REST'
+	          AND p.CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP -
+	              CASE
+	                  WHEN (
+	                      SELECT COUNT(*)
+	                      FROM PLACE
+	                      WHERE PLACE_TYPE = 'REST'
+	                        AND CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP - INTERVAL '30' DAY
+	                  ) <![CDATA[ < ]]> 10
+	                  THEN INTERVAL '60' DAY
+	                  ELSE INTERVAL '30' DAY
+	              END
+	        ORDER BY p.VIEW_COUNT DESC
+	    )
+	    WHERE ROWNUM <![CDATA[ <= ]]> 10
+	</select>
+    
+    <!-- 숙소 TOP10 - 가격 추가 -->
+    <select id="getTop10ByACC" parameterType="string" resultMap="accResultMap">
+	    SELECT *
+	    FROM (
+	        SELECT a.ACCOMMODATION_ID
+	             , a.DESCRIPTION
+	             , a.PHONE
+	             , a.PRICE
+	             , a.STATUS AS ACC_STATUS
+	             , p.PLACE_ID
+	             , p.PLACE_TYPE
+	             , p.NAME
+	             , p.ADDRESS
+	             , p.VIEW_COUNT
+	             , p.IMAGE_URL
+	             , p.CREATED_AT AS PLACE_CREATED_AT
+	        FROM ACCOMMODATION a
+	        JOIN PLACE p
+	          ON a.ACCOMMODATION_ID = p.PLACE_ID
+	        WHERE p.PLACE_TYPE = 'ACC'
+	          AND p.CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP -
+	              CASE
+	                  WHEN (
+	                      SELECT COUNT(*)
+	                      FROM PLACE
+	                      WHERE PLACE_TYPE = 'ACC'
+	                        AND CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP - INTERVAL '30' DAY
+	                  ) <![CDATA[ < ]]> 10
+	                  THEN INTERVAL '60' DAY
+	                  ELSE INTERVAL '30' DAY
+	              END
+	        ORDER BY p.VIEW_COUNT DESC
+	    )
+	    WHERE ROWNUM <![CDATA[ <= ]]> 10
+	</select>
+
+    <select id="getFavoritePlaceIds" parameterType="string" resultType="int">
+        SELECT place_id
+        FROM FAVORITE
+        WHERE user_id = #{user_id}
+    </select>
+
+    <select id="getPlaceReviewStatsByIds" parameterType="list" resultType="map">
+        SELECT p.PLACE_ID
+             , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+             , NVL(ROUND(AVG(rv.RATING),1),0) AS AVG_RATING
+        FROM PLACE p
+        LEFT JOIN REVIEW rv
+          ON p.PLACE_ID = rv.PLACE_ID
+         AND rv.STATUS = 'DISPLAY'
+        WHERE p.PLACE_ID IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY p.PLACE_ID
+    </select>
+
+</mapper>

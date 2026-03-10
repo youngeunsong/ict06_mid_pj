@@ -12,10 +12,12 @@
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/common/search.css">
+<link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
 
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
 
 <script src="${path}/resources/js/search/search.js" defer></script>
+<script src="${path}/resources/js/search/bookmark.js" defer></script>
 
 </head>
 <body>
@@ -43,41 +45,54 @@
 			        <button class="btn btn-outline-success" onclick="openFilter('FEST')">축제</button>
 			    </div>
 	    		<hr>
+	    		
+	    		<!-- 즐겨찾기 중, 로그인 여부를 따지기 위한 세션 값 히든 -->
+	    		<input type="hidden" id="contextPath" value="${path}">
+				<input type="hidden" id="loginUserId" value="${sessionScope.sessionID}">
 			
 		    	<!-- 맛집 섹션 S -->
 			    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 			        <h5 class="fw-bold mb-0">맛집(${restListCnt})</h5>
+			        <input type="hidden" id="restListCnt" value="${restListCnt}">
 			    </div>
 			
 			    <div class="row g-3">
-			    	<c:forEach var="restDTO" items="${restList}" varStatus="st">
-				    	<!-- 카드 -->
-				        <div class="col-6 col-md-4 col-lg-3 searchRestCard
-				        	${st.index >= 8 ? 'd-none' : ''}">
-				        	
-				        	<a href="#">
-					            <div class="card border-0 shadow-sm h-100">
-				                	<img src="${restDTO.image_url}"
-					                     class="card-img-top"
-					                     style="aspect-ratio:16/9; object-fit:cover;">
-					
-					                <div class="card-body">
-					                    <div class="fw-semibold">${restDTO.name}</div>
-					
-					                    <div class="text-muted small mb-2">
-					                        ${restDTO.address}
-					                    </div>
-					
-					                    <div class="d-flex gap-3 text-muted small">
-					                        <span><i class="fa-regular fa-eye"></i> ${restDTO.view_count}</span>
-					                        <span><i class="fa-regular fa-comment"></i> ${restDTO.review_count}</span>
-					                    </div>
-					                </div>
-					            </div>
+				    <c:forEach var="restDTO" items="${restList}" varStatus="st">
+				        <div class="col-6 col-md-4 col-lg-3 searchRestCard ${st.index >= 8 ? 'd-none' : ''}">
+				            <a href="${path}/place/detail?id=${restDTO.place_id}" class="place-card text-decoration-none text-dark">
+				
+				                <div class="place-card__thumb-wrap position-relative">
+				                    <img src="${restDTO.image_url}"
+				                         class="thumb-img"
+				                         alt="${restDTO.name}">
+				
+				                    <button type="button"
+				                            class="bookmark-btn"
+				                            data-place-id="${restDTO.place_id}"
+				                            onclick="toggleBookmark(event, this)">
+				                        <i class="${favoritePlaceIds.contains(restDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+				                    </button>
+				                </div>
+				
+				                <div class="place-card__body">
+				                    <div class="place-card__title">${restDTO.name}</div>
+				
+				                    <div class="place-card__address">
+				                        <i class="bi bi-geo-alt-fill text-danger"></i>
+				                        ${restDTO.address}
+				                    </div>
+				
+				                    <div class="d-flex gap-3 text-muted small mt-2">
+				                        <span><i class="fa-regular fa-eye"></i> ${restDTO.view_count}</span>
+				                        <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[restDTO.place_id]}" default="0"/></span>
+				                        <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[restDTO.place_id]}" default="0"/></span>
+				                    </div>
+				                </div>
+				
 				            </a>
 				        </div>
-			    	</c:forEach>
-			    </div>
+				    </c:forEach>
+				</div>
 			
 		    	<!-- 더보기 버튼 -->
 			    <div class="text-center mt-3">
@@ -91,37 +106,46 @@
 		    	<div class="mt-5 mb-4">
 				    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 				        <h5 class="fw-bold mb-0">숙소(${accListCnt})</h5>
+				        <input type="hidden" id="accListCnt" value="${accListCnt}">
 				    </div>
 			
 			    <div class="row g-3">
-			    	<c:forEach var="accDTO" items="${accList}" varStatus="st">
-				    	<!-- 카드 -->
-				        <div class="col-6 col-md-4 col-lg-3 searchAccCard
-				        	${st.index >= 8 ? 'd-none' : ''}">
-				        	
-				        	<a href="#">
-					            <div class="card border-0 shadow-sm h-100">
-					                <img src="${accDTO.image_url}"
-					                     class="card-img-top"
-					                     style="aspect-ratio:16/9; object-fit:cover;">
-					
-					                <div class="card-body">
-					                    <div class="fw-semibold">${accDTO.name}</div>
-					
-					                    <div class="text-muted small mb-2">
-					                        ${accDTO.address}
-					                    </div>
-					
-					                    <div class="d-flex gap-3 text-muted small">
-					                        <span><i class="fa-regular fa-eye"></i> ${accDTO.view_count}</span>
-					                        <span><i class="fa-regular fa-comment"></i> ${accDTO.review_count}</span>
-					                    </div>
-					                </div>
-					            </div>
+				    <c:forEach var="accDTO" items="${accList}" varStatus="st">
+				        <div class="col-6 col-md-4 col-lg-3 searchAccCard ${st.index >= 8 ? 'd-none' : ''}">
+				            <a href="${path}/place/detail?id=${accDTO.place_id}" class="place-card text-decoration-none text-dark">
+				
+				                <div class="place-card__thumb-wrap position-relative">
+				                    <img src="${accDTO.image_url}"
+				                         class="thumb-img"
+				                         alt="${accDTO.name}">
+				
+				                    <button type="button"
+				                            class="bookmark-btn"
+				                            data-place-id="${accDTO.place_id}"
+				                            onclick="toggleBookmark(event, this)">
+				                        <i class="${favoritePlaceIds.contains(accDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+				                    </button>
+				                </div>
+				
+				                <div class="place-card__body">
+				                    <div class="place-card__title">${accDTO.name}</div>
+				
+				                    <div class="place-card__address">
+				                        <i class="bi bi-geo-alt-fill text-danger"></i>
+				                        ${accDTO.address}
+				                    </div>
+				
+				                    <div class="d-flex gap-3 text-muted small mt-2">
+				                        <span><i class="fa-regular fa-eye"></i> ${accDTO.view_count}</span>
+				                        <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[accDTO.place_id]}" default="0"/></span>
+				                        <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[accDTO.place_id]}" default="0"/></span>
+				                    </div>
+				                </div>
+				
 				            </a>
 				        </div>
-			    	</c:forEach>
-			    </div>
+				    </c:forEach>
+				</div>
 			
 		    	<!-- 더보기 버튼 -->
 			    <div class="text-center mt-3">
@@ -137,6 +161,7 @@
 		    	<div class="mt-5 mb-4">
 				    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 				        <h6 class="fw-bold mb-0 fs-5">축제(${festListCnt})</h6>
+				        <input type="hidden" id="festListCnt" value="${festListCnt}">
 				        <a href="${path}/festival.fe" class="text-muted small text-decoration-none">전체 축제보기 ></a>
 				    </div>
 				
@@ -150,13 +175,20 @@
 						            <!-- 1페이지 (슬라이드 1) -->
 						            <div class="carousel-item ${st.index == 0 ? 'active' : ''}">
 						                <div class="row g-3">
-								</c:if>							
+								</c:if>		
+											<!-- 카드 -->					
 						                    <div class="col-6 col-md-3">
-						                        <div class="card border-0 shadow-sm">
+						                        <div class="card border-0 shadow-sm search-card">
 						                            <div class="position-relative">
 						                                <img src="${festDTO.placeDTO.image_url}"
-						                                     class="card-img-top"
-						                                     style="aspect-ratio:1/1; object-fit:cover;">
+														     class="card-img-top thumb-img"
+														     alt="${festDTO.placeDTO.name}">
+						                                     
+						                                <button type="button" class="bookmark-btn" data-place-id="${festDTO.placeDTO.place_id}"
+													            	onclick="toggleBookmark(event, this)">
+													        <i class="${favoritePlaceIds.contains(festDTO.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+													    </button>
+						                                     
 						                                <span class="badge bg-dark position-absolute bottom-0 start-0 m-2"
 						                                      style="font-size:0.65rem;">${festDTO.status}</span>
 						                            </div>

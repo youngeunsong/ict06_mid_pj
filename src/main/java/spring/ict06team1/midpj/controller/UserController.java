@@ -23,15 +23,6 @@ public class UserController {
 	@Autowired
 	private UserServiceImpl service;
 	
-	// [첫페이지] ----------------------------------------------------------------------------------------
-	@RequestMapping("/main.do")
-	public String main(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		logger.info("<<< url => /main.do >>>");
-
-		return "common/main";
-	}
-	
 	// [회원가입] -------------------------------------------------------------------------------------------------------------------
 	// [회원가입] 회원가입 페이지 이동 -----------------------------------------------------------------------
 	@RequestMapping("/join.do")

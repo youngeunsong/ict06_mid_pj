@@ -4,116 +4,177 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
   <mapper namespace="spring.ict06team1.midpj.dao.SearchDAO">  <!-- namespace="패키지명.인터페이스" -->
-  	<!-- 2-1. FESTIVAL DTO 매핑 -->
-  	<resultMap type="spring.ict06team1.midpj.dto.FestivalDTO" id="festResultMap">
-  		<result property="festival_id" column="FESTIVAL_ID"/>
-  		<result property="description" column="DESCRIPTION"/>
-  		<result property="start_date" column="START_DATE"/>
-  		<result property="end_date" column="END_DATE"/>
-  		<result property="status" column="STATUS"/>
-		
-		<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-			<result property="place_id" column="PLACE_ID"/>
-			<result property="place_type" column="PLACE_TYPE"/>
-			<result property="name" column="NAME"/>
-			<result property="address" column="ADDRESS"/>
-			<result property="view_count" column="VIEW_COUNT"/>
-			<result property="image_url" column="IMAGE_URL"/>
-			<result property="review_count" column="REVIEW_COUNT"/>
-		</association>  		
-  	</resultMap>
-  	
-  	
-  	<!-- 1. 맛집, 숙소, 축제 리스트 가져오기 -->
-	<select id="getSearchList" parameterType="java.lang.String" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-		SELECT p.PLACE_TYPE,
-		       p.NAME,
-		       p.ADDRESS,
-		       p.VIEW_COUNT,
-		       p.IMAGE_URL,
-		       COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
-		FROM PLACE p
-		    LEFT JOIN REVIEW rv ON p.PLACE_ID = rv.PLACE_ID
-		WHERE (name LIKE '%'||#{keyword}||'%' OR
-		 			address LIKE '%'||#{keyword}||'%')
-		GROUP BY p.PLACE_ID,
-		         p.PLACE_TYPE,
-		         p.NAME,
-		         p.ADDRESS,
-		         p.VIEW_COUNT,
-		         p.IMAGE_URL,
-		         p.CREATED_AT
-		ORDER BY p.VIEW_COUNT DESC
-	</select>
+  	<!-- Accommodation DTO 매핑 -->
+  	<resultMap id="accResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
+	    <id property="accommodation_id" column="ACCOMMODATION_ID"/>
+	    <result property="description" column="DESCRIPTION"/>
+	    <result property="phone" column="PHONE"/>
+	    <result property="price" column="PRICE"/>
+	    <result property="status" column="ACC_STATUS"/>
 	
-	<!-- 2. 축제 상세 리스트 가져오기 -->
-	<select id="getFestList" parameterType="String" resultMap="festResultMap">
-		SELECT f.FESTIVAL_ID 
-			 , TO_CHAR(f.DESCRIPTION) AS DESCRIPTION
-			 , f.START_DATE 
-			 , f.END_DATE 
-			 , f.STATUS
-			 , p.PLACE_TYPE
-		     , p.NAME
-		     , p.ADDRESS
-		     , p.VIEW_COUNT
-		     , p.IMAGE_URL
-		     , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
-		  FROM FESTIVAL f
-		 INNER JOIN PLACE p ON f.FESTIVAL_ID = p.PLACE_ID
-		  LEFT JOIN REVIEW rv  ON p.PLACE_ID = rv.PLACE_ID
-		 WHERE (p.NAME LIKE '%'||#{keyword}||'%' OR p.address LIKE '%'||#{keyword}||'%')
-		GROUP BY f.FESTIVAL_ID 
-		       , TO_CHAR(f.DESCRIPTION)
-		       , f.START_DATE 
-		       , f.END_DATE 
-		       , f.STATUS
-		       , p.PLACE_TYPE
-		       , p.NAME
-		       , p.ADDRESS
-		       , p.VIEW_COUNT
-		       , p.IMAGE_URL 
-		ORDER BY p.VIEW_COUNT DESC
-	</select>
+	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	        <id property="place_id" column="PLACE_ID"/>
+	        <result property="place_type" column="PLACE_TYPE"/>
+	        <result property="name" column="NAME"/>
+	        <result property="address" column="ADDRESS"/>
+	        <result property="view_count" column="VIEW_COUNT"/>
+	        <result property="image_url" column="IMAGE_URL"/>
+	        <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+	    </association>
+	</resultMap>
+  	
+  	<!-- FESTIVAL DTO 매핑 -->
+    <resultMap id="festResultMap" type="spring.ict06team1.midpj.dto.FestivalDTO">
+        <id property="festival_id" column="FESTIVAL_ID"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="start_date" column="START_DATE"/>
+        <result property="end_date" column="END_DATE"/>
+        <result property="status" column="FEST_STATUS"/>
+
+        <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+            <id property="place_id" column="PLACE_ID"/>
+            <result property="place_type" column="PLACE_TYPE"/>
+            <result property="name" column="NAME"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="view_count" column="VIEW_COUNT"/>
+            <result property="image_url" column="IMAGE_URL"/>
+            <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+        </association>
+    </resultMap>
+  	
+  	<!-- PLACE DTO 매핑 -->
+    <resultMap id="placeResultMap" type="spring.ict06team1.midpj.dto.PlaceDTO">
+        <id property="place_id" column="PLACE_ID"/>
+        <result property="place_type" column="PLACE_TYPE"/>
+        <result property="name" column="NAME"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="view_count" column="VIEW_COUNT"/>
+        <result property="image_url" column="IMAGE_URL"/>
+        <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+    </resultMap>
+  	
+    <!-- 1. 검색어 기준 장소 목록 -->
+    <select id="getSearchList" parameterType="String" resultMap="placeResultMap">
+        SELECT p.PLACE_ID
+             , p.PLACE_TYPE
+             , p.NAME
+             , p.ADDRESS
+             , p.VIEW_COUNT
+             , p.IMAGE_URL
+             , p.CREATED_AT AS PLACE_CREATED_AT
+          FROM PLACE p
+         WHERE (p.NAME LIKE '%' || #{keyword} || '%'
+            OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
+         ORDER BY p.VIEW_COUNT DESC
+    </select>
 	
-	<!-- AJAX 카드 목록 -->
-	<select id="getSearchAjax" parameterType="map"
-	        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+    <!-- 2. 검색어 기준 축제 목록 -->
+    <select id="getFestList" parameterType="java.lang.String" resultMap="festResultMap">
+        SELECT f.FESTIVAL_ID
+             , TO_CHAR(f.DESCRIPTION) AS DESCRIPTION
+             , f.START_DATE
+             , f.END_DATE
+             , f.STATUS AS FEST_STATUS
+             , p.PLACE_ID
+             , p.PLACE_TYPE
+             , p.NAME
+             , p.ADDRESS
+             , p.VIEW_COUNT
+             , p.IMAGE_URL
+             , p.CREATED_AT AS PLACE_CREATED_AT
+          FROM FESTIVAL f
+         INNER JOIN PLACE p
+            ON f.FESTIVAL_ID = p.PLACE_ID
+         WHERE (p.NAME LIKE '%' || #{keyword} || '%'
+            OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
+         ORDER BY p.VIEW_COUNT DESC
+    </select>
+
+    <!-- 3. 검색어 기준 장소별 리뷰 통계 -->
+    <select id="getPlaceReviewStats" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT p.PLACE_ID AS PLACE_ID
+             , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+             , NVL(ROUND(AVG(rv.RATING), 1), 0) AS AVG_RATING
+          FROM PLACE p
+          LEFT JOIN REVIEW rv
+            ON p.PLACE_ID = rv.PLACE_ID
+           AND rv.STATUS = 'DISPLAY'
+         WHERE (p.NAME LIKE '%' || #{keyword} || '%'
+            OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
+         GROUP BY p.PLACE_ID
+    </select>
+	
+    <!-- [즐겨찾기] 1. 즐겨찾기 여부 확인 -->
+    <select id="checkFavorite" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(*)
+          FROM FAVORITE
+         WHERE user_id = #{user_id}
+           AND place_id = #{place_id}
+    </select>
+
+    <!-- [즐겨찾기] 2. 즐겨찾기 추가 -->
+    <insert id="addFavorite" parameterType="java.util.Map">
+        INSERT INTO FAVORITE (
+            favorite_id,
+            user_id,
+            place_id
+        )
+        VALUES (
+            SEQ_FAVORITE.NEXTVAL,
+            #{user_id},
+            #{place_id}
+        )
+    </insert>
+
+    <!-- [즐겨찾기] 3. 즐겨찾기 삭제 -->
+    <delete id="deleteFavorite" parameterType="java.util.Map">
+        DELETE FROM FAVORITE
+         WHERE user_id = #{user_id}
+           AND place_id = #{place_id}
+    </delete>
+	
+    <!-- [즐겨찾기] 4. 즐겨찾기 한 정보 끌고오기 -->
+    <select id="getFavoritePlaceIds" parameterType="java.lang.String" resultType="int">
+        SELECT place_id
+          FROM FAVORITE
+         WHERE user_id = #{user_id}
+    </select>
+
+	
+	<!-- 4. AJAX 카드 목록 -->
+	<select id="getSearchAjax" parameterType="map" resultMap="placeResultMap">
 	    SELECT *
-		  FROM (
-		      SELECT innerQ.*, ROWNUM rn
-		      FROM (
-		          SELECT p.PLACE_ID
-		               , p.PLACE_TYPE
-		               , p.NAME
-		               , p.ADDRESS
-		               , p.VIEW_COUNT
-		               , p.IMAGE_URL
-		               , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
-		            FROM PLACE p
-		            LEFT JOIN REVIEW rv ON p.PLACE_ID = rv.PLACE_ID
-		           WHERE (p.NAME LIKE '%'||#{keyword}||'%'
-		              OR  p.ADDRESS LIKE '%'||#{keyword}||'%')
-		          <if test="type != null and type != 'ALL'">
-		              AND p.PLACE_TYPE = #{type}
-		          </if>
-		           GROUP BY p.PLACE_ID, p.PLACE_TYPE, p.NAME,
-		                    p.ADDRESS, p.VIEW_COUNT, p.IMAGE_URL
-		          <choose>
-		              <when test="sort != null and sort == 'latest'">
-		                  ORDER BY p.PLACE_ID DESC
-		              </when>
-		              <otherwise>
-		                  ORDER BY p.VIEW_COUNT DESC
-		              </otherwise>
-		          </choose>
-		      ) innerQ
-		      WHERE ROWNUM &lt;= #{endRow}
-		  )
-		  WHERE rn &gt; #{startRow}
+	      FROM (
+	          SELECT innerQ.*, ROWNUM rn
+	          FROM (
+	              SELECT p.PLACE_ID
+	                   , p.PLACE_TYPE
+	                   , p.NAME
+	                   , p.ADDRESS
+	                   , p.VIEW_COUNT
+	                   , p.IMAGE_URL
+	                   , p.CREATED_AT AS CREATED_AT
+	                FROM PLACE p
+	               WHERE (p.NAME LIKE '%'||#{keyword}||'%'
+	                  OR  p.ADDRESS LIKE '%'||#{keyword}||'%')
+	              <if test="type != null and type != 'ALL'">
+	                  AND p.PLACE_TYPE = #{type}
+	              </if>
+	              <choose>
+	                  <when test="sort != null and sort == 'latest'">
+	                      ORDER BY p.CREATED_AT DESC
+	                  </when>
+	                  <otherwise>
+	                      ORDER BY p.VIEW_COUNT DESC
+	                  </otherwise>
+	              </choose>
+	          ) innerQ
+	          WHERE ROWNUM &lt;= #{endRow}
+	      )
+	      WHERE rn &gt; #{startRow}
 	</select>
 	
-	<!-- AJAX 전체 건수 -->
+	<!-- 5. AJAX 전체 건수 -->
 	<select id="getSearchAjaxCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	      FROM PLACE p
@@ -122,6 +183,23 @@
 	    <if test="type != 'ALL'">
 	        AND p.PLACE_TYPE = #{type}
 	    </if>
+	</select>
+	
+	<!-- 6. AJAX 목록 대상 장소들의 리뷰 통계 -->
+	<select id="getSearchAjaxReviewStats" parameterType="map" resultType="map">
+		SELECT p.PLACE_ID AS PLACE_ID
+		     , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+		     , NVL(ROUND(AVG(rv.RATING), 1), 0) AS AVG_RATING
+		  FROM PLACE p
+		  LEFT JOIN REVIEW rv
+		    ON p.PLACE_ID = rv.PLACE_ID
+		   AND rv.STATUS = 'DISPLAY'
+		 WHERE (p.NAME LIKE '%' || #{keyword} || '%'
+		    OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
+		<if test="type != null and type != 'ALL'">
+		    AND p.PLACE_TYPE = #{type}
+		</if>
+		 GROUP BY p.PLACE_ID
 	</select>
 	
   </mapper>	

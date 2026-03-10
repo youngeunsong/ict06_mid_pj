@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.service.SearchServiceImpl;
 
@@ -36,7 +37,6 @@ public class SearchController {
 		return "common/search";
 	}
 	
-	
 	//[검색페이지] AJAX 필터화면
 	@RequestMapping("/search/ajax")
 	public String searchAjax(
@@ -54,8 +54,21 @@ public class SearchController {
 		model.addAttribute("list", data.get("list"));
 	    model.addAttribute("totalPages", data.get("totalPages"));
 	    model.addAttribute("currentPage", data.get("currentPage"));
+	    model.addAttribute("reviewCountMap", data.get("reviewCountMap"));
+		model.addAttribute("avgRatingMap", data.get("avgRatingMap"));
+		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds")); // 즐겨찾기
 		
 		return "common/search_fragment";
+	}
+
+	//[즐겨찾기]
+	@RequestMapping("/favorite/toggle")
+	@ResponseBody
+	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
+		logger.info("<<< url => /favorite/toggle>>>");
+		
+		return searchService.toggleFavorite(request);
+		
 	}
 	
 

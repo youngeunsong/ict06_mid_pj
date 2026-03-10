@@ -161,8 +161,13 @@
 								</table>
 								
 								<%-- 페이징 --%>
+								<!-- TODO: 페이징 부분이 컨텐츠 영역의 정중앙에 오게 수정 -->
 								<div class="py-3 border-top">
 									<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
+								</div>
+								
+								<div align="left">
+									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adpl'">새 축제 추가</button>
 								</div>
 							</div>
 						</div>

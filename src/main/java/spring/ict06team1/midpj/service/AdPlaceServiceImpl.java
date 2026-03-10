@@ -74,9 +74,16 @@ public class AdPlaceServiceImpl implements AdPlaceService{
 		System.out.println("[AdPlaceServiceImpl - modifyFestival()]");
 	}
 
+	// 신규 축제 등록
+	@Override
+	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("[AdPlaceServiceImpl - insertFestival()]");
+	}
+	
 	// 축제 정보 삭제 
 	@Override
 	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdPlaceServiceImpl - deleteFestival()]");
 	}
+
 }

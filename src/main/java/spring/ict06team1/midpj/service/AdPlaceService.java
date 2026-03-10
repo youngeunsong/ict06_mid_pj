@@ -16,6 +16,9 @@ public interface AdPlaceService {
 	// 축제 정보 수정
 	public void modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model);
 
+	// 신규 축제 등록
+	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model);
+	
 	// 축제 정보 삭제 
 	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model);
 }

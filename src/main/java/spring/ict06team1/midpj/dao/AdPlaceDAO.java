@@ -20,6 +20,9 @@ public interface AdPlaceDAO {
 	// 축제 정보 수정
 	public int modifyFestival(FestivalDTO dto);
 	
+	// 신규 축제 등록
+	public int insertFestival(FestivalDTO dto); 
+	
 	// 축제 정보 삭제
 	public int deleteFestival(int festival_id);
 }

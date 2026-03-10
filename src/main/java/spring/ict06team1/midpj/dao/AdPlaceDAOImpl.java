@@ -44,10 +44,18 @@ public class AdPlaceDAOImpl implements AdPlaceDAO{
 		return 0;
 	}
 
+	// 신규 축제 등록
+	@Override
+	public int insertFestival(FestivalDTO dto) {
+		System.out.println("[AdReservationDAOImpl - insertFestival()]");
+		return 0;
+	}
+	
 	// 축제 정보 삭제
 	@Override
 	public int deleteFestival(int festival_id) {
 		System.out.println("[AdReservationDAOImpl - getFestivalList()]");
 		return 0;
 	}
+
 }

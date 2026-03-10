@@ -41,7 +41,11 @@
 <!-- AdminLTE -->
 <link rel="stylesheet"
 	href="${path}/resources/admin/dist/css/adminlte.min.css">
-	
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" 
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <!-- css 끝-->	
 
 <!-- js 시작 -->
@@ -73,6 +77,9 @@
 <!-- daterangepicker -->
 <script src="${path}/resources/admin/plugins/moment/moment.min.js"></script>
 <script src="${path}/resources/admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+<!-- FullCalendar -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="${path}/resources/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -8,10 +8,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>회원가입</title>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- F12시 reading 'fn'오류 -->
+
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
+<link rel="stylesheet" href="${path}/resources/css/common/header.css">
+<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
 <link rel="stylesheet" href="${path}/resources/css/user/join.css">
 
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
+<%-- <script src="${path}/resources/js/common/main.js" defer></script> --%>
 <script src="${path}/resources/js/user/join.js" defer></script>
 
 </head>
@@ -39,28 +46,50 @@
                         <div id="step_div1">
                            <h3 align="center" style="margin-bottom:20px;">필수 계정 정보</h3>
                            <table align="center" class="join_table">
-                              <tr>
-                                 <th> * 아이디 </th>
-                                 <td>
-                                    <div style="display: flex; align-items: center;">
-                                       <input type="text" class="input" name="user_id" id="user_id" placeholder="6~20자 영문, 숫자" required autofocus>
-                                       <input type="button" class="btn_overlap" value="중복확인" style="margin-left:10px" onclick="confirmId()">
-                                    </div>
-                                    <input type="hidden" name="hiddenUserId" value="0">
-                                    <div id="idMessage" style="font-size: 12px; margin-top: 5px;"></div>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <th> * 비밀번호 </th>
-                                 <td><input type="password" class="input" name="user_password" id="user_password" placeholder="영문/숫자/특수문자 조합" required></td>
-                              </tr>
-                              <tr>
-                                 <th> * 비밀번호 확인 </th>
-                                 <td>
-                                    <input type="password" class="input" name="re_password" id="re_password" placeholder="비밀번호 재입력" required>
-                                    <div id="pwdMessage" style="font-size: 12px; margin-top: 5px;"></div>
-                                 </td>
-                              </tr>
+
+                               <tr>
+								    <th> * 아이디 </th>
+								    <td>
+								        <div style="display: flex; align-items: center;">
+								            <input type="text" class="input" name="user_id" id="user_id" required autofocus>
+								            <input type="button" class="btn_overlap" value="중복확인" style="margin-left:10px" onclick="confirmId()">
+								        </div>
+								        <div id="id_guide" style="font-size: 12px; margin-top: 5px; color: #666;">6~20자 영문, 숫자</div>
+								        <input type="hidden" name="hiddenUserId" value="0">
+								        <div id="idMessage" style="font-size: 12px; margin-top: 5px;"></div>
+								    </td>
+								</tr>
+								
+								<tr>
+								    <th> * 비밀번호 </th>
+								    <td>
+								        <div class="pwd_container" style="position: relative; display: flex; align-items: center;">
+								            <input type="password" class="input" name="password" id="user_password" required style="width: 100%; padding-right: 40px;">
+								            <i class="fa-solid fa-eye-slash togglePwd" data-target="user_password" style="position: absolute; right: 10px; cursor: pointer;"></i>
+								        </div>
+								        <div id="pwd_guide_wrapper" style="font-size: 12px; margin-top: 8px;">
+								            <div id="pwd_default_txt" style="color: #666;">영문/숫자/특수문자 포함 8~20자</div>
+								            <div id="pwd_check_list" style="color: #ccc; display: none;">
+								                <span id="check_eng">✓ 영문</span> 
+								                <span id="check_num">✓ 숫자</span> 
+								                <span id="check_spe">✓ 특수문자</span> 
+								                <span id="check_len">✓ 8~20자</span>
+								            </div>
+								        </div>
+								    </td>
+								</tr>
+								
+								<tr>
+								    <th> * 비밀번호 확인 </th>
+								    <td>
+								        <div class="pwd_container" style="position: relative; display: flex; align-items: center;">
+								            <input type="password" class="input" name="re_password" id="re_password" required style="width: 100%; padding-right: 40px;">
+								            <i class="fa-solid fa-eye-slash togglePwd" data-target="re_password" style="position: absolute; right: 10px; cursor: pointer;"></i>
+								        </div>
+								        <div id="pwdMatchMessage" style="font-size: 12px; margin-top: 8px; color: #ccc;">비밀번호를 한 번 더 입력해주세요.</div>
+								    </td>
+								</tr>
+
                            </table>
                            <div align="center" style="margin-top: 30px;">
                               <input type="button" class="btn_next" value="다음 단계로" onclick="nextStep(2)" 
@@ -73,7 +102,9 @@
                            <table align="center" class="join_table">
                               <tr>
                                  <th> * 이름 </th>
-                                 <td><input type="text" class="input" name="user_name" id="user_name" placeholder="실명을 입력하세요" required></td>
+
+                                 <td><input type="text" class="input" name="name" placeholder="실명을 입력하세요" required></td>
+
                               </tr>
                               <tr>
                                  <th> * 성별 </th>
@@ -91,16 +122,17 @@
                               <tr>
                                  <th> * 연락처 </th>
                                  <td>
-                                    <input type="text" name="phone1" class="input" style="width:50px" maxlength="3"> -
-                                    <input type="text" name="phone2" class="input" style="width:70px" maxlength="4"> -
-                                    <input type="text" name="phone3" class="input" style="width:70px" maxlength="4">
+                                    <input type="text" name="phone1" class="input" style="width:50px" maxlength="3" required> -
+                                    <input type="text" name="phone2" class="input" style="width:70px" maxlength="4" required> -
+                                    <input type="text" name="phone3" class="input" style="width:70px" maxlength="4" required>
                                  </td>
                               </tr>
                               <tr>
                                  <th> * 이메일 </th>
                                  <td>
-                                    <input type="text" name="user_email1" id="user_email1" class="input" style="width:100px" required> @
-                                    <input type="text" name="user_email2" id="user_email2" class="input" style="width:100px" required>
+
+                                    <input type="text" name="email1" class="input" style="width:100px" required> @
+                                    <input type="text" name="email2" id="user_email2" class="input" style="width:100px" required>
                                     <select class="input" name="user_email3" onchange="selectEmail()">
                                        <option value="0">직접입력</option>
                                        <option value="naver.com">네이버</option>
@@ -168,7 +200,35 @@
 			</code> 
 		</pre>
       
-      <%@ include file="../../common/footer.jsp" %>
+   <%@ include file="../../common/footer.jsp" %>
    </div>
+
+   <script type="text/javascript">
+       window.onload = function() {
+           // 서버에서 전달받은 insertCnt(1, -1, -2, -3 등)를 자바스크립트 변수에 할당
+           const result = "${insertCnt}"; 
+
+           // 값이 비어있지 않을 때만 실행 (처음 회원가입 페이지에 들어왔을 때는 실행 안 됨)
+           if (result !== "") {
+               if (result === "-1") {
+                   alert("보안 위반: 아이디는 6자 이상이어야 합니다.");
+                   history.back(); 
+               } else if (result === "-2") {
+                   alert("이미 사용 중인 아이디입니다. 다시 확인해주세요.");
+                   history.back();
+               } else if (result === "-3") {
+                   alert("보안 위반: 비밀번호는 8자 이상이어야 합니다.");
+                   history.back();
+               } else if (result === "1") {
+                   alert("회원가입을 축하드립니다!");
+                   location.href = "${path}/login.do"; // 가입 성공 시 로그인 이동
+               } else if (result === "0") {
+                   alert("회원가입 실패! 입력 정보를 다시 확인해주세요.");
+                   history.back();
+               }
+           }
+       };
+   </script>
+
 </body>
 </html>

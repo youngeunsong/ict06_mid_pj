@@ -1,0 +1,264 @@
+@charset "UTF-8";
+/* ad_reservation.css */
+
+
+
+body {
+	background-color: #F6F6F6 !important;
+}
+
+.container-fluid {
+	max-width: 1400px;
+}
+
+/* ── footer ── */
+.main-footer {
+	text-align: center;
+}
+
+/* ── 카드 ── */
+.card {
+	border: none;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+	background-color: #ffffff;
+	border-bottom: 1px solid #eeeeee;
+}
+
+/* ── 테이블 ── */
+.table td, .table th {
+	padding: 1rem 0.5rem;
+}
+
+.table thead th {
+	background-color: #ffffff;
+	color: #333;
+	font-weight: 600;
+	border-bottom: 2px solid #dee2e6;
+	white-space: nowrap;
+}
+
+.table tbody td {
+	font-size: 0.9rem;
+	vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+	background-color: #fcfcfc !important;
+}
+
+/* ── 필터 전체 외곽 박스 ── */
+.filter-box {
+	display: flex;
+	flex-direction: row; /* 가로 방향 */
+	justify-content: space-between; /* 좌측 검색과 우측 필터 분리 */
+	align-items: flex-start; /* 상단 정렬 */
+	gap: 20px;
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+}
+
+/* 필터 영역 상하단 정렬 및 여백 조정 */
+.filter-box .d-flex {
+    flex-wrap: wrap; /* 요소가 너무 많으면 자동으로 줄바꿈 */
+}
+
+.filter-box .tag {
+    cursor: pointer;
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 정렬 드롭다운과 버튼 사이 간격 */
+.filter-box select, .filter-box button {
+    margin-bottom: 5px;
+}
+
+/* ── 왼쪽: 보기방식 + 키워드 ── */
+.filter-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* ── 오른쪽: 필터 내부 박스 ── */
+.filter-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    width: fit-content;
+    margin-left: auto;
+    align-items: flex-start;
+}
+
+.filter-right .filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.filter-title {
+	font-size: 0.78rem;
+	font-weight: 700;
+	color: #343a40;
+	padding-bottom: 7px;
+	border-bottom: 1px solid #dee2e6;
+	margin-bottom: 8px;
+}
+
+/* 개별 행(Label + Tags) */
+.filter-row {
+    display: flex;
+    align-items: center;     /* 수평 정렬 */
+    justify-content: flex-start;
+    gap: 10px;               /* 라벨과 태그 사이 간격 */
+}
+
+.filter-row .btn {
+	margin-left: 70px;
+}
+
+.filter-row+.filter-row {
+	margin-top: 6px;
+}
+
+.filter-row-label {
+    width: 70px;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #495057;
+    flex-shrink: 0;
+}
+
+/* ── 태그 버튼 기본 ── */
+.tag {
+	font-size: 0.75rem;
+	padding: 3px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1.5px solid;
+	background: #fff;
+	user-select: none;
+	transition: background 0.13s, color 0.13s;
+	white-space: nowrap;
+	line-height: 1.4;
+}
+
+/* 비활성 — 외곽선 + 글자 */
+.tag-success {
+	border-color: #28a745;
+	color: #28a745;
+}
+
+.tag-warning {
+	border-color: #e0a800;
+	color: #856404;
+}
+
+.tag-danger {
+	border-color: #dc3545;
+	color: #dc3545;
+}
+
+.tag-secondary {
+	border-color: #6c757d;
+	color: #6c757d;
+}
+
+.tag-primary {
+	border-color: #007bff;
+	color: #007bff;
+}
+
+/* 활성 — 꽉 채운 색 */
+.tag-success.active {
+	background: #28a745;
+	color: #fff;
+	border-color: #28a745;
+}
+
+.tag-warning.active {
+	background: #ffc107;
+	color: #212529;
+	border-color: #ffc107;
+}
+
+.tag-danger.active {
+	background: #dc3545;
+	color: #fff;
+	border-color: #dc3545;
+}
+
+.tag-secondary.active {
+	background: #6c757d;
+	color: #fff;
+	border-color: #6c757d;
+}
+
+.tag-primary.active {
+	background: #007bff;
+	color: #fff;
+	border-color: #007bff;
+}
+
+.btn-filter-search {
+	font-size: 0.78rem !important;
+	padding: 4px 16px !important;
+	white-space: nowrap;
+}
+
+/* ── 페이징 ── */
+.page-link {
+	border-radius: 6px !important;
+	margin: 0 3px;
+	color: #666;
+}
+
+/* ── 모달 헤더 ── */
+.modal-header-success {
+	background-color: #01D281;	
+}
+
+.modal-header-success .close {
+	color: #fff !important;
+	opacity: 0.9;
+	text-shadow: none;
+}
+
+.modal-header-success .close:hover {
+	opacity: 1;
+}
+
+/* ── 모달 헤더 버튼 (BS4 대응) ── */
+.modal-header-success .close {
+	background-color: #01D281;
+}
+
+.modal-header-success .close:hover {
+	opacity: 1;
+}
+
+/* ── 수정 버튼 ── */
+.btn-edit {
+	background-color: #FEFBDA;
+	border-color: #E8E4C0;
+	color: #333;
+}
+
+.btn-edit:hover {
+	background-color: #F5F0B0;
+	border-color: #d4ce9a;
+	color: #222;	
+}

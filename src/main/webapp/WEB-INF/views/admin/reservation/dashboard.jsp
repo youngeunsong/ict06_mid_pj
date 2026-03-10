@@ -2,23 +2,26 @@
 <!-- TODO : 이 페이지의 작동 제대로 하는 지 체크 필요 -->
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
-
+<!DOCTYPE html>
+<html>
+<head>
+<fmt:setTimeZone value="Asia/Seoul" />
+<!-- ad_reservation.css -->
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_reservation.css" />
 <!-- apexcharts -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
 	integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
 	crossorigin="anonymous" />
 
+<meta charset="UTF-8">
+<title>Reservation DASHBOARD</title>
+</head>
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
 	<div class="wrapper">
-		<!-- Preloader -->
-		<div
-			class="preloader flex-column justify-content-center align-items-center">
-			<img src="${path}/resources/admin/dist/img/AdminLTELogo.png"
-				height="60" width="60">
-		</div>
 
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
@@ -28,162 +31,305 @@
 		
 		<!-- ================= CONTENT ================= -->
 		<div class="content-wrapper">	
-			<!--begin::App Main-->
-			<main class="app-main">
-				<!--begin::App Content Header-->
-				<div class="app-content-header py-4 bg-white border-bottom mb-4">
-					<div class="container-fluid">
-						<h3 class="fw-bold text-dark"><i class="bi bi-bar-chart-fill me-2"></i>Reservation Dashboard</h3>
+			<!--begin::App Content Header-->
+			<div class="app-content-header py-4 bg-white border-bottom mb-4">
+				<div class="container-fluid">
+					<h3 class="font-weight-bold text-dark"><i class="bi bi-bar-chart-fill me-2"></i>Reservation Dashboard</h3>
+				</div>
+			</div>
+			<!--end::App Content Header-->
+			
+			<!--begin::App Content-->
+			<div class="app-content">
+				<!--begin::Container-->
+				<div class="container-fluid">
+					<div class="app-content-header py-3">
+						<h3 class="mb-0 font-weight-bold">예약 통계 대시보드</h3>
 					</div>
 				</div>
-				<!--end::App Content Header-->
-			
-				<!--begin::App Content-->
-				<div class="app-content">
-					<!--begin::Container-->
+				
+				<section class="app-content">
 					<div class="container-fluid">
-			
-						<!--begin::통계치-->
-						<div class="row g-3 mb-4 text-white">
-							<div class="col-md-3">
-								<div class="card bg-primary border-0 shadow-sm p-3 h-100">
-									<div class="d-flex justify-content-between align-items-start">
-										<div><p class="mb-0 opacity-75">총 예약</p><h2 class="fw-bold">1,240</h2></div>
-										<div class="fs-1 opacity-50"><i class="bi bi-calendar-check"></i></div>
+						<%--=====KPI 카드=====--%>
+						<div class="row mb-4">
+							<div class="col-6 col-md-3 mb-3">
+								<div class="card text-center shadow-sm">
+									<div class="card-body">
+										<p class="text-muted mb-1" style="font-size:0.85rem;">전체 예약</p>
+										<h3 class="font-weight-bold" style="color:#01D281;">${kpi.TOTAL}</h3>
+										<small class="text-muted">건</small>
 									</div>
-									<div class="mt-3 small fw-light"><i class="bi bi-arrow-up"></i> 12% 증가</div>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="card bg-danger border-0 shadow-sm p-3 h-100">
-									<div class="d-flex justify-content-between align-items-start">
-										<div><p class="mb-0 opacity-75">취소 건수</p><h2 class="fw-bold">48</h2></div>
-										<div class="fs-1 opacity-50"><i class="bi bi-x-circle"></i></div>
+							<div class="col-6 col-md-3 mb-3">
+								<div class="card text-center shadow-sm">
+									<div class="card-body">
+										<p class="text-muted mb-1" style="font-size:0.85rem;">오늘 예약</p>
+										<h3 class="font-weight-bold" style="color:#01D281;">${kpi.TODAY}</h3>
+										<small class="text-muted">건</small>
 									</div>
-									<div class="mt-3 small fw-light">전월 대비 2% 감소</div>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="card bg-warning border-0 shadow-sm p-3 h-100 text-dark">
-									<div class="d-flex justify-content-between align-items-start text-dark">
-										<div><p class="mb-0 opacity-75">노쇼(No-show)</p><h2 class="fw-bold text-dark">12</h2></div>
-										<div class="fs-1 opacity-50"><i class="bi bi-person-x"></i></div>
+							<div class="col-6 col-md-3 mb-3">
+								<div class="card text-center shadow-sm">
+									<div class="card-body">
+										<p class="text-muted mb-1" style="font-size:0.85rem;">이번달 예약</p>
+										<h3 class="font-weight-bold" style="color:#01D281;">${kpi.MONTHLY}</h3>
+										<small class="text-muted">건</small>
 									</div>
-									<div class="mt-3 small fw-bold">주의 필요</div>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="card bg-success border-0 shadow-sm p-3 h-100">
-									<div class="d-flex justify-content-between align-items-start">
-										<div><p class="mb-0 opacity-75">정상 이행률</p><h2 class="fw-bold">96%</h2></div>
-										<div class="fs-1 opacity-50"><i class="bi bi-pie-chart-fill"></i></div>
+							<div class="col-6 col-md-3 mb-3">
+								<div class="card text-center shadow-sm">
+									<div class="card-body">
+										<p class="text-muted mb-1" style="font-size:0.85rem;">취소율</p>
+										<h3 class="font-weight-bold" style="color:#01D281;">${kpi.CANCEL_RATE}</h3>
+										<small class="text-muted">%</small>
 									</div>
-									<div class="mt-3 small fw-light">최고치 달성 중</div>
 								</div>
 							</div>
 						</div>
-						<!--end::통계치-->
 						
-						<!--begin::주간 예약 추이-->
-						<div class="row g-4">
-							<div class="col-lg-8">
-								<div class="card border-0 shadow-sm h-100">
-									<div class="card-header bg-white border-bottom-0 pt-4 px-4">
-										<h5 class="fw-bold">주간 예약 추이 분석</h5>
+						<%--=====통계 차트=====--%>
+						<div class="row mb-4">
+							<%--=====left::월별 추이+도넛 차트=====--%>
+							<div class="col-12 col-md-6 mb-3">
+								<%--월별 예약 추이--%>
+								<div class="card shadow-sm mb-3">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">월별 예약 추이</h5>
 									</div>
-									<div class="card-body p-4"><div id="reservation-trend-chart"></div></div>
+									<div class="card-body" style="position:relative; height:250px">
+										<canvas id="monthlyChart"></canvas>
+									</div>
+								</div>
+								<%--예약상태별 비율(도넛차트)--%>
+								<div class="card shadow-sm mb-3">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">예약 상태별 비율</h5>
+									</div>
+									<div class="card-body d-flex justify-content-center">
+										<canvas id="statusChart" height="120"></canvas>
+									</div>
+								</div>
+								<%--장소분류별 비율(도넛차트)--%>
+								<div class="card shadow-sm">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">장소 분류별 비율</h5>
+									</div>
+									<div class="card-body d-flex justify-content-center">
+										<canvas id="placeTypeChart" height="120"></canvas>
+									</div>
 								</div>
 							</div>
-							<div class="col-lg-4">
-								<div class="card border-0 shadow-sm h-100">
-									<div class="card-header bg-white border-bottom-0 pt-4 px-4">
-										<h5 class="fw-bold">상태별 점유율</h5>
+							
+							<%--=====right::요일별 분포+예약 처리 현황=====--%>
+							<div class="col-12 col-md-6 mb-3">
+								<%--=====요일별 분포=====--%>
+								<div class="card shadow-sm mb-3">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">요일별 예약 분포</h5>
 									</div>
-									<div class="card-body p-4"><div id="reservation-status-pie"></div></div>
+									<div class="card-body" style="position:relative; height:250px;">
+										<canvas id="dayOfWeekChart"></canvas>
+									</div>
+								</div>
+								<%--=====예약 처리 현황 요약=====--%>
+								<div class="card shadow-sm">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">예약 처리 현황</h5>
+									</div>
+									<div class="card-body">
+										<div class="list-group list-group-flush">
+											<div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+												<span>대기 중인 예약</span>
+												<span class="badge badge-warning badge-pill">${pendingList.size()}건</span>
+											</div>
+											<div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+												<span>금일 신규 예약</span>
+												<span class="badge badge-success badge-pill">${kpi.TODAY}건</span>
+											</div>
+											<div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+												<span>취소된 예약 비율</span>
+												<span class="badge badge-danger badge-pill">${kpi.CANCEL_RATE}%</span>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-						<!--end::주간 예약 추이-->
-					</div>
-					<!--end::Container-->
-				</div>
-				<!--end::App Content-->
-			</main>
-			<!--end::App Main-->
-		</div>
-		<!--end::content Wrapper-->
-	</div>
-	<!-- end::div Wrapper -->
-	
-	<!-- JS -->
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>	<!-- apex charts 라이브러리 추가 -->
-	<script>
-		document.addEventListener('DOMContentLoaded',function() {
-			//==============================
-			//[1] 기간별 예약 추이 차트(Line/Area Chart) 시작
-			//begin::Reservation Trend Chart
-			//==============================
-			const trend_options = {
-					series: [{
-						name: '예약 건수',
-						data: [31,40,28,51,42,109,100]	//실제 DB data 바인딩 영역
-					}, {
-						name: '취소 건수',
-						data: [11,17,4,26,35,57,31]
-					}],
-					chart: {
-						height: 350,
-						type: 'area',
-						toolbar: {show: false}
-					},
-					colors: ['#0d6efd', '#dc3545'],	//blue(예약), red(취소)
-					dataLabels: {enabled: false},
-					stroke: {curve: 'smooth'},
-					xaxis: {
-						categories: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-					},
-					tooltip: {x: {format: 'yyyy/MM/dd HH:mm'}},
-				};
-			
-			const trend_chart = new ApexCharts(
-				document.querySelector("#reservation-trend-chart"),
-				trend_options
-			);
-			trend_chart.render();
-			//end::Reservation Trend Chart
-	
-			//==============================
-			//[2] 상태별 점유율 차트(Donut/Pie Chart) 시작
-			//begin::Reservation Status Pie Chart
-			//==============================
-			const status_options = {
-				series: [40, 15, 10, 35],	//[확정, 대기, 취소, 완료] 데이터 비중
-				chart: {
-					height: 350,
-					type: 'donut',	//도넛형 차트
-				},
-				labels: ['예약확정', '결제대기', '취소', '이용완료'],
-				colors: ['#0d6efd', '#ffc107', '#dc3545', '#198754'],
-				legend: {
-					position: 'bottom'
-				},
-				responsive: [{
-					breakpoint: 480,
-					options: {
-						chart: {width: 200},
-						legend: {position: 'bottom'}
-					}
-				}]
-			};
+					
+						<%--=====미처리 목록+최근 예약=====--%>
+						<div class="row">
+							<%--=====미처리 목록(PENDING)=====--%>
+							<div class="col-12 col-md-6 mb-3">
+								<div class="card shadow-sm">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0 text-danger">
+											<i class="bi bi-exclamation-circle mr-1"></i>미처리 예약
+											<span class="badge badge-danger ml-1">${pendingList.size()}</span>
+										</h5>
+									</div>
+									<div class="card-body p-0">
+										<table class="table table-hover m-0">
+											<thead class="thead-light">
+												<tr>
+													<th>예약번호</th>
+													<th>사용자</th>
+													<th>장소</th>
+													<th>방문일</th>
+												</tr>
+											</thead>
+											<tbody>
+												<c:forEach var="dto" items="${pendingList}">
+													<tr style="cursor:pointer;" onclick="location.href='${path}/getReservationList.ad?status=PENDING'">
+														<td>${dto.reservation_id}</td>
+														<td>${dto.user_id}</td>
+														<td>${dto.placeDTO.name}</td>
+														<td><fmt:formatDate value="${dto.check_in}" pattern="MM-dd" /></td>
+													</tr>
+												</c:forEach>
+												<c:if test="${empty pendingList}">
+													<tr>
+														<td colspan="4" class="text-center py-3 text-muted">미처리</td>
+													</tr>
+												</c:if>
+											</tbody>
+										</table>
+									</div>
+									<div class="card-footer bg-white">
+										<div class="mt-3 p-3 bg-light rounded" style="font-size:0.9rem; color:#666">
+											<i class="bi bi-info-circle me-1"></i>미처리 예약은 목록 클릭 시 상세 관리 페이지로 이동합니다.
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<%--최근 예약 5건--%>
+							<div class="col-12 col-md-6 mb-3">
+								<div class="card shadow-sm">
+									<div class="card-header">
+										<h5 class="card-title font-weight-bold mb-0">
+											<i class="bi bi-clock-history mr-1"></i>최근 예약
+										</h5>
+									</div>
+									<div class="card-body p-0">
+										<table class="table table-hover m-0">
+											<thead class="thead-light">
+												<tr>
+													<th>예약번호</th>
+													<th>사용자</th>
+													<th>장소</th>
+													<th>분류</th>
+													<th>상태</th>
+												</tr>
+											</thead>
+											<tbody>
+												<c:forEach var="dto" items="${recentList}">
+													<tr>
+														<td>${dto.reservation_id}</td>
+														<td>${dto.user_id}</td>
+														<td>${dto.placeDTO.name}</td>
+														<td>
+															<c:choose>
+																<c:when test="${dto.placeDTO.place_type == 'REST'}">맛집</c:when>
+																<c:when test="${dto.placeDTO.place_type == 'ACC'}">숙소</c:when>
+																<c:when test="${dto.placeDTO.place_type == 'FEST'}">축제</c:when>
+															</c:choose>
+														</td>
+														<td>
+															<c:choose>
+																<c:when test="${dto.status == 'RESERVED'}">
+																	<span class="badge badge-success">확정</span>
+																</c:when>
+																<c:when test="${dto.status == 'PENDING'}">
+																	<span class="badge badge-warning">결제대기</span>
+																</c:when>
+																<c:when test="${dto.status == 'CANCELLED'}">
+																	<span class="badge badge-danger">취소</span>
+																</c:when>
+																<c:when test="${dto.status == 'COMPLETED'}">
+																	<span class="badge badge-secondary">이용완료</span>
+																</c:when>
+															</c:choose>
+														</td>
+													</tr>
+												</c:forEach>
+												<c:if test="${empty recentList}">
+													<tr>
+														<td colspan="5" class="text-center py-3 text-muted">예약 내역이 없습니다.</td>
+													</tr>
+												</c:if>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					
+					</div>					
+				</section>
+			</div>
 		
-			/* const status_chart = new ApexCharts(
-				document.querySelector("#reservation-status-pie"),
-				status_options
-			);
-			status_chart.render();
-			//end::Reservation Status Pie Chart */
-			new ApexCharts(document.querySelector("#reservation-status-pie"), status_options).render();
-		});
+		<footer class="main-footer">
+			<strong>Copyright &copy; 2026</strong>
+		</footer>
+	</div>
+		
+	<!-- JS -->
+	<script>
+		const dashBoardData = {
+			monthly: {
+				labels: [
+					<c:forEach var="item" items="${monthlyTrend}" varStatus="s">
+						'${item.MONTH}'${!s.last ? ',' : ''}
+					</c:forEach>
+				],
+				data: [
+					<c:forEach var="item" items="${monthlyTrend}" varStatus="s">
+						${item.CNT}${!s.last ? ',' : ''}
+					</c:forEach>
+				]
+			},
+			status: {
+				labels: [
+					<c:forEach var="item" items="${statusRatio}" varStatus="s">
+						'${item.STATUS}'${!s.last ? ',' : ''}
+					</c:forEach>
+				],
+				data: [
+					<c:forEach var="item" items="${statusRatio}" varStatus="s">
+						${item.CNT}${!s.last ? ',' : ''}
+					</c:forEach>
+				]
+			},
+			placeType: {
+				labels: [
+					<c:forEach var="item" items="${placeTypeRatio}" varStatus="s">
+						'${item.PLACE_TYPE}'${!s.last ? ',' : ''}
+					</c:forEach>
+				],
+				data: [
+					<c:forEach var="item" items="${placeTypeRatio}" varStatus="s">
+						${item.CNT}${!s.last ? ',' : ''}
+					</c:forEach>
+				]
+			},
+			dayOfWeek: {
+				labels: [
+					<c:forEach var="item" items="${dayOfWeekStats}" varStatus="s">
+						'${item.DAY_NAME}'${!s.last ? ',' : ''}
+					</c:forEach>
+				],
+				data: [
+					<c:forEach var="item" items="${dayOfWeekStats}" varStatus="s">
+						${item.CNT}${!s.last ? ',' : ''}
+					</c:forEach>
+				]
+			}
+		};
 	</script>
+	<script src="${path}/resources/js/admin/dashboard.js"></script>
 </body>
 <!--end::Body-->
+</html>

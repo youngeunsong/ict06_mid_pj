@@ -3,6 +3,7 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
+
 import spring.ict06team1.midpj.dto.MemberDTO;
 
 public interface UserDAO {
@@ -25,7 +26,5 @@ public interface UserDAO {
 
     // 6. 회원 정보 수정
     public int updateUser(MemberDTO dto);
-    
-    // 7. 전체 회원 리스트 조회
-    public List<MemberDTO> getUserList();
-}
+
+}    

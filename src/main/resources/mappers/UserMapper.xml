@@ -6,48 +6,59 @@
   <mapper namespace="spring.ict06team1.midpj.dao.UserDAO">  <!-- namespace="패키지명.인터페이스" -->
   	
   	<!-- 1. 아이디 중복 체크 -->
-	<select id="idCheck" parameterType="java.lang.String" resultType="int">
-		SELECT count(*)
-		FROM MEMBER
-		WHERE user_id = #{user_id, jdbcType=VARCHAR}
-	</select>
+	<select id="idCheck" parameterType="String" resultType="int">
+        SELECT COUNT(*) 
+          FROM MEMBER 
+         WHERE user_id = #{user_id}
+    </select>
+  		
   		
 	<!-- 2. 회원 정보 삽입 (회원가입) -->
 	<insert id="insertUser" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
-	  INSERT INTO MEMBER (
-	    user_id, password, name, birth_date, email, phone, address, gender
-	  ) VALUES (
-	    #{user_id, jdbcType=VARCHAR},
-	    #{password, jdbcType=VARCHAR},
-	    #{name, jdbcType=VARCHAR},
-	    #{birth_date, jdbcType=DATE},
-	    #{email, jdbcType=VARCHAR},
-	    #{phone, jdbcType=VARCHAR},
-	    #{address, jdbcType=VARCHAR},
-	    #{gender, jdbcType=CHAR}
-	  )
-	</insert>
+        INSERT INTO members (
+            user_id, password, email, name, birth_date, 
+            gender, phone, address, point_balance, role, 
+            status, joinDate
+        ) VALUES (
+            #{user_id}, #{password}, #{email}, #{name}, #{birth_date}, 
+            #{gender}, #{phone}, #{address}, #{point_balance}, #{role}, 
+            #{status}, SYSTIMESTAMP
+        )
+    </insert>
+	
 	
   	<!-- 3. 로그인 체크 / 회원정보 인증(수정, 탈퇴) -->
 	<select id="loginCheck" parameterType="java.util.Map" resultType="int">
-		SELECT count(*) FROM MEMBER
-		 WHERE user_id = #{user_id}
-		   AND password = #{password}
-	</select>
+        SELECT COUNT(*) FROM MEMBER 
+        WHERE user_id = #{user_id} AND password = #{password}
+        AND status != 'OUT' 
+    </select>
 	
-	<!-- 회원정보 삭제 (탈퇴) -->
-	<!-- 
+	<!-- 4. 회원정보 삭제 (탈퇴) -->
 	<update id="deleteUser" parameterType="String">
-    UPDATE mvc_user_tbl 
-       SET status = '0' 
-     WHERE user_id = #{user_id}
-	</update>
-	 -->
-	<!-- 상세페이지 조회 -->
-	<!-- 
-	<select id="getUserDetail" parameterType="String" resultType="spring.ict06team1.midpj.dto.UserDTO">
-		SELECT * FROM mvc_user_tbl
-		 WHERE user_id = #{user_id}
-	</select>
-   -->
+        UPDATE MEMBER 
+        SET status = 'OUT' 
+        WHERE user_id = #{user_id}
+    </update>
+  
+ 
+	<!-- 5. 상세페이지 조회 -->
+	<select id="getUserDetail" parameterType="String" resultType="spring.ict06team1.midpj.dto.MemberDTO">
+        SELECT * FROM MEMBER 
+         WHERE user_id = #{user_id}
+    </select>
+	
+  
+  	<!-- 6. 회원 정보 수정 -->
+  	<update id="updateUser" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
+        UPDATE MEMBER 
+        SET password = #{password},
+            name = #{name},
+            email = #{email},
+            phone = #{phone},
+            address = #{address}
+        WHERE user_id = #{user_id}
+    </update>
+  	
+  	
   </mapper>	

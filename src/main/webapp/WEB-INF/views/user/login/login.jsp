@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
-
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,9 +10,11 @@
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
+<link rel="stylesheet" href="${path}/resources/css/common/header.css">
+<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
 
-<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
-
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
+<script src="${path}/resources/js/user/login.js" defer></script>
 </head>
 <body>
    <div class="wrap">
@@ -26,15 +27,16 @@
 			    <p>오신 것을 환영합니다!</p>
 			
 			    <form name="loginform" action="${path}/loginAction.do" method="post" onsubmit="return loginCheck()">
-			        <div class="login_input_container">
-			        	<div class="login_group">
+
+			        <div class="login_input_container"> <div class="login_group">
 			                <i class="fa-regular fa-user"></i>
-			                <input type="text" name="user_id" id="user_id" placeholder="아이디" required autofocus>
+			                <input type="text" name="user_id" id="user_id" placeholder="아이디" required>
 			            </div>
 			
 			            <div class="login_group">
 			                <i class="fa-solid fa-lock"></i>
-			                <input type="password" name="user_password" id="user_password" placeholder="비밀번호" required>
+
+			                <input type="password" name="password" id="password" placeholder="비밀번호" required>
 			                <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
 			            </div>
 			        </div>
@@ -63,8 +65,9 @@
 			</code> 
 		</pre>
       
-      <%@ include file="../../common/footer.jsp" %>
       <script src="${path}/resources/js/user/login.js" defer></script>
+      <!-- 관련 SQL  -->
+      <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>
 </html>

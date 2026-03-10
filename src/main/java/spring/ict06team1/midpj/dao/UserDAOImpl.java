@@ -20,10 +20,8 @@ public class UserDAOImpl implements UserDAO {
 	public int idCheck(String user_id) {
 		System.out.println("UserDAOImpl - idCheck()");
 		
-		//int selectCnt = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.idCheck", user_id);
 		UserDAO dao = sqlSession.getMapper(UserDAO.class);
 		int selectCnt = dao.idCheck(user_id);
-		
 		return selectCnt;
 	}
 
@@ -36,6 +34,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	// 3. 로그인 체크 / 회원정보 인증(수정, 탈퇴)
+    // 회원정보 인증(수정, 탈퇴시)
 	@Override
 	public int loginCheck(Map<String, Object> map) {
 		System.out.println("UserDAOImpl - loginCheck()");
@@ -61,23 +60,17 @@ public class UserDAOImpl implements UserDAO {
 		System.out.println("UserDAOImpl - getUserDetail()");
 		
 		MemberDTO dto = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.getUserDetail", user_id);
-		
+
 		return dto;
 	}
 
 	// 6. 회원 정보 수정
 	@Override
 	public int updateUser(MemberDTO dto) {
-		return 0;
+		System.out.println("UserDAOImpl - updateUser()");
+		
+		int updateCnt = sqlSession.update("spring.ict06team1.midpj.dao.UserDAO.updateUser", dto);
+		
+		return updateCnt;
 	}
-
-	// 7. 전체 회원 리스트 조회
-	@Override
-	public List<MemberDTO> getUserList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-
 }

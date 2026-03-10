@@ -122,9 +122,9 @@
                               <tr>
                                  <th> * 연락처 </th>
                                  <td>
-                                    <input type="text" name="phone1" class="input" style="width:50px" maxlength="3"> -
-                                    <input type="text" name="phone2" class="input" style="width:70px" maxlength="4"> -
-                                    <input type="text" name="phone3" class="input" style="width:70px" maxlength="4">
+                                    <input type="text" name="phone1" class="input" style="width:50px" maxlength="3" required> -
+                                    <input type="text" name="phone2" class="input" style="width:70px" maxlength="4" required> -
+                                    <input type="text" name="phone3" class="input" style="width:70px" maxlength="4" required>
                                  </td>
                               </tr>
                               <tr>

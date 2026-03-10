@@ -3,10 +3,18 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import spring.ict06team1.midpj.dto.FaqDTO;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 
+@Repository
 public class AdSupportDAOImpl implements AdSupportDAO {
+	
+	@Autowired
+	private SqlSession sqlSession;
 
 	// ===== [1:1 문의 관리] =====
     // 1. 문의글 총 개수 (페이징 계산용, 카테고리 필터 포함)

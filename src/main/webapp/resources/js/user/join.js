@@ -92,6 +92,14 @@ function confirmId() {
         return;
     }
 
+	// [수정 완료] userId (84번 줄에서 정의한 변수)를 사용하세요!
+    if (userId.toLowerCase().includes("admin")) { 
+        alert("아이디에 'admin' 키워드를 포함할 수 없습니다.");
+        document.getElementById("user_id").value = "";
+        document.getElementById("user_id").focus();
+        return;
+    }
+
     // 1차 필터링: 서버에 묻기 전에 '형식'이 맞는지 먼저 검사
     // 형식이 안 맞으면 서버(DB)까지 갈 필요도 없이 여기서 바로 차단
     if (!idRegExp.test(userId)) {

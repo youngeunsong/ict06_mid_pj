@@ -64,7 +64,15 @@ public class UserServiceImpl implements UserService {
 	    String gender = request.getParameter("gender");
 	    String address = request.getParameter("address");
 
-	    // 2. [핵심 보안] 서버에서 한 번 더 검사 (입구 컷)
+	    // 2-1. 아이디에 'admin'이 포함되어 있는지 확인 (소문자로 변환해서 체크)
+	    if (user_id != null && user_id.toLowerCase().contains("admin")) {
+	    	// 아이디에 admin이 포함되면 가입 절차를 진행하지 않고 중단
+	        System.out.println("중단: 관리자 키워드가 포함된 아이디입니다.");
+	        model.addAttribute("errorMsg", "사용할 수 없는 아이디입니다.");
+	        return;
+	    }
+	    
+	    // 2-2. [핵심 보안] 서버에서 한 번 더 검사 (입구 컷)
 	    // 아이디가 없거나 비밀번호가 너무 짧으면 DB에 넣지 않고 바로 리턴!
 	    if (user_id == null || user_id.length() < 6) {
 	        model.addAttribute("insertCnt", -1); // 아이디가 너무 짧음
@@ -134,11 +142,11 @@ public class UserServiceImpl implements UserService {
 		System.out.println("UserServiceImpl - loginAction()");
 		
 		String user_id = request.getParameter("user_id");
-		String user_password = request.getParameter("user_password");
+		String password = request.getParameter("password");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
-		map.put("password", user_password);
+		map.put("password", password);
 		
 		int selectCnt = dao.loginCheck(map);
 		
@@ -146,11 +154,18 @@ public class UserServiceImpl implements UserService {
 		if(selectCnt == 1) {
 			request.getSession().setAttribute("sessionID", user_id);
 			//브라우저 종료 시 세션 무효화(자동 로그아웃 처리. 30분=1800초 기준)
-			request.getSession().setMaxInactiveInterval(1800);
+			request.getSession().setMaxInactiveInterval(1800);	
 			
+			// 권한 정보 가져오기
+	        MemberDTO dto = dao.getUserDetail(user_id); 
+	        if(dto != null) {
+	            // 세션에 role(ADMIN 또는 USER)
+	            request.getSession().setAttribute("userRole", dto.getRole());
+	        }
 		}
 		model.addAttribute("selectCnt", selectCnt);
 		request.setAttribute("user_id", user_id);
+		request.setAttribute("selectCnt", selectCnt);
 	}
 
     // 4. 회원정보 인증처리 및 탈퇴(논리삭제 방식)

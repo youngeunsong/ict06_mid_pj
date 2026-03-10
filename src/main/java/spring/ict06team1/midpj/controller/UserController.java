@@ -78,15 +78,28 @@ public class UserController {
 		return "user/login/login";
 	}
 	
-	// 로그인 처리 
+	// 로그인 처리
 	@RequestMapping("/loginAction.do")	
 	public String loginAction(HttpServletRequest request, HttpServletResponse response, Model model) 
-		throws ServletException, IOException {
-		logger.info("<<< url => loginAction.do>>>");
-		
-		service.loginAction(request, response, model);
-		
-		return "user/login/loginAction";
+	    throws ServletException, IOException {
+	    
+	    service.loginAction(request, response, model);
+	    
+	    int selectCnt = (Integer) request.getAttribute("selectCnt");
+	    
+	    if (selectCnt == 1) {
+	        // 세션에서 권한 확인
+	        String userRole = (String) request.getSession().getAttribute("userRole");
+
+	        if ("ADMIN".equals(userRole)) {
+	            return "redirect:/adminHome.ad"; // 관리자면 여기로!
+	        } else {
+	            return "redirect:/main.do";      // 일반인이면 여기로!
+	        }
+	    } else {
+	        // 로그인 실패하면 원래 가던 jsp로
+	        return "user/login/loginAction"; 
+	    }
 	}
 	
 	// 로그아웃 처리 

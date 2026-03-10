@@ -3,11 +3,17 @@ package spring.ict06team1.midpj.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import spring.ict06team1.midpj.dao.AdSupportDAO;
+
 @Service
 public class AdSupportServiceImpl implements AdSupportService {
+	
+	@Autowired
+	private AdSupportDAO adsupportDAO;
 
 	// ===== [1:1 문의 관리] =====
 	

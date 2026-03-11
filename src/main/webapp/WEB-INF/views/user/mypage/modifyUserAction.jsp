@@ -25,24 +25,23 @@
 <title>회원정보 수정 처리</title>
 </head>
 <body>
-
-    <c:choose>
-        <c:when test="${updateCnt > 0}">
-            <script type="text/javascript">
-                alert("회원 정보가 성공적으로 수정되었습니다.");
-                // 수정 후에는 메인 화면이나 마이페이지 메인으로
-                location.href = "${path}/main.do"; 
-            </script>
-        </c:when>
-
-        <c:otherwise>
-            <script type="text/javascript">
-                alert("정보 수정에 실패했습니다. 다시 시도해주세요.");
-                // 이전 상세 페이지(modifyDetailPage.do)로
-                history.back(); 
-            </script>
-        </c:otherwise>
-    </c:choose>
-
+	<div class="wrap">
+		
+		<!-- 1주차 시연 후 아래 주석 처리한 라인의 주석을 다시 풀고 구현하면 됩니다. -->	
+		<c:if test="${updateCnt == 1}">
+			<script type="text/javascript">
+				alert("정보 수정 성공!!");
+				window.location= "${path}/main.do";
+			</script>
+		</c:if>
+		
+		<c:if test="${updateCnt != 1}">
+			<script type="text/javascript">
+				alert("정보 수정 실패!!");
+				window.location= "${path}/modifyDetailAction.do";
+			</script>
+		</c:if>
+	
+	</div>
 </body>
 </html>

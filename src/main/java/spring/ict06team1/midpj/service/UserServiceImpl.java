@@ -228,25 +228,42 @@ public class UserServiceImpl implements UserService {
 		throws ServletException, IOException {
 		System.out.println("UserServiceImpl - modifyUserAction()");
 		
-		// 1. DTO 객체 생성
+		//1. DTO 객체 생성
 		MemberDTO dto = new MemberDTO();
-	    
-	    // 2. 수정 가능한 데이터만 수집
-	    // 아이디는 WHERE 절 조건으로 쓰기 위해 반드시 가져와야 합니다.
-	    dto.setUser_id(request.getParameter("user_id")); 
-	    
-	    dto.setPassword(request.getParameter("password"));
-	    dto.setName(request.getParameter("name"));
-	    dto.setEmail(request.getParameter("email"));
-	    dto.setPhone(request.getParameter("phone"));
-	    dto.setAddress(request.getParameter("address"));
-	    
-	    // 3. DAO 호출 (DB 업데이트 실행)
+
+		// 1. jsp에서 보낸 파라미터 받기
+		String user_id = request.getParameter("user_id");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		String gender = request.getParameter("gender");
+		String strBirth = request.getParameter("birth_date");
+		
+		// 2. dto 객체 생성 및 데이터 세팅
+		
+		dto.setUser_id(user_id);
+		dto.setPassword(password);
+		dto.setName(name);
+		dto.setEmail(email);
+		dto.setPhone(phone);
+		dto.setAddress(address);
+		dto.setGender(gender);
+		
+		// 3. 날짜 처리 (문자열 -> java.sql.Date)
+	    if (strBirth != null && !strBirth.equals("")) {
+	        try {
+	            dto.setBirth_date(java.sql.Date.valueOf(strBirth));
+	        } catch (IllegalArgumentException e) {
+	            System.out.println("날짜 형식 오류: " + strBirth);
+	        }
+	    }
+
+	    // 4. DAO 호출하여 DB 업데이트 실행
 	    int updateCnt = dao.updateUser(dto);
 	    
-	    // 4. 결과값 전달
-	    model.addAttribute("updateCnt", updateCnt);
-	    
+	    // 5. 결과 반환 (1이면 성공, 0이면 실패)
 	    return updateCnt;
 	}
 }

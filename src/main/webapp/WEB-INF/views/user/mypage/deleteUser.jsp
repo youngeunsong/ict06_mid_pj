@@ -1,93 +1,82 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/views/common/setting.jsp"%>
 
-<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>회원 탈퇴</title>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴 | 맛침내!</title>
+    <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
+    
+    <style>
+        :root { --point-color: #0CB574; --danger-color: #dc3545; }
+        .delete-container { max-width: 500px; margin: 80px auto; background: #fff; border-radius: 20px; overflow: hidden; }
+        .delete-header { padding: 40px 30px 20px; text-align: center; }
+        .delete-body { padding: 0 40px 40px; }
+        .icon-box { width: 80px; height: 80px; background: #fff5f5; color: var(--danger-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; }
+        .warning-box { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 25px; border-left: 4px solid var(--danger-color); }
+        .warning-box ul { margin-bottom: 0; padding-left: 20px; color: #666; font-size: 0.9rem; }
+        .form-control:focus { border-color: var(--danger-color); box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1); }
+        .btn-delete { background-color: var(--danger-color); color: white; border: none; padding: 12px; transition: 0.3s; }
+        .btn-delete:hover { background-color: #bb2d3b; color: white; transform: translateY(-2px); }
+    </style>
 
-<!-- 부트스트랩 선언 + 헤더/푸터 -->
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
-<link rel="stylesheet" href="${path}/resources/css/user/login.css"> <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="${path}/resources/css/common/header.css">
-<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
-<style>
-    .delete_info {
-        background-color: #f8f8f8;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: left;
-        margin-bottom: 25px;
-        font-size: 14px;
-        color: #666;
-        line-height: 1.6;
-    }
-    .delete_info strong { color: #f91a32; }
-    .btn_delete {
-        width: 100%;
-        padding: 15px;
-        background-color: #999; /* 처음엔 무채색 */
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .btn_delete:hover { background-color: #f91a32; } /* 하버 시 빨간색 */
-</style>
+    <script type="text/javascript">
+        function confirmDelete() {
+            const pw = document.getElementById("password").value;
+            if(!pw) {
+                alert("본인 확인을 위해 비밀번호를 입력해주세요.");
+                return false;
+            }
+            return confirm("탈퇴 후에는 복구가 불가능합니다.\n정말 '맛침내!'를 떠나시겠습니까?");
+        }
+    </script>
 </head>
-<body>
-   <div class="wrap">
-      <%@ include file="../../common/header.jsp" %>
-      
-      <div id="container">
-         <div id="contents">
-            <div class="login_form_area">
-               <h2>회원 탈퇴</h2>
-               <p>계정을 삭제하시기 전 안내사항을 확인해주세요.</p>
+<body class="bg-light">
+    <div class="wrap">
+        <%@ include file="../../common/header.jsp"%>
 
-               <div class="delete_info">
-                  * 탈퇴 후에는 <strong>로그인이 불가능</strong>합니다. [cite: 2026-02-24] <br>
-                  * 작성하신 <strong>게시글과 댓글은 그대로 유지</strong>됩니다.<br>
-                  * 현재 보유하신 포인트는 모두 소멸됩니다. [cite: 2026-02-24]
-               </div>
+        <div class="container">
+            <div class="delete-container shadow-sm">
+                <div class="delete-header">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-user-slash"></i>
+                    </div>
+                    <h3 class="fw-bold">회원 탈퇴</h3>
+                    <p class="text-muted small">그동안 '맛침내!'와 함께해주셔서 감사합니다.</p>
+                </div>
 
-               <form name="deleteform" action="${path}/deleteUserAction.do" method="post">
-                  <div class="input_box">
-                     <div class="input_group">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" name="password" id="password" placeholder="본인 확인을 위해 비밀번호를 입력하세요" required>
-                     </div>
-                  </div>
+                <div class="delete-body">
+                    <div class="warning-box">
+                        <p class="fw-bold mb-2" style="color: var(--danger-color);">⚠️ 유의사항을 확인해주세요</p>
+                        <ul>
+                            <li>탈퇴 시 사용 중인 <b>포인트는 모두 소멸</b>됩니다.</li>
+                            <li>작성하신 리뷰 및 게시글은 삭제되지 않습니다.</li>
+                            <li>동일한 아이디로 <b>재가입이 불가능</b>할 수 있습니다.</li>
+                        </ul>
+                    </div>
 
-                  <div class="btn_area">
-                     <input type="submit" value="탈퇴하기" class="btn_delete">
-                  </div>
-                  
-                  <div class="login_bottom_links">
-                     <a href="${path}/main.do">탈퇴 취소하고 돌아가기</a>
-                  </div>
-               </form>
+                    <form action="${path}/deleteUserAction.do" method="post" onsubmit="return confirmDelete();">
+                        <div class="mb-4">
+                            <label for="password" class="form-label small fw-bold">비밀번호 확인</label>
+                            <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="현재 비밀번호를 입력하세요" required>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <button type="button" class="btn btn-light w-100 py-3 fw-bold" onclick="history.back();">취소</button>
+                            </div>
+                            <div class="col-8">
+                                <button type="submit" class="btn btn-delete w-100 py-3 fw-bold">탈퇴하기</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-         </div>
-      </div>
-      
-      <!-- 관련 SQL -->
-    SQL 쿼리 : 회원 탈퇴 
-   		<pre>
-			<code>
-			<c:out escapeXml="true" value="
-		        UPDATE MEMBER 
-        SET status = 'OUT' 
-        WHERE user_id = #${'{'}user_id}
-			" />
-			</code> 
-		</pre>
-     <!-- 관련 SQL -->
-      <%@ include file="../../common/footer.jsp" %>
-   </div>
+        </div>
+
+        <%@ include file="../../common/footer.jsp"%>
+    </div>
 </body>
 </html>

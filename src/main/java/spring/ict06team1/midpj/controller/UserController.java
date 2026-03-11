@@ -114,7 +114,7 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => deleteUserAction.do>>>");
 		
-		// service.deleteUserAction(request, response, model);
+		service.deleteUserAction(request, response, model);
 		
 		return "user/mypage/deleteUserAction";
 	}	
@@ -146,9 +146,19 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => modifyDetailPage.do>>>");
 		
-		// service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
+		service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
 		
-		return "user/mypage/modifyDetailPage";
+		// 서비스가 model에 담아준 결과값 꺼내기 / asMap() => Model의 스프링 바구니를 자바의 Map형식으로 변환해 값을 꺼내쓰기위한 메서드
+		int selectCnt = (Integer)model.asMap().get("selectCnt");
+		
+		if(selectCnt == 1) {
+			// 인증 성공 -> 내 정보가 담긴 상세 수정 페이지로
+			return "user/mypage/modifyDetailPage";
+		} else {
+			// 인증 실패 -> 다시 비번 입력 폼으로 보내면서 메시지 띄우기
+			model.addAttribute("errMsg", "비밀번호가 틀렸습니다.");
+			return "user/mypage/modifyUser";
+		}
 	}
 	
 	// [마이페이지] 회원수정 완료 
@@ -157,6 +167,13 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => modifyUserAction.do>>>");
 		
+		// 서비스에서 db업데이트 실행 후 결과(1 or 0)을 받아옴
+		int updateCnt = service.modifyUserAction(request, response, model);
+		
+		// 결과값을 jsp에서 쓸 수 있도록 모델에 담기
+		model.addAttribute("updateCnt",updateCnt);
+		
+		// 알림창을 띄워줄 결과 페이지로 이동
 		return "user/mypage/modifyUserAction";
 	}
 	
@@ -233,7 +250,4 @@ public class UserController {
 		return "user/inquiry/inquiry";
 	}
 	
-	
-	
-
 }

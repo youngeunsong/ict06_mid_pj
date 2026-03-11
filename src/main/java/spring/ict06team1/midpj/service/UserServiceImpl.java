@@ -173,7 +173,41 @@ public class UserServiceImpl implements UserService {
 	public int modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException {
 		System.out.println("UserServiceImpl - modifyUserAction()");
-		return 0;
+		
+		// 1. jsp에서 보낸 파라미터 받기
+		String user_id = request.getParameter("user_id");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		String gender = request.getParameter("gender");
+		String strBirth = request.getParameter("birth_date");
+		
+		// 2. dto 객체 생성 및 데이터 세팅
+		MemberDTO dto = new MemberDTO();
+		dto.setUser_id(user_id);
+		dto.setPassword(password);
+		dto.setName(name);
+		dto.setEmail(email);
+		dto.setPhone(phone);
+		dto.setAddress(address);
+		dto.setGender(gender);
+		
+		// 3. 날짜 처리 (문자열 -> java.sql.Date)
+	    if (strBirth != null && !strBirth.equals("")) {
+	        try {
+	            dto.setBirth_date(java.sql.Date.valueOf(strBirth));
+	        } catch (IllegalArgumentException e) {
+	            System.out.println("날짜 형식 오류: " + strBirth);
+	        }
+	    }
+
+	    // 4. DAO 호출하여 DB 업데이트 실행
+	    int updateCnt = dao.updateUser(dto);
+	    
+	    // 5. 결과 반환 (1이면 성공, 0이면 실패)
+	    return updateCnt;
 	}
 
 	// 7. 전체 회원 목록 조회 (관리자 페이지용)

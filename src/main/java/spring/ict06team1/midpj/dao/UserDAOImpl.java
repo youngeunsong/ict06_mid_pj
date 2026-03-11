@@ -68,7 +68,12 @@ public class UserDAOImpl implements UserDAO {
 	// 6. 회원 정보 수정
 	@Override
 	public int updateUser(MemberDTO dto) {
-		return 0;
+		System.out.println("UserDAOImpl - updateUser()");
+		
+		// sqlSession.update("매퍼경로.id", 파라미터)
+	    int updateCnt = sqlSession.update("spring.ict06team1.midpj.dao.UserDAO.updateUser", dto);
+	    
+		return updateCnt;
 	}
 
 	// 7. 전체 회원 리스트 조회

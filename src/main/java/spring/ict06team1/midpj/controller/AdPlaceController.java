@@ -20,9 +20,6 @@ public class AdPlaceController {
 
 	private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.class);
 	
-	@Autowired 
-	private AdPlaceServiceImpl adFestService; 
-
 	// [관리자 - 장소 관리] 홈
 	@RequestMapping("/placeHome.adpl")
 	public String placeHome(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -47,13 +44,12 @@ public class AdPlaceController {
 		return "admin/place/accommodationList";
 	}
 	
-	// 축제 관리 --------------------------------------------------------------------------------------------
-	// [관리자 - 장소 관리] 등록된 축제 목록 전체 조회, 검색/필터
-	@RequestMapping("/festivalList.adpl")
-	public String festivalList(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		logger.info("[url => /festivalList.adpl]");
-		adFestService.getFestivalList(request, response, model); 
-		return "admin/place/festivalList";
-	}
+//	// 축제 관리 --------------------------------------------------------------------------------------------
+//	// [관리자 - 장소 관리] 등록된 축제 목록 전체 조회, 검색/필터
+//	@RequestMapping("/festivalList.adpl")
+//	public String festivalList(HttpServletRequest request, HttpServletResponse response, Model model)
+//			throws ServletException, IOException {
+//		logger.info("[url => /festivalList.adpl]");
+//		return "admin/place/festivalList";
+//	}
 }

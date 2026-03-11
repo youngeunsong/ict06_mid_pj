@@ -167,7 +167,7 @@
 								</div>
 								
 								<div align="left">
-									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adpl'">새 축제 추가</button>
+									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">새 축제 추가</button>
 								</div>
 							</div>
 						</div>

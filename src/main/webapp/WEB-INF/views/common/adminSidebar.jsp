@@ -135,7 +135,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/festivalList.adpl" class="nav-link">
+							<a href="${path}/festivalList.adfe" class="nav-link">
 								축제 관리
 							</a>
 						</li>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import spring.ict06team1.midpj.service.AdPlaceServiceImpl;
+import spring.ict06team1.midpj.service.AdFestivalServiceImpl;
 
 @Controller
 public class AdFestivalController {
@@ -21,7 +21,7 @@ public class AdFestivalController {
 private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.class);
 	
 	@Autowired 
-	private AdPlaceServiceImpl adFestService; 
+	private AdFestivalServiceImpl adFestService; 
 	
 	// 축제 관리 --------------------------------------------------------------------------------------------
 	// [관리자 - 장소 관리] 등록된 축제 목록 전체 조회, 검색/필터
@@ -30,7 +30,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 			throws ServletException, IOException {
 		logger.info("[url => /festivalList.adpl]");
 		adFestService.getFestivalList(request, response, model); 
-		return "admin/place/festivalList";
+		return "admin/place/festival/festivalList";
 	}
 	
 	// [관리자 - 장소 관리] 새로운 축제 등록
@@ -39,6 +39,6 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 			throws ServletException, IOException {
 		logger.info("[url => /createFestival.adpl]");
 		// adFestService.getFestivalList(request, response, model); 
-		return "admin/place/createFestival";
+		return "admin/place/festival/createFestival";
 	}
 }

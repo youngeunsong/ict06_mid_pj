@@ -242,6 +242,7 @@ SELECT * FROM POINT;
 CREATE TABLE INQUIRY (
     inquiry_id   NUMBER PRIMARY KEY,
     user_id      VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
+    category	VARCHAR2(200),
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
     status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED

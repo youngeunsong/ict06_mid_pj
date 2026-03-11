@@ -6,6 +6,7 @@ public class InquiryDTO {
 
 	private int inquiry_id;
 	private String user_id;
+	private String category;
 	private String title;
 	private String content;
 	private String status;
@@ -17,11 +18,12 @@ public class InquiryDTO {
 		super();
 	}
 
-	public InquiryDTO(int inquiry_id, String user_id, String title, String content, String status, String admin_reply,
-			Timestamp inquiryDate, Timestamp answerDate) {
+	public InquiryDTO(int inquiry_id, String user_id, String category, String title, String content, String status,
+			String admin_reply, Timestamp inquiryDate, Timestamp answerDate) {
 		super();
 		this.inquiry_id = inquiry_id;
 		this.user_id = user_id;
+		this.category = category;
 		this.title = title;
 		this.content = content;
 		this.status = status;
@@ -29,61 +31,84 @@ public class InquiryDTO {
 		this.inquiryDate = inquiryDate;
 		this.answerDate = answerDate;
 	}
-	
+
 	public int getInquiry_id() {
 		return inquiry_id;
 	}
+
 	public void setInquiry_id(int inquiry_id) {
 		this.inquiry_id = inquiry_id;
 	}
+
 	public String getUser_id() {
 		return user_id;
 	}
+
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public String getStatus() {
 		return status;
 	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
 	public String getAdmin_reply() {
 		return admin_reply;
 	}
+
 	public void setAdmin_reply(String admin_reply) {
 		this.admin_reply = admin_reply;
 	}
+
 	public Timestamp getInquiryDate() {
 		return inquiryDate;
 	}
+
 	public void setInquiryDate(Timestamp inquiryDate) {
 		this.inquiryDate = inquiryDate;
 	}
+
 	public Timestamp getAnswerDate() {
 		return answerDate;
 	}
+
 	public void setAnswerDate(Timestamp answerDate) {
 		this.answerDate = answerDate;
 	}
 
 	@Override
 	public String toString() {
-		return "InquiryDTO [inquiry_id=" + inquiry_id + ", user_id=" + user_id + ", title=" + title + ", content="
-				+ content + ", status=" + status + ", admin_reply=" + admin_reply + ", inquiryDate=" + inquiryDate
-				+ ", answerDate=" + answerDate + "]";
+		return "InquiryDTO [inquiry_id=" + inquiry_id + ", user_id=" + user_id + ", category=" + category + ", title="
+				+ title + ", content=" + content + ", status=" + status + ", admin_reply=" + admin_reply
+				+ ", inquiryDate=" + inquiryDate + ", answerDate=" + answerDate + "]";
 	}
 
 }

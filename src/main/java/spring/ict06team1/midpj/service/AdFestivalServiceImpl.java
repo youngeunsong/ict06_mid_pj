@@ -1,5 +1,6 @@
 package spring.ict06team1.midpj.service;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.dao.AdFestivalDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.page.Paging;
 
 @Service
@@ -66,6 +68,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	@Override
 	public void getFestivalDetail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - getFestivalDetail()]");
+		
 	}
 
 	// 축제 정보 수정
@@ -78,6 +81,49 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	@Override
 	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - insertFestival()]");
+		
+		// 1) parameter값 수집(검색어, 예약상태) TODO: 상황에 맞게 수정 
+		String name = request.getParameter("name");
+		String address = request.getParameter("address");
+		double latitude = Double.parseDouble(request.getParameter("latitude"));
+		double longitude = Double.parseDouble(request.getParameter("longitude"));
+		String image_url = request.getParameter("image_url");
+		String description = request.getParameter("description");
+		Date start_date = Date.valueOf(request.getParameter("start_date")) ;
+		Date end_date = Date.valueOf(request.getParameter("end_date"));
+		
+		// PlaceDTO에 담기 - 장소 유형별 공통 정보
+		PlaceDTO plDto = new PlaceDTO(); 
+		plDto.setName(name);
+		plDto.setAddress(address);
+		plDto.setLatitude(latitude);
+		plDto.setLongitude(longitude);
+		plDto.setImage_url(image_url);
+		
+		// FestivalDTO에 담기
+		FestivalDTO dto = new FestivalDTO();
+		dto.setPlaceDTO(plDto);
+		dto.setDescription(description);
+		dto.setStart_date(start_date);
+		dto.setEnd_date(end_date);
+		
+		// DAO 호출하여 DB에 데이터 추가 시도  
+		int insertCntPlace = dao.insertPlace(plDto);
+		
+		// Place 테이블에 먼저 추가 시도하여 성공 시 
+		if(insertCntPlace > 0) {
+			int insertCnt = dao.insertFestival(dto);
+			
+			//Model에 담아서 jsp로 전달
+			model.addAttribute("insertCnt", insertCnt); 
+		} 
+		// Place 테이블에 추가 실패 시 
+		else {
+			//Model에 담아서 jsp로 전달
+			model.addAttribute("insertCnt", 0); 
+		}
+		
+		
 	}
 	
 	// 축제 정보 삭제 

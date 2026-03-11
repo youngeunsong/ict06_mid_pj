@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 
 public interface AdFestivalDAO {
 
@@ -20,7 +21,10 @@ public interface AdFestivalDAO {
 	// 축제 정보 수정
 	public int modifyFestival(FestivalDTO dto);
 	
-	// 신규 축제 등록
+	// (1) 신규 장소 등록 
+	public int insertPlace(PlaceDTO dto); 
+	
+	// (2) 신규 축제 등록
 	public int insertFestival(FestivalDTO dto); 
 	
 	// 축제 정보 삭제

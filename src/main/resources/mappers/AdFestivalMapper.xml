@@ -72,7 +72,7 @@
 	
 	<!-- 축제 상세 정보 조회 -->
 	
-	<!-- 전체 축제 건수 조회(페이징용), TODO:점심 먹고 와서 하기 -->
+	<!-- 전체 축제 건수 조회(페이징용) -->
 	<select id="getFestivalCount" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM FESTIVAL F
@@ -93,6 +93,42 @@
 	</select>
 	
 	<!-- 축제 정보 수정 -->
+	
+	<!-- (1) 신규 장소 등록 -->
+	<insert id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
+		INSERT INTO PLACE (
+		    place_id,
+		    place_type,
+		    name,
+		    address,
+		    latitude,
+		    longitude,
+		    image_url
+		) VALUES (
+		    SEQ_PLACE.NEXTVAL,
+		    'FEST',
+		    #{name},
+		    #{address},
+		    #{latitude},
+		    #{longitude},
+		    #{image_url}
+		)
+	</insert>
+	
+	<!-- (2) 신규 축제 등록 -->
+	<insert id="insertFestival" parameterType="spring.ict06team1.midpj.dto.FestivalDTO">
+		INSERT INTO FESTIVAL (
+		    festival_id,
+		    description,
+		    start_date,
+		    end_date
+		) VALUES (
+		    SEQ_PLACE.CURRVAL,
+		    #{description},
+		    #{start_date},
+		    #{end_date}
+		)
+	</insert>
 	
 	<!-- 축제 정보 삭제 -->
  </mapper> 

@@ -43,76 +43,62 @@
 			<!-- 신규 축제 정보 입력 폼 영역 시작 -->
             <div class="card card-primary">
               	<!-- form start -->
-              	<form>
+              	<form name="festivalForm" action="${path}/createFestivalAction.adfe" method="post"> <!-- onsubmit 필요한 지 확인 -->
 	              	<!-- card-body 시작  -->
 	                <div class="card-body">
 	                	<!-- 정보 입력 테이블 영역 시작 -->
 	                	<table class="table">
 	                		<!-- 축제 이름 시작-->
 	                		<tr>
-	                			<th><label for="inputName">축제 이름</label></th>
-	                			<td><input type="text" id="inputName" class=".form-control-border" placeholder="축제 이름을 입력해주세요"></td>
+	                			<th><label for="inputName">* 축제 이름</label></th>
+	                			<td><input type="text" id="inputName" name="name" class=".form-control-border" placeholder="축제 이름을 입력해주세요" required></td>
 	                		</tr>
 	                		<!-- 축제 이름 끝-->
 		                	<!-- 축제 주소 시작-->
 		                	<tr>
 	                			<th><label for="inputAddress">축제 주소</label></th>
-	                			<td><input type="text" id="inputAddress" class=".form-control-border" placeholder="축제 주소를 입력해주세요"></td>
+	                			<td><input type="text" id="inputAddress" name="address" class=".form-control-border" placeholder="축제 주소를 입력해주세요"></td>
 	                		</tr>
 		                	<!-- 축제 주소 끝-->
 		                	<!-- 축제 위도 시작-->
 		                	<tr>
 	                			<th><label for="inputLatitude">축제 위도</label></th>
-	                			<td><input type="text" id="inputLatitude" class=".form-control-border" placeholder="축제 위도를 입력해주세요"></td>
+	                			<td><input type="number" step="0.00000001" id="inputLatitude" name="latitude" class=".form-control-border" placeholder="축제 위도를 입력해주세요"></td>
 	                		</tr>
 		                	<!-- 축제 위도 끝-->
 		                	<!-- 축제 경도 시작-->
 		                	<tr>
 	                			<th><label for="inputLongitude">축제 경도</label></th>
-	                			<td><input type="text" id="inputLongitude" class=".form-control-border" placeholder="축제 경도를 입력해주세요"></td>
+	                			<td><input type="number" step="0.00000001" name="longitude" id="inputLongitude" class=".form-control-border" placeholder="축제 경도를 입력해주세요"></td>
 	                		</tr>
 		                	<!-- 축제 경도 끝-->
 		                	<!-- 축제 이미지 URL 시작 -->
 		                	<tr>
 	                			<th><label for="inputImgAddress">축제 이미지 웹주소</label></th>
-	                			<td><input type="text" id="inputImgAddress" class=".form-control-border" placeholder="축제 이미지 웹주소를 입력해주세요"></td>
+	                			<td><input type="text" id="inputImgAddress" name="image_url" class=".form-control-border" placeholder="축제 이미지 웹주소를 입력해주세요"></td>
 	                		</tr>
 		                	<!-- 축제 이미지 URL 끝 -->
 		                	<!-- 축제 설명 시작 -->
 		                	<tr>
 	                			<th><label for="inputDescription">축제 설명</label></th>
-	                			<td><textarea id="inputDescription" cols="30" rows="10" placeholder="축제에 대한 설명문을 입력해주세요."></textarea></td>
+	                			<td><textarea id="inputDescription" name="description" cols="50" rows="10" placeholder="축제에 대한 설명문을 입력해주세요."></textarea></td>
 	                		</tr>
 		                	<!-- 축제 설명 끝 -->
+		                	<!-- 축제 시작일 시작 -->
+		                	<tr>
+	                			<th><label for="inputStartDate">축제 시작일</label></th>
+	                			<td><input type="date" id="inputStartDate" name="start_date"></td>
+	                		</tr>
+		                	<!-- 축제 시작일 끝 -->
+		                	<!-- 축제 종료일 시작 -->
+		                	<tr>
+	                			<th><label for="inputEndDate">축제 종료일</label></th>
+	                			<td><input type="date" id="inputEndDate" name="end_date"></td>
+	                		</tr>
+		                	<!-- 축제 종료일 끝 -->
 		                	
 	                	</table>
 	                	<!-- 정보 입력 테이블 영역 끝 -->
-	                	
-	                	
-	                  <!-- <div class="form-group">
-	                    <label for="exampleInputEmail1">Email address</label>
-	                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-	                  </div>
-	                  <div class="form-group">
-	                    <label for="exampleInputPassword1">Password</label>
-	                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-	                  </div>
-	                  <div class="form-group">
-	                    <label for="exampleInputFile">File input</label>
-	                    <div class="input-group">
-	                      <div class="custom-file">
-	                        <input type="file" class="custom-file-input" id="exampleInputFile">
-	                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-	                      </div>
-	                      <div class="input-group-append">
-	                        <span class="input-group-text">Upload</span>
-	                      </div>
-	                    </div>
-	                  </div>
-	                  <div class="form-check">
-	                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-	                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-	                  </div> -->
 	                </div>
 	                <!-- card-body 끝 -->
 
@@ -138,7 +124,39 @@
 		<!-- &gt; : > 표시 -->
 		<div>
 			<pre><code>
+				-- 1. PLACE 테이블에 축제 장소 추가
+				INSERT INTO PLACE (
+				    place_id,
+				    place_type,
+				    name,
+				    address,
+				    latitude,
+				    longitude,
+				    image_url
+				) VALUES (
+				    SEQ_PLACE.NEXTVAL,
+				    'FEST',
+				    '서울 벚꽃 축제',
+				    '서울특별시 영등포구 여의서로',
+				    37.528316,
+				    126.932676,
+				    'https://example.com/images/cherry_festival.jpg'
+				);
 				
+				-- 2. FESTIVAL 테이블에 축제 상세 정보 추가
+				INSERT INTO FESTIVAL (
+				    festival_id,
+				    description,
+				    start_date,
+				    end_date,
+				    status
+				) VALUES (
+				    SEQ_PLACE.CURRVAL,
+				    '여의도에서 열리는 대표적인 봄 벚꽃 축제로 다양한 공연과 먹거리 부스가 운영됩니다.',
+				    DATE '2026-04-05',
+				    DATE '2026-04-12',
+				    'UPCOMING'
+				);
 			</code></pre>
 		</div>
 		<!-- 관련 SQL 끝 -->

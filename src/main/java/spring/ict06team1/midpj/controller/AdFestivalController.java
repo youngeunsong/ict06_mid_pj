@@ -28,7 +28,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	@RequestMapping("/festivalList.adfe")
 	public String festivalList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /festivalList.adpl]");
+		logger.info("[url => /festivalList.adfe]");
 		adFestService.getFestivalList(request, response, model); 
 		return "admin/place/festival/festivalList";
 	}
@@ -37,8 +37,16 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	@RequestMapping("/createFestival.adfe")
 	public String createFestival(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /createFestival.adpl]");
-		// adFestService.getFestivalList(request, response, model); 
+		logger.info("[url => /createFestival.adfe]");
 		return "admin/place/festival/createFestival";
+	}
+	
+	// [관리자 - 장소 관리] 새로운 축제 등록 액션
+	@RequestMapping("/createFestivalAction.adfe")
+	public String createFestivalAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /createFestivalAction.adfe]");
+		adFestService.insertFestival(request, response, model); 
+		return "admin/place/festival/createFestivalAction";
 	}
 }

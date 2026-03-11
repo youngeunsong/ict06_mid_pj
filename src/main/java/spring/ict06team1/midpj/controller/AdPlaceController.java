@@ -56,13 +56,4 @@ public class AdPlaceController {
 		adFestService.getFestivalList(request, response, model); 
 		return "admin/place/festivalList";
 	}
-	
-	// [관리자 - 장소 관리] 새로운 축제 등록
-	@RequestMapping("/createFestival.adpl")
-	public String createFestival(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		logger.info("[url => /createFestival.adpl]");
-		// adFestService.getFestivalList(request, response, model); 
-		return "admin/place/createFestival";
-	}
 }

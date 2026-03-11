@@ -51,27 +51,40 @@
 	                		<!-- 축제 이름 시작-->
 	                		<tr>
 	                			<th><label for="inputName">축제 이름</label></th>
-	                			<td> </td>
+	                			<td><input type="text" id="inputName" class=".form-control-border" placeholder="축제 이름을 입력해주세요"></td>
 	                		</tr>
 	                		<!-- 축제 이름 끝-->
-		                	
-		                	<div class="form-group">
-		                		<label for="inputName">축제 이름</label>
-		                		<input type="text" id="inputName" class=".form-control-border" placeholder="축제 이름을 입력해주세요">
-		                	</div>
-		                	
 		                	<!-- 축제 주소 시작-->
-		                	<div class="form-group">
-		                		<label for="inputAddress">축제 주소</label>
-		                		<input type="text" id="inputAddress" class=".form-control-border" placeholder="축제 주소를 입력해주세요">
-		                	</div>
+		                	<tr>
+	                			<th><label for="inputAddress">축제 주소</label></th>
+	                			<td><input type="text" id="inputAddress" class=".form-control-border" placeholder="축제 주소를 입력해주세요"></td>
+	                		</tr>
 		                	<!-- 축제 주소 끝-->
 		                	<!-- 축제 위도 시작-->
-		                	<div class="form-group">
-		                		<label for="inputAddress">축제 위도</label>
-		                		<input type="text" id="inputAddress" class=".form-control-border" placeholder="축제 위도를 입력해주세요">
-		                	</div>
+		                	<tr>
+	                			<th><label for="inputLatitude">축제 위도</label></th>
+	                			<td><input type="text" id="inputLatitude" class=".form-control-border" placeholder="축제 위도를 입력해주세요"></td>
+	                		</tr>
 		                	<!-- 축제 위도 끝-->
+		                	<!-- 축제 경도 시작-->
+		                	<tr>
+	                			<th><label for="inputLongitude">축제 경도</label></th>
+	                			<td><input type="text" id="inputLongitude" class=".form-control-border" placeholder="축제 경도를 입력해주세요"></td>
+	                		</tr>
+		                	<!-- 축제 경도 끝-->
+		                	<!-- 축제 이미지 URL 시작 -->
+		                	<tr>
+	                			<th><label for="inputImgAddress">축제 이미지 웹주소</label></th>
+	                			<td><input type="text" id="inputImgAddress" class=".form-control-border" placeholder="축제 이미지 웹주소를 입력해주세요"></td>
+	                		</tr>
+		                	<!-- 축제 이미지 URL 끝 -->
+		                	<!-- 축제 설명 시작 -->
+		                	<tr>
+	                			<th><label for="inputDescription">축제 설명</label></th>
+	                			<td><textarea id="inputDescription" cols="30" rows="10" placeholder="축제에 대한 설명문을 입력해주세요."></textarea></td>
+	                		</tr>
+		                	<!-- 축제 설명 끝 -->
+		                	
 	                	</table>
 	                	<!-- 정보 입력 테이블 영역 끝 -->
 	                	

@@ -427,6 +427,7 @@ BEGIN
 END;
 /
 
+
 --------------------------------------------------
 -- 테이블 삭제 (참조 관계 역순)
 --------------------------------------------------
@@ -442,7 +443,8 @@ DROP TABLE FAQ;
 DROP TABLE IMAGE_STORE;
 DROP TABLE REVIEW;
 DROP TABLE FESTIVAL_TICKET;
-
+DROP TABLE COMMUNITY;
+DROP TABLE COMMUNITY_COMMENT; 
 
 -- 2. 거래 관련 테이블 (결제는 예약을 참조하므로 결제 먼저 삭제)
 DROP TABLE PAYMENT;

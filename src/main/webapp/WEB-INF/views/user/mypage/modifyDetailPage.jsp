@@ -1,155 +1,156 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 공통 경로(${path}) 및 설정값 포함 --%>
+<%@ include file="/WEB-INF/views/common/setting.jsp"%>
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>정보 수정</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원정보 수정 | 맛침내!</title>
 
-<!-- 부트스트랩 선언 + 헤더/푸터 -->
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+    <%-- 부트스트랩 5 및 외부 라이브러리 --%>
+    <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
+    <link rel="stylesheet" href="${path}/resources/css/user/login.css">
+    <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="${path}/resources/css/common/header.css">
-<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
-<style>
-    .modify_wrap { width: 700px; margin: 50px auto; padding: 40px; border: 1px solid #ddd; background: #fff; }
-    .modify_title { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; font-size: 24px; }
-    .modify_table { width: 100%; border-spacing: 0; border-top: 1px solid #eee; }
-    .modify_table th { text-align: left; padding: 15px; background: #fbfbfb; border-bottom: 1px solid #eee; width: 180px; color: #333; }
-    .modify_table td { padding: 12px; border-bottom: 1px solid #eee; }
-    .input_full { width: 95%; padding: 10px; border: 1px solid #ccc; border-radius: 3px; }
-    .point_text { color: #f91a32; font-weight: bold; }
-    .btn_center { text-align: center; margin-top: 40px; display: flex; justify-content: center; gap: 10px; }
-    .btn_submit { padding: 15px 50px; background: #f91a32; color: #fff; border: none; font-weight: bold; cursor: pointer; }
-    .btn_cancel { padding: 15px 50px; background: #999; color: #fff; border: none; font-weight: bold; cursor: pointer; }
-</style>
+    <style>
+        :root { --point-color: #0CB574; }
+        .modify-container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 15px; overflow: hidden; }
+        .modify-header { background: #f8f9fa; padding: 30px; border-bottom: 1px solid #eee; text-align: center; }
+        .modify-body { padding: 40px; }
+        .table-label { background-color: #f9f9f9; width: 25%; font-weight: 600; vertical-align: middle; }
+        .form-control:focus { border-color: var(--point-color); box-shadow: 0 0 0 0.25rem rgba(12, 181, 116, 0.25); }
+        .btn-point { background-color: var(--point-color); color: white; border: none; }
+        .btn-point:hover { background-color: #0a9660; color: white; }
+        .section-title { font-size: 1.1rem; font-weight: bold; margin-top: 25px; margin-bottom: 15px; color: #333; border-left: 4px solid var(--point-color); padding-left: 10px; }
+    </style>
 
-<script type="text/javascript">
-    // 비밀번호 일치 실시간 체크
-    function validateForm() {
-        const pw = document.getElementById("password").value;
-        const pwConfirm = document.getElementById("password_confirm").value;
-        
-        if (pw !== pwConfirm) {
-            alert("변경할 비밀번호가 서로 일치하지 않습니다.");
-            document.getElementById("password_confirm").focus();
-            return false;
-        }
-        return true;
-    }
-</script>
-</head>
-<body>
-<div class="wrap">
-    <%@ include file="../../common/header.jsp" %>
-    
-    <div id="container">
-        <c:choose>
-            <c:when test="${selectCnt == 1}">
-
-                <div class="modify_wrap">
-                    <h2 class="modify_title">회원정보 관리</h2>
-                    <form action="${path}/modifyUserAction.do" method="post" onsubmit="return validateForm();">
-                        <table class="modify_table">
-                            <%-- 1. 기본 정보 (수정불가) --%>
-                            <tr>
-                                <th>아이디</th>
-                                <td><strong>${dto.user_id}</strong><input type="hidden" name="user_id" value="${dto.user_id}"></td>
-                            </tr>
-                            <tr>
-                                <th>현재 포인트</th>
-                                <td class="point_text">${dto.point_balance} P</td>
-                            </tr>
-                            
-
-                            <%-- 2. 비밀번호 수정 --%>
-                            <tr>
-                                <th>새 비밀번호</th>
-                                <td><input type="password" name="password" id="password" class="input_full" placeholder="변경할 비밀번호 입력" required></td>
-                            </tr>
-                            <tr>
-                                <th>새 비밀번호 확인</th>
-                                <td><input type="password" id="password_confirm" class="input_full" placeholder="한번 더 입력해주세요" required></td>
-                            </tr>
-
-                            <%-- 3. 개인 신상 정보 [cite: 2026-02-24] --%>
-                            <tr>
-                                <th>이름</th>
-                                <td><input type="text" name="name" value="${dto.name}" class="input_full"></td>
-                            </tr>
-                            <tr>
-                                <th>이메일</th>
-                                <td><input type="email" name="email" value="${dto.email}" class="input_full"></td>
-                            </tr>
-                            <tr>
-                                <th>휴대폰 번호</th>
-                                <td><input type="text" name="phone" value="${dto.phone}" class="input_full"></td>
-                            </tr>
-                            <tr>
-                                <th>주소</th>
-                                <td><input type="text" name="address" value="${dto.address}" class="input_full"></td>
-                            </tr>
-                            <tr>
-                                <th>생년월일</th>
-                                <td><input type="date" name="birth_date" value="${dto.birth_date}" class="input_full"></td>
-                            </tr>
-                            <tr>
-                                <th>성별</th>
-                                <td>
-                                    <input type="radio" name="gender" value="M" ${dto.gender == 'M' ? 'checked' : ''}> 남성
-                                    <input type="radio" name="gender" value="F" ${dto.gender == 'F' ? 'checked' : ''} style="margin-left: 20px;"> 여성
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>가입일</th>
-                                <td>${dto.joinDate}</td>
-                            </tr>
-                        </table>
-
-                        <div class="btn_center">
-                            <button type="submit" class="btn_submit">수정하기</button>
-                            <button type="button" class="btn_cancel" onclick="location.href='${path}/main.do'">취소</button>
-                        	<button type="button" class="btn_cancel" onclick="if(confirm('정말 회원탈퇴 하시겠습니까?')) location.href='${path}/deleteUser.do'">
-						        회원탈퇴
-						    </button>
-						    
-		                </div>
-                    </form>
-                </div>
-            </c:when>
+    <script type="text/javascript">
+        // 폼 제출 전 유효성 검사
+        function validateForm() {
+            const pw = document.getElementById("password").value;
+            const pwConfirm = document.getElementById("password_confirm").value;
             
-            <c:otherwise>
-                <script>alert("인증에 실패했습니다."); history.back();</script>
-            </c:otherwise>
-        </c:choose>
+            if (pw !== pwConfirm) {
+                alert("변경할 비밀번호가 서로 일치하지 않습니다.");
+                document.getElementById("password_confirm").focus();
+                return false;
+            }
+            
+            if(!confirm("입력하신 정보로 수정하시겠습니까?")) return false;
+            return true;
+        }
+    </script>
+</head>
+<body class="bg-light">
+    <div class="wrap">
+        <%@ include file="../../common/header.jsp"%>
+
+        <div class="container my-5">
+            <c:choose>
+                <c:when test="${selectCnt == 1}">
+                    <div class="modify-container shadow-sm">
+                        <div class="modify-header">
+                            <h2 class="fw-bold mb-2">회원정보 수정</h2>
+                            <p class="text-muted mb-0">맛침내!의 소중한 정보를 최신으로 유지해주세요.</p>
+                        </div>
+
+                        <div class="modify-body">
+                            <form action="${path}/modifyUserAction.do" method="post" onsubmit="return validateForm();">
+                                
+                                <div class="section-title">기본 정보</div>
+                                <table class="table table-bordered align-middle">
+                                    <tr>
+                                        <th class="table-label text-center">아이디</th>
+                                        <td>
+                                            <span class="fw-bold px-2">${dto.user_id}</span>
+                                            <input type="hidden" name="user_id" value="${dto.user_id}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-label text-center">포인트</th>
+                                        <td>
+                                            <span class="text-success fw-bold px-2">
+                                                <i class="fa-solid fa-p"></i> ${dto.point_balance != null ? dto.point_balance : 0} P
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="section-title">비밀번호 변경</div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">새 비밀번호</label>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="새 비밀번호 입력" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">새 비밀번호 확인</label>
+                                        <input type="password" id="password_confirm" class="form-control" placeholder="비밀번호 재입력" required>
+                                    </div>
+                                </div>
+
+                                <div class="section-title">상세 정보</div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">이름</label>
+                                        <input type="text" name="name" value="${dto.name}" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">생년월일</label>
+                                        <input type="date" name="birth_date" value="${dto.birth_date}" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">이메일</label>
+                                        <input type="email" name="email" value="${dto.email}" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">연락처</label>
+                                        <input type="text" name="phone" value="${dto.phone}" class="form-control" placeholder="010-0000-0000">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold">주소</label>
+                                        <input type="text" name="address" value="${dto.address}" class="form-control">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold d-block">성별</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="genderM" value="M" ${dto.gender == 'M' ? 'checked' : ''}>
+                                            <label class="form-check-label" for="genderM">남성</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="genderF" value="F" ${dto.gender == 'F' ? 'checked' : ''}>
+                                            <label class="form-check-label" for="genderF">여성</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="if(confirm('정말 탈퇴하시겠습니까? 데이터가 모두 삭제됩니다.')) location.href='${path}/deleteUser.do'">
+                                        회원탈퇴
+                                    </button>
+                                    <div>
+                                        <button type="button" class="btn btn-light px-4 me-2" onclick="location.href='${path}/main.do'">취소</button>
+                                        <button type="submit" class="btn btn-point px-5 fw-bold">정보 수정 완료</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <script>
+                        alert("인증 정보가 유효하지 않습니다.");
+                        location.href="${path}/modifyUser.do";
+                    </script>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
+        <%@ include file="../../common/footer.jsp"%>
     </div>
-						    
-                  
-    <!-- 관련 SQL -->
-    SQL 쿼리 : 회원 상세 정보 가져오기
-   	<pre><code>
-     SELECT 
-           user_id, name, email, phone, 
-           role, status, joinDate, point_balance
-       FROM MEMBER
-       ORDER BY joinDate DESC
-	</code></pre>
-    
-    SQL 쿼리 : 회원 정보 수정 
-   		<pre>
-			<code>
-			<c:out escapeXml="true" value="
-     UPDATE MEMBER
-        SET email = #${'{'}email},
-            phone = #${'{'}phone},
-            address = #${'{'}address},
-            name = #${'{'}name}
-        WHERE user_id = #${'{'}user_id}
-			" />
-			</code> 
-		</pre>
-    <!-- 관련 SQL -->     
-    <%@ include file="../../common/footer.jsp" %>
-</div>
 </body>
 </html>

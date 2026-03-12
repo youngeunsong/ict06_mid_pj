@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
 	                pdto.setLongitude(item.path("mapx").asDouble());
 	                pdto.setLatitude(item.path("mapy").asDouble());
 	                rdto.setPhone(item.path("tel").asText(""));
-	                rdto.setAreaCode(item.path("areacode").asText("")); 
+	                rdto.setAreaCode(item.path("areaCode").asText("")); 
 
 	                // 2️⃣ 공통 상세 정보 호출 (개요, 카테고리 등)
 	                testRegisterDetail(contentId, rdto);
@@ -187,83 +187,34 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public void getRestaurant_list(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("AdminServiceImpl - getRestaurant_list()");
-		
-		String pageNum = request.getParameter("pageNum");
-		
-		Paging paging = new Paging(pageNum);
-		int total = admindao.placeCnt();
-		System.out.println("total : "+ total);
-		
-		paging.setTotalCount(total);
-		
-		//5-2단계 게시글 목록
-		int start = paging.getStartRow();
-		int end = paging.getEndRow();
-		Map<String,Object> map = new HashMap();
-		map.put("start", start);
-		map.put("end", end);
-		
-		List<PlaceDTO> list = admindao.placeList(map);
-		System.out.println("list : "+list);
-		
-		
-		model.addAttribute("list", list);
-		model.addAttribute("paging", paging);
-		
+	    System.out.println("AdminServiceImpl - getRestaurant_list()");
+	    
+	    String pageNum = request.getParameter("pageNum");
+	    String areaCode = request.getParameter("areaCode");
+
+	    Paging paging = new Paging(pageNum);
+	    
+	    Map<String, Object> map = new HashMap();
+	    map.put("areaCode", areaCode);
+
+	    int total = admindao.placeCnt(map); 
+	    System.out.println("total : " + total);
+	    
+	    paging.setTotalCount(total);
+	    
+	    map.put("start", paging.getStartRow());
+	    map.put("end", paging.getEndRow());
+	    
+	    // [수정] List 타입을 PlaceDTO에서 Map으로 변경
+	    List<Map<String, Object>> list = admindao.placeList(map); 
+	    System.out.println("list size : " + (list != null ? list.size() : 0));
+	    
+	    model.addAttribute("list", list);
+	    model.addAttribute("paging", paging);
+	    model.addAttribute("areaCode", areaCode);
 	}
 	
-	@Override
-    public Map<String, Object> getRestaurantArea(String areacode, String pageNum) {
-        // 1. areacode가 없거나 "전체"를 의미하는 빈 문자열인 경우
-		Map<String,Object> resultMap = new HashMap();
-		if (pageNum == null || pageNum.trim().isEmpty()) {
-	        pageNum = "1";
-	    }
-        if (areacode == null || areacode.trim().isEmpty()) {
-        	
-    		
-    		Paging paging = new Paging(pageNum);
-    		int total = admindao.placeCnt();
-    		System.out.println("total : "+ total);
-    		
-    		paging.setTotalCount(total);
-    		
-    		//5-2단계 게시글 목록
-    		int start = paging.getStartRow();
-    		int end = paging.getEndRow();
-    		Map<String,Object> map = new HashMap();
-    		map.put("start", start);
-    		map.put("end", end);
-    		map.put("paging", paging);
-    		List<PlaceDTO> list = admindao.placeList(map);
-    		resultMap.put("list", list);
-            resultMap.put("paging", paging);
-            resultMap.put("areacode", areacode);
-            return resultMap; // 기존의 전체 목록 조회 DAO 호출
-        	} 
-        	else {
-            // 2. 특정 지역 코드가 넘어온 경우 필터링 조회
-        	
-    		Paging paging = new Paging(pageNum);
-    		int total = admindao.placeCntArea(areacode);
-    		System.out.println("total : "+ total);
-    		paging.setTotalCount(total);
-    		//5-2단계 게시글 목록
-    		int start = paging.getStartRow();
-    		int end = paging.getEndRow();
-    		Map<String,Object> map = new HashMap();
-    		map.put("start", start);
-    		map.put("end", end);
-    		map.put("areacode", areacode);
-    		List<PlaceDTO> list = admindao.getRestaurantArea(map);
-    		resultMap.put("list", list);
-            resultMap.put("paging", paging);
-            resultMap.put("areacode", areacode);
-            return resultMap;
-        	}
-	}
-
+	
 	@Override
 	public void getRestaurantInsert(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
@@ -276,7 +227,7 @@ public class AdminServiceImpl implements AdminService {
 		String saveDir = request.getSession().getServletContext().getRealPath("/resources/upload/");//이거는 이 url을 읽는거다
 		System.out.println("saveDir : "+saveDir);
 		
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj123\\src\\main\\webapp\\resources\\upload\\";
+		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\upload\\";
 		
 		System.out.println("realDir : "+realDir);
 		
@@ -323,12 +274,16 @@ public class AdminServiceImpl implements AdminService {
 			PlaceDTO pDto = new PlaceDTO();
 		    pDto.setPlace_type("rest"); // 고정값
 		    pDto.setName(request.getParameter("pdName"));
-		    pDto.setAddress(request.getParameter("address"));
-		    
+		    String address_detail = request.getParameter("address_detail");
+		    String address = request.getParameter("address");
+		    String fullAddress = address;
+		    if (address_detail != null && !address_detail.trim().isEmpty()) {
+		        fullAddress += " - " + address_detail; // "주소 상세주소" 형태로 합쳐짐
+		    }
+		    pDto.setAddress(fullAddress);
 		    pDto.setImage_url(p_img1);
 		    pDto.setLatitude(Double.parseDouble(request.getParameter("latitude"))); 
 		    pDto.setLongitude(Double.parseDouble(request.getParameter("longitude")));
-		    
 		    RestaurantDTO rDto = new RestaurantDTO();
 		    rDto.setPhone(request.getParameter("phone"));
 		    rDto.setCategory(request.getParameter("category"));
@@ -360,6 +315,14 @@ public class AdminServiceImpl implements AdminService {
 			}
 			
 			//6단계. jsp로 처리결과 전달
+			String pageNum1 = request.getParameter("pageNum");
+			if (pageNum1 == null || pageNum1.trim().isEmpty()) {
+		        pageNum1 = "1";
+		    }
+			int pageNum = Integer.parseInt(pageNum1);
+			String areaCode = request.getParameter("areaCode");
+			model.addAttribute("pageNum",pageNum);
+			model.addAttribute("areaCode",areaCode);
 			model.addAttribute("insertCnt",insertCnt);
 			System.out.println("insertCnt"+insertCnt);
 		
@@ -380,11 +343,13 @@ public class AdminServiceImpl implements AdminService {
 		int pageNum = Integer.parseInt(pageNum1);
 		PlaceDTO pdto = admindao.getPlaceDetail(place_id);
 		RestaurantDTO rdto = admindao.getRestaurantDetail(place_id);
+		String areaCode = request.getParameter("areaCode");
 		System.out.println("코드"+rdto.getCategory());
 		System.out.println("코드"+rdto.getPhone());
-		model.addAttribute("pdto",pdto);
-		model.addAttribute("rdto",rdto);
-		model.addAttribute("pageNum",pageNum);
+		model.addAttribute("pdto", pdto);
+		model.addAttribute("rdto", rdto);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("areaCode", areaCode);
 		
 	}
 
@@ -409,7 +374,7 @@ public class AdminServiceImpl implements AdminService {
 		String saveDir = request.getSession().getServletContext().getRealPath("/resources/upload/");//이거는 이 url을 읽는거다
 		System.out.println("saveDir : "+saveDir);
 		
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj123\\src\\main\\webapp\\resources\\upload";
+		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\upload";
 		System.out.println("realDir : "+realDir);
 		
 		FileInputStream fis = null;
@@ -469,7 +434,14 @@ public class AdminServiceImpl implements AdminService {
 		pDto.setPlace_id(Integer.parseInt((request.getParameter("place_id"))));
 	    pDto.setPlace_type("rest"); // 고정값
 	    pDto.setName(request.getParameter("pdName"));
-	    pDto.setAddress(request.getParameter("address"));
+	    
+	    String address_detail = request.getParameter("address_detail");
+	    String address = request.getParameter("address");
+	    String fullAddress = address;
+	    if (address_detail != null && !address_detail.trim().isEmpty()) {
+	        fullAddress += " - " + address_detail; // "주소 상세주소" 형태로 합쳐짐
+	    }
+	    pDto.setAddress(fullAddress);
 	    pDto.setImage_url(p_img1);
 	    pDto.setLatitude(Double.parseDouble(request.getParameter("latitude"))); 
 	    pDto.setLongitude(Double.parseDouble(request.getParameter("longitude")));
@@ -500,7 +472,40 @@ public class AdminServiceImpl implements AdminService {
 			updateCnt = 0;
 		}
 		//6단계. 
+		
+		String areaCode = request.getParameter("areaCode");
 		model.addAttribute("updateCnt",updateCnt);
 		model.addAttribute("hiddenPageNum",hiddenPageNum);
+		model.addAttribute("areaCode",areaCode);
+		System.out.println("수정 후 areaCode 확인 : " + areaCode);
 		}
+	
+	@Override
+	public void getRestaurantDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    
+	    System.out.println("AdminServiceImpl - getRestaurantDeleteAction()");
+	    
+	    // 1. 파라미터를 먼저 문자열로 다 받습니다.
+	    String strPlace_id = request.getParameter("place_id");
+	    String pageNum = request.getParameter("pageNum");
+	    String areaCode = request.getParameter("areaCode");
+	    
+	    int deleteCnt = 0;
+
+	    // 2. [오류 해결 포인트] place_id가 있을 때만 삭제 로직 실행
+	    if (strPlace_id != null && !strPlace_id.trim().isEmpty()) {
+	        int place_id = Integer.parseInt(strPlace_id); // 이제 여기서 null 에러 안 납니다.
+	        deleteCnt = admindao.getRestaurantDeleteAction(place_id);
+	    }
+	    
+	    // 3. 기본값 설정 (null 방지)
+	    if (pageNum == null || pageNum.isEmpty()) pageNum = "1";
+	    if (areaCode == null) areaCode = "";
+
+	    // 4. 모델에 담기 (컨트롤러에서 redirect 시 꺼내 쓸 수 있게 함)
+	    model.addAttribute("deleteCnt", deleteCnt);
+	    model.addAttribute("pageNum", pageNum);
+	    model.addAttribute("areaCode", areaCode);
+	}
 }

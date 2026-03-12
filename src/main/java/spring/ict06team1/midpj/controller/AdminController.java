@@ -54,18 +54,22 @@ public class AdminController {
 			return "admin/place/restaurant";
 	}
 	
-	@RequestMapping("/restaurantArea.ad")
-	@ResponseBody // Java 객체를 JSON으로 자동 변환 (Jackson)
-	public Map<String, Object> restaurantArea(
-	        @RequestParam(value="areacode", required=false) String areacode,
-	        @RequestParam(value="pageNum", defaultValue="1") String pageNum) {
-	    // 1. 서비스 호출 (나중에 만드실 부분)
-	    // areacode가 없거나 빈 값일 때의 처리 로직을 서비스에 맡기거나 여기서 분기합니다.
-		Map<String, Object> resultMap = adminService.getRestaurantArea(areacode,pageNum);
-		resultMap.put("areacode", areacode);
-	    // 2. 결과 반환 (Jackson 라이브러리에 의해 자동으로 JSON 포맷으로 변환됨)
-	    return resultMap; 
-	}
+	
+	
+	/*
+	 * @RequestMapping("/restaurantArea.ad")
+	 * 
+	 * @ResponseBody // Java 객체를 JSON으로 자동 변환 (Jackson) public Map<String, Object>
+	 * restaurantArea(
+	 * 
+	 * @RequestParam(value="areaCode", required=false) String areaCode,
+	 * 
+	 * @RequestParam(value="pageNum", defaultValue="1") String pageNum) { // 1. 서비스
+	 * 호출 (나중에 만드실 부분) // areacode가 없거나 빈 값일 때의 처리 로직을 서비스에 맡기거나 여기서 분기합니다.
+	 * Map<String, Object> resultMap =
+	 * adminService.getRestaurantArea(areaCode,pageNum); // 2. 결과 반환 (Jackson 라이브러리에
+	 * 의해 자동으로 JSON 포맷으로 변환됨) return resultMap; }
+	 */
 	
 	@GetMapping("/restaurantInsert.ad")
 	public String restaurantInsert(HttpServletRequest request, HttpServletResponse response,Model model)
@@ -99,11 +103,29 @@ public class AdminController {
 		return "admin/place/restaurantModifyAction";
 	}
 	
+	@GetMapping("/restaurantDeleteAction.ad")
+	public String restaurantDeleteAction(HttpServletRequest request, Model model) 
+	        throws ServletException, IOException {
+	    
+	    logger.info("<<< url => /restaurantDeleteAction.ad >>>");
+	    
+	    // 1. 삭제 서비스 호출 (여기서 model에 담아준 값을 나중에 꺼내 씁니다)
+	    adminService.getRestaurantDeleteAction(request, null, model);
+	    
+	    // 2. 서비스에서 model에 담아둔 파라미터 꺼내기
+	    String pageNum = (String) model.asMap().get("pageNum");
+	    String areaCode = (String) model.asMap().get("areaCode");
+	    
+	    // 3. [해결사] redirect를 사용하여 목록 컨트롤러(/restaurant.ad)를 다시 실행하게 함
+	    // 이렇게 하면 주소창이 정화되어 페이징 오류가 사라지고, 리스트도 다시 불러옵니다.
+	    return "redirect:/restaurant.ad?pageNum=" + pageNum + "&areaCode=" + areaCode;
+	}
+	
 	@RequestMapping("/start_1.ad")
 	public String start_1(HttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => mapTest >>> ");
-		return"admin/place/start_1";
+		return"admin/place/restaurant_publicdata";
 	}
 	
 	@ResponseBody

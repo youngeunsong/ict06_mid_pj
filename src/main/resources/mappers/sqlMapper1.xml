@@ -7,74 +7,36 @@
 	 
 	<!--관리자 장소 - 맛집 관리  -->
 	<!--장소 목록 갯수 구하기  -->
-	<select id="placeCnt" resultType="int">
-		SELECT COUNT(*) AS cnt 
-		FROM PLACE p, RESTAURANT r
-		WHERE p.place_id = r.restaurant_id
-	</select>
-	
-	<select id="placeCntArea" parameterType="String" resultType="int">
+	<select id="placeCnt" parameterType="java.util.Map" resultType="int">
 	    SELECT COUNT(*) AS cnt 
 	    FROM PLACE p, RESTAURANT r
 	    WHERE p.place_id = r.restaurant_id
-	    AND r.areacode = #{areacode}
+	    <if test="areaCode != null and areaCode != ''">
+	        AND r.areaCode = #{areaCode}
+	    </if>
 	</select>
-	
-	<!--관리자 장소 맛집 목록  -->
-	<select id="placeList" parameterType="java.util.Map" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-		SELECT 
-        T.place_id,
-        T.place_type,
-        T.name,
-        T.address,
-        T.view_count,
-        T.image_url,
-        T.placeRegDate
-	    FROM (
-	        SELECT 
-	            A.place_id,
-	            A.place_type,
-	            A.name,
-	            A.address,
-	            A.view_count,
-	            A.image_url,
-	            A.placeRegDate,
-	            ROWNUM AS rn
-	        FROM (
+	<select id="placeList" parameterType="java.util.Map" resultType="java.util.HashMap">
+	    SELECT * FROM (
+	        SELECT A.*, ROWNUM AS rn FROM (
 	            SELECT 
-	                p.place_id,
-	                p.place_type,
-	                p.name,
-	                p.address,
-	                p.view_count,
-	                p.image_url,
-	                p.created_at AS placeRegDate
-	            FROM place p 
-	            JOIN restaurant r ON p.place_id = r.restaurant_id
-	            ORDER BY p.place_id DESC
-	        ) A
-	        WHERE ROWNUM &lt;= #{end}
-	    ) T
-	    WHERE T.rn &gt;= #{start}
-	</select>
-	
-	<select id="getRestaurantArea" parameterType="java.util.Map" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-       SELECT * FROM (
-	        SELECT A.*, ROWNUM AS rNum FROM (
-	            SELECT 
-	                p.place_id,
-	                p.place_type,
-	                p.name,
-	                p.address,
-	                p.view_count,
-	                p.image_url,
-	                p.created_at AS placeRegDate  FROM PLACE p, RESTAURANT r
+	                p.place_id    AS "place_id",
+	                p.place_type  AS "place_type",
+	                p.name        AS "name",
+	                p.address     AS "address",
+	                p.view_count  AS "view_count",
+	                p.image_url   AS "image_url",
+	                p.created_at  AS "placeRegDate",
+	                r.category    AS "category"
+	            FROM PLACE p, RESTAURANT r
 	            WHERE p.place_id = r.restaurant_id
-	              AND r.areacode = #{areacode}
-	            ORDER BY p.place_id DESC
+	            <if test="areaCode != null and areaCode != ''">
+	                AND r.areaCode = #{areaCode}
+	            </if>
+	            /* [수정] DESC(내림차순)를 ASC(오름차순)로 변경 */
+	            ORDER BY p.created_at DESC 
 	        ) A
 	        WHERE ROWNUM &lt;= #{end}
-	    ) WHERE rNum &gt;= #{start}
+	    ) WHERE rn &gt;= #{start}
 	</select>
 	<select id="checkDuplicate" parameterType="string" resultType="int">
         SELECT COUNT(*) 
@@ -82,69 +44,40 @@
         WHERE Restaurant_ID = #{restaurant_id}
     </select>
 
-    <insert id="testInsertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
-    INSERT INTO PLACE (
-        PLACE_ID, 
-        PLACE_TYPE, 
-        NAME, 
-        ADDRESS, 
-        VIEW_COUNT, 
-        LATITUDE,    
-	    LONGITUDE,   
-	    IMAGE_URL,   
-	    CREATED_AT  
-        
-    ) VALUES (
-        #{place_id, jdbcType=NUMERIC}, 
-        'REST', 
-        #{name, jdbcType=VARCHAR}, 
-        #{address, jdbcType=VARCHAR}, 
-        0, 
-        #{latitude, jdbcType=NUMERIC}, 
-        #{longitude, jdbcType=NUMERIC}, 
-        #{image_url, jdbcType=VARCHAR}, 
-        SYSTIMESTAMP 
-    )
-	</insert>
-	
-	<insert id="testInsertRes" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
-	    INSERT INTO RESTAURANT (
-	        restaurant_id, 
-	        description, 
-	        phone, 
-	        category, 
-	        status, 
-	        areaCode,
-	        opentime,
-	        restdate,
-		    parking
-	    ) VALUES (
-	        #{restaurant_id, jdbcType=NUMERIC}, 
-	        #{description, jdbcType=CLOB}, 
-	        #{phone, jdbcType=VARCHAR}, 
-	        #{category, jdbcType=VARCHAR}, 
-	        'OPEN',
-	        #{areaCode, jdbcType=VARCHAR},
-	        #{opentime, jdbcType=VARCHAR},
-	        #{restdate, jdbcType=VARCHAR},
-	        #{parking, jdbcType=VARCHAR}
-	    )
-	</insert>
+    <update id="testInsertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
+    MERGE INTO PLACE p
+    USING DUAL ON (p.place_id = #{place_id})
+    WHEN MATCHED THEN
+        UPDATE SET name = #{name}, address = #{address}, latitude = #{latitude}, longitude = #{longitude}, image_url = #{image_url}
+    WHEN NOT MATCHED THEN
+        INSERT (place_id, place_type, name, address, view_count, latitude, longitude, image_url, created_at)
+        VALUES (#{place_id}, 'REST', #{name}, #{address}, 0, #{latitude}, #{longitude}, #{image_url}, SYSTIMESTAMP)
+	</update>
+
+	<update id="testInsertRes" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
+	    MERGE INTO RESTAURANT r
+	    USING DUAL ON (r.restaurant_id = #{restaurant_id})
+	    WHEN MATCHED THEN
+	        UPDATE SET description = #{description}, phone = #{phone}, category = #{category}, opentime = #{opentime}, restdate = #{restdate}, parking = #{parking}, areaCode = #{areaCode}
+	    WHEN NOT MATCHED THEN
+	        INSERT (restaurant_id, description, phone, category, status, opentime, restdate, parking, areaCode)
+	        VALUES (#{restaurant_id}, #{description}, #{phone}, #{category}, 'OPEN', #{opentime}, #{restdate}, #{parking}, #{areaCode})
+	</update>
 	
 	 <insert id="getPlaceInsert" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
-	    <selectKey keyProperty="place_id" resultType="int" order="AFTER">
-	        SELECT place_id_seq.CURRVAL FROM DUAL
+	    <selectKey keyProperty="place_id" resultType="int" order="BEFORE">
+	        SELECT SEQ_PLACE.NEXTVAL FROM DUAL
 	    </selectKey>
 	    INSERT INTO PLACE (
 	        place_id, place_type, name, address, view_count, latitude, longitude, image_url, created_at
 	    ) VALUES (
-	        place_id_seq.NEXTVAL, 'REST', #{name}, #{address}, 0, #{latitude}, #{longitude}, #{image_url}, SYSTIMESTAMP
+	        #{place_id}, 'REST', #{name}, #{address}, 0, #{latitude}, #{longitude}, #{image_url}, SYSTIMESTAMP
 	    )
 	</insert>
 	
 	<insert id="getRestaurantInsert" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
 	    INSERT INTO RESTAURANT (
-	        restaurant_id, description, phone, category, status, opentime, restdate, parking, areacode
+	        restaurant_id, description, phone, category, status, opentime, restdate, parking, areaCode
 	    ) VALUES (
 	        #{restaurant_id}, #{description, jdbcType=CLOB}, #{phone, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, 
 	        'OPEN', #{opentime, jdbcType=VARCHAR}, #{restdate, jdbcType=VARCHAR}, 
@@ -177,20 +110,21 @@
             opentime, 
             restdate, 
             parking, 
-            TRIM(areacode) AS areaCode
+            TRIM(areaCode) AS areaCode
         FROM RESTAURANT
         WHERE restaurant_id = #{place_id}
     </select>
     
     <update id="getPlaceUpdateAction" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
-        UPDATE PLACE 
-           SET name = #{name},
-               address = #{address},
-               latitude = #{latitude},
-               longitude = #{longitude},
-               image_url = #{image_url}
-         WHERE place_id = #{place_id}
-    </update>
+	    UPDATE PLACE 
+	       SET name = #{name},
+	           address = #{address},
+	           latitude = #{latitude},
+	           longitude = #{longitude},
+	           image_url = #{image_url},
+	           created_at = SYSTIMESTAMP 
+	     WHERE place_id = #{place_id}
+	</update>
 
     <update id="getRestaurantUpdateAction" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
         UPDATE RESTAURANT
@@ -200,7 +134,14 @@
                opentime = #{opentime},
                restdate = #{restdate},
                parking = #{parking},
-               areacode = #{areaCode}
+               areaCode = #{areaCode}
          WHERE restaurant_id = #{restaurant_id}
     </update>
+    
+    <!--맛집 정보 삭제  -->
+    <delete id="getRestaurantDeleteAction" parameterType="int">
+	    DELETE FROM PLACE 
+	    WHERE place_id = #{place_id}
+	</delete>
+    
  </mapper> 

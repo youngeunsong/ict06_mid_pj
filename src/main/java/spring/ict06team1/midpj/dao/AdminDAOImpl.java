@@ -17,34 +17,34 @@ public class AdminDAOImpl implements AdminDAO {
 	//----------------------------------------------------------------
 	//장소 갯수 구하기
 	@Override
-	public int placeCnt() {	
+	public int placeCnt(Map<String, Object> map) {	
 		System.out.println("[AdminDAOImpl - placeCnt()]");
-		int total = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.placeCnt");
+		int total = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.placeCnt",map);
 		return total;
 	}
 	
-	@Override
-	public int placeCntArea(String areacode) {
-		System.out.println("[AdminDAOImpl - placeCntArea()]");
-		int total = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.placeCntArea",areacode);
-		return total;
-	}
+	/*
+	 * @Override public int placeCntArea(String areaCode) {
+	 * System.out.println("[AdminDAOImpl - placeCntArea()]"); int total =
+	 * sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.placeCntArea",
+	 * areaode); return total; }
+	 */
 	
 	//맛집 목록
-	//게시글 목록
 	@Override 
-	public List<PlaceDTO> placeList(Map<String,Object> map) {
-		System.out.println("[AdminDAOImpl - placeList()]");
-		List list = sqlSession.selectList("spring.ict06team1.midpj.dao.AdminDAO.placeList",map);
-		return list;
+	public List<Map<String, Object>> placeList(Map<String, Object> map) {
+	    System.out.println("[AdminDAOImpl - placeList()]");
+	    // selectList의 결과를 Map 리스트로 받습니다.
+	    List<Map<String, Object>> list = sqlSession.selectList("spring.ict06team1.midpj.dao.AdminDAO.placeList", map);
+	    return list;
 	}
 	
-	@Override 
-	public List<PlaceDTO>getRestaurantArea(Map<String,Object> map) {
-		System.out.println("[AdminDAOImpl - getRestaurantArea()]");
-		List list = sqlSession.selectList("spring.ict06team1.midpj.dao.AdminDAO.getRestaurantArea",map);
-		return list;
-	}
+	/*
+	 * @Override public List<PlaceDTO>getRestaurantArea(Map<String,Object> map) {
+	 * System.out.println("[AdminDAOImpl - getRestaurantArea()]"); List list =
+	 * sqlSession.selectList(
+	 * "spring.ict06team1.midpj.dao.AdminDAO.getRestaurantArea",map); return list; }
+	 */
 	
 	@Override 
 	public int getPlaceInsert(PlaceDTO pdto) {
@@ -69,36 +69,51 @@ public class AdminDAOImpl implements AdminDAO {
 	
 	@Override
 	public int testInsertPlace(PlaceDTO pdto) {
+		System.out.println("[AdminDAOImpl - testInsertPlace()]");
 		int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.AdminDAO.testInsertPlace",pdto);
 		return insertCnt;
 	}
 	
 	@Override
 	public int checkDuplicate(String test_id) {
+		System.out.println("[AdminDAOImpl - checkDuplicate()]");
 		return sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.checkDuplicate", test_id);
     }
 
 	@Override
 	public RestaurantDTO getRestaurantDetail(int place_id) {
+		System.out.println("[AdminDAOImpl - getRestaurantDetail()]");
 		RestaurantDTO rdto = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.getRestaurantDetail", place_id);
 		return rdto;
 	}
 
 	@Override
 	public PlaceDTO getPlaceDetail(int place_id) {
+		System.out.println("[AdminDAOImpl - getPlaceDetail()]");
 		PlaceDTO pdto = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdminDAO.getPlaceDetail", place_id);
 		return pdto;
 	}
 
 	@Override
 	public int getRestaurantUpdateAction(RestaurantDTO rDto) {
+		System.out.println("[AdminDAOImpl - getRestaurantUpdateAction()]");
 		int updateCntR = sqlSession.update("spring.ict06team1.midpj.dao.AdminDAO.getRestaurantUpdateAction", rDto);
 		return updateCntR;
 	}
 
 	@Override
 	public int getPlaceUpdateAction(PlaceDTO pDto) {
+		System.out.println("[AdminDAOImpl - getPlaceUpdateAction()]");
 		int updateCntP = sqlSession.update("spring.ict06team1.midpj.dao.AdminDAO.getPlaceUpdateAction", pDto);
 		return updateCntP;
+	}
+	
+	//맛집 정보 삭제
+	@Override
+	public int getRestaurantDeleteAction(int place_id) {
+		System.out.println("[AdminDAOImpl - getRestaurantDeleteAction()]");
+		int deleteCnt = sqlSession.delete("spring.ict06team1.midpj.dao.AdminDAO.getRestaurantDeleteAction", place_id);
+		return deleteCnt;
+		
 	}
 }

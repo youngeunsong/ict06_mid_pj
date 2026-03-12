@@ -125,7 +125,7 @@
 					
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/restaurantList.adpl" class="nav-link"> 
+							<a href="${path}/restaurant.ad" class="nav-link"> 
 								맛집 관리
 							</a>
 						</li>
@@ -148,4 +148,3 @@
 </aside>
 
 <!-- ================= JS ================= -->
-</html>

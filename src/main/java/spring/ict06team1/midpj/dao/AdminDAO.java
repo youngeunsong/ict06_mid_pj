@@ -11,14 +11,15 @@ public interface AdminDAO {
 	//------------------------------------------------------------------
 	//관리자 장소 - 맛집 조회
 	//1.관리자 장소 목록 갯수 구하기
-	public int placeCnt();
+	int placeCnt(Map<String, Object> map);
 	
-	public int placeCntArea(String areacode);
+	/* public int placeCntArea(String areaCode); */
 	
 	//2.관리자 장소 맛집 목록 조회
-	public List<PlaceDTO> placeList(Map<String,Object> map);
+	// AdminDAO.java
+	public List<Map<String, Object>> placeList(Map<String, Object> map);
 	
-	public List<PlaceDTO>getRestaurantArea(Map<String,Object> map);
+	/* public List<PlaceDTO>getRestaurantArea(Map<String,Object> map); */
 	
 	public int getPlaceInsert(PlaceDTO pdto);
 	
@@ -31,6 +32,9 @@ public interface AdminDAO {
 	public int getRestaurantUpdateAction(RestaurantDTO rDto);
 	
 	public int getPlaceUpdateAction(PlaceDTO pDto);
+	
+	//맛집 정보 삭제
+	public int getRestaurantDeleteAction(int place_id);
 	
 	public int testInsertRes(RestaurantDTO rdto);
 	

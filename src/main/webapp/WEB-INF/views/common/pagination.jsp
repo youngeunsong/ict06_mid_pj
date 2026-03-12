@@ -26,7 +26,6 @@
 						<a class="page-link border-0 mx-1" href="?pageNum=${paging.next}&keyword=${keyword}&status=${status}&placeType=${placeType}&sortType=${sortType}">
 							<i class="bi bi-chevron-right"></i>
 						</a>
-						</a>
 					</li>
 				</c:if>
 			</ul>

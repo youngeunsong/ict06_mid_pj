@@ -132,7 +132,7 @@
 		    #{name},
 		    #{address},
 		    #{latitude},
-		    #{longitude},
+    		#{longitude},
 		    #{image_url}
 		)
 	</insert>

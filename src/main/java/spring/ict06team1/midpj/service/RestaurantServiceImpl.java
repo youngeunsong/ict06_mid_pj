@@ -71,4 +71,36 @@ public class RestaurantServiceImpl implements RestaurantService {
             return true;
         }
     }
+    
+    @Override
+    public List<PlaceDTO> getBestRestaurantList() {
+        return dao.getBestRestaurantList();
+    }
+
+    @Override
+    public double getAvgRating(int place_id) {
+        return dao.getAvgRating(place_id);
+    }
+    
+    @Override
+    public int getBestRestaurantCount() {
+        return dao.getBestRestaurantCount();
+    }
+    
+    @Override
+    public List<PlaceDTO> getBestRestaurantPageList(int start, int end) {
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("start", start);
+        map.put("end", end);
+
+        return dao.getBestRestaurantPageList(map);
+    }
+    
+    @Override
+    public List<PlaceDTO> getBestRestaurantTop5() {
+        return dao.getBestRestaurantTop5();
+    }
+    
 }

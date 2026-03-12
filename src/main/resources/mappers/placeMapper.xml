@@ -121,5 +121,138 @@
     WHERE user_id = #{userId}
       AND place_id = #{placeId}
   </delete>
+  
+  <!-- ========================= -->
+	<!-- 맛집 랭킹 목록 조회 -->
+	<!-- ========================= -->
+	<select id="getBestRestaurantList"
+	        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	  SELECT
+	    p.place_id,
+	    p.place_type,
+	    p.name,
+	    p.address,
+	    NVL(p.view_count, 0) AS view_count,
+	    p.latitude,
+	    p.longitude,
+	    p.image_url,
+	    p.created_at AS placeRegDate,
+	    COUNT(r.review_id) AS review_count,
+	    NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
+	  FROM place p
+	  LEFT JOIN review r
+	    ON p.place_id = r.place_id
+	   AND r.status = 'DISPLAY'
+	  WHERE p.place_type = 'REST'
+	  GROUP BY
+	    p.place_id,
+	    p.place_type,
+	    p.name,
+	    p.address,
+	    p.view_count,
+	    p.latitude,
+	    p.longitude,
+	    p.image_url,
+	    p.created_at
+	  ORDER BY NVL(p.view_count, 0) DESC, p.place_id DESC
+	</select>
+	
+	<!-- 평균 별점 -->
+	<select id="getAvgRating"
+	        parameterType="int"
+	        resultType="double">
+	  SELECT NVL(ROUND(AVG(r.rating), 1), 0)
+	  FROM review r
+	  WHERE r.place_id = #{value}
+	    AND r.status = 'DISPLAY'
+	</select>
+	
+	<!-- 전체 맛집 갯수 -->
+	<select id="getBestRestaurantCount"
+	        resultType="int">
+	  SELECT COUNT(*)
+	  FROM place
+	  WHERE place_type = 'REST'
+	</select>
+	
+	<select id="getBestRestaurantPageList"
+        parameterType="map"
+        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
 
+	  <![CDATA[
+	  SELECT *
+	  FROM (
+	      SELECT
+	        p.place_id,
+	        p.place_type,
+	        p.name,
+	        p.address,
+	        NVL(p.view_count,0) view_count,
+	        p.latitude,
+	        p.longitude,
+	        p.image_url,
+	        p.created_at AS placeRegDate,
+	        COUNT(r.review_id) review_count,
+	        NVL(ROUND(AVG(r.rating),1),0) avg_rating,
+	        ROW_NUMBER() OVER (ORDER BY NVL(p.view_count,0) DESC) rn
+	      FROM place p
+	      LEFT JOIN review r
+	        ON p.place_id = r.place_id
+	       AND r.status = 'DISPLAY'
+	      WHERE p.place_type = 'REST'
+	      GROUP BY
+	        p.place_id,
+	        p.place_type,
+	        p.name,
+	        p.address,
+	        p.view_count,
+	        p.latitude,
+	        p.longitude,
+	        p.image_url,
+	        p.created_at
+	  )
+	  WHERE rn > #{start}
+	    AND rn <= #{end}
+	  ]]>
+	</select>
+	
+	<select id="getBestRestaurantTop5"
+        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT
+		      p.place_id,
+		      p.place_type,
+		      p.name,
+		      p.address,
+		      NVL(p.view_count,0) view_count,
+		      p.latitude,
+		      p.longitude,
+		      p.image_url,
+		      p.created_at AS placeRegDate,
+		      COUNT(r.review_id) review_count,
+		      NVL(ROUND(AVG(r.rating),1),0) avg_rating,
+		      ROW_NUMBER() OVER (ORDER BY NVL(p.view_count,0) DESC) rn
+		    FROM place p
+		    LEFT JOIN review r
+		      ON p.place_id = r.place_id
+		     AND r.status='DISPLAY'
+		    WHERE p.place_type='REST'
+		    GROUP BY
+		      p.place_id,
+		      p.place_type,
+		      p.name,
+		      p.address,
+		      p.view_count,
+		      p.latitude,
+		      p.longitude,
+		      p.image_url,
+		      p.created_at
+		)
+		WHERE rn <= 5
+		]]>
+		
+		</select>
 </mapper>

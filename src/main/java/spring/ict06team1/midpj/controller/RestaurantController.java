@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +42,28 @@ public class RestaurantController {
 
     // [restaurant] 실시간 베스트 맛집 페이지로 이동
     @RequestMapping("/bestRestaurants.rs")
-    public String bestRestaurants(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("<<< url => bestRestaurants.rs>>>");
+    public String bestRestaurants(
+            @RequestParam(value="pageNum", defaultValue="1") int pageNum,
+            Model model) {
+
+        int pageSize = 12;
+
+        // TOP5
+        List<PlaceDTO> top5List = service.getBestRestaurantTop5();
+
+        // 전체 개수
+        int totalCount = service.getBestRestaurantCount();
+
+        int start = (pageNum - 1) * pageSize;
+        int end = start + pageSize;
+
+        // 6위 이후 리스트
+        List<PlaceDTO> pageList = service.getBestRestaurantPageList(start, end);
+
+        model.addAttribute("top5List", top5List);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("totalCount", totalCount);
+
         return "user/restaurant/bestRestaurants";
     }
 

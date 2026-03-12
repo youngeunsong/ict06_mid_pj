@@ -21,4 +21,19 @@ public interface RestaurantService {
 
     // 즐겨찾기 토글
     boolean toggleFavorite(String userId, int place_id);
+    
+    // 맛집 랭킹 목록 조회
+    List<PlaceDTO> getBestRestaurantList();
+    
+    // 별점 평균
+    double getAvgRating(int place_id);
+    
+    // 맛집 총 갯수
+    int getBestRestaurantCount();
+    
+    // 맛집 페이지 리스트
+    List<PlaceDTO> getBestRestaurantPageList(int start, int end);
+    
+    // 맛집 top 5
+    List<PlaceDTO> getBestRestaurantTop5();
 }

@@ -40,7 +40,8 @@
 			
 				<div class="card shadow-sm">
 					<div class="card-body">
-						<form id="noticeModifyForm" method="post" action="${path}/noticeUpdate.adnt">
+						<form id="noticeModifyForm" method="post" action="${path}/noticeUpdate.adnt"
+								enctype="multipart/form-data">
 						
 							<%--notice_id hidden--%>
 							<input type="hidden" name="noticeId" value="${dto.notice_id}">
@@ -83,10 +84,9 @@
 							
 							<%--이미지 URL--%>
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">이미지 URL</label>
+								<label class="col-sm-2 col-form-label font-weight-bold">이미지 파일</label>
 								<div class="col-sm-10">
-									<input type="text" name="content" class="form-control"
-											value="${dto.image_url}" placeholder="이미지 URL 입력" required>
+									<input type="file" name="uploadFile" class="form-control" accept="image/*">
 								</div>
 							</div>
 							
@@ -106,7 +106,7 @@
 							<div class="form-group row">
 								<div class="col-sm-12 text-right">
 									<a href="${path}/noticeList.adnt" class="btn btn-secondary mr-2">취소</a>
-									<button type="submit" class="btn btn-danger mr-2"
+									<button type="button" class="btn btn-danger mr-2"
 											onclick="deleteNotice('${dto.notice_id}')">삭제</button>
 									<button type="submit" class="btn btn-primary">수정</button>
 								</div>

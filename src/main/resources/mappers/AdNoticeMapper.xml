@@ -26,36 +26,46 @@
 					   view_count, is_top, created_at
 				FROM NOTICE
 				<where>
-					<if test="keyword != null and keyword != ''">
-						title LIKE '%'||#{keyword}||'%'
+					<if test="sc.keyword != null and sc.keyword != ''">
+						title LIKE '%'||#{sc.keyword}||'%'
 					</if>
-					<if test="category != null and category != ''">
-						AND category = #{category}
+					<if test="sc.category != null and sc.category != ''">
+						AND category = #{sc.category}
+					</if>
+					<if test="sc.status != null and sc.status != ''">
+						AND status = #{sc.status}
 					</if>
 				</where>
 				ORDER BY is_top DESC, created_at DESC
 			) A
 		)
-		WHERE rnum BETWEEN #{startRow} AND #{endRow}
+		WHERE rnum BETWEEN #{paging.startRow} AND #{paging.endRow}
 	</select>
 	
 	<!-- 2. 상세 -->
-	<select id="getNoticeDetail" parameterType="map" resultType="int">
-		SELECT notice_id, admin_id, category, title,
-			   content, image_url, view_count, is_top, created_at, updated_at
-		FROM NOTICE
+	<select id="getNoticeDetail" parameterType="int" resultMap="adNoticeMap">
+		SELECT * FROM NOTICE
 		WHERE notice_id = #{noticeId}
 	</select>
+	
+	<!-- 2-1. 조회수 증가 -->
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE notice SET view_count = view_count + 1
+		WHERE notice_id = #{notice_id}
+	</update>
 
 	<!-- 3. 전체 건수 조회(페이징용) -->
 	<select id="getNoticeCount" parameterType="map" resultType="int">
 		SELECT COUNT(*) FROM NOTICE
 		<where>
-			<if test="keyword != null and keyword != ''">
-				title LIKE '%'||#{keyword}||'%'
+			<if test="sc.keyword != null and sc.keyword != ''">
+				title LIKE CONCAT('%', #{sc.keyword}, '%')
 			</if>
-			<if test="category != null and category != ''">
-				AND category = #{category}
+			<if test="sc.category != null and sc.category != ''">
+				AND category = #{sc.category}
+			</if>
+			<if test="sc.status != null and sc.status != ''">
+				AND status = #{sc.status}
 			</if>
 		</where>
 	</select>
@@ -64,8 +74,14 @@
 	<insert id="insertNotice" parameterType="spring.ict06team1.midpj.dto.NoticeDTO">
 		INSERT INTO NOTICE(notice_id, admin_id, category, title, content, 
 							image_url, is_top, view_count, created_at, updated_at)
-		VALUES(SEQ_NOTICE.NEXTVAL, #{admin_id}, #{category}, #{title}, #{content},
-				#{image_url}, #{is_top}, 0, SYSTIMESTAMP, SYSTIMESTAMP)
+		VALUES(SEQ_NOTICE.NEXTVAL,
+			  #{admin_id, jdbcType=VARCHAR},
+			  #{category, jdbcType=VARCHAR}, 
+			  #{title, jdbcType=VARCHAR}, 
+			  #{content, jdbcType=VARCHAR},
+			  #{image_url, jdbcType=VARCHAR}, 
+			  #{is_top, jdbcType=VARCHAR}, 
+			  0, SYSTIMESTAMP, SYSTIMESTAMP)
 	</insert>
 	
 	<!-- 5. 수정 -->
@@ -85,5 +101,5 @@
 		DELETE FROM NOTICE
 		WHERE notice_id = #{noticeId}
 	</delete>
-	 
+	
  </mapper> 

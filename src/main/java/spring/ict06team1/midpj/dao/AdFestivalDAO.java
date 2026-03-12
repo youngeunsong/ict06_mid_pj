@@ -16,12 +16,16 @@ public interface AdFestivalDAO {
 	// 축제 상세 정보 조회
 	public FestivalDTO getFestivalDetail(int festival_id); 
 	
+	// 티켓 상세 정보 조회
+	public FestivalTicketDTO getTicketDetail(int festival_id, String ticket_type); 
+	
 	// 전체 축제 건수 조회(페이징용)
 	public int getFestivalCount(Map<String,Object> map);
 	
 	// 축제 정보 수정
 	public int modifyFestival(FestivalDTO dto);
 	
+	// 등록
 	// (1) 신규 장소 등록 
 	public int insertPlace(PlaceDTO dto); 
 	

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import spring.ict06team1.midpj.service.AdFestivalServiceImpl;
@@ -42,11 +43,22 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	}
 	
 	// [관리자 - 장소 관리] 새로운 축제 등록 액션
-	@RequestMapping("/createFestivalAction.adfe")
+	// 오류가 날 경우 SQL에서 SEQ_PLACE의 최댓값이 최대 place_id와 동일한지 확인. SEQ_PLACE 재설정 필요. 
+	// @RequestMapping("/createFestivalAction.adfe")
+	@PostMapping("/createFestivalAction.adfe")
 	public String createFestivalAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /createFestivalAction.adfe]");
 		adFestService.insertFestival(request, response, model); 
 		return "admin/place/festival/createFestivalAction";
+	}
+	
+	// [관리자 - 장소 관리] 축제 1건 상세 조회
+	@RequestMapping("/showFestivalDetail.adfe")
+	public String showFestivalDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /showFestivalDetail.adfe]");
+		adFestService.getFestivalDetail(request, response, model); 
+		return "admin/place/festival/showFestivalDetail";
 	}
 }

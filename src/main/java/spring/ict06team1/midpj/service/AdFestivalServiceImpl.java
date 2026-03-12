@@ -70,6 +70,20 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	public void getFestivalDetail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - getFestivalDetail()]");
 		
+		// 1) parameter값 수집(festival_id)
+		int festival_id = Integer.parseInt(request.getParameter("festival_id")); 
+		
+		// 2) 상세 조회
+		// 2-1) FestivalDTO 조회
+		FestivalDTO festivalDTO = dao.getFestivalDetail(festival_id); 
+		// System.out.println("festivalDTO" + festivalDTO);
+		System.out.println(festivalDTO.getPlaceDTO().getName());
+		
+		// 2-2) (있다면) FestivalTicketDTO 조회 
+		
+		
+		// 3) Model에 담아서 jsp로 전달
+		model.addAttribute("festivalDTO", festivalDTO); 
 	}
 
 	// 축제 정보 수정
@@ -87,8 +101,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		// PlaceDTO에 담을 변수
 		String name = request.getParameter("name");
 		String address = request.getParameter("address");
-		double latitude = Double.parseDouble(request.getParameter("latitude"));
-		double longitude = Double.parseDouble(request.getParameter("longitude"));
+		double latitude = parseDouble(request.getParameter("latitude"));
+		double longitude = parseDouble(request.getParameter("longitude"));
 		String image_url = request.getParameter("image_url");
 		
 		// FestivalDTO에 담을 변수
@@ -128,8 +142,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 				for(int i = 0; i < ticket_types.length; i++) {
 					FestivalTicketDTO ticketDTO = new FestivalTicketDTO();
 					ticketDTO.setTicket_type(ticket_types[i]);			
-					ticketDTO.setPrice(Integer.parseInt(request.getParameter("price" + ticket_types[i])));
-					ticketDTO.setStock(Integer.parseInt(request.getParameter("stock" + ticket_types[i])));
+					ticketDTO.setPrice(parseInteger(request.getParameter("price" + ticket_types[i])));
+					ticketDTO.setStock(parseInteger(request.getParameter("stock" + ticket_types[i])));
 					ticketDTO.setDescription(request.getParameter("ticketDesc" + ticket_types[i]));
 					int insertTicketCnt = dao.insertTicket(ticketDTO); 
 					
@@ -158,5 +172,22 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	@Override
 	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - deleteFestival()]");
+	}
+	
+	// Null 값 처리
+	// int의 null 처리 
+	private int parseInteger(String value){
+	    if(value == null || value.trim().isEmpty()){
+	        return 0;
+	    }
+	    return Integer.parseInt(value);
+	}
+
+	// Double의 null 처리 
+	private double parseDouble(String value){
+	    if(value == null || value.trim().isEmpty()){
+	        return 0;
+	    }
+	    return Double.parseDouble(value);
 	}
 }

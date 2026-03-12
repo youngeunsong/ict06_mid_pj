@@ -21,42 +21,49 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 	// 축제 목록 조회
 	@Override
 	public List<FestivalDTO> getFestivalList(Map<String, Object> map) {
-		System.out.println("[AdReservationDAOImpl - getFestivalList()]");
+		System.out.println("[AdFestivalDAOImpl - getFestivalList()]");
 		return sqlSession.getMapper(AdFestivalDAO.class).getFestivalList(map);
 	}
 
 	// 축제 상세 정보 조회
 	@Override
 	public FestivalDTO getFestivalDetail(int festival_id) {
-		System.out.println("[AdReservationDAOImpl - getFestivalDetail()]");
+		System.out.println("[AdFestivalDAOImpl - getFestivalDetail()]");
+		return sqlSession.getMapper(AdFestivalDAO.class).getFestivalDetail(festival_id);
+	}
+	
+	// 티켓 상세 정보 조회
+	@Override
+	public FestivalTicketDTO getTicketDetail(int festival_id, String ticket_type) {
+		System.out.println("[AdFestivalDAOImpl - getTicketDetail()]");
 		return null;
 	}
 
 	// 전체 축제 건수 조회(페이징용)
 	@Override
 	public int getFestivalCount(Map<String, Object> map) {
-		System.out.println("[AdReservationDAOImpl - getFestivalCount()]");	
+		System.out.println("[AdFestivalDAOImpl - getFestivalCount()]");	
 		return sqlSession.getMapper(AdFestivalDAO.class).getFestivalCount(map);
 	}
 
 	// 축제 정보 수정
 	@Override
 	public int modifyFestival(FestivalDTO dto) {
-		System.out.println("[AdReservationDAOImpl - modifyFestival()]");
+		System.out.println("[AdFestivalDAOImpl - modifyFestival()]");
 		return 0;
 	}
 	
 	// (1) 신규 장소 등록 
 	@Override
 	public int insertPlace(PlaceDTO dto) {
-		System.out.println("[AdReservationDAOImpl - insertPlace()]");
+		System.out.println("[AdFestivalDAOImpl - insertPlace()]");
 		return sqlSession.getMapper(AdFestivalDAO.class).insertPlace(dto);
 	}
 
 	// (2) 신규 축제 등록
 	@Override
 	public int insertFestival(FestivalDTO dto) {
-		System.out.println("[AdReservationDAOImpl - insertFestival()]");
+		System.out.println("[AdFestivalDAOImpl - insertFestival()]");
 		return sqlSession.getMapper(AdFestivalDAO.class).insertFestival(dto);
 	}
 	
@@ -70,7 +77,9 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 	// 축제 정보 삭제
 	@Override
 	public int deleteFestival(int festival_id) {
-		System.out.println("[AdReservationDAOImpl - getFestivalList()]");
+		System.out.println("[AdFestivalDAOImpl - getFestivalList()]");
 		return 0;
 	}
+
+	
 }

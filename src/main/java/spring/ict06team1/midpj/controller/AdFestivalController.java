@@ -42,6 +42,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	}
 	
 	// [관리자 - 장소 관리] 새로운 축제 등록 액션
+	// 오류가 날 경우 SQL에서 SEQ_PLACE의 최댓값이 최대 place_id와 동일한지 확인. SEQ_PLACE 재설정 필요. 
 	@RequestMapping("/createFestivalAction.adfe")
 	public String createFestivalAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {

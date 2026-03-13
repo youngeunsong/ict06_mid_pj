@@ -287,41 +287,41 @@
 		  <div class="rk-topWrap">
 		
 		    <!-- TOP 1 -->
-		    <c:forEach var="item" items="${top5List}" begin="0" end="0">
-		      <div class="rk-top1 mb-4">
-		        <c:set var="place" value="${item}" scope="request"/>
-		        <c:set var="mode" value="top10" scope="request"/>
-		        <c:set var="rank" value="1" scope="request"/>
-		        <c:set var="rankCls" value="rank-1" scope="request"/>
+		<c:forEach var="item" items="${topList}" begin="0" end="0">
+		  <div class="rk-top1 mb-4">
+		    <c:set var="place" value="${item}" scope="request"/>
+		    <c:set var="mode" value="top10" scope="request"/>
+		    <c:set var="rank" value="1" scope="request"/>
+		    <c:set var="rankCls" value="rank-1" scope="request"/>
 		
-		        <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
-		      </div>
-		    </c:forEach>
+		    <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
+		  </div>
+		</c:forEach>
 		
-		    <!-- TOP 2 ~ 5 -->
-		    <div class="row g-4">
-		      <c:forEach var="item" items="${top5List}" begin="1" end="4" varStatus="st">
-		        <div class="col-12 col-md-6 rk-topSub">
-		          <c:set var="place" value="${item}" scope="request"/>
-		          <c:set var="mode" value="top10" scope="request"/>
-		          <c:set var="rank" value="${st.index + 2}" scope="request"/>
+		<!-- TOP 2 ~ 5 -->
+		<div class="row g-4">
+		  <c:forEach var="item" items="${topList}" begin="1" end="4" varStatus="st">
+		    <div class="col-12 col-md-6 rk-topSub">
+		      <c:set var="place" value="${item}" scope="request"/>
+		      <c:set var="mode" value="top10" scope="request"/>
+		      <c:set var="rank" value="${st.index + 2}" scope="request"/>
 		
-		          <c:choose>
-		            <c:when test="${st.index + 2 == 2}">
-		              <c:set var="rankCls" value="rank-2" scope="request"/>
-		            </c:when>
-		            <c:when test="${st.index + 2 == 3}">
-		              <c:set var="rankCls" value="rank-3" scope="request"/>
-		            </c:when>
-		            <c:otherwise>
-		              <c:set var="rankCls" value="rank-default" scope="request"/>
-		            </c:otherwise>
-		          </c:choose>
+		      <c:choose>
+		        <c:when test="${st.index + 2 == 2}">
+		          <c:set var="rankCls" value="rank-2" scope="request"/>
+		        </c:when>
+		        <c:when test="${st.index + 2 == 3}">
+		          <c:set var="rankCls" value="rank-3" scope="request"/>
+		        </c:when>
+		        <c:otherwise>
+		          <c:set var="rankCls" value="rank-default" scope="request"/>
+		        </c:otherwise>
+		      </c:choose>
 		
-		          <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
-		        </div>
-		      </c:forEach>
+		      <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
 		    </div>
+		  </c:forEach>
+		</div>
 		
 		  </div>
 		</section>
@@ -329,7 +329,7 @@
       <!-- 더보기 -->
       <h2 class="rk-moreTitle">더보기+</h2>
 
-      <div class="row g-4 rk-moreGrid">
+      <div class="row g-4 rk-moreGrid" id="moreListWrap">
 		  <c:forEach var="item" items="${pageList}">
 			  <div class="col-6 col-md-4 col-lg-3">
 			    <c:set var="place" value="${item}" scope="request"/>
@@ -339,12 +339,30 @@
 			</c:forEach>
 		</div>
 
-      <!-- 페이지네이션 -->
-      <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
+      <div class="text-center mt-4 d-flex justify-content-center gap-2">
+		    <button type="button"
+		            id="moreBtn"
+		            class="btn btn-outline-dark px-4 py-2"
+		            data-offset="${nextOffset}"
+		            data-limit="${limit}">
+		        더보기
+		    </button>
+		
+		    <button type="button"
+		            id="collapseBtn"
+		            class="btn btn-outline-secondary px-4 py-2"
+		            style="display:none;">
+		        접기
+		    </button>
+		</div>
 
     </div>
   </main>
-
+	<script>
+	    const path = "${path}";
+	</script>
+	
+	<script src="${path}/resources/js/restaurant/bestRestaurants.js"></script>
   <%@ include file="../../common/footer.jsp" %>
 </body>
 </html>

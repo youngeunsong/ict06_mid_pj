@@ -40,32 +40,68 @@ public class RestaurantController {
         return "user/restaurant/restaurant";
     }
 
-    // [restaurant] 실시간 베스트 맛집 페이지로 이동
-    @RequestMapping("/bestRestaurants.rs")
-    public String bestRestaurants(
-            @RequestParam(value="pageNum", defaultValue="1") int pageNum,
-            Model model) {
+ // [restaurantRanking] ----------------------------------------------------------------------
+ // [restaurantRanking] 맛집 랭킹 페이지 이동
+ // TOP5 + 더보기 첫 목록을 준비해서 JSP로 이동
+	 @RequestMapping("/bestRestaurants.rs")
+	 public String bestRestaurants(Model model) {
+	
+	     // 한 번 더보기 시 가져올 개수
+	     int limit = 12;
+	
+	     // 상단 고정 TOP5
+	     List<PlaceDTO> topList = service.getBestRestaurantTop5();
+	
+	     // 더보기 첫 목록 (6위부터 12개)
+	     List<PlaceDTO> pageList = service.getBestRestaurantPageList(5, 17);
+	
+	     if (topList == null) topList = new ArrayList<>();
+	     if (pageList == null) pageList = new ArrayList<>();
+	
+	     Map<Integer, Double> avgRatingMap = new HashMap<>();
+	     Map<Integer, Integer> reviewCountMap = new HashMap<>();
+	
+	     for (PlaceDTO place : topList) {
+	         avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
+	         reviewCountMap.put(place.getPlace_id(), place.getReview_count());
+	     }
+	
+	     for (PlaceDTO place : pageList) {
+	         avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
+	         reviewCountMap.put(place.getPlace_id(), place.getReview_count());
+	     }
+	
+	     int totalCount = service.getBestRestaurantCount();
+	     int remainCount = Math.max(totalCount - 5, 0);
+	
+	     model.addAttribute("topList", topList);
+	     model.addAttribute("pageList", pageList);
+	     model.addAttribute("avgRatingMap", avgRatingMap);
+	     model.addAttribute("reviewCountMap", reviewCountMap);
+	     model.addAttribute("favoritePlaceIds", new ArrayList<Integer>());
+	
+	     // 더보기 관련
+	     model.addAttribute("limit", limit);
+	     model.addAttribute("nextOffset", 17);
+	     model.addAttribute("remainCount", remainCount);
+	
+	     return "user/restaurant/bestRestaurants";
+	 }
+	 
+	// [restaurantRanking] ----------------------------------------------------------------------
+	// [restaurantRanking] 맛집 랭킹 더보기 AJAX
+	// offset 이후 맛집 목록을 JSON으로 반환
+	@RequestMapping("/bestRestaurantsMore.rs")
+	@ResponseBody
+	public List<PlaceDTO> bestRestaurantsMore(
+	        @RequestParam("offset") int offset,
+	        @RequestParam(value = "limit", defaultValue = "12") int limit) {
 
-        int pageSize = 12;
+	    int start = offset;
+	    int end = offset + limit;
 
-        // TOP5
-        List<PlaceDTO> top5List = service.getBestRestaurantTop5();
-
-        // 전체 개수
-        int totalCount = service.getBestRestaurantCount();
-
-        int start = (pageNum - 1) * pageSize;
-        int end = start + pageSize;
-
-        // 6위 이후 리스트
-        List<PlaceDTO> pageList = service.getBestRestaurantPageList(start, end);
-
-        model.addAttribute("top5List", top5List);
-        model.addAttribute("pageList", pageList);
-        model.addAttribute("totalCount", totalCount);
-
-        return "user/restaurant/bestRestaurants";
-    }
+	    return service.getBestRestaurantPageList(start, end);
+	}
 
     // [restaurant] 지역별 베스트 맛집 페이지로 이동
     @RequestMapping("/bestRestaurantsRegion.rs")

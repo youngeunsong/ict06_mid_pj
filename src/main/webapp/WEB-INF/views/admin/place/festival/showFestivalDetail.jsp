@@ -49,7 +49,6 @@
                 <div class="card-body">
                 	<!-- 정보 테이블 영역 시작 -->
                 	<table class="table">
-                		
                 		<!-- 축제 이름 시작-->
                 		<tr>
                 			<th><label for="inputName">* 축제 이름</label></th>

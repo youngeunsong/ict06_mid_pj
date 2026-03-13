@@ -108,16 +108,17 @@
 									<thead class="thead-light">
 										<tr>
 											<th style="width:80px;">축제번호</th>
-											<th style="width:140px;">축제명</th>
-											<th style="width:140px;">주소</th>
+											<th style="width:120px;">축제명</th>
+											<th style="width:120px;">주소</th>
 											<th style="width:80px;">조회수</th>
 											<th style="width:80px;">위도</th>
 											<th style="width:80px;">경도</th>
-											<th style="width:130px;">대표 이미지</th>
+											<th style="width:120px;">대표 이미지</th>
 											<th style="width:80px;">축제 시작일</th>
 											<th style="width:80px;">축제 종료일</th>
 											<th style="width:80px;">축제 상태</th>
 											<th style="width:80px;">등록일</th>
+											<th style="width:100px;">관리</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -146,7 +147,11 @@
 													</c:choose>	
 												</td>	
 												<td><fmt:formatDate value="${dto.placeDTO.placeRegDate}" pattern="yyyy-MM-dd" /></td>
-												<%-- TODO: 수정버튼 클릭 시 행클릭 이벤트 차단 --%>
+												<%-- event.stopPropagation();: 수정, 삭제 버튼 클릭 시 행클릭 이벤트 차단 --%>
+												<td class="text-center">
+							                        <button class="btn btn-xs btn-outline-secondary" onclick="event.stopPropagation(); location.href='${path}/modifyFestival.adfe?place_id=${dto.festival_id}&pageNum=${paging.pageNum}'">수정</button>
+							                        <button class="btn btn-xs btn-outline-danger" onclick="event.stopPropagation(); deleteFestival(${dto.festival_id});">삭제</button>
+							                    </td>
 											</tr>
 										</c:forEach>
 										<!-- 리스트가 빈 경우 -->

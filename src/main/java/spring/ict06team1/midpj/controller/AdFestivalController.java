@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.service.AdFestivalServiceImpl;
 
@@ -60,5 +61,23 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 		logger.info("[url => /showFestivalDetail.adfe]");
 		adFestService.getFestivalDetail(request, response, model); 
 		return "admin/place/festival/showFestivalDetail";
+	}
+	
+	// [관리자 - 장소 관리] 축제 수정
+	@RequestMapping("/modifyFestival.adfe")
+	public String modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /modifyFestival.adfe]");
+		// adFestService.getFestivalDetail(request, response, model); 
+		return "admin/place/festival/modifyFestival";
+	}
+	
+	// [관리자 - 장소 관리] 축제 삭제
+	@RequestMapping("/deleteActionFestival.adfe")
+	@ResponseBody
+	public int deleteActionFestival(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /deleteActionFestival.adfe]");
+	    return adFestService.deleteFestival(request, response, model);
 	}
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.SearchCriteria.Paging;
@@ -183,11 +184,23 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	
 	// 축제 정보 삭제 
 	@Override
-	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
+	@Transactional
+	public int deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - deleteFestival()]");
+		// 1) parameter값 수집(place_id, pageNum) 
+		int festival_id = Integer.parseInt(request.getParameter("festival_id")); 
+		System.out.println("festival_id : " + festival_id);
+		// DAO 호출하여 DB에 데이터 삭제 시도
+		// 1) FestivalTicket 테이블에서 먼저 삭제
+		dao.deleteFestivalTickets(festival_id);
+		
+		// 2) Festival 테이블에서 삭제 (Place 테이블에서는 삭제 안 함. 다른 테이블과 연관이 크기 때문) 
+		int deleteCnt = dao.deleteFestival(festival_id);
+		
+		return deleteCnt; 
 	}
 	
-	// Null 값 처리
+	// int, Double 형 데이터의 Null 값 처리
 	// int의 null 처리 
 	private int parseInteger(String value){
 	    if(value == null || value.trim().isEmpty()){

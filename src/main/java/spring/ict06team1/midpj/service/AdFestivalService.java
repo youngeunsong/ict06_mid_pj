@@ -20,5 +20,5 @@ public interface AdFestivalService {
 	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 	// 축제 정보 삭제 
-	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model);
+	public int deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model);
 }

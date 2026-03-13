@@ -30,6 +30,15 @@ SELECT
   FROM  FESTIVAL_TICKET
  WHERE  festival_id = 1009;
 
+-- 축제 정보 삭제
+-- 1) 관련 티켓 먼저 삭제
+DELETE FROM FESTIVAL_TICKET
+ WHERE festival_id = 1007;
+ 
+-- 2) 축제 삭제
+DELETE FROM FESTIVAL
+ WHERE festival_id = 1007;
+
 -----------------------------------------
 -- 축제 등록 시 문제가 생길 때 체크 
 -- PLACE 테이블의 place_id 최댓값 확인

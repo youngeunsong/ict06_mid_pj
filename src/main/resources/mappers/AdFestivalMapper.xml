@@ -129,6 +129,7 @@
 	
 	<!-- 축제 정보 수정 -->
 	
+	<!-- 신규 축제 등록: 3단계 -->
 	<!-- (1) 신규 장소 등록 -->
 	<insert id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
 		INSERT INTO PLACE (
@@ -184,5 +185,16 @@
 		)
 	</insert>
 	
-	<!-- 축제 정보 삭제 -->
+	<!-- 축제 정보 삭제 : 2단계 -->
+	<!-- (1) 축제 티켓 정보 삭제 -->
+	<delete id="deleteFestivalTickets" parameterType="int">
+	    DELETE FROM FESTIVAL_TICKET
+	    WHERE festival_id = #{festival_id}
+	</delete>
+	
+	<!-- (2) 축제 정보 삭제 -->
+	<delete id="deleteFestival" parameterType="int">
+	    DELETE FROM FESTIVAL
+	    WHERE festival_id = #{festival_id}
+	</delete>
  </mapper> 

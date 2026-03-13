@@ -61,3 +61,33 @@ function keywordSearch() {
 
 /* 축제 수정 modal */
 /* 축제 수정 처리 */ 
+
+/* 축제 삭제 처리 */
+function deleteFestival(festival_id){
+
+    if(!confirm("정말 삭제하시겠습니까?")){
+        return;
+    }
+
+    $.ajax({
+
+        url : path + "/deleteActionFestival.adfe",
+        type : "POST",
+        data : { festival_id : festival_id },
+
+        success : function(result){
+
+            if(result == 1){
+                alert("삭제되었습니다");
+                location.reload();
+            }else{
+                alert("삭제 실패");
+            }
+        },
+
+        error : function(){
+            alert("서버 오류");
+        }
+
+    });
+}

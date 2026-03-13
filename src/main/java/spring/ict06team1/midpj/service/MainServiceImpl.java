@@ -20,30 +20,14 @@ public class MainServiceImpl implements MainService {
 	@Autowired
 	private MainDAO dao;
 
-	//맛집 TOP10
-	@Override
-	public List<PlaceDTO> getTop10ByREST() {
-	    System.out.println("[MainServiceImpl - getTop10ByREST()]");
-	    List<PlaceDTO> getTop10RESTlist = dao.getTop10ByREST();
-	    
-	    return getTop10RESTlist;
-	}
 	
-	//숙소 TOP10
-	@Override
-	public List<AccommodationDTO> getTop10ByACC() {
-	    System.out.println("[MainServiceImpl - getTop10ByACC()]");
-	    List<AccommodationDTO> getTop10ACClist = dao.getTop10ByACC();
-	    
-	    return getTop10ACClist;
-	}
 
 	//각 플레이스 별 리뷰 카운트
 	@Override
     public Map<Integer, Integer> getReviewCountMap(List<Integer> placeIds) {
 		System.out.println("[MainServiceImpl - getReviewCountMap()]");
 
-        Map<Integer, Integer> reviewCountMap = new HashMap<>();
+        Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
 
         if (placeIds == null || placeIds.isEmpty()) return reviewCountMap;
         
@@ -67,7 +51,7 @@ public class MainServiceImpl implements MainService {
     public Map<Integer, Double> getAvgRatingMap(List<Integer> placeIds) {
 		System.out.println("[MainServiceImpl - getAvgRatingMap()]");
 
-        Map<Integer, Double> avgRatingMap = new HashMap<>();
+        Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
 
         if (placeIds == null || placeIds.isEmpty()) return avgRatingMap;
 
@@ -94,7 +78,7 @@ public class MainServiceImpl implements MainService {
 	    String user_id = (String) request.getSession().getAttribute("sessionID");
 	    
 	    if (user_id == null || user_id.trim().isEmpty()) {
-	        return new ArrayList<>();
+	        return new ArrayList<Integer>();
 	    }
 	    
 	    List<Integer> favoriteList = dao.getFavoritePlaceIds(user_id);

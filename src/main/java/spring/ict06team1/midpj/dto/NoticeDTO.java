@@ -12,14 +12,15 @@ public class NoticeDTO {
 	private String image_url;
 	private int view_count;
 	private String is_top;
-	private Timestamp regDate;
+	private Timestamp noticeRegDate;
+	private Timestamp noticeUpdateDate;
 
 	public NoticeDTO() {
 		super();
 	}
 
 	public NoticeDTO(int notice_id, String admin_id, String category, String title, String content, String image_url,
-			int view_count, String is_top, Timestamp regDate) {
+			int view_count, String is_top, Timestamp noticeRegDate, Timestamp noticeUpdateDate) {
 		super();
 		this.notice_id = notice_id;
 		this.admin_id = admin_id;
@@ -29,7 +30,8 @@ public class NoticeDTO {
 		this.image_url = image_url;
 		this.view_count = view_count;
 		this.is_top = is_top;
-		this.regDate = regDate;
+		this.noticeRegDate = noticeRegDate;
+		this.noticeUpdateDate = noticeUpdateDate;
 	}
 
 	public int getNotice_id() {
@@ -96,19 +98,28 @@ public class NoticeDTO {
 		this.is_top = is_top;
 	}
 
-	public Timestamp getRegDate() {
-		return regDate;
+	public Timestamp getNoticeRegDate() {
+		return noticeRegDate;
 	}
 
-	public void setRegDate(Timestamp regDate) {
-		this.regDate = regDate;
+	public void setNoticeRegDate(Timestamp noticeRegDate) {
+		this.noticeRegDate = noticeRegDate;
+	}
+
+	public Timestamp getNoticeUpdateDate() {
+		return noticeUpdateDate;
+	}
+
+	public void setNoticeUpdateDate(Timestamp noticeUpdateDate) {
+		this.noticeUpdateDate = noticeUpdateDate;
 	}
 
 	@Override
 	public String toString() {
 		return "NoticeDTO [notice_id=" + notice_id + ", admin_id=" + admin_id + ", category=" + category + ", title="
 				+ title + ", content=" + content + ", image_url=" + image_url + ", view_count=" + view_count
-				+ ", is_top=" + is_top + ", regDate=" + regDate + "]";
+				+ ", is_top=" + is_top + ", noticeRegDate=" + noticeRegDate + ", noticeUpdateDate=" + noticeUpdateDate
+				+ "]";
 	}
 
 }

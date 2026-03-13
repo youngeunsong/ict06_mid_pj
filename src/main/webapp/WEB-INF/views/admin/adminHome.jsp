@@ -101,6 +101,7 @@
 								</div>
 							</div>
 						</div>
+					</div>
 						
 						<!--사용자 만족도 설문 결과-->
 						<div class="row mb-4">
@@ -117,11 +118,11 @@
 								</div>
 							</div>
 						</div>
+						
 					</div>
+					<!--end::Container-fluid-->
 				</div>
 			</div>
-			<!--end::Container-fluid-->
-		</div>
 		<!--end::content-->
 				
 		<!-- ================= FOOTER ================= -->

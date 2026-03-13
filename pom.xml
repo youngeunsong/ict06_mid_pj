@@ -151,13 +151,39 @@
 		</dependency>
 		<!-- Jackson 라이브러리 끝 -->
 	
+		<!-- fileupload용 시작 -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<!-- fileupload용 끝 -->
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
-		</dependency>        
+		</dependency> 
+		
+		<!--추가합니다 사진업로드를 위한 거  --> 
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
+		</dependency>
+	
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.11.0</version>
+		</dependency>      
 	</dependencies>
     <build>
         <plugins>

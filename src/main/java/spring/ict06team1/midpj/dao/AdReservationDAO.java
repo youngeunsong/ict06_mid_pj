@@ -45,4 +45,10 @@ public interface AdReservationDAO {
 	
 	//3-7. 최근 예약 5건
 	public List<ReservationDTO> getRecentReservations();
+	
+	//미처리 예약 건수 조회
+	public int getPendingCount();
+	
+	//페이징된 미처리 목록 조회(매개변수로 Map 전달 추천)
+	public List<ReservationDTO> getPendingListPage(Map<String, Object> map);
 }

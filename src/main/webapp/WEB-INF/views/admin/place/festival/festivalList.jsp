@@ -122,7 +122,7 @@
 									</thead>
 									<tbody>
 										<c:forEach var="dto" items="${list}">
-											<tr> <!-- TODO: 나중에 수정하기 -->
+											<tr onclick="location.href='${path}/showFestivalDetail.adfe?festival_id=${dto.festival_id}';" style="cursor:pointer;"> <!-- TODO: 나중에 수정하기 -->
 												<td>${dto.festival_id}</td>
 												<td>${dto.placeDTO.name}</td>
 												<td>${dto.placeDTO.address}</td>

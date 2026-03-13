@@ -17,7 +17,6 @@ public class CommunityDTO {
 	
 	public CommunityDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public CommunityDTO(int post_id, String user_id, String title, String content, String category, int view_count,

@@ -2,6 +2,10 @@
 
 let top10Offset = 0;
 
+/* =========================
+   TOP10 카드 관련 함수
+========================= */
+
 function getTop10Elements() {
   const row = document.getElementById('top10Row');
   const viewport = document.querySelector('.top10-viewport');
@@ -73,8 +77,13 @@ function resetTop10Slider() {
   top10Offset = 0;
   row.style.transform = 'translateX(0)';
   row.style.transition = 'transform 0.35s ease';
+
   updateDots();
 }
+
+/* =========================
+   DOM 로딩 후 실행
+========================= */
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -82,20 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const heroEl = document.getElementById('heroCarousel');
   if (heroEl) {
     const thumbs = document.querySelectorAll('.hero-thumb');
+
     heroEl.addEventListener('slid.bs.carousel', (e) => {
       thumbs.forEach(t => t.classList.remove('active'));
       if (thumbs[e.to]) thumbs[e.to].classList.add('active');
     });
   }
-
-  /* Best Tabs */
-  document.querySelectorAll('.best-tabs .nav-link').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelectorAll('.best-tabs .nav-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-    });
-  });
 
   /* Notice Tabs */
   document.querySelectorAll('.notice-tabs .nav-link').forEach(link => {
@@ -106,7 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* TOP10 드롭다운 */
+  /* =========================
+     TOP10 드롭다운
+  ========================= */
+
   const CATEGORY_LABEL = { REST: '맛집', ACC: '숙소' };
   const CATEGORY_LINK = {
     REST: '/midpj/restaurant.rs',
@@ -135,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
         row.innerHTML = hiddenSource.innerHTML;
       }
 
-      const viewAll = document.querySelector('.section-wrap .view-all');
+      const viewAll = document.getElementById('top10ViewAllLink');
       if (viewAll && CATEGORY_LINK[category]) {
         viewAll.setAttribute('href', CATEGORY_LINK[category]);
       }
@@ -147,21 +151,70 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* 최초 dot 세팅 */
+  /* =========================
+     BEST 추천 AJAX 탭
+  ========================= */
+
+  const bestTabs = document.querySelectorAll('#bestTabs [data-best-type]');
+  const bestContentWrap = document.getElementById('bestContentWrap');
+  const contextPathEl = document.getElementById('contextPath');
+  const contextPath = contextPathEl ? contextPathEl.value : '/midpj';
+
+  function loadBestContent(type) {
+    if (!bestContentWrap) return;
+
+    fetch(contextPath + '/main/best/ajax?type=' + encodeURIComponent(type))
+      .then(res => res.text())
+      .then(html => {
+        bestContentWrap.innerHTML = html;
+      })
+      .catch(err => {
+        console.error('BEST 추천 AJAX 오류:', err);
+      });
+  }
+
+  if (bestTabs.length && bestContentWrap) {
+    bestTabs.forEach(link => {
+      link.addEventListener('click', function (e) {
+
+        e.preventDefault();
+
+        bestTabs.forEach(tab => tab.classList.remove('active'));
+        this.classList.add('active');
+
+        const type = this.dataset.bestType;
+
+        loadBestContent(type);
+      });
+    });
+
+    /* 최초 로딩 */
+    loadBestContent('ALL');
+  }
+
+  /* =========================
+     TOP10 dots 초기화
+  ========================= */
+
   updateDots();
 
-  /* 브라우저 크기 변경 시 슬라이드 재계산 */
+  /* 브라우저 resize 대응 */
+
   window.addEventListener('resize', () => {
+
     const maxTranslate = getMaxTranslate();
+
     if (top10Offset > maxTranslate) {
       top10Offset = maxTranslate;
     }
 
     const row = document.getElementById('top10Row');
+
     if (row) {
       row.style.transform = `translateX(-${top10Offset}px)`;
     }
 
     updateDots();
   });
+
 });

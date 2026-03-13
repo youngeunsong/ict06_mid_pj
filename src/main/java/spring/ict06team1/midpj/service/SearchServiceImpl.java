@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import spring.ict06team1.midpj.dao.SearchDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -31,7 +32,13 @@ public class SearchServiceImpl implements SearchService {
 		System.out.println("[SearchServiceImpl - getSearchList()]");
 		
 		String keyword = request.getParameter("keyword");
+		String login_userId = (String) request.getSession().getAttribute("sessionID");
 		System.out.println("keyword: " + keyword);
+		
+	    if (login_userId != null && keyword != null && !keyword.trim().isEmpty()) {
+	        ///search.do 검색 시 login_userId가 있다면 insertSearchHistory에 추가
+	    	insertSearchHistory(login_userId, keyword);
+	    }
 		
 		// keyword로 전체 값 가져오기
 		List<PlaceDTO> list = dao.getSearchList(keyword);
@@ -214,6 +221,65 @@ public class SearchServiceImpl implements SearchService {
 		return result;
 	}
 
+	//자동완성 10개
+	@Override
+	public List<String> getAutoComplete(String keyword) {
+		System.out.println("[SearchServiceImpl - getAutoComplete()]");
+		System.out.println("[SearchServiceImpl] keyword=> " + keyword);
+		
+	    // 1. 반환할 리스트 미리 생성
+	    List<String> resultList = new ArrayList<>();
+
+	    // 2. 검증: 키워드가 비어있다면 빈 리스트 그대로 반환
+	    if (keyword == null || keyword.trim().isEmpty()) {
+	        return resultList; 
+	    }
+
+	    // 3. DAO를 통해 데이터 가져오기 + trim() : 띄어쓰기 삭제
+	    resultList = dao.getAutoComplete(keyword.trim());
+
+	    // 4. 최종 결과 반환
+	    return resultList;
+	}
+
+	//1. 최근 검색어 5~10개 조회
+	@Override
+	public List<SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {
+		System.out.println("[SearchServiceImpl - getRecentKeywords()]");
+		
+		//로그인한 사용자 아이디 세션에서 가져오기
+		String login_userId = (String) request.getSession().getAttribute("sessionID");
+
+	    //반환 리스트 생성
+	    List<SearchHistoryDTO> RecentKeywordList = new ArrayList<SearchHistoryDTO>();
+	    
+	    if (login_userId == null || login_userId.trim().isEmpty()) {
+	        return RecentKeywordList;
+	    }
+	    
+	    RecentKeywordList = dao.getRecentKeywords(login_userId);
+
+	    return RecentKeywordList;
+	}
+
+	//[최근 검색어] 2. 최근 검색어 추가
+	@Override
+	public void insertSearchHistory(String userId, String keyword) {
+		System.out.println("[SearchServiceImpl - insertSearchHistory()]");
+		
+		if (userId == null || keyword == null) return;
+
+	    keyword = keyword.trim();
+	    if (keyword.isEmpty()) return;
+
+	    Map<String, Object> searchMap = new HashMap<String, Object>();
+	    searchMap.put("user_id", userId);
+	    searchMap.put("keyword", keyword);
+
+	    dao.deleteSameKeyword(searchMap);   // 키워드 중복 방지를 위한 기존 같은 검색어 삭제
+	    dao.insertSearchHistory(searchMap); // 검색어 신규 저장
+	}
+		
 
 	
 }

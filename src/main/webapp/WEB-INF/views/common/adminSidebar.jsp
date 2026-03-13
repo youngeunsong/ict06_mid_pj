@@ -168,7 +168,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/festivalList.adpl" class="nav-link ${fn:contains(currentURI, 'festivalList') ? 'active' : ''}">
+							<a href="${path}/festivalList.adfe" class="nav-link ${fn:contains(currentURI, 'festivalList') ? 'active' : ''}">
 								축제 관리
 							</a>
 						</li>

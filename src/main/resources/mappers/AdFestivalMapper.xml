@@ -34,7 +34,7 @@
 					   F.description, 
 					   F.start_date, F.end_date, 
 					   F.status, 
-					   P.name, P.address, P.view_count, 
+					   P.name, P.place_type, P.address, P.view_count, 
 					   P.latitude, P.longitude, 
 					   P.image_url,
 					   P.created_at 
@@ -42,6 +42,7 @@
 				FROM FESTIVAL F
 				LEFT JOIN PLACE P
 				ON F.festival_id = P.place_id
+				AND P.place_type = 'FEST'
 			<where>
 				<if test="keyword != null and keyword != ''">
 					(P.Name LIKE '%'||#{keyword}||'%' 
@@ -71,6 +72,40 @@
 	</select>
 	
 	<!-- 축제 상세 정보 조회 -->
+	<select id="getFestivalDetail" parameterType="int" resultMap="festivalMap">
+		SELECT
+				F.festival_id,
+				F.description,
+				F.start_date,
+				F.end_date,
+				F.status,
+				P.place_id,
+				P.place_type,
+				P.name,
+				P.address,
+				P.view_count,
+				P.latitude,
+				P.longitude,
+				P.image_url,
+				P.created_at
+		FROM 	FESTIVAL F
+		LEFT JOIN PLACE P
+		ON F.festival_id = P.place_id
+		WHERE F.festival_id = #{festival_id}
+	</select>
+	
+	<!-- 축제 티켓 상세 조회 -->
+	<select id="getFestivalTickets" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+		SELECT
+			    ticket_id,
+			    festival_id,
+			    ticket_type,
+			    price,
+			    stock,
+			    description
+		  FROM  FESTIVAL_TICKET
+		 WHERE  festival_id = #{festival_id}
+	</select>
 	
 	<!-- 전체 축제 건수 조회(페이징용) -->
 	<select id="getFestivalCount" parameterType="map" resultType="int">
@@ -110,7 +145,7 @@
 		    #{name},
 		    #{address},
 		    #{latitude},
-		    #{longitude},
+    		#{longitude},
 		    #{image_url}
 		)
 	</insert>

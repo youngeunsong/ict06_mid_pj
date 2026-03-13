@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 @Repository
 public class SearchDAOImpl implements SearchDAO {
@@ -108,4 +109,51 @@ public class SearchDAOImpl implements SearchDAO {
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
 		return dao.getSearchAjaxReviewStats(param);
 	}
+
+	// 자동완성 10개
+	@Override
+	public List<String> getAutoComplete(String keyword) {
+		System.out.println("[SearchDAOImpl - getAutoComplete()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		List<String> resultList = dao.getAutoComplete(keyword);
+		
+		return resultList;
+	}
+
+	//1. 최근 검색어 5~10개 조회
+	@Override
+	public List<SearchHistoryDTO> getRecentKeywords(String login_userId) {
+		System.out.println("[SearchDAOImpl - getRecentKeywords()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		List<SearchHistoryDTO> RecentKeywordList = dao.getRecentKeywords(login_userId);
+		
+		return RecentKeywordList;
+	}
+
+	//2. 최근 검색어 추가 전, 이미 db에 있다면 중복 방지를 위한 삭제
+	@Override
+	public int deleteSameKeyword(Map<String, Object> searchMap) {
+		System.out.println("[SearchDAOImpl - deleteSameKeyword()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		int deleteCnt = dao.deleteSameKeyword(searchMap);
+		
+		return deleteCnt;
+	}
+	
+	
+	//3. 최근 검색어 추가
+	@Override
+	public int insertSearchHistory(Map<String, Object> searchMap) {
+		System.out.println("[SearchDAOImpl - insertSearchHistory()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		int insertCnt = dao.insertSearchHistory(searchMap);
+		
+		return insertCnt;
+	}
+
+
 }

@@ -202,4 +202,74 @@
 		 GROUP BY p.PLACE_ID
 	</select>
 	
+	<!-- 자동완성 5개 -->
+	<select id="getAutoComplete" parameterType="String" resultType="String">
+	    SELECT keyword
+	    FROM (
+	        SELECT DISTINCT p.name AS keyword
+	        FROM PLACE p
+	        WHERE p.name LIKE '%' || #{keyword} || '%'
+	
+	        UNION
+	
+	        SELECT DISTINCT p.address AS keyword
+	        FROM PLACE p
+	        WHERE p.address LIKE '%' || #{keyword} || '%'
+	
+	        UNION
+	
+	        SELECT DISTINCT r.category AS keyword
+	        FROM RESTAURANT r
+	        WHERE r.category LIKE '%' || #{keyword} || '%'
+	    )
+	    WHERE ROWNUM <![CDATA[<=]]> 10
+	</select>
+
+	
+	<!-- 최근 검색어 5~10개 -->
+	<select id="getRecentKeywords" parameterType="String" resultType="spring.ict06team1.midpj.dto.SearchHistoryDTO">
+	    SELECT *
+	    FROM (
+	        SELECT history_id,
+	               user_id,
+	               keyword,
+	               created_at AS searchDate
+	        FROM (
+	            SELECT h.history_id,
+	                   h.user_id,
+	                   h.keyword,
+	                   h.created_at,
+	                   ROW_NUMBER() OVER (PARTITION BY h.keyword ORDER BY h.created_at DESC) AS rn
+	            FROM SEARCH_HISTORY h
+	            WHERE h.user_id = #{userId}
+	        )
+	        WHERE rn = 1
+	        ORDER BY created_at DESC
+	    )
+	    WHERE ROWNUM &lt;= 5
+	</select>
+	
+	<!-- 검색어 저장 전, 중복 된다면 삭제 후 신규 저장 -->
+	<delete id="deleteSameKeyword" parameterType="map">
+	    DELETE FROM SEARCH_HISTORY
+	    WHERE user_id = #{user_id}
+	      AND keyword = #{keyword}
+	</delete>
+	
+	
+	<!-- 검색어 저장 -->
+	<insert id="insertSearchHistory" parameterType="map">
+	    INSERT INTO SEARCH_HISTORY (
+	        history_id,
+	        user_id,
+	        keyword,
+	        created_at
+	    ) VALUES (
+	        SEQ_SEARCH.NEXTVAL,
+	        #{user_id},
+	        #{keyword},
+	        SYSTIMESTAMP
+	    )
+	</insert>
+	
   </mapper>	

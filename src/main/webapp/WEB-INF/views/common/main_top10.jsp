@@ -4,6 +4,13 @@
 <input type="hidden" id="contextPath" value="${path}">
 <input type="hidden" id="loginUserId" value="${sessionScope.sessionID}">
 
+<!-- ==================================================
+     [유지] main.js가 사용하는 핵심 구조
+     - .top10-viewport
+     - #top10Row
+     - .top10-card-wrap
+=================================================== -->
+
 <!-- 맛집 : 기본 -->
 <div class="top10-viewport">
     <div id="top10Row" data-active="REST">

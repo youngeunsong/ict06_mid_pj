@@ -1,5 +1,9 @@
 @charset "UTF-8";
-/* search.css */
+/* =========================================================
+   search.css
+   검색 페이지 전용 스타일
+   ※ 카드 공통 스타일은 card.css로 분리
+========================================================= */
 
 body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
@@ -8,7 +12,7 @@ body {
 }
 
 /* =========================
-   검색 필터 버튼
+   1. 검색 필터 버튼
 ========================= */
 .chip-tabs .btn {
     border-radius: 999px;
@@ -26,101 +30,8 @@ body {
 }
 
 /* =========================
-   검색 카드 공통
-========================= */
-.place-card {
-    display: block;
-    height: 100%;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    box-shadow: 0 2px 10px rgba(0,0,0,.07);
-    transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.place-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.13);
-    color: inherit;
-}
-
-.place-card__thumb-wrap {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-    background: #f3f3f3;
-}
-
-.thumb-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform .35s ease;
-}
-
-.place-card:hover .thumb-img {
-    transform: scale(1.05);
-}
-
-.place-card__body {
-    padding: 12px 14px 14px;
-}
-
-.place-card__title {
-    font-size: .95rem;
-    font-weight: 700;
-    color: #1a1a2e;
-    line-height: 1.4;
-    margin-bottom: 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: color .2s ease;
-}
-
-.place-card:hover .place-card__title {
-    color: #00a85e;
-}
-
-.place-card__address {
-    font-size: .8rem;
-    color: #555;
-    line-height: 1.4;
-    margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.place-card__meta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    font-size: .78rem;
-    color: #777;
-}
-
-.place-card__meta span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.place-card__price {
-    margin-top: 10px;
-    font-size: .95rem;
-    font-weight: 700;
-    color: #00a85e;
-}
-
-
-
-/* =========================
-   AJAX 카드 열 높이 보정
+   2. AJAX 카드 열 높이 보정
+   - 검색 결과 카드 레이아웃 전용
 ========================= */
 #ajaxResultWrap .col-6,
 #ajaxResultWrap .col-md-4,
@@ -133,7 +44,9 @@ body {
 }
 
 /* =========================
-   축제 캐러셀
+   3. 축제 캐러셀
+   - search 페이지 안의 캐러셀 전용
+   - 공통 카드가 아니라 search 전용 배치
 ========================= */
 #eventCarousel .card {
     border: none;
@@ -158,7 +71,7 @@ body {
 }
 
 /* =========================
-   더보기 버튼
+   4. 더보기 버튼
 ========================= */
 .text-center .btn-outline-secondary {
     border-radius: 999px;
@@ -167,25 +80,9 @@ body {
 }
 
 /* =========================
-   모바일
+   5. 모바일
 ========================= */
 @media (max-width: 768px) {
-    .place-card__thumb-wrap {
-        height: 150px;
-    }
-
-    .place-card__title {
-        font-size: .9rem;
-    }
-
-    .place-card__address {
-        font-size: .76rem;
-    }
-
-    .place-card__meta {
-        font-size: .74rem;
-    }
-
     #eventCarousel .thumb-img {
         height: 150px;
     }

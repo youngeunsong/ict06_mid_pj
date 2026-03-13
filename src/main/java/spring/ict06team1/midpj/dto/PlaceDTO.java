@@ -17,8 +17,6 @@ public class PlaceDTO {
 	private ReviewDTO reviewDto;
 	private int review_count;  //-- 장소 별 리뷰 카운트
 	private double avg_rating;   //-- 장소 별 평균 별점
-
-	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp placeRegDate;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")

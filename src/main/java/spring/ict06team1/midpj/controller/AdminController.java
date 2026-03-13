@@ -19,13 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import spring.ict06team1.midpj.service.AdminService;
-
 @Controller
 public class AdminController {
-	
-	@Autowired
-	private AdminService adminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
@@ -45,6 +40,4 @@ public class AdminController {
 		logger.info("[url => /adminSample.ad]");
 		return "admin/adminSample";
 	}
-	
-
 }

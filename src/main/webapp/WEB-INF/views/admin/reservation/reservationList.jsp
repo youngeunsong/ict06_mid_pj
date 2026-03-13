@@ -14,6 +14,11 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
+	<!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
+	
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
 
@@ -23,13 +28,13 @@
 		<!-- ================= CONTENT ================= -->
 		<!--begin::content 헤더-->
 		<div class="content-wrapper">
-			<div class="app-content-header py-3">
+			<div class="content-header">
 				<div class="container-fluid">
 					<h3 class="mb-0 font-weight-bold">예약 관리</h3>
 				</div>
 			</div>
 			
-			<section class="app-content">
+			<div class="app-content">
 				<div class="container-fluid">
 				
 					<%--필터 영역--%>
@@ -122,6 +127,13 @@
 										</tr>
 									</thead>
 									<tbody>
+										<c:if test="${empty list}">
+											<tr>
+												<td colspan="7" class="text-center py-4 text-muted">
+												조회된 예약 내역이 없습니다.
+												</td>
+											</tr>
+										</c:if>
 										<c:forEach var="dto" items="${list}">
 											<tr style="cursor:pointer;" onclick="viewDetail('${dto.reservation_id}')">
 												<td>${dto.reservation_id}</td>
@@ -133,8 +145,8 @@
 														<c:when test="${dto.placeDTO.place_type == 'FEST'}">축제</c:when>
 													</c:choose>
 												</td>
-												<td><fmt:formatDate value="${dto.check_in}" pattern="yyyy-MM-dd" /></td>
 												<td><fmt:formatDate value="${dto.resDate}" pattern="yyyy-MM-dd" /></td>
+												<td><fmt:formatDate value="${dto.check_in}" pattern="yyyy-MM-dd" /></td>
 												<td>
 													<c:choose>
 														<c:when test="${dto.status == 'RESERVED'}">
@@ -159,13 +171,6 @@
 												</td>
 											</tr>
 										</c:forEach>
-										<c:if test="${empty list}">
-											<tr>
-												<td colspan="7" class="text-center py-4 text-muted">
-												조회된 예약 내역이 없습니다.
-												</td>
-											</tr>
-										</c:if>
 									</tbody>
 								</table>
 
@@ -184,7 +189,7 @@
 					</div>
 					
 				</div>
-			</section>
+			</div>
 		</div>
 		
 		<!-- ================= FOOTER ================= -->
@@ -278,7 +283,7 @@
 								<th class="table-light">장소명</th>
 								<td><span id="update_name" class="pl-2"></span></td>
 								<th class="table-light">예약자ID</th>
-								<td><span id="update_user_id" class="fpl-2"></span></td>
+								<td><span id="update_user_id" class="pl-2"></span></td>
 							</tr>
 							<tr>
 								<th class="table-light">방문일</th>
@@ -323,11 +328,6 @@ const reservationData = [
 	<c:forEach var="res" items="${list}" varStatus="status">
 	<c:choose>
 		<c:when test="${res.placeDTO != null}">
-			<c:choose>
-				<c:when test="${res.placeDTO.place_type == 'REST'}"><c:set var="placeType" value="맛집"/></c:when>
-				<c:when test="${res.placeDTO.place_type == 'ACC'}"><c:set var="placeType" value="숙소"/></c:when>
-				<c:when test="${res.placeDTO.place_type == 'FEST'}"><c:set var="placeType" value="축제"/></c:when>
-			</c:choose>
 			<c:set var="resTitle" value="${res.user_id} | ${res.placeDTO.name}"/>
 		</c:when>
 		<c:otherwise>

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
 
-<title>공지/이벤트 수정</title>
+<title>공지/이벤트 등록</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <!--begin::div wrapper-->
@@ -31,7 +31,7 @@
 	<div class="content-wrapper">
 		<div class="app content-header">
 			<div class="container-fluid">
-				<h3 class="mb-0 font-weight-bold">공지/이벤트 수정</h3>
+				<h3 class="mb-0 font-weight-bold">공지/이벤트 등록</h3>
 			</div>
 		</div>
 		
@@ -40,7 +40,7 @@
 			
 				<div class="card shadow-sm">
 					<div class="card-body">
-						<form id="noticeModifyForm" method="post" action="${path}/noticeUpdate.adnt">
+						<form id="noticeWriteForm" method="post" action="${path}/noticeInsert.adnt" enctype="multipart/form-data">
 						
 							<%--notice_id hidden--%>
 							<input type="hidden" name="noticeId" value="${dto.notice_id}">
@@ -54,7 +54,7 @@
 									<select name="category" class="form-control" required>
 										<option value="">선택</option>
 										<option value="NOTICE" ${dto.category == 'NOTICE'}>공지사항</option>
-										<option value="EVENT">이벤트</option>
+										<option value="EVENT" ${dto.category == 'EVENT'}>이벤트</option>
 									</select>
 								</div>
 							</div>
@@ -81,12 +81,11 @@
 								</div>
 							</div>
 							
-							<%--이미지 URL--%>
+							<%--이미지--%>
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">이미지 URL</label>
+								<label class="col-sm-2 col-form-label font-weight-bold">이미지</label>
 								<div class="col-sm-10">
-									<input type="text" name="content" class="form-control"
-											placeholder="내용 입력" required>
+									<input type="file" name="uploadFile" class="form-control" accept="image/*">
 								</div>
 							</div>
 							

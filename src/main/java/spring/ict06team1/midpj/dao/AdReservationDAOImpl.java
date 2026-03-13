@@ -14,9 +14,6 @@ public class AdReservationDAOImpl implements AdReservationDAO {
 
 	@Autowired
 	private SqlSession sqlSession;
-	
-	//namespace 경로 상수로 선언
-	private static final String namespace = "spring.ict06team1.midpj.dao.AdReservationDAO.";
 
 	//1. 예약 조회
 	//1-1. 예약목록 전체 조회, 검색/필터
@@ -65,50 +62,64 @@ public class AdReservationDAOImpl implements AdReservationDAO {
 	//3-1. KPI(기간별 집계)
 	@Override
 	public Map<String, Object> getDashboardKPI() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getDashboardKPI()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getDashboardKPI();
 	}
 
 	//3-2. 월별 예약 추이(최근 6개월)
 	@Override
 	public List<Map<String, Object>> getMonthlyTrend() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getMonthlyTrend()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getMonthlyTrend();
 	}
 
 	//3-3. 예약 상태별 비율
 	@Override
 	public List<Map<String, Object>> getStatusRatio() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getStatusRatio()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getStatusRatio();
 	}
 
 	//3-4. 장소 분류별 비율
 	@Override
 	public List<Map<String, Object>> getPlaceTypeRatio() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getPlaceTypeRatio()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getPlaceTypeRatio();
 	}
 
 	//3-5. 요일별 예약 분포
 	@Override
 	public List<Map<String, Object>> getDayOfWeekStats() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getDayOfWeekStats()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getDayOfWeekStats();
 	}
 
 	//3-6. 미처리(PENDING) 목록
 	@Override
 	public List<ReservationDTO> getPendingList() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getPendingList()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getPendingList();
 	}
 
 	//3-7. 최근 예약 5건
 	@Override
 	public List<ReservationDTO> getRecentReservations() {
-		// TODO Auto-generated method stub
+		System.out.println("[AdReservationDAOImpl - getRecentReservations()]");
 		return sqlSession.getMapper(AdReservationDAO.class).getRecentReservations();
+	}
+
+	//미처리 예약 건수 조회
+	@Override
+	public int getPendingCount() {
+		System.out.println("[AdReservationDAOImpl - getPendingCount()]");
+		return sqlSession.getMapper(AdReservationDAO.class).getPendingCount();
+	}
+
+	//페이징된 미처리 목록 조회(매개변수로 Map 전달 추천)
+	@Override
+	public List<ReservationDTO> getPendingListPage(Map<String, Object> map) {
+		System.out.println("[AdReservationDAOImpl - getPendingList()]");
+		return sqlSession.getMapper(AdReservationDAO.class).getPendingListPage(map);
 	}
 
 }

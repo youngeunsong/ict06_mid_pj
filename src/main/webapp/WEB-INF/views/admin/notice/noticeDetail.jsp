@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
 
-<title>공지/이벤트 수정</title>
+<title>공지/이벤트 상세보기</title>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <!--begin::div wrapper-->
@@ -31,7 +31,7 @@
 	<div class="content-wrapper">
 		<div class="app content-header">
 			<div class="container-fluid">
-				<h3 class="mb-0 font-weight-bold">공지/이벤트 수정</h3>
+				<h3 class="mb-0 font-weight-bold">공지/이벤트 상세보기</h3>
 			</div>
 		</div>
 		
@@ -40,77 +40,86 @@
 			
 				<div class="card shadow-sm">
 					<div class="card-body">
-						<form id="noticeModifyForm" method="post" action="${path}/noticeUpdate.adnt">
+							
+						<%--분류--%>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label font-weight-bold">분류</label>
+							<div class="col-sm-10 d-flex align-items-center">
+								<c:choose>
+									<c:when test="${dto.category == 'NOTICE'}">
+										<span class="badge badge-primary">공지사항</span>
+									</c:when>
+								<c:otherwise>
+									<span class="badge badge-primary">이벤트</span>
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+					
+					<%--제목--%>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label font-weight-bold">제목</label>
+						<div class="col-sm-10 d-flex align-items-center">
+							${dto.title}
+						</div>
+					</div>
 						
-							<%--notice_id hidden--%>
-							<input type="hidden" name="noticeId" value="${dto.notice_id}">
-							
-							<%--분류--%>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">분류
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-4">
-									<select name="category" class="form-control" required>
-										<option value="">선택</option>
-										<option value="NOTICE" ${dto.category == 'NOTICE'}>공지사항</option>
-										<option value="EVENT">이벤트</option>
-									</select>
-								</div>
+						<%--작성자+등록일+조회수--%>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label font-weight-bold">작성자</label>
+							<div class="col-sm-4 d-flex align-items-center">${dto.admin_id}</div>
+							<label class="col-sm-2 col-form-label font-weight-bold">등록일</label>
+							<div class="col-sm-4 d-flex align-items-center">
+								<fmt:formatDate value="${dto.noticeRegDate}" pattern="yyyy-MM-dd HH:mm" />
 							</div>
+						</div>
 							
-							<%--제목--%>
+						<%--조회수+상단고정--%>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label font-weight-bold">조회수</label>
+							<div class="col-sm-4 d-flex align-items-center">${dto.view_count}</div>
+							<label class="col-sm-2 col-form-label font-weight-bold">상단고정</label>
+							<div class="col-sm-4 d-flex align-items-center">
+								<c:choose>
+									<c:when test="${dto.is_top == 'Y'}">
+										<span class="badge badge-warning">고정</span>
+									</c:when>
+									<c:otherwise>-</c:otherwise>
+								</c:choose>
+							</div>
+						</div>
+						
+						<%--이미지--%>
+						<c:if test="${not empty dto.image_url}">
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">제목
-									<span class="text-danger">*</span>
-								</label>
+								<label class="col-sm-2 col-form-label font-weight-bold">이미지</label>
 								<div class="col-sm-10">
-									<input type="text" name="title" class="form-control"
-											placeholder="제목 입력" maxlength="200" required>
+									<img src="${dto.image_url}" class="img-fluid" style="max-height:300px;">
 								</div>
 							</div>
-							
-							<%--내용--%>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">내용
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<textarea id="content" name="content" class="form-control" rows="15"
-											placeholder="내용 입력" required></textarea>
+						</c:if>
+						
+						<%--내용--%>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label font-weight-bold">내용</label>
+							<div class="col-sm-10">
+								<div class="border rounded p-3 bg-light" style="min-height:200px; white-space:pre-wrap;">
+								${dto.content}
 								</div>
 							</div>
-							
-							<%--이미지 URL--%>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">이미지 URL</label>
-								<div class="col-sm-10">
-									<input type="text" name="content" class="form-control"
-											placeholder="내용 입력" required>
-								</div>
+						</div>
+
+						<%--버튼--%>
+						<div class="form-group row">
+							<div class="col-sm-12 text-right">
+								<a href="${path}/noticeList.adnt" class="btn btn-secondary mr-2">목록</a>
+								<a href="${path}/noticeModify.adnt?noticeId=${dto.notice_id}" class="btn btn-primary">수정</a>
+								<button class="btn btn-danger" onclick="deleteNotice('${dto.notice_id}')">삭제</button>
 							</div>
-							
-							<%--상단 고정--%>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">상단 고정</label>
-								<div class="col-sm-10 d-flex align-items-center">
-									<input type="checkbox" id="isTop" name="isTop" value="Y">
-									<label for="isTop">상단 고정</label>
-								</div>
-							</div>
-							
-							<%--버튼--%>
-							<div class="form-group row">
-								<div class="col-sm-12 text-right">
-									<a href="${path}/noticeList.adnt" class="btn btn-secondary mr-2">취소</a>
-									<button type="submit" class="btn btn-primary">등록</button>
-								</div>
-							</div>
-							
-						</form>
+						</div>
+
 					</div>
 				</div>
-				
 			</div>
 		</div>
 	</div>

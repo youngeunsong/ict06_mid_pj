@@ -7,29 +7,22 @@ public class RestaurantDTO {
 	private String phone;
 	private String category;
 	private String status;
-	
-	//추가사항
-	private String opentime;
 	private String restdate;
-	private String parking;
 	private String areaCode;
-
+	
 	public RestaurantDTO() {
 		super();
 	}
 
-	
+
 	public RestaurantDTO(int restaurant_id, String description, String phone, String category, String status,
-			String opentime, String restdate, String parking, String areaCode) {
-		super();
+			String restdate, String areaCode) {
 		this.restaurant_id = restaurant_id;
 		this.description = description;
 		this.phone = phone;
 		this.category = category;
 		this.status = status;
-		this.opentime = opentime;
 		this.restdate = restdate;
-		this.parking = parking;
 		this.areaCode = areaCode;
 	}
 
@@ -37,40 +30,41 @@ public class RestaurantDTO {
 	public int getRestaurant_id() {
 		return restaurant_id;
 	}
+
 	public void setRestaurant_id(int restaurant_id) {
 		this.restaurant_id = restaurant_id;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public String getPhone() {
 		return phone;
 	}
+
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 	public String getCategory() {
 		return category;
 	}
+
 	public void setCategory(String category) {
 		this.category = category;
 	}
+
 	public String getStatus() {
 		return status;
 	}
+
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getOpentime() {
-		return opentime;
-	}
-
-	public void setOpentime(String opentime) {
-		this.opentime = opentime;
 	}
 
 	public String getRestdate() {
@@ -81,14 +75,6 @@ public class RestaurantDTO {
 		this.restdate = restdate;
 	}
 
-	public String getParking() {
-		return parking;
-	}
-
-	public void setParking(String parking) {
-		this.parking = parking;
-	}
-
 	public String getAreaCode() {
 		return areaCode;
 	}
@@ -96,13 +82,11 @@ public class RestaurantDTO {
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
 	}
-
-
 	@Override
 	public String toString() {
 		return "RestaurantDTO [restaurant_id=" + restaurant_id + ", description=" + description + ", phone=" + phone
-				+ ", category=" + category + ", status=" + status + ", opentime=" + opentime + ", restdate=" + restdate
-				+ ", parking=" + parking + ", areaCode=" + areaCode + "]";
+				+ ", category=" + category + ", status=" + status + ", restdate=" + restdate + ", areaCode=" + areaCode
+				+ "]";
 	}
 	
 }

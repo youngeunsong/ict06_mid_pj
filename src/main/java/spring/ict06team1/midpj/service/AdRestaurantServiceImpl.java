@@ -23,10 +23,11 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.AdRestaurantDAO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
-import spring.ict06team1.midpj.page.Paging;
+
 
 
 @Service

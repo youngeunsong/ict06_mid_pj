@@ -20,7 +20,7 @@ function filterData() {
 	if(statusList.length > 0) params.push('status=' + statusList.join(','));
 	if(sortType) params.push('sortType=' + sortType);
 	
-	location.href = path + '/festivalList.adpl' +
+	location.href = path + '/festivalList.adfe' +
 	(params.length > 0 ? '?' + params.join('&') : '');
 }
 
@@ -53,7 +53,7 @@ function keywordSearch() {
 		alert('축제명 혹은 설명에 해당하는 키워드를 입력해주세요!'); // TODO: 어떤 키워드를 넣을 수 있을 지 체크 
 		return;
 	}
-	location.href = path + '/festivalList.adpl?keyword=' + encodeURIComponent(keyword)
+	location.href = path + '/festivalList.adfe?keyword=' + encodeURIComponent(keyword)
 					+ (sortType ? '&sortType=' + sortType : '');
 }
 

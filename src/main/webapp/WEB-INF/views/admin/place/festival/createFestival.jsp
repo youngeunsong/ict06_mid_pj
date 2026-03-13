@@ -56,44 +56,44 @@
 	                		<!-- 축제 이름 끝-->
 		                	<!-- 축제 주소 시작-->
 		                	<tr>
-	                			<th><label for="inputAddress">축제 주소</label></th>
-	                			<td><input type="text" id="inputAddress" name="address" placeholder="축제 주소를 입력해주세요"></td>
+	                			<th><label for="inputAddress">* 축제 주소</label></th>
+	                			<td><input type="text" id="inputAddress" name="address" placeholder="축제 주소를 입력해주세요" required></td>
 	                		</tr>
 		                	<!-- 축제 주소 끝-->
 		                	<!-- 축제 위도 시작-->
 		                	<tr>
-	                			<th><label for="inputLatitude">축제 위도</label></th>
-	                			<td><input type="number" step="0.00000001" id="inputLatitude" name="latitude" placeholder="축제 위도를 입력해주세요"></td>
+	                			<th><label for="inputLatitude">* 축제 위도</label></th>
+	                			<td><input type="number" step="0.00000001" id="inputLatitude" name="latitude" placeholder="축제 위도를 입력해주세요" required></td>
 	                		</tr>
 		                	<!-- 축제 위도 끝-->
 		                	<!-- 축제 경도 시작-->
 		                	<tr>
-	                			<th><label for="inputLongitude">축제 경도</label></th>
-	                			<td><input type="number" step="0.00000001" name="longitude" id="inputLongitude" placeholder="축제 경도를 입력해주세요"></td>
+	                			<th><label for="inputLongitude">* 축제 경도</label></th>
+	                			<td><input type="number" step="0.00000001" name="longitude" id="inputLongitude" placeholder="축제 경도를 입력해주세요" required></td>
 	                		</tr>
 		                	<!-- 축제 경도 끝-->
 		                	<!-- 축제 이미지 URL 시작 -->
 		                	<tr>
-	                			<th><label for="inputImgAddress">축제 이미지 웹주소</label></th>
-	                			<td><input type="text" id="inputImgAddress" name="image_url" placeholder="축제 이미지 웹주소를 입력해주세요"></td>
+	                			<th><label for="inputImgAddress">* 축제 이미지 웹주소</label></th>
+	                			<td><input type="text" id="inputImgAddress" name="image_url" placeholder="축제 이미지 웹주소를 입력해주세요" required></td>
 	                		</tr>
 		                	<!-- 축제 이미지 URL 끝 -->
 		                	<!-- 축제 설명 시작 -->
 		                	<tr>
-	                			<th><label for="inputDescription">축제 설명</label></th>
-	                			<td><textarea id="inputDescription" name="description" cols="50" rows="10" placeholder="축제에 대한 설명문을 입력해주세요."></textarea></td>
+	                			<th><label for="inputDescription">* 축제 설명</label></th>
+	                			<td><textarea id="inputDescription" name="description" cols="50" rows="10" placeholder="축제에 대한 설명문을 입력해주세요." required></textarea></td>
 	                		</tr>
 		                	<!-- 축제 설명 끝 -->
 		                	<!-- 축제 시작일 시작 -->
 		                	<tr>
-	                			<th><label for="inputStartDate">축제 시작일</label></th>
-	                			<td><input type="date" id="inputStartDate" name="start_date"></td>
+	                			<th><label for="inputStartDate">* 축제 시작일</label></th>
+	                			<td><input type="date" id="inputStartDate" name="start_date" required></td>
 	                		</tr>
 		                	<!-- 축제 시작일 끝 -->
 		                	<!-- 축제 종료일 시작 -->
 		                	<tr>
-	                			<th><label for="inputEndDate">축제 종료일</label></th>
-	                			<td><input type="date" id="inputEndDate" name="end_date"></td>
+	                			<th><label for="inputEndDate">* 축제 종료일</label></th>
+	                			<td><input type="date" id="inputEndDate" name="end_date" required></td>
 	                		</tr>
 		                	<!-- 축제 종료일 끝 -->
 		                	<!-- 티켓 정보 입력 시작 -->

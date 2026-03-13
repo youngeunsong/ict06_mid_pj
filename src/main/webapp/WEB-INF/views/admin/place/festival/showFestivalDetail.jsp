@@ -83,7 +83,8 @@
 	                	<!-- 축제 설명 시작 -->
 	                	<tr>
                 			<th><label for="inputDescription">축제 설명</label></th>
-                			<td><textarea cols="50" rows="10" readonly>${festivalDTO.description}</textarea></td>
+                			<%-- <td><textarea cols="50" rows="10" readonly>${festivalDTO.description}</textarea></td> --%>
+                			<td><div style="white-space: pre-wrap;">${festivalDTO.description}</div></td>
                 		</tr>
 	                	<!-- 축제 설명 끝 -->
 	                	<!-- 축제 시작일 시작 -->

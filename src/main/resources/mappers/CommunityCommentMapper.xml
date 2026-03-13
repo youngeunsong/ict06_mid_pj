@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.ict06team1.midpj.dao.CommunityCommentDAO">
+
+	<!-- CommunityComment DTO 매핑 -->
+    <resultMap id="commentMap" type="spring.ict06team1.midpj.dto.CommunityCommentDTO">
+        <id property="comment_id" column="comment_id"/>
+        <result property="post_id" column="post_id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="commentDate" column="created_at"/>
+        <result property="commentUpdateDate" column="updated_at"/>
+    </resultMap>
+
+	<!-- 댓글 목록 -->
+    <select id="getCommentList" parameterType="int" resultMap="commentMap">
+	    SELECT comment_id,
+	           post_id,
+	           user_id,
+	           content,
+	           status,
+	           created_at,
+	           updated_at
+	      FROM COMMUNITY_COMMENT
+	     WHERE post_id = #{post_id}
+	       AND status = 'DISPLAY'
+	     ORDER BY comment_id ASC
+	</select>
+    
+    <!-- 댓글 등록 -->
+    <insert id="insertComment" parameterType="spring.ict06team1.midpj.dto.CommunityCommentDTO">
+	    INSERT INTO COMMUNITY_COMMENT
+	    (
+	        comment_id,
+	        post_id,
+	        user_id,
+	        content,
+	        status,
+	        created_at
+	    )
+	    VALUES
+	    (
+	        SEQ_COMMENT.NEXTVAL,
+	        #{post_id},
+	        #{user_id},
+	        #{content},
+	        'DISPLAY',
+	        SYSTIMESTAMP
+	    )
+	</insert>
+	
+	<!-- 작성자 검증 -->
+	<select id="getCommentDetail" parameterType="int" resultMap="commentMap">
+	    SELECT comment_id,
+	           post_id,
+	           user_id,
+	           content,
+	           status,
+	           created_at,
+	           updated_at
+	      FROM COMMUNITY_COMMENT
+	     WHERE comment_id = #{comment_id}
+	</select>
+	
+	<!-- 댓글삭제 / 화면에서 안보이게 status 'HIDDEN'으로 업데이트 -->
+	<update id="deleteComment" parameterType="int">
+	    UPDATE COMMUNITY_COMMENT
+	       SET status = 'HIDDEN'
+	     WHERE comment_id = #{comment_id}
+	</update>
+
+</mapper>

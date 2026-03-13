@@ -5,6 +5,7 @@ import java.util.Map;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 public interface SearchDAO {
 	
@@ -41,4 +42,19 @@ public interface SearchDAO {
 	
 	// 3. AJAX 목록 대상 장소들의 리뷰 통계
 	List<Map<String, Object>> getSearchAjaxReviewStats(Map<String, Object> param);
+	
+	// [자동완성] -----------------------------------------------------------
+	//자동완성 10개
+	public List<String> getAutoComplete(String keyword);
+	
+	// [최근 검색어] -----------------------------------------------------------
+	// 1. 최근 검색어 5~10개 조회
+	public List<SearchHistoryDTO> getRecentKeywords(String login_userId);
+	
+	// 2. 최근 검색어 추가 전, 이미 db에 있다면 중복 방지를 위한 삭제
+	public int deleteSameKeyword(Map<String, Object> searchMap);
+	
+	// 3. 최근 검색어 추가
+	public int insertSearchHistory(Map<String, Object> searchMap);
+	
 }

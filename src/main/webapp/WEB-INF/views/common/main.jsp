@@ -5,9 +5,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>main</title>
 
+<!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/common/main.css">
 <link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
@@ -138,7 +141,7 @@
           </div>
           	
           <!-- 하단 설명 글 -->
-          <p class="section-subtitle" id="top10Subtitle">이번 주 가장 많은 사람들이 찾아본 맛집 TOP 10</p>
+          <p class="section-subtitle" id="top10Subtitle">이번 달 가장 많은 사람들이 찾아본 맛집 TOP 10</p>
         </div>
         <a href="${path}/restaurant.rs" id="top10ViewAllLink" class="view-all">
 		    전체보기 <i class="bi bi-chevron-right"></i>
@@ -170,238 +173,76 @@
   </section>
   <!-- 금주의 TOP10E -->
 
-
   <!-- BEST 추천 -->
-  <section class="section-wrap">
-    <div class="container">
-      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-        <h2 class="section-title">BEST 추천 <span class="badge-new">BEST</span></h2>
-        <ul class="nav best-tabs flex-nowrap overflow-auto">
-          <li class="nav-item"><a class="nav-link active" href="#">전체</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">맛집</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">숙소</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">축제</a></li>
-        </ul>
-      </div>
-
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <div class="best-feature-banner h-100">
-            <div>
-              <div class="quote-icon">"</div>
-              <p class="feature-text">
-                사람들은 언제나 한 곳에<br/>
-                오래있으면 더 멀리, 더<br/>
-                문득 떠나고싶어 지기도 합니다.<br/>
-                그럴 땐 망설이지 마세요.
-              </p>
-            </div>
-            <div>
-              <div class="feature-img-wrap">
-                <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" alt="오로라"/>
-              </div>
-              <button class="btn-more mt-3">지금 떠나기 →</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-8">
-          <div class="row g-3">
-
-            <div class="col-6">
-              <div class="best-sub-card card">
-                <div class="img-wrap">
-                  <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80" alt="교토"/>
-                </div>
-                <div class="card-body">
-                  <div class="card-region"><i class="bi bi-geo-alt-fill text-danger me-1"></i>일본 · 교토</div>
-                  <div class="card-title">교토 전통문화 투어 2박 3일</div>
-                  <div class="card-price"><span class="discount-badge">30%</span>699,000원</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div class="best-sub-card card">
-                <div class="img-wrap">
-                  <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80" alt="산토리니"/>
-                </div>
-                <div class="card-body">
-                  <div class="card-region"><i class="bi bi-geo-alt-fill text-danger me-1"></i>그리스 · 산토리니</div>
-                  <div class="card-title">산토리니 에게해 로맨스 5일</div>
-                  <div class="card-price"><span class="discount-badge">20%</span>1,890,000원</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div class="best-sub-card card">
-                <div class="img-wrap">
-                  <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80" alt="인도"/>
-                </div>
-                <div class="card-body">
-                  <div class="card-region"><i class="bi bi-geo-alt-fill text-danger me-1"></i>인도 · 타지마할</div>
-                  <div class="card-title">인도 문화 탐방 6박 7일</div>
-                  <div class="card-price"><span class="discount-badge">15%</span>1,290,000원</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div class="best-sub-card card">
-                <div class="img-wrap">
-                  <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80" alt="방콕"/>
-                </div>
-                <div class="card-body">
-                  <div class="card-region"><i class="bi bi-geo-alt-fill text-danger me-1"></i>태국 · 방콕</div>
-                  <div class="card-title">방콕 자유여행 3박 4일</div>
-                  <div class="card-price"><span class="discount-badge">25%</span>598,000원</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+	<section class="section-wrap">
+	  <div class="container">
+	    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+	      <h2 class="section-title">BEST 추천 <span class="badge-new">BEST</span></h2>
+	
+	      <!-- BEST 버튼 -->
+	      <ul class="nav best-tabs flex-nowrap overflow-auto" id="bestTabs">
+	        <li class="nav-item"><a class="nav-link active" href="#" data-best-type="ALL">전체</a></li>
+	        <li class="nav-item"><a class="nav-link" href="#" data-best-type="REST">맛집</a></li>
+	        <li class="nav-item"><a class="nav-link" href="#" data-best-type="ACC">숙소</a></li>
+	        <li class="nav-item"><a class="nav-link" href="#" data-best-type="FEST">축제</a></li>
+	      </ul>
+	    </div>
+	
+	    <!-- BEST AJAX 내용 들어갈 영역 -->
+	    <div id="bestContentWrap"></div>
+	
+	    <!-- bookmark.js용 -->
+	    <input type="hidden" id="contextPath" value="${path}">
+	    <input type="hidden" id="loginUserId" value="${sessionScope.sessionID}">
+	  </div>
+	</section>
 
 
-  <!-- ====================================================
-       4. 이달의 추천 국내 축제
-  ===================================================== -->
+  <!-- 이달의 추천 국내 축제S -->
   <section class="section-wrap festival-section">
     <div class="container">
+      <!-- 헤더 -->
       <div class="d-flex align-items-center justify-content-between mb-3">
         <div>
           <h2 class="section-title">
             <i class="bi bi-calendar-event-fill me-1" style="color:var(--primary);"></i>
             이달의 추천 국내 축제
           </h2>
-          <p class="section-subtitle">3월에 꼭 가봐야 할 국내 축제 모음</p>
+          <!-- 해당 월에 맞춰 자동으로 월 변경 -->
+          <jsp:useBean id="now" class="java.util.Date" />
+			<p class="section-subtitle">
+			  <fmt:formatDate value="${now}" pattern="M"/>월에 꼭 가봐야 할 국내 축제 모음
+			</p>
         </div>
-        <a href="#" class="view-all">전체보기 <i class="bi bi-chevron-right"></i></a>
+        <a href="${path}/festival.fe" class="view-all">전체보기 <i class="bi bi-chevron-right"></i></a>
       </div>
 
-      <div class="row g-3 mb-3">
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1495562569060-2eec283d3391?w=400&q=80" alt="벚꽃축제"/>
-              <span class="period-badge">3.22 ~ 3.31</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">진해 군항제 벚꽃축제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>경남 창원시</div>
-            </div>
+	  <!-- 카드 -->
+	  <div class="row g-3">
+        <c:forEach var="fest" items="${festivalList}">
+          <div class="col-6 col-md-3">
+          	<c:set var="mode" value="festival"/>
+            <%@ include file="card/festivalCard.jsp" %>
           </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1519750783826-e2420f4d687f?w=400&q=80" alt="산수유"/>
-              <span class="period-badge">3.14 ~ 3.24</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">구례 산수유꽃 축제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>전남 구례군</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=400&q=80" alt="매화"/>
-              <span class="period-badge">3.08 ~ 3.17</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">광양 매화문화축제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>전남 광양시</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&q=80" alt="영등포"/>
-              <span class="period-badge">3.28 ~ 4.06</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">여의도 봄꽃 축제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>서울 영등포</div>
-            </div>
-          </div>
-        </div>
+        </c:forEach>
       </div>
-
-      <div class="row g-3">
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="대구"/>
-              <span class="period-badge">3.29 ~ 4.07</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">대구 이월드 별빛 축제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>대구 서구</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&q=80" alt="전주"/>
-              <span class="period-badge">3.01 ~ 3.31</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">전주 한옥마을 봄 문화제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>전북 전주시</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80" alt="제주"/>
-              <span class="period-badge">3.15 ~ 3.25</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">제주 유채꽃 국제걷기대회</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>제주 서귀포</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="festival-card card h-100">
-            <div class="img-wrap">
-              <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&q=80" alt="통영"/>
-              <span class="period-badge">3.21 ~ 3.30</span>
-            </div>
-            <div class="card-body">
-              <div class="card-title">통영 한산대첩 봄 문화제</div>
-              <div class="card-loc"><i class="bi bi-geo-alt-fill"></i>경남 통영시</div>
-            </div>
-          </div>
-        </div>
-      </div>
+     
     </div>
   </section>
+  <!-- 이달의 추천 국내 축제E -->
 
 
-  <!-- ====================================================
-       5. 공지사항
-  ===================================================== -->
+  <!-- 공지&이벤트 -->
   <section class="notice-section">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between mb-2">
-        <h2 class="section-title">공지사항</h2>
-        <a href="#" class="view-all">전체보기 <i class="bi bi-chevron-right"></i></a>
+        <h2 class="section-title">공지사항 & 이벤트</h2>
+        <a href="${path}/community.co" class="view-all">전체보기 <i class="bi bi-chevron-right"></i></a>
       </div>
 
       <ul class="nav notice-tabs border-bottom mb-3">
         <li class="nav-item"><a class="nav-link active" href="#">공지사항</a></li>
         <li class="nav-item"><a class="nav-link" href="#">이벤트</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">자주묻는질문</a></li>
       </ul>
 
       <table class="table notice-table mb-0">

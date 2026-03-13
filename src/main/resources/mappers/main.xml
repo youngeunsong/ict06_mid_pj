@@ -51,41 +51,9 @@
 	    WHERE ROWNUM <![CDATA[ <= ]]> 10
 	</select>
     
+    
     <!-- 숙소 TOP10 - 가격 추가 -->
-    <select id="getTop10ByACC" parameterType="string" resultMap="accResultMap">
-	    SELECT *
-	    FROM (
-	        SELECT a.ACCOMMODATION_ID
-	             , a.DESCRIPTION
-	             , a.PHONE
-	             , a.PRICE
-	             , a.STATUS AS ACC_STATUS
-	             , p.PLACE_ID
-	             , p.PLACE_TYPE
-	             , p.NAME
-	             , p.ADDRESS
-	             , p.VIEW_COUNT
-	             , p.IMAGE_URL
-	             , p.CREATED_AT AS PLACE_CREATED_AT
-	        FROM ACCOMMODATION a
-	        JOIN PLACE p
-	          ON a.ACCOMMODATION_ID = p.PLACE_ID
-	        WHERE p.PLACE_TYPE = 'ACC'
-	          AND p.CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP -
-	              CASE
-	                  WHEN (
-	                      SELECT COUNT(*)
-	                      FROM PLACE
-	                      WHERE PLACE_TYPE = 'ACC'
-	                        AND CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP - INTERVAL '30' DAY
-	                  ) <![CDATA[ < ]]> 10
-	                  THEN INTERVAL '60' DAY
-	                  ELSE INTERVAL '30' DAY
-	              END
-	        ORDER BY p.VIEW_COUNT DESC
-	    )
-	    WHERE ROWNUM <![CDATA[ <= ]]> 10
-	</select>
+ 
 
     <select id="getFavoritePlaceIds" parameterType="string" resultType="int">
         SELECT place_id

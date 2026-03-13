@@ -10,11 +10,6 @@ import spring.ict06team1.midpj.dto.PlaceDTO;
 
 public interface MainService {
 
-	//맛집 TOP10
-	public List<PlaceDTO> getTop10ByREST();
-
-    //숙소 TOP10
-	public List<AccommodationDTO> getTop10ByACC();
     
     //각 플레이스 별 리뷰 카운트
 	public Map<Integer, Integer> getReviewCountMap(List<Integer> placeIds);

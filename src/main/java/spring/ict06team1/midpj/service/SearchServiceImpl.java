@@ -37,8 +37,8 @@ public class SearchServiceImpl implements SearchService {
 		List<PlaceDTO> list = dao.getSearchList(keyword);
 		
 		// placeType에 맞춰 리스트로 묶기
-		List<PlaceDTO> restList = new ArrayList<>();
-	    List<PlaceDTO> accList = new ArrayList<>();
+		List<PlaceDTO> restList = new ArrayList<PlaceDTO>();
+	    List<PlaceDTO> accList = new ArrayList<PlaceDTO>();
 
 	    for (PlaceDTO dto : list) {
 	        String type = dto.getPlace_type();
@@ -53,8 +53,8 @@ public class SearchServiceImpl implements SearchService {
 	    // 리뷰 통계 조회
 	    List<Map<String, Object>> reviewStatsList = dao.getPlaceReviewStats(keyword);
 		
-		Map<Integer, Integer> reviewCountMap = new HashMap<>();
-		Map<Integer, Double> avgRatingMap = new HashMap<>();
+		Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
+		Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
 
 		//각 카테고리에 맞는 리스트에 담기
 		for(Map<String, Object> row : reviewStatsList) {
@@ -76,7 +76,7 @@ public class SearchServiceImpl implements SearchService {
 		
 		// 로그인 사용자의 즐겨찾기 place_id 목록
 		String user_id = (String) request.getSession().getAttribute("sessionID");
-		List<Integer> favoritePlaceIds = new ArrayList<>();
+		List<Integer> favoritePlaceIds = new ArrayList<Integer>();
 
 		if (user_id != null && !user_id.trim().isEmpty()) {
 			favoritePlaceIds = dao.getFavoritePlaceIds(user_id);
@@ -111,7 +111,7 @@ public class SearchServiceImpl implements SearchService {
 	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
 		System.out.println("[SearchServiceImpl - toggleFavorite()]");
 
-	    Map<String, Object> result = new HashMap<>();
+	    Map<String, Object> result = new HashMap<String, Object>();
 	    
 	    //로그인 여부 확인하기
 	    String user_id = (String) request.getSession().getAttribute("sessionID");
@@ -123,7 +123,7 @@ public class SearchServiceImpl implements SearchService {
 	    
 	    int place_id = Integer.parseInt(request.getParameter("place_id"));
 	    
-	    Map<String, Object> checkFavorite = new HashMap<>();
+	    Map<String, Object> checkFavorite = new HashMap<String, Object>();
 	    checkFavorite.put("user_id", user_id);
 	    checkFavorite.put("place_id", place_id);
 
@@ -161,11 +161,18 @@ public class SearchServiceImpl implements SearchService {
 		int totalCnt = dao.getSearchAjaxCount(param);
 		int totalPages = (int) Math.ceil((double)totalCnt/ pageSize); //Math.ceil(소수점 올림)
 		
+/*<<<<<<< HEAD
+		Map<String, Object> result = new HashMap();
+	    result.put("list",        list);
+	    result.put("totalCnt",    totalCnt);
+	    result.put("totalPages",  totalPages);
+	    result.put("currentPage", page);
+=======*/
 		// AJAX용 리뷰 통계
 		List<Map<String, Object>> statsList = dao.getSearchAjaxReviewStats(param);
 
-		Map<Integer, Integer> reviewCountMap = new LinkedHashMap<>();
-		Map<Integer, Double> avgRatingMap = new LinkedHashMap<>();
+		Map<Integer, Integer> reviewCountMap = new LinkedHashMap<Integer, Integer>();
+		Map<Integer, Double> avgRatingMap = new LinkedHashMap<Integer, Double>();
 
 		for (Map<String, Object> row : statsList) {
 			Integer placeId = ((Number) row.get("PLACE_ID")).intValue();
@@ -189,13 +196,13 @@ public class SearchServiceImpl implements SearchService {
 			((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
 		String user_id = (String) request.getSession().getAttribute("sessionID");
-		List<Integer> favoritePlaceIds = new ArrayList<>();
+		List<Integer> favoritePlaceIds = new ArrayList<Integer>();
 
 		if (user_id != null && !user_id.trim().isEmpty()) {
 			favoritePlaceIds = dao.getFavoritePlaceIds(user_id);
 		}
 
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("list", list);
 		result.put("totalCnt", totalCnt);
 		result.put("totalPages", totalPages);

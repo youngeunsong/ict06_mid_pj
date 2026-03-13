@@ -16,27 +16,7 @@ public class MainDAOImpl implements MainDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    //맛집 TOP10
-    @Override
-    public List<PlaceDTO> getTop10ByREST() {
-        System.out.println("[MainDAOImpl - getTop10ByREST()]");
-
-        MainDAO dao = sqlSession.getMapper(MainDAO.class);
-        List<PlaceDTO> getTop10RESTlist = dao.getTop10ByREST();
-        
-        return getTop10RESTlist;
-    }
     
-    //숙소 TOP10
-    @Override
-    public List<AccommodationDTO> getTop10ByACC() {
-        System.out.println("[MainDAOImpl - getTop10ByACC()]");
-
-        MainDAO dao = sqlSession.getMapper(MainDAO.class);
-        List<AccommodationDTO> getTop10ACClist = dao.getTop10ByACC();
-        
-        return getTop10ACClist;
-    }
     
     //각 플레이스 별 리뷰
     @Override

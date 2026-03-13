@@ -3,8 +3,9 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
-
+import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 
 public interface UserDAO {
 
@@ -26,5 +27,14 @@ public interface UserDAO {
 
     // 6. 회원 정보 수정
     public int updateUser(MemberDTO dto);
+    
+    // 7. 즐겨찾기 목록 조회
+    public List<PlaceDTO> getFavoriteList(String user_id);
+    
+    // 나의 문의 목록 조회
+    public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map);
+    
+    // 나의 문의 총 개수 조회
+    public int selectMyInquiryCount(Map<String, Object> map);
 
 }    

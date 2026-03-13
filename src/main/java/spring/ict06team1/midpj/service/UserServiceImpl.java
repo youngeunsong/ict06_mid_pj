@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.dao.UserDAO;
+import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 
 
 
@@ -265,5 +267,74 @@ public class UserServiceImpl implements UserService {
 	    
 	    // 5. 결과 반환 (1이면 성공, 0이면 실패)
 	    return updateCnt;
+	}
+	
+	// 7. 나의 즐겨찾기 목록 조회
+	@Override
+	public void viewBookmarksAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - viewBookmarksAction()");
+		
+		// 1. 세션에서 아이디 꺼내기
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		// 2. DAO 호출해서 리스트 받아오기
+		List<PlaceDTO> list = dao.getFavoriteList(sessionID);
+		
+		// 3. 모델에 담아서 JSP로 보내기
+		model.addAttribute("list", list);
+		
+	}
+	
+	// 나의 문의 목록 조회
+	@Override
+	public void viewInquiriesAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - viewInquiriesAction()");
+		
+		// 1. 세션에서 아이디 꺼내기
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		// 2. 파라미터 받기 (현재 페이지 번호, 필터링할 상태값)
+		String pageNum = request.getParameter("pageNum");
+		String status = request.getParameter("status");
+		
+		// 3. 상태값이 없을 경우 기본값 'all'로 설정(에러방지)
+		if (status == null || status.equals("")) {
+			status = "all";
+		}
+		
+		// 4. 페이징 객체 생성 및 전체 문의글 개수 조회
+		spring.ict06team1.midpj.page.Paging paging = new spring.ict06team1.midpj.page.Paging(pageNum);
+		
+		// DAO에 던질 파라미터 묶기 (아이디와 필터링 상태)
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", sessionID);
+		map.put("status", status);
+		
+		// 내 조건에 맞는 전체 글 개수 가져오기
+		int totalCount = dao.selectMyInquiryCount(map);
+		System.out.println("전체 문의 개수 => " + totalCount);
+		
+		// 5. 페이징 계산 실행 (이걸 호출해야 startRow, endRow가 계산됨)
+		paging.setTotalCount(totalCount);
+		
+		// 6. 계산된 시작번호와 끝번호를 다시 map에 담기
+		map.put("start", paging.getStartRow());
+		map.put("end", paging.getEndRow());
+		
+		// 7. 실제 목록 조회 실행
+		List<InquiryDTO> list = dao.selectMyInquiryList(map);
+		
+		// 8. JSP로 보낼 데이터들 모델에 담기
+		model.addAttribute("MyInquiryList", list);         // 문의 목록 리스트
+		model.addAttribute("paging", paging);     // 페이징 계산 객체
+		model.addAttribute("status", status);     // 선택한 필터 상태 유지용
+		model.addAttribute("totalCount", totalCount); // 전체 개수 표시용
+		
+		System.out.println("조회된 총 개수: " + totalCount);
+		System.out.println("시작 번호(start): " + paging.getStartRow());
+		System.out.println("끝 번호(end): " + paging.getEndRow());
+		
 	}
 }

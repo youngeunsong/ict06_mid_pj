@@ -1,6 +1,5 @@
 --------------------------------------------------
 --DB 테이블 생성
-
 -- 1. 회원
 CREATE TABLE MEMBER (
     user_id			VARCHAR2(50) PRIMARY KEY,

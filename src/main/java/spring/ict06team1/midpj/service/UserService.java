@@ -38,4 +38,14 @@ public interface UserService {
     public int modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
     
+    // 7. 즐겨찾기 목록 조회
+    public void viewBookmarksAction(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+    
+    // 나의 문의 목록 조회
+    public void viewInquiriesAction(HttpServletRequest request, HttpServletResponse response, Model model)
+    	throws ServletException, IOException;
+    
+    
+    
 }

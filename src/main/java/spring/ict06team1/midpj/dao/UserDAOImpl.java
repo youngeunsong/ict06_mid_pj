@@ -7,7 +7,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -72,5 +74,35 @@ public class UserDAOImpl implements UserDAO {
 		int updateCnt = sqlSession.update("spring.ict06team1.midpj.dao.UserDAO.updateUser", dto);
 		
 		return updateCnt;
+	}
+
+	// 7. 나의 즐겨찾기 목록 조회
+	@Override
+	public List<PlaceDTO> getFavoriteList(String user_id) {
+		System.out.println("UserDAOImpl - getFavoriteList()");
+		
+		List<PlaceDTO> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.getFavoriteList", user_id);
+		
+		return list;
+	}
+
+	// 나의 문의 목록 조회
+	@Override
+	public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - selectMyInquiryList()");
+		
+		List<InquiryDTO> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.selectMyInquiryList", map);
+		
+		return list;
+	}
+
+	// 나의 문의 총 개수 조회
+	@Override
+	public int selectMyInquiryCount(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - selectMyInquiryCount()");
+		
+		int selectCnt = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.selectMyInquiryCount", map);
+		
+		return selectCnt;
 	}
 }

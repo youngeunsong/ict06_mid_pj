@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="spring.ict06team1.midpj.dao.AdNoticeDAO">
+	 <!-- 0. 매핑 -->
+	 <resultMap id="adNoticeMap" type="spring.ict06team1.midpj.dto.NoticeDTO">
+	 	<id property="notice_id" column="notice_id"/>
+	 	<result property="admin_id" column="admin_id"/>
+	 	<result property="category" column="category"/>
+	 	<result property="title" column="title"/>
+	 	<result property="content" column="content"/>
+	 	<result property="image_url" column="image_url"/>
+	 	<result property="view_count" column="view_count"/>
+	 	<result property="is_top" column="is_top"/>
+	 	<result property="noticeRegDate" column="created_at"/>
+	 	<result property="noticeUpdateDate" column="updated_at"/>
+	 </resultMap>
+
+	<!-- 1. 목록 조회 -->
+	<select id="getNoticeList" parameterType="map" resultMap="adNoticeMap">
+		SELECT * FROM (
+			SELECT ROWNUM AS rnum, A.* FROM (
+				SELECT notice_id, admin_id, category, title,
+					   view_count, is_top, created_at
+				FROM NOTICE
+				<where>
+					<if test="sc.keyword != null and sc.keyword != ''">
+						title LIKE '%'||#{sc.keyword}||'%'
+					</if>
+					<if test="sc.category != null and sc.category != ''">
+						AND category = #{sc.category}
+					</if>
+					<if test="sc.status != null and sc.status != ''">
+						AND status = #{sc.status}
+					</if>
+				</where>
+				ORDER BY is_top DESC, created_at DESC
+			) A
+		)
+		WHERE rnum BETWEEN #{paging.startRow} AND #{paging.endRow}
+	</select>
+	
+	<!-- 2. 상세 -->
+	<select id="getNoticeDetail" parameterType="int" resultMap="adNoticeMap">
+		SELECT * FROM NOTICE
+		WHERE notice_id = #{noticeId}
+	</select>
+	
+	<!-- 2-1. 조회수 증가 -->
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE notice SET view_count = view_count + 1
+		WHERE notice_id = #{notice_id}
+	</update>
+
+	<!-- 3. 전체 건수 조회(페이징용) -->
+	<select id="getNoticeCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM NOTICE
+		<where>
+			<if test="sc.keyword != null and sc.keyword != ''">
+				title LIKE CONCAT('%', #{sc.keyword}, '%')
+			</if>
+			<if test="sc.category != null and sc.category != ''">
+				AND category = #{sc.category}
+			</if>
+			<if test="sc.status != null and sc.status != ''">
+				AND status = #{sc.status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 4. 등록 -->
+	<insert id="insertNotice" parameterType="spring.ict06team1.midpj.dto.NoticeDTO">
+		INSERT INTO NOTICE(notice_id, admin_id, category, title, content, 
+							image_url, is_top, view_count, created_at, updated_at)
+		VALUES(SEQ_NOTICE.NEXTVAL,
+			  #{admin_id, jdbcType=VARCHAR},
+			  #{category, jdbcType=VARCHAR}, 
+			  #{title, jdbcType=VARCHAR}, 
+			  #{content, jdbcType=VARCHAR},
+			  #{image_url, jdbcType=VARCHAR}, 
+			  #{is_top, jdbcType=VARCHAR}, 
+			  0, SYSTIMESTAMP, SYSTIMESTAMP)
+	</insert>
+	
+	<!-- 5. 수정 -->
+	<update id="updateNotice" parameterType="spring.ict06team1.midpj.dto.NoticeDTO">
+		UPDATE NOTICE
+		SET category    = #{category},
+			title 	    = #{title},
+			content	    = #{content},
+			image_url   = #{image_url},
+			is_top	    = #{is_top},
+			updated_at  = SYSTIMESTAMP
+		WHERE notice_id = #{noticeId}
+	</update>
+
+	<!-- 6. 삭제 -->
+	<delete id="deleteNotice" parameterType="int">
+		DELETE FROM NOTICE
+		WHERE notice_id = #{noticeId}
+	</delete>
+	
+ </mapper> 

@@ -1,15 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->       
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>등록 장소 관리</title>
+<title>축제 등록 성공</title>
 </head>
-<!--end::Head-->
-<!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
 	<div class="wrapper">
@@ -22,38 +20,33 @@
 
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
+
 		<!-- ================= SIDEBAR ================= -->
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
 		<!-- ================= CONTENT ================= -->
-		<!-- 컨텐츠 시작 -->
-		<div class="content-wrapper">
-			<img src="${path}/resources/images/admin/placeList.png" width="100%"
-				alt="main">
-		</div>
-		<!-- 컨텐츠 끝 -->
+		<c:if test="${insertCnt == 1}">
+			<script type="text/javascript">
+				alert("신규 축제 등록 성공!!"); 
+				window.location="${path}/festivalList.adfe"; 
+			</script>
+		</c:if>		
+		
+		<c:if test="${insertCnt != 1}">
+			<script type="text/javascript">
+				alert("신규 축제 등록 실패!!"); 
+				window.location="${path}/createFestivalAction.adfe"
+			</script>
+		</c:if>
 
 		<!-- ================= FOOTER ================= -->
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
 		
-		<!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : 등록 맛집 목록 조회</div>
-		
-		<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-		<!-- #${'{'} : #과 { 표시 -->
-		<!-- &lt; : < 표시 -->
-		<!-- &gt; : > 표시 -->
-		<div>
-			<pre><code>
-			</code></pre>
-		</div>
-		<!-- 관련 SQL 끝 -->
 	</div>
-	<!--end::div Wrapper-->
+	<!--end::div wrapper-->
 
 	<!-- ================= JS ================= -->
 </body>
-<!--end::Body-->
 </html>

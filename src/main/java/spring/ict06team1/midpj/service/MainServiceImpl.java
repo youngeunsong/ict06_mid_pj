@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import spring.ict06team1.midpj.dao.MainDAO;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
+import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 
 @Service
@@ -43,7 +44,7 @@ public class MainServiceImpl implements MainService {
     public Map<Integer, Integer> getReviewCountMap(List<Integer> placeIds) {
 		System.out.println("[MainServiceImpl - getReviewCountMap()]");
 
-        Map<Integer, Integer> reviewCountMap = new HashMap<>();
+        Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
 
         if (placeIds == null || placeIds.isEmpty()) return reviewCountMap;
         
@@ -100,5 +101,50 @@ public class MainServiceImpl implements MainService {
 	    List<Integer> favoriteList = dao.getFavoritePlaceIds(user_id);
 	    
 	    return favoriteList;
+	}
+
+	//이달의 추천 국내 축제
+	@Override
+	public List<FestivalDTO> getTop8ThisMonthFestival() {
+		System.out.println("[MainServiceImpl - getTop8ThisMonthFestival()]");
+		List<FestivalDTO> Top8ThisMonthFestival = dao.getTop8ThisMonthFestival();
+		
+		return Top8ThisMonthFestival;
+	}
+
+	//BEST 추천 - 전체 탭 우측 4개
+	@Override
+	public List<Map<String, Object>> getBestAllTop4() {
+		System.out.println("[MainServiceImpl - getBestAllTop4()]");
+		
+		List<Map<String, Object>> BestAllTop4 = dao.getBestAllTop4();
+	    return BestAllTop4;
+	}
+
+	//BEST 추천 - 맛집 5개
+	@Override
+	public List<PlaceDTO> getBestRestTop5() {
+		System.out.println("[MainServiceImpl - getBestRestTop5()]");
+		
+		List<PlaceDTO> BestRestTop5 = dao.getBestRestTop5();
+	    return BestRestTop5;
+	}
+
+	//BEST 추천 - 숙소 5개
+	@Override
+	public List<AccommodationDTO> getBestAccTop5() {
+		System.out.println("[MainServiceImpl - getBestAccTop5()]");
+		
+		List<AccommodationDTO> BestAccTop5 = dao.getBestAccTop5();
+	    return BestAccTop5;
+	}
+
+	//BEST 추천 - 축제 5개
+	@Override
+	public List<FestivalDTO> getBestFestTop5() {
+		System.out.println("[MainServiceImpl - getBestFestTop5()]");
+		
+		List<FestivalDTO> BestFestTop5 = dao.getBestFestTop5();
+	    return BestFestTop5;
 	}
 }

@@ -8,37 +8,55 @@
 
     <c:forEach var="dto" items="${list}">
         <div class="col-6 col-md-4 col-lg-3">
-            <a href="${path}/place/detail?id=${dto.place_id}" class="place-card text-decoration-none text-dark">
+            <div class="search-card-wrap">
+            	<!-- place_type에 맞춰 카드 클릭 시 url 변경하기 -->
+                <c:choose>
+				    <c:when test="${dto.place_type eq 'REST'}">
+				        <c:set var="detailUrl" value="${path}/restaurantDetail.rs?place_id=${dto.place_id}" />
+				    </c:when>
+				    <c:when test="${dto.place_type eq 'ACC'}">
+				        <c:set var="detailUrl" value="${path}/accommodationDetail.ac?place_id=${dto.place_id}" />
+				    </c:when>
+				    <c:when test="${dto.place_type eq 'FEST'}">
+				        <c:set var="detailUrl" value="${path}/festivalDetail.fe?place_id=${dto.place_id}" />
+				    </c:when>
+				    <c:otherwise>
+				        <c:set var="detailUrl" value="${path}/place/detail?id=${dto.place_id}" />
+				    </c:otherwise>
+				</c:choose>
+				
+				<a href="${detailUrl}" class="place-card text-decoration-none text-dark">
 
-                <div class="place-card__thumb-wrap position-relative">
-                    <img src="${dto.image_url}"
-                         class="thumb-img"
-                         alt="${dto.name}">
+                    <div class="place-card__thumb-wrap position-relative">
+                        <img src="${dto.image_url}"
+                             class="thumb-img"
+                             alt="${dto.name}">
 
-                    <button type="button"
-                            class="bookmark-btn"
-                            data-place-id="${dto.place_id}"
-                            onclick="toggleBookmark(event, this)">
-                        <i class="${favoritePlaceIds.contains(dto.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-                    </button>
-                </div>
-
-                <div class="place-card__body">
-                    <div class="place-card__title">${dto.name}</div>
-
-                    <div class="place-card__address">
-                        <i class="bi bi-geo-alt-fill text-danger"></i>
-                        ${dto.address}
+                        <button type="button"
+                                class="bookmark-btn"
+                                data-place-id="${dto.place_id}"
+                                onclick="toggleBookmark(event, this)">
+                            <i class="${favoritePlaceIds.contains(dto.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+                        </button>
                     </div>
 
-                    <div class="d-flex gap-3 text-muted small mt-2">
-                        <span><i class="fa-regular fa-eye"></i> ${dto.view_count}</span>
-                        <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[dto.place_id]}" default="0"/></span>
-                        <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[dto.place_id]}" default="0"/></span>
-                    </div>
-                </div>
+                    <div class="place-card__body">
+                        <div class="place-card__title">${dto.name}</div>
 
-            </a>
+                        <div class="place-card__address">
+                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                            ${dto.address}
+                        </div>
+
+                        <div class="place-card__meta">
+                            <span><i class="fa-regular fa-eye"></i> ${dto.view_count}</span>
+                            <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[dto.place_id]}" default="0"/></span>
+                            <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[dto.place_id]}" default="0"/></span>
+                        </div>
+                    </div>
+
+                </a>
+            </div>
         </div>
     </c:forEach>
 </div>

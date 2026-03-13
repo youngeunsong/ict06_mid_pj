@@ -20,6 +20,9 @@ SELECT user_id       -- 계정 ID
      , ROLE          -- 유저: ROLE_USER/ 관리자: admin
 FROM MEMBER
 
+SELECT *
+FROM "MEMBER" m 
+
 -- 참고) 플레이스
 SELECT PLACE_ID   -- 장소 고유 번호 (PK, 부모)
      , place_type -- 구분 (REST: 맛집, ACC: 숙소, FEST: 축제)
@@ -52,27 +55,17 @@ FROM RESTAURANT
 SELECT *
 FROM ACCOMMODATION
 
-INSERT INTO ACCOMMODATION (
-    accommodation_id,
-    description,
-    phone,
-    price,
-    status
-)
-SELECT 
-    p.PLACE_ID,
-    '편안한 숙소입니다. 전망이 좋고 접근성이 뛰어납니다.',
-    '02-1234-5678',
-    TRUNC(DBMS_RANDOM.VALUE(50000, 250000)),
-    'OPEN'
-FROM PLACE p
-WHERE p.PLACE_TYPE = 'ACC'
-  AND NOT EXISTS (
-      SELECT 1
-      FROM ACCOMMODATION a
-      WHERE a.accommodation_id = p.place_id
-  )
-  AND ROWNUM <= 50;
+SELECT category, COUNT(*)
+FROM COMMUNITY
+WHERE status = 'DISPLAY'
+GROUP BY category
+ORDER BY category;
+
+
+SELECT *
+FROM COMMUNITY
+WHERE CATEGORY LIKE '맛집수다'
+
 
 
 -- 참고) 리뷰

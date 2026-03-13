@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ include file="setting.jsp" %>
+
+<!-- 
+꼭 common/headerSearch.js 와 함께 사용해주세요!!
+- 자동검색 기능
+
+ -->
+
+<script src="${path}/resources/js/common/header.js" defer></script>
 
 <header>
 	<!-- header 시작 -->
@@ -22,11 +29,25 @@
 	    <div class="collapse navbar-collapse" id="topNav">
 	      <!-- 검색바 (중앙) -->
 	      <form class="d-flex flex-grow-1 mx-lg-3 my-2 my-lg-0" role="search" action="${path}/search.do" method="get">
+	      	<!-- 검색창 -->
 	        <div class="input-group">
 	          <span class="input-group-text bg-white border-end-0">🔍</span>
-		          <input class="form-control border-start-0" type="search" name="keyword"
+		          <input id="headerKeyword" class="form-control border-start-0" type="search" name="keyword"
 		                 placeholder="맛집 · 숙소 · 축제 검색" aria-label="Search">
 	        </div>
+	        
+	        <!-- 자동완성 + 최근 검색어 박스 -->
+	        <div id="searchSuggestBox" class="search-suggest-box d-none">
+		        <div id="recentKeywordArea" class="suggest-section d-none">
+		            <div class="suggest-title">최근 검색어</div>
+		            <ul id="recentKeywordList" class="suggest-list"></ul>
+		        </div>
+		
+		        <div id="autoCompleteArea" class="suggest-section d-none">
+		            <div class="suggest-title">추천 검색어</div>
+		            <ul id="autoCompleteList" class="suggest-list"></ul>
+		        </div>
+		    </div>
 	      </form>
 	
 	      <!-- 메뉴 -->
@@ -34,7 +55,7 @@
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/restaurant.rs">맛집</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/accommodation.ac">숙소</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/festival.fe">축제</a></li>
-	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/community.co">커뮤니티</a></li>
+	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/community_free.co">커뮤니티</a></li>
 			
 	        <!-- 더보기 드롭다운 -->
 	        <li class="nav-item dropdown">
@@ -75,4 +96,3 @@
 	</nav>
 </header>
 <!-- header 끝 -->
-

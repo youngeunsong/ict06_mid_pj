@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import spring.ict06team1.midpj.dto.AccommodationDTO;
+import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 
 public interface MainService {
@@ -24,4 +25,20 @@ public interface MainService {
 
     //즐겨찾기
 	public List<Integer> getFavoritePlaceIds(HttpServletRequest request);
+	
+	//이달의 추천 국내 축제
+	public List<FestivalDTO> getTop8ThisMonthFestival();
+	
+	//BEST 추천 - 전체 탭 우측 4개
+	public List<Map<String, Object>> getBestAllTop4();
+	
+	//BEST 추천 - 맛집 5개
+	public List<PlaceDTO> getBestRestTop5();
+	
+	//BEST 추천 - 숙소 5개
+	public List<AccommodationDTO> getBestAccTop5();
+	
+	//BEST 추천 - 축제 5개
+	public List<FestivalDTO> getBestFestTop5();
+	
 }

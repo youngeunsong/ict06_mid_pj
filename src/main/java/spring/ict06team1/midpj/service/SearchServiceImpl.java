@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import spring.ict06team1.midpj.dao.SearchDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -31,14 +32,20 @@ public class SearchServiceImpl implements SearchService {
 		System.out.println("[SearchServiceImpl - getSearchList()]");
 		
 		String keyword = request.getParameter("keyword");
+		String login_userId = (String) request.getSession().getAttribute("sessionID");
 		System.out.println("keyword: " + keyword);
+		
+	    if (login_userId != null && keyword != null && !keyword.trim().isEmpty()) {
+	        ///search.do 검색 시 login_userId가 있다면 insertSearchHistory에 추가
+	    	insertSearchHistory(login_userId, keyword);
+	    }
 		
 		// keyword로 전체 값 가져오기
 		List<PlaceDTO> list = dao.getSearchList(keyword);
 		
 		// placeType에 맞춰 리스트로 묶기
-		List<PlaceDTO> restList = new ArrayList<>();
-	    List<PlaceDTO> accList = new ArrayList<>();
+		List<PlaceDTO> restList = new ArrayList<PlaceDTO>();
+	    List<PlaceDTO> accList = new ArrayList<PlaceDTO>();
 
 	    for (PlaceDTO dto : list) {
 	        String type = dto.getPlace_type();
@@ -53,8 +60,8 @@ public class SearchServiceImpl implements SearchService {
 	    // 리뷰 통계 조회
 	    List<Map<String, Object>> reviewStatsList = dao.getPlaceReviewStats(keyword);
 		
-		Map<Integer, Integer> reviewCountMap = new HashMap<>();
-		Map<Integer, Double> avgRatingMap = new HashMap<>();
+		Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
+		Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
 
 		//각 카테고리에 맞는 리스트에 담기
 		for(Map<String, Object> row : reviewStatsList) {
@@ -76,7 +83,7 @@ public class SearchServiceImpl implements SearchService {
 		
 		// 로그인 사용자의 즐겨찾기 place_id 목록
 		String user_id = (String) request.getSession().getAttribute("sessionID");
-		List<Integer> favoritePlaceIds = new ArrayList<>();
+		List<Integer> favoritePlaceIds = new ArrayList<Integer>();
 
 		if (user_id != null && !user_id.trim().isEmpty()) {
 			favoritePlaceIds = dao.getFavoritePlaceIds(user_id);
@@ -111,7 +118,7 @@ public class SearchServiceImpl implements SearchService {
 	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
 		System.out.println("[SearchServiceImpl - toggleFavorite()]");
 
-	    Map<String, Object> result = new HashMap<>();
+	    Map<String, Object> result = new HashMap<String, Object>();
 	    
 	    //로그인 여부 확인하기
 	    String user_id = (String) request.getSession().getAttribute("sessionID");
@@ -123,7 +130,7 @@ public class SearchServiceImpl implements SearchService {
 	    
 	    int place_id = Integer.parseInt(request.getParameter("place_id"));
 	    
-	    Map<String, Object> checkFavorite = new HashMap<>();
+	    Map<String, Object> checkFavorite = new HashMap<String, Object>();
 	    checkFavorite.put("user_id", user_id);
 	    checkFavorite.put("place_id", place_id);
 
@@ -161,11 +168,18 @@ public class SearchServiceImpl implements SearchService {
 		int totalCnt = dao.getSearchAjaxCount(param);
 		int totalPages = (int) Math.ceil((double)totalCnt/ pageSize); //Math.ceil(소수점 올림)
 		
+/*<<<<<<< HEAD
+		Map<String, Object> result = new HashMap();
+	    result.put("list",        list);
+	    result.put("totalCnt",    totalCnt);
+	    result.put("totalPages",  totalPages);
+	    result.put("currentPage", page);
+=======*/
 		// AJAX용 리뷰 통계
 		List<Map<String, Object>> statsList = dao.getSearchAjaxReviewStats(param);
 
-		Map<Integer, Integer> reviewCountMap = new LinkedHashMap<>();
-		Map<Integer, Double> avgRatingMap = new LinkedHashMap<>();
+		Map<Integer, Integer> reviewCountMap = new LinkedHashMap<Integer, Integer>();
+		Map<Integer, Double> avgRatingMap = new LinkedHashMap<Integer, Double>();
 
 		for (Map<String, Object> row : statsList) {
 			Integer placeId = ((Number) row.get("PLACE_ID")).intValue();
@@ -189,13 +203,13 @@ public class SearchServiceImpl implements SearchService {
 			((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
 		String user_id = (String) request.getSession().getAttribute("sessionID");
-		List<Integer> favoritePlaceIds = new ArrayList<>();
+		List<Integer> favoritePlaceIds = new ArrayList<Integer>();
 
 		if (user_id != null && !user_id.trim().isEmpty()) {
 			favoritePlaceIds = dao.getFavoritePlaceIds(user_id);
 		}
 
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("list", list);
 		result.put("totalCnt", totalCnt);
 		result.put("totalPages", totalPages);
@@ -207,6 +221,65 @@ public class SearchServiceImpl implements SearchService {
 		return result;
 	}
 
+	//자동완성 10개
+	@Override
+	public List<String> getAutoComplete(String keyword) {
+		System.out.println("[SearchServiceImpl - getAutoComplete()]");
+		System.out.println("[SearchServiceImpl] keyword=> " + keyword);
+		
+	    // 1. 반환할 리스트 미리 생성
+	    List<String> resultList = new ArrayList<>();
+
+	    // 2. 검증: 키워드가 비어있다면 빈 리스트 그대로 반환
+	    if (keyword == null || keyword.trim().isEmpty()) {
+	        return resultList; 
+	    }
+
+	    // 3. DAO를 통해 데이터 가져오기 + trim() : 띄어쓰기 삭제
+	    resultList = dao.getAutoComplete(keyword.trim());
+
+	    // 4. 최종 결과 반환
+	    return resultList;
+	}
+
+	//1. 최근 검색어 5~10개 조회
+	@Override
+	public List<SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {
+		System.out.println("[SearchServiceImpl - getRecentKeywords()]");
+		
+		//로그인한 사용자 아이디 세션에서 가져오기
+		String login_userId = (String) request.getSession().getAttribute("sessionID");
+
+	    //반환 리스트 생성
+	    List<SearchHistoryDTO> RecentKeywordList = new ArrayList<SearchHistoryDTO>();
+	    
+	    if (login_userId == null || login_userId.trim().isEmpty()) {
+	        return RecentKeywordList;
+	    }
+	    
+	    RecentKeywordList = dao.getRecentKeywords(login_userId);
+
+	    return RecentKeywordList;
+	}
+
+	//[최근 검색어] 2. 최근 검색어 추가
+	@Override
+	public void insertSearchHistory(String userId, String keyword) {
+		System.out.println("[SearchServiceImpl - insertSearchHistory()]");
+		
+		if (userId == null || keyword == null) return;
+
+	    keyword = keyword.trim();
+	    if (keyword.isEmpty()) return;
+
+	    Map<String, Object> searchMap = new HashMap<String, Object>();
+	    searchMap.put("user_id", userId);
+	    searchMap.put("keyword", keyword);
+
+	    dao.deleteSameKeyword(searchMap);   // 키워드 중복 방지를 위한 기존 같은 검색어 삭제
+	    dao.insertSearchHistory(searchMap); // 검색어 신규 저장
+	}
+		
 
 	
 }

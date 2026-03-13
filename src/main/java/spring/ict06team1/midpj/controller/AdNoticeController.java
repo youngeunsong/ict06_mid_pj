@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class AdNoticeController {
 		return "admin/notice/noticeList";
 	}
 
-	// 1-2. 공지/이벤트 상세 조회
+	// 1-2. 공지/이벤트 상세 조회+조회수 증가
 	@RequestMapping("/noticeDetail.adnt")
 	public String getNoticeDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
@@ -58,11 +59,11 @@ public class AdNoticeController {
 
 	// 2-2. 등록 처리
 	@RequestMapping("/noticeInsert.adnt")
-	public String noticeInsert(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String noticeInsert(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /noticeInsert.adnt]");
 		adNoService.insertNotice(request, response, model);
-
+		
 		return "redirect:/noticeList.adnt";
 	}
 
@@ -74,7 +75,7 @@ public class AdNoticeController {
 		logger.info("[url => /noticeModify.adnt]");
 		adNoService.getNoticeDetail(request, response, model);
 
-		return "admin/Notice/noticeModify";
+		return "admin/notice/noticeModify";
 	}
 
 	// 3-2. 수정 처리
@@ -106,7 +107,7 @@ public class AdNoticeController {
 		logger.info("[url => /noticeImageUpload.adnt]");
 		adNoService.uploadImage(request, response, model);
 		
-		return (String)request.getAttribute("imageUrl");
+		return "redirect:/admin/notice/list.do";
 	}
 
 }

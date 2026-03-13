@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.AdReservationDAOImpl;
 import spring.ict06team1.midpj.dto.ReservationDTO;
-import spring.ict06team1.midpj.page.Paging;
 
 @Service
 public class AdReservationServiceImpl implements AdReservationService {
@@ -140,13 +140,32 @@ public class AdReservationServiceImpl implements AdReservationService {
 		List<Map<String,Object>> dayOfWeekStats = adResDao.getDayOfWeekStats();
 		model.addAttribute("dayOfWeekStats", dayOfWeekStats);
 		
-		//6. 미처리 목록
-		List<ReservationDTO> pendingList = adResDao.getPendingList();
-		model.addAttribute("pendingList", pendingList);
+		//6. 미처리 목록(+페이징)
+		//6-1. 페이지 사이즈 지정
+		int pageSize = 5;
+		String pageParam = request.getParameter("pendingPage");
+		int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+		
+		//6-2. 미처리 전체 건수 조회
+		int totalCount = adResDao.getPendingCount();
+		int totalPages = (int) Math.ceil((double) totalCount/pageSize);
+		if(totalPages == 0) totalPages = 1;
+		
+		//6-3. DAO에 Map으로 전달
+		Map<String, Object> map = new HashMap<>();
+		map.put("startRow", (currentPage - 1) * pageSize + 1);
+		map.put("endRow", currentPage * pageSize);
+		
+		//6-4. 데이터 조회 및 모델 전달
+		model.addAttribute("pendingList", adResDao.getPendingListPage(map));
+		model.addAttribute("pendingPage", currentPage);
+		model.addAttribute("pendingTotalCount", adResDao.getPendingCount());
+		model.addAttribute("pendingTotalPages", totalPages);
 		
 		//7. 최근 예약 5건
 		List<ReservationDTO> recentList = adResDao.getRecentReservations();
 		model.addAttribute("recentList", recentList);
+		
 		
 	}
 }

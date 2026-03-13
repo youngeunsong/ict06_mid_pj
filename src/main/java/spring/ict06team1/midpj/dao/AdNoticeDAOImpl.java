@@ -30,6 +30,13 @@ public class AdNoticeDAOImpl implements AdNoticeDAO {
 		return sqlSession.getMapper(AdNoticeDAO.class).getNoticeDetail(noticeId);
 	}
 
+	//2-1. 상세 조회 후 조회수 증가
+	@Override
+	public int increaseViewCount(int noticeId) {
+		System.out.println("[AdNoticeDAOImpl - getNoticeDetail()]");
+		return sqlSession.getMapper(AdNoticeDAO.class).increaseViewCount(noticeId);
+	}
+
 	//3. 전체 건수 조회(페이징용)
 	@Override
 	public int getNoticeCount(Map<String, Object> map) {

@@ -45,20 +45,20 @@
 							<%--카테고리 탭--%>
 							<div class="col-auto">
 								<div class="btn-group" role="group">
-									<a href="${path}/noticeList.adnt?category=&keyword=${keyword}"
-										class="btn btn-sm ${empty category ? 'btn-dark' : 'btn-outline-dark'}">전체</a>
-									<a href="${path}/noticeList.adnt?category=NOTICE&keyword=${keyword}"
-										class="btn btn-sm ${'NOTICE' == category ? 'btn-primary' : 'btn-outline-primary'}">공지사항</a>
-									<a href="${path}/noticeList.adnt?category=EVENT&keyword=${keyword}"
-										class="btn btn-sm ${'EVENT' == category ? 'btn-success' : 'btn-outline-success'}">이벤트</a>
+									<a href="${path}/noticeList.adnt?category=&keyword=${sc.keyword}"
+										class="btn btn-sm ${empty sc.category ? 'btn-dark' : 'btn-outline-dark'}">전체</a>
+									<a href="${path}/noticeList.adnt?category=NOTICE&keyword=${sc.keyword}"
+										class="btn btn-sm ${'NOTICE' == sc.category ? 'btn-primary' : 'btn-outline-primary'}">공지사항</a>
+									<a href="${path}/noticeList.adnt?category=EVENT&keyword=${sc.keyword}"
+										class="btn btn-sm ${'EVENT' == sc.category ? 'btn-success' : 'btn-outline-success'}">이벤트</a>
 								</div>
 							</div>
 							<%--검색--%>
 							<div class="col-3">
 								<form method="get" action="${path}/noticeList.adnt" class="d-flex mb-0">
-									<input type="hidden" name="category" value="${category}">
+									<input type="hidden" name="category" value="${sc.category}">
 									<input type="text" name="keyword" class="form-control form-control-sm mr-2"
-											placeholder="제목 검색" value="${keyword}">
+											placeholder="제목 검색" value="${sc.keyword}">
 									<button type="submit" class="btn btn-sm btn-secondary flex-shrink-0">검색</button>
 								</form>
 							</div>
@@ -97,12 +97,12 @@
 										</tr>
 									</c:when>
 									<c:otherwise>
-										<c:forEach var="notice" items="${list}">
-											<tr>
-												<td>${notice.NOTICE_ID}</td>
+										<c:forEach var="dto" items="${list}">
+											<tr style="cursor:pointer;" onclick="location.href='${path}/noticeDetail.adnt?noticeId=${dto.notice_id}'">
+												<td>${dto.notice_id}</td>
 												<td>
 													<c:choose>
-														<c:when test="${notice.CATEGORY == 'NOTICE'}">
+														<c:when test="${dto.category == 'NOTICE'}">
 															<span class="badge badge-primary">공지</span>
 														</c:when>
 														<c:otherwise>
@@ -111,27 +111,26 @@
 													</c:choose>
 												</td>
 												<td class="text-left">
-													<a href="${path}/noticeDetail.adnt?noticeId=${notice.NOTICE_ID}">
-														${notice.TITLE}
-													</a>
+														${dto.title}
 												</td>
 												<td>
 													<c:choose>
-														<c:when test="${notice.IS_TOP == 'Y'}">
+														<c:when test="${dto.is_top == 'Y'}">
 															<span class="badge badge-warning">고정</span>
 														</c:when>
 														<c:otherwise>-</c:otherwise>
 													</c:choose>
 												</td>
-												<td>${notice.VIEW_COUNT}</td>
+												<td>${dto.view_count}</td>
 												<td>
-													<fmt:formatDate value="${notice.CREATED_AT}" pattern="yyyy-MM-dd" />
+													<fmt:formatDate value="${dto.noticeRegDate}" pattern="yyyy-MM-dd" />
 												</td>
-												<td>
-													<a href="${path}/noticeModify.adnt?noticeId=${notice.NOTICE_ID}"
-														class="btn btn-xs btn-outline-secondary">수정	</a>
+												<td onclick="event.stopPropagation()">
+													<a href="${path}/noticeModify.adnt?noticeId=${dto.notice_id}"
+														class="btn btn-xs btn-outline-secondary"
+														onclick="event.stopPropagation()">수정</a>
 													<button class="btn btn-xs btn-outline-danger"
-															onclick="deleteNotice('${notice.NOTICE_ID}')">삭제</button>
+															onclick="event.stopPropagation(); deleteNotice('${dto.notice_id}')">삭제</button>
 												</td>
 											</tr>
 										</c:forEach>

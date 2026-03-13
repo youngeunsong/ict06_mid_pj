@@ -1,4 +1,4 @@
-package spring.ict06team1.midpj.page;
+package spring.ict06team1.midpj.SearchCriteria;
 
 public class Paging {
 	

@@ -40,7 +40,7 @@
              	<!--  -->
 				<li class="nav-item">
 					<!-- class 뒤에 active 붙여서 현재 선택한 메뉴임을 표시 가능 -->
-					<a href="${path}/adminHome.ad" class="nav-link"> 
+					<a href="${path}/adminHome.ad" class="nav-link ${fn:contains(currentURI, 'adminHome') ? 'active' : ''}"> 
 						<i class="nav-icon fas fa-tachometer-alt"></i>
 						<!-- <p>Dashboard(통계)</p> -->
 						KPI 대시보드
@@ -49,7 +49,7 @@
 				
 				<!-- 고객 지원 메뉴 시작 -->
 				<li class="nav-item">
-					<a href="${path}/supportHome.adsp" class="nav-link"> 
+					<a href="${path}/supportHome.adsp" class="nav-link ${fn:contains(currentURI, 'support') ? 'active' : ''}"> 
 						<i class="fa-solid fa-headset"></i>
 						고객지원
 					</a>
@@ -58,35 +58,70 @@
 				
 				<!-- 예약 관리 메뉴 시작: 하위 메뉴 있음 -->
 				<!-- <li class="nav-item menu-open"> -->
-				<li class="nav-item ${currentURI.contains('resDashboard') || currentURI.contains('getReservationList') ? 'menu-open' : ''}">
-					<!-- <a href="#" class="nav-link active">  -->
-					<a href="#" class="nav-link ${currentURI.contains('resDashboard') || currentURI.contains('getReservationList') ? 'active' : ''}"> 
+				<li class="nav-item ${fn:contains(currentURI, 'reservation') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'reservation') ? 'active' : ''}"> 
 						<i class="fa-solid fa-calendar"></i>
 						예약 관리
 						<i class="right fas fa-angle-left"></i>
 					</a>
-					
+					<!-- 예약 관리 하위메뉴 시작 -->
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/resDashboard.ad" class="nav-link ${currentURI.contains('resDashboard') ? 'active' : ''}"> 
+							<a href="${path}/resDashboard.ad" class="nav-link ${fn:contains(currentURI, 'dashboard') ? 'active' : ''}"> 
 								예약 통계 대시보드
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/getReservationList.ad" class="nav-link ${currentURI.contains('resDashboard') ? 'active' : ''}">
+							<a href="${path}/getReservationList.ad" class="nav-link ${fn:contains(currentURI, 'reservationList') ? 'active' : ''}">
 								예약 내역
 							</a>
 						</li>
 					</ul>
+					<!-- 예약 관리 하위메뉴 끝 -->
 				</li>
 				<!-- 예약 관리 메뉴 끝 -->
 				
-				<!-- 커뮤니티 관리 메뉴 시작 -->
-				<li class="nav-item">
-					<a href="${path}/communityHome.adco" class="nav-link"> 
-						<i class="fa-solid fa-comments"></i>
-						커뮤니티 관리 
+				<!-- 공지/이벤트 관리 메뉴 시작 -->
+				<li class="nav-item ${fn:contains(currentURI, 'notice') ? 'menu-open' : ''}">
+					<a href="${path}/noticeList.adnt" class="nav-link ${fn:contains(currentURI, 'notice') ? 'active' : ''}"> 
+						<i class="fa-solid fa-bullhorn"></i>
+						공지/이벤트 관리
+						<i class="right fas fa-angle-left"></i> 
 					</a>
+					
+					<!-- 공지/이벤트 관리 하위메뉴 시작 -->
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a href="${path}/noticeList.adnt" class="nav-link ${fn:contains(currentURI, 'noticeList') ? 'active' : ''}"> 
+								공지/이벤트 목록
+							</a>
+						</li>
+					</ul>
+					<!-- 공지/이벤트 관리 하위메뉴 끝 -->
+				</li>
+
+				<!-- 커뮤니티 관리 메뉴 시작 -->
+				<li class="nav-item ${fn:contains(currentURI, 'community')||fn:contains(currentURI, 'adco') ? 'menu-open' : ''}">
+					<a href="${path}/communityHome.adco" class="nav-link ${fn:contains(currentURI, 'community')||fn:contains(currentURI, 'adco') ? 'active' : ''}"> 
+						<i class="fa-solid fa-comments"></i>
+						커뮤니티 관리
+						<i class="right fas fa-angle-left"></i>
+					</a>
+					
+					<!-- 커뮤니티 관리 하위메뉴 열기 시작 -->
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a href="#" class="nav-link"> 
+								?? 관리
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="#" class="nav-link">
+								??? 관리
+							</a>
+						</li>
+					</ul>
+					<!-- 커뮤니티 관리 하위메뉴 열기 끝 -->
 				</li>
 				
 				<!-- <li class="nav-item">
@@ -114,28 +149,26 @@
 				<!-- 커뮤니티 관리 메뉴 끝 -->
 				
 				<!-- 장소 관리 메뉴 시작 -->
-				<li class="nav-item">
-					<!-- <a href="#" class="nav-link active">  -->
-					<a href="#" class="nav-link"> 
-						<!-- 아이콘을 쓰고 싶다면 아래 주석 해제해서 메뉴에 맞는 아이콘 넣어서 사용 -->
+				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'active' : ''}"> 
 						<i class="fa-solid fa-location-dot"></i>
-						장소 관리 
+						장소 관리
 						<i class="right fas fa-angle-left"></i>
 					</a>
 					
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/restaurantList.adpl" class="nav-link"> 
+							<a href="${path}/restaurantList.adpl" class="nav-link ${fn:contains(currentURI, 'restaurantList') ? 'active' : ''}"> 
 								맛집 관리
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/accommodationList.adpl" class="nav-link">
+							<a href="${path}/accommodationList.adpl" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
 								숙소 관리
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/festivalList.adfe" class="nav-link">
+							<a href="${path}/festivalList.adpl" class="nav-link ${fn:contains(currentURI, 'festivalList') ? 'active' : ''}">
 								축제 관리
 							</a>
 						</li>

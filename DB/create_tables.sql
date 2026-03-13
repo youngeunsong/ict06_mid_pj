@@ -19,9 +19,6 @@ CREATE TABLE MEMBER (
     CONSTRAINT CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
 );
 SELECT * FROM MEMBER;
-DELETE FROM MEMBER;
-COMMIT;
-
 
 -- 2. 장소 통합
 CREATE TABLE PLACE (
@@ -47,11 +44,13 @@ WHERE place_type = 'FEST'; --149건
 
 -- 3. 맛집 (PLACE 참조)
 CREATE TABLE RESTAURANT (
-    restaurant_id  NUMBER PRIMARY KEY REFERENCES PLACE(place_id) ON DELETE CASCADE,
-    description    CLOB,
-    phone          VARCHAR2(20),
-    category       VARCHAR2(50),
-    status         VARCHAR2(20) DEFAULT 'OPEN',
+    restaurant_id	NUMBER PRIMARY KEY REFERENCES PLACE(place_id) ON DELETE CASCADE,
+    description		CLOB,
+    phone			VARCHAR2(20),
+    category		VARCHAR2(50),
+    status			VARCHAR2(20) DEFAULT 'OPEN',
+	restdate		VARCHAR2(30),
+    areaCode		VARCHAR2(30),
     CONSTRAINT CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM RESTAURANT;
@@ -86,7 +85,7 @@ CREATE TABLE FESTIVAL (
 );
 SELECT * FROM FESTIVAL;
 
--- 6. 축제 티켓 종류 테이블(추가?)
+-- 6. 축제 티켓 종류 테이블
 CREATE TABLE FESTIVAL_TICKET (
     ticket_id    NUMBER PRIMARY KEY,
     festival_id  NUMBER REFERENCES FESTIVAL(festival_id) ON DELETE CASCADE,
@@ -195,7 +194,6 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
-    order_no    NUMBER DEFAULT 0,
     visible     CHAR(1) DEFAULT 'Y',
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
@@ -263,7 +261,8 @@ CREATE TABLE NOTICE (
     image_url	VARCHAR2(500),
     view_count   NUMBER DEFAULT 0,
     is_top       CHAR(1) DEFAULT 'N', -- 상단 고정 여부
-    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 regDate
+    created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 noticeRegDate
+    updated_at	TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 noticeUpdateDate
     CONSTRAINT CHK_NOTICE_ISTOP CHECK(IS_TOP IN('Y','N')),
     CONSTRAINT CHK_NOTICE_CATEGORY CHECK(CATEGORY IN('NOTICE','EVENT'))
 );
@@ -378,9 +377,21 @@ END;
 
 -- NOTICE용 트리거
 CREATE OR REPLACE TRIGGER TRG_NOTICE_ADMIN_CHECK
-BEFORE INSERT OR UPDATE ON NOTICE FOR EACH ROW
+BEFORE INSERT OR UPDATE ON NOTICE
+FOR EACH ROW
 BEGIN
+	--1. admin_id가 NULL인 경우(세션 없는 경우)
+	IF :NEW.admin_id IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20004, '관리자 인증 정보가 없습니다. 로그인 상태를 확인해주세요.');
+	END IF;
+
+	--2. 관리자 인증 프로시저 호출
     PROC_CHECK_ADMIN_AUTH(:NEW.admin_id);
+	
+	EXCEPTION
+		WHEN OTHERS THEN
+			--다른 오류 발생 시에도 해당 예외를 상위로 던져 INSERT/UPDATE 차단
+			RAISE;
 END;
 /
 

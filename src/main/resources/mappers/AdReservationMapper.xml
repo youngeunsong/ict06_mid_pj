@@ -209,4 +209,27 @@
 		<!-- where rownum <= 5 -->
 		WHERE ROWNUM &lt;= 5
 	 </select>
+	 
+	 <!-- 3-8. 전체 미처리건수 조회(페이징용) -->
+	 <select id="getPendingCount" resultType="int">
+	 	SELECT COUNT(*)
+	 	FROM RESERVATION
+	 	WHERE status = 'PENDING'
+	 </select>
+	 
+	 <!-- 3-9. 미처리건 페이징 -->
+	 <select id="getPendingListPage" parameterType="map" resultMap="reservationMap">
+	 	SELECT * FROM (
+	 		SELECT ROWNUM AS rnum, A.* FROM (
+	 			SELECT R.reservation_id, R.user_id, R.created_at,
+	 				   TRUNC(R.check_in) AS check_in,
+	 				   P.name, P.place_type
+	 			FROM RESERVATION R
+	 			LEFT JOIN PLACE P ON R.place_id = P.place_id
+	 			WHERE R.status = 'PENDING'
+	 			ORDER BY R.created_at DESC
+	 		) A
+	 	)
+	 	WHERE rnum BETWEEN #{startRow} AND #{endRow}
+	 </select>
  </mapper> 

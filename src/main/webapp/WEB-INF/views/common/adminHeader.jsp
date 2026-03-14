@@ -30,32 +30,111 @@
 				</a>
 			</li>
 			
+			<!--다크모드 토글-->
+			<li class="nav-item me-1">
+				<button id="darkModeToggle" class="nav-link btn btn-link"
+						style="font-size:1.2rem; color:#01D281;" title="다크모드 전환">
+					<i class="bi bi-moon-fill"></i>
+				</button>
+			</li>
+			
+			<!--알림 벨-->
+			<li class="nav-item dropdown me-1">
+				<a href="#" class="nav-link" data-toggle="dropdown" title="알림">
+					<i class="bi bi-bell-fill" style="font-size:1.2rem; color:#01D281;"></i>
+					<c:if test="${pendingCount > 0}">
+						<span class="badge badge-danger navbar-badge">${pendingCount}</span>
+					</c:if>
+				</a>
+				<div class="dropdown-menu dropdown-menu-end shadow" style="min-width:300px;">
+					<div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+						<span class="font-weight-bold">알림</span>
+						<small class="text-muted">${pendingCount}건</small>
+					</div>
+					<div id="alarmList">
+						<c:choose>
+							<c:when test="${pendingCount > 0}">
+								<a href="${path}/getReservationList.ad?status=PENDING" class="dropdown-item py-2">
+									<i class="bi bi-clock-history text-warning me-2"></i>
+									결제 대기 중인 예약이 <strong>${pendingCount}건</strong> 있습니다.
+								</a>
+							</c:when>
+							<c:otherwise>
+								<div class="text-center text-muted py-3">
+									<i class="bi bi-bell-slash mb-1 d-block" style="font-size:1.5rem;"></i>
+									새로운 알림이 없습니다.
+								</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div class="border-top text-center py-2">
+						<a href="${path}/getReservationList.ad?status=PENDING" class="text-success" style="font-size:0.85rem;">
+							결제대기 예약 전체보기
+						</a>
+					</div>
+				</div>
+			</li>
+			
 			<!--관리자 드롭다운-->
 			<li class="nav-item dropdown user-menu">
-			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+			<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
 				<i class="bi bi-person-circle" style="font-size:1.4rem; color:#01D281;"></i>
 				<span class="d-none d-md-inline ml-1">${sessionScope.sessionID}</span>
 			</a>
 			<ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-					<li class="user-header" style="background-color:#01D281">
-	                	<i class="bi bi-person-circle" style="font-size:4rem; color:#fff;"></i>
-	                	<p>
-	                		${sessionScope.sessionID}
-	                		<small>관리자</small>
-	                	</p>
-					</li>
-					<li class="user-footer">
-						<a href="${path}/logout.do" class="btn btn-danger btn-flat float-end">
-							<i class="fas fa-power-off mr-1"></i>LOGOUT
+				<li class="user-header" style="background-color:#01D281">
+                	<i class="bi bi-person-circle" style="font-size:4rem; color:#fff;"></i>
+                	<p>
+                		${sessionScope.sessionID}
+                		<small>관리자</small>
+                	</p>
+				</li>
+				<li class="user-footer">
+					<div class="text-center py-2">
+						<a href="${path}/adminMyPage.ad" class="btn btn-outline-secondary btn-sm">
+							<i class="bi bi-person-gear me-1"></i>프로필/비밀번호 변경
 						</a>
-					</li>
-				</ul>
-			</li>
+					</div>
+				</li>
+				<li class="user-footer">
+					<a href="${path}/logout.do" class="btn btn-danger btn-flat float-end">
+						<i class="fas fa-power-off mr-1"></i>LOGOUT
+					</a>
+				</li>
+			</ul>
+		</li>
 			
 		</ul>
 		<!--end::Right-->
-		
 	</div>
 </nav>
 
 <!-- ================= JS ================= -->
+<script>
+/* ── 다크모드 토글 ── */
+ (function() {
+	 const btn = document.getElementById('darkModeToggle');
+	 const icon = btn.querySelector('i');
+	 const isDark = localStorage.getItem('adminDarkMode') === 'true';
+	 
+	 function applyDark(dark) {
+		 if(dark) {
+			 document.body.classList.add('dark-mode');
+			 icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+			 btn.title = '라이트모드 전환';
+		 }
+		 else {
+			 document.body.classList.remove('dark-mode');
+			 icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+			 btn.title = '다크모드 전환';
+		 }
+	 }
+	 applyDark(isDark);
+	 
+	 btn.addEventListener('click', function() {
+		 const nowDark = document.body.classList.contains('dark-mode');
+		 localStorage.setItem('adminDarkMode', !nowDark);
+		 applyDark(!nowDark);
+	 });
+ })();
+</script>

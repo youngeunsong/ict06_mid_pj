@@ -165,7 +165,12 @@ public class AdReservationServiceImpl implements AdReservationService {
 		//7. 최근 예약 5건
 		List<ReservationDTO> recentList = adResDao.getRecentReservations();
 		model.addAttribute("recentList", recentList);
-		
-		
+	}
+
+	//미처리예약 
+	@Override
+	public int getPendingCount() {
+		System.out.println("[AdminServiceImpl - getPendingCount()]");
+		return adResDao.getPendingCount();
 	}
 }

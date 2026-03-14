@@ -122,6 +122,7 @@
 </div>
 <%--end::wrapper--%>
 
+<script>const path = "${path}";</script>
 <script src="${path}/resources/js/admin/notice.js"></script>
 
 </body>

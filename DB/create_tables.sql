@@ -1,3 +1,7 @@
+--Ver.260314
+--변경사항
+--1) Restaurant 테이블: restDate, areaCode 필드 추가
+--2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
 --------------------------------------------------
 --DB 테이블 생성
 
@@ -49,7 +53,7 @@ CREATE TABLE RESTAURANT (
     phone			VARCHAR2(20),
     category		VARCHAR2(50),
     status			VARCHAR2(20) DEFAULT 'OPEN',
-	restdate		VARCHAR2(30),
+	restDate		VARCHAR2(30),
     areaCode		VARCHAR2(30),
     CONSTRAINT CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
@@ -194,6 +198,7 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
+    order_no	CHAR(1),
     visible     CHAR(1) DEFAULT 'Y',
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
@@ -247,7 +252,7 @@ CREATE TABLE INQUIRY (
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
-    CONSTRAINT CHK_INQUIRY_STATUS CHECK(status IN('PENDING', 'ANSWERED'))
+    CONSTRAINT CHK_INQUIRY_STATUS CHECK(status IN('PENDING', 'PROGRESS', 'ANSWERED'))
 );
 SELECT * FROM INQUIRY;
 
@@ -318,7 +323,7 @@ CREATE SEQUENCE SEQ_PAY START WITH 1 INCREMENT BY 1;
 CREATE OR REPLACE TRIGGER TRG_RESERVATION_ID
 BEFORE INSERT ON RESERVATION FOR EACH ROW
 BEGIN
-  SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 3, '0')
+  SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 5, '0')
   INTO :NEW.reservation_id FROM DUAL;
 END;
 /

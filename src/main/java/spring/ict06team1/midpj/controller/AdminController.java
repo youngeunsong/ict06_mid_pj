@@ -1,7 +1,6 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,25 +11,50 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.service.UserServiceImpl;
 
 @Controller
 public class AdminController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	
+	@Autowired
+	private UserServiceImpl userService;
 
 	// 0. ADMIN HOME
 	@RequestMapping("/adminHome.ad")
 	public String adminHome(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /adminHome.ad]");
-	//	return "admin/home";
 		return "admin/adminHome";
+	}
+	
+	//1. 관리자 마이페이지
+	@RequestMapping("/adminMyPage.ad")
+	public String adminMyPage(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /adminMyPage.ad]");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		MemberDTO dto = userService.getAdminDetail(sessionID);
+		
+		//관리자 정보 조회
+		model.addAttribute("dto", dto);
+		return "admin/mypage/adminMyPage";
+	}
+	
+	//2. 관리자 정보 수정 처리
+	@RequestMapping("/adminMyPageAction.ad")
+	public String adminMyPageAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /adminMyPageAction.ad]");
+		
+		int updateCnt = userService.modifyAdminAction(request, response, model);
+		model.addAttribute("updateCnt", updateCnt);
+		return "admin/mypage/adminMyPageAction";
 	}
 	
 	// Sample page 테스트

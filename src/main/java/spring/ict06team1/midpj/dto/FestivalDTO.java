@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 public class FestivalDTO {
 
@@ -10,13 +11,14 @@ public class FestivalDTO {
 	private Date end_date;
 	private String status;
 	private PlaceDTO placeDTO;
+	private List<FestivalTicketDTO> ticketList; // 추가: 해당 축제의 티켓을 관리하기 위해 추가했습니다. 
 	
 	public FestivalDTO() {
 		super();
 	}
 
 	public FestivalDTO(int festival_id, String description, Date start_date, Date end_date, String status,
-			PlaceDTO placeDTO) {
+			PlaceDTO placeDTO, List<FestivalTicketDTO> ticketList) {
 		super();
 		this.festival_id = festival_id;
 		this.description = description;
@@ -24,6 +26,7 @@ public class FestivalDTO {
 		this.end_date = end_date;
 		this.status = status;
 		this.placeDTO = placeDTO;
+		this.ticketList = ticketList;
 	}
 
 	public int getFestival_id() {
@@ -74,11 +77,18 @@ public class FestivalDTO {
 		this.placeDTO = placeDTO;
 	}
 
+	public List<FestivalTicketDTO> getTicketList() {
+		return ticketList;
+	}
+
+	public void setTicketList(List<FestivalTicketDTO> ticketList) {
+		this.ticketList = ticketList;
+	}
+
 	@Override
 	public String toString() {
 		return "FestivalDTO [festival_id=" + festival_id + ", description=" + description + ", start_date=" + start_date
-				+ ", end_date=" + end_date + ", status=" + status + ", placeDTO=" + placeDTO + "]";
+				+ ", end_date=" + end_date + ", status=" + status + ", placeDTO=" + placeDTO + ", ticketList="
+				+ ticketList + "]";
 	}
-	
-	
 }

@@ -152,7 +152,7 @@ public class AdReservationServiceImpl implements AdReservationService {
 		if(totalPages == 0) totalPages = 1;
 		
 		//6-3. DAO에 Map으로 전달
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap();
 		map.put("startRow", (currentPage - 1) * pageSize + 1);
 		map.put("endRow", currentPage * pageSize);
 		

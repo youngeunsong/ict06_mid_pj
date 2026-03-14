@@ -1,0 +1,289 @@
+accommodation_id,description,phone,price,status
+1,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",883-951-6780,51611,CLOSED
+6,Morbi ut odio.,486-401-3118,75695,CLOSED
+13,In congue. Etiam justo.,480-974-8194,117414,OPEN
+15,Quisque id justo sit amet sapien dignissim vestibulum.,741-434-8041,129930,OPEN
+16,Proin interdum mauris non ligula pellentesque ultrices.,529-442-3597,152708,CLOSED
+18,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",132-484-7534,159925,OPEN
+26,Pellentesque ultrices mattis odio. Donec vitae nisi.,625-623-6732,93000,OPEN
+31,Morbi vel lectus in quam fringilla rhoncus.,883-313-9447,73160,OPEN
+40,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",795-320-8376,162932,OPEN
+46,Suspendisse ornare consequat lectus.,984-380-0740,13620,OPEN
+49,"Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",456-601-8478,181724,CLOSED
+50,Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.,280-884-5453,39067,CLOSED
+54,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",999-107-2759,92598,CLOSED
+55,Suspendisse potenti.,584-165-5602,22085,OPEN
+64,"Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",731-740-7316,50108,OPEN
+69,Aenean sit amet justo. Morbi ut odio.,823-853-8590,69036,OPEN
+74,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor.,892-227-4041,12800,OPEN
+77,Nulla tellus. In sagittis dui vel nisl.,329-560-8161,29395,CLOSED
+78,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.,267-705-0382,157968,CLOSED
+81,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",441-386-9374,179049,OPEN
+87,Nullam varius.,154-717-2835,130264,OPEN
+93,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",348-307-1254,150833,OPEN
+96,Ut at dolor quis odio consequat varius.,872-596-0196,76159,OPEN
+101,Pellentesque ultrices mattis odio. Donec vitae nisi.,334-760-7186,193659,OPEN
+106,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.",626-731-8741,77343,OPEN
+107,Praesent blandit.,567-285-7817,135137,OPEN
+110,Cras in purus eu magna vulputate luctus.,213-197-8338,84611,OPEN
+114,"Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",786-524-0752,133877,OPEN
+118,Curabitur gravida nisi at nibh. In hac habitasse platea dictumst.,301-865-4614,113892,OPEN
+138,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.,267-343-4042,23529,OPEN
+139,"In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",281-783-8629,13473,CLOSED
+140,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.,379-328-8499,196291,CLOSED
+141,Suspendisse ornare consequat lectus.,775-378-1557,151367,OPEN
+146,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",932-202-5830,172999,OPEN
+147,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.",792-373-1123,177284,OPEN
+148,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.",192-862-6865,71311,OPEN
+150,"Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",665-472-8714,159729,CLOSED
+151,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus.",910-300-5311,34737,OPEN
+152,Suspendisse potenti. Nullam porttitor lacus at turpis.,525-713-3649,10284,OPEN
+155,Proin at turpis a pede posuere nonummy.,162-736-5895,160549,OPEN
+161,"Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",480-586-0756,149020,CLOSED
+165,"Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",372-101-8541,147460,OPEN
+167,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",884-472-1198,176851,OPEN
+169,Integer non velit.,231-771-3247,53218,OPEN
+170,Donec semper sapien a libero.,672-256-3529,198457,OPEN
+176,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,756-794-6803,136938,CLOSED
+177,"Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",618-886-2530,16430,OPEN
+181,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,886-414-0506,72745,OPEN
+186,In blandit ultrices enim.,767-438-3035,64792,OPEN
+187,Praesent lectus.,855-148-1380,22889,CLOSED
+189,Integer a nibh.,428-797-7338,105862,CLOSED
+190,Proin at turpis a pede posuere nonummy. Integer non velit.,537-777-4607,109462,OPEN
+193,Aliquam erat volutpat. In congue.,473-819-8947,130278,CLOSED
+209,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",323-367-3627,186903,OPEN
+211,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,356-978-9933,160999,CLOSED
+213,Etiam faucibus cursus urna.,157-987-0835,173290,OPEN
+216,Maecenas rhoncus aliquam lacus.,481-920-1582,114965,OPEN
+218,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",706-195-2809,23085,OPEN
+228,Quisque id justo sit amet sapien dignissim vestibulum.,874-333-1089,137661,OPEN
+229,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",813-570-2204,115965,OPEN
+236,Proin eu mi.,613-787-4874,185756,OPEN
+238,Nullam molestie nibh in lectus. Pellentesque at nulla.,681-567-6884,145960,CLOSED
+239,Fusce consequat.,944-986-7870,172678,CLOSED
+241,In congue. Etiam justo.,952-886-6077,43438,CLOSED
+246,Etiam vel augue.,330-540-2599,89940,OPEN
+253,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",616-222-8427,46823,OPEN
+255,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.",495-668-4618,180659,OPEN
+257,In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.,602-531-7752,11840,OPEN
+258,Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.,163-495-0589,9167,OPEN
+260,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",154-869-6081,171752,OPEN
+263,"Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",392-692-5685,112073,OPEN
+265,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.",536-515-1379,136405,CLOSED
+267,Quisque ut erat.,338-377-5900,91815,OPEN
+274,Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.,813-245-1052,173212,CLOSED
+285,"Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",944-768-1602,148125,CLOSED
+287,Quisque ut erat.,592-458-9184,60564,OPEN
+289,Donec quis orci eget orci vehicula condimentum.,117-455-7808,171408,CLOSED
+292,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,212-544-4346,174034,OPEN
+295,Nulla facilisi.,517-129-5918,17552,OPEN
+298,Cras in purus eu magna vulputate luctus.,976-410-5362,98825,OPEN
+304,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam.",401-270-3665,60774,CLOSED
+305,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",330-228-7018,91750,OPEN
+313,Donec dapibus.,299-969-5171,36772,OPEN
+315,Sed sagittis.,859-172-6944,166214,CLOSED
+318,Aenean lectus.,814-638-4916,193849,OPEN
+322,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam.",974-956-0734,30138,OPEN
+324,"Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",744-779-4803,23955,CLOSED
+325,Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.,990-529-6393,62751,OPEN
+326,Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.,281-520-6455,137371,CLOSED
+327,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.,528-418-0057,14737,OPEN
+331,Phasellus in felis. Donec semper sapien a libero.,267-815-1738,104814,CLOSED
+336,Morbi porttitor lorem id ligula.,277-637-1396,107403,OPEN
+338,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",328-560-3469,94059,OPEN
+341,"In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc.",296-977-4089,126865,OPEN
+342,Integer ac neque.,438-464-3129,152894,OPEN
+344,Sed ante.,185-209-2857,169335,OPEN
+346,Nulla mollis molestie lorem.,762-522-7344,178190,OPEN
+349,Suspendisse potenti.,418-144-3910,151516,OPEN
+358,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit.,139-789-8524,146470,CLOSED
+371,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",967-393-6977,36808,OPEN
+374,Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.,158-633-9118,47009,CLOSED
+375,Donec vitae nisi.,428-978-2205,91276,OPEN
+377,In hac habitasse platea dictumst. Etiam faucibus cursus urna.,984-842-4696,172475,CLOSED
+381,Proin eu mi.,536-743-8407,70412,OPEN
+382,Morbi non quam nec dui luctus rutrum. Nulla tellus.,370-985-5687,5909,OPEN
+383,Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus.,338-332-6299,8785,OPEN
+385,Curabitur at ipsum ac tellus semper interdum.,868-554-5073,116566,OPEN
+387,Nullam molestie nibh in lectus. Pellentesque at nulla.,500-391-9485,29333,OPEN
+391,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.,827-996-2209,79292,CLOSED
+397,"Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula.",626-320-8135,165375,OPEN
+398,Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.,444-118-3362,176409,OPEN
+404,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros.,702-336-1411,48478,OPEN
+405,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien.",634-778-1721,160741,OPEN
+413,Duis bibendum. Morbi non quam nec dui luctus rutrum.,762-802-2936,140080,OPEN
+414,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",153-942-2699,170273,OPEN
+420,Nulla nisl. Nunc nisl.,872-884-0244,128298,OPEN
+426,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci.",361-221-2574,198448,OPEN
+428,Nulla ut erat id mauris vulputate elementum. Nullam varius.,792-251-0026,25707,OPEN
+429,Aenean lectus.,268-109-8317,191184,OPEN
+434,Proin risus.,195-278-9981,176647,OPEN
+435,Pellentesque ultrices mattis odio. Donec vitae nisi.,770-189-1277,72815,OPEN
+441,Duis aliquam convallis nunc.,700-846-6977,106315,OPEN
+443,Maecenas pulvinar lobortis est. Phasellus sit amet erat.,206-290-2287,192155,CLOSED
+444,In hac habitasse platea dictumst.,266-499-9734,55338,OPEN
+446,In eleifend quam a odio. In hac habitasse platea dictumst.,952-552-3349,39871,OPEN
+459,Aenean fermentum. Donec ut mauris eget massa tempor convallis.,519-500-1298,137817,CLOSED
+461,Aenean auctor gravida sem.,644-629-1838,104661,OPEN
+463,Nulla suscipit ligula in lacus.,724-528-7853,168749,CLOSED
+464,Sed accumsan felis. Ut at dolor quis odio consequat varius.,470-326-1201,138792,OPEN
+469,"Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",599-691-7413,92825,CLOSED
+472,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.",863-122-7339,186373,OPEN
+475,Duis consequat dui nec nisi volutpat eleifend.,834-878-8361,16111,OPEN
+482,In congue.,481-944-1222,62330,CLOSED
+484,Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.,742-125-3537,14758,OPEN
+494,Nulla nisl.,381-128-2173,20809,OPEN
+497,Pellentesque eget nunc.,572-588-7257,126757,OPEN
+499,Pellentesque ultrices mattis odio. Donec vitae nisi.,186-981-1236,23819,OPEN
+503,Morbi a ipsum. Integer a nibh.,614-577-5319,57783,OPEN
+506,Cras pellentesque volutpat dui.,133-947-9742,189639,OPEN
+508,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.,753-844-3314,146819,OPEN
+511,Aenean fermentum. Donec ut mauris eget massa tempor convallis.,386-913-6175,7994,CLOSED
+517,"Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",529-907-9283,93811,OPEN
+520,"Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.",137-210-4327,156833,OPEN
+522,Suspendisse potenti. Nullam porttitor lacus at turpis.,987-618-4100,114954,OPEN
+523,Integer ac neque.,961-392-7738,184095,CLOSED
+531,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",784-200-8779,192790,OPEN
+533,Phasellus in felis. Donec semper sapien a libero.,976-965-9966,153498,CLOSED
+536,Nam tristique tortor eu pede.,425-884-4056,192146,CLOSED
+538,In quis justo.,914-175-8573,49738,CLOSED
+543,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien.",221-266-2069,142649,CLOSED
+546,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",115-201-7272,195024,OPEN
+548,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",340-585-7696,53461,OPEN
+550,In sagittis dui vel nisl.,881-903-6570,34399,OPEN
+555,In congue.,453-139-1160,11489,OPEN
+561,Quisque id justo sit amet sapien dignissim vestibulum.,785-103-2139,92852,OPEN
+568,Aliquam erat volutpat. In congue.,547-734-6359,131218,CLOSED
+569,Nulla tempus.,675-890-2184,133290,OPEN
+571,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros.,603-267-9012,46932,OPEN
+572,Duis at velit eu est congue elementum.,328-450-5790,75666,OPEN
+573,Pellentesque at nulla.,214-183-1668,155875,OPEN
+574,"Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",100-480-6892,164057,OPEN
+575,Proin risus. Praesent lectus.,780-592-9068,91679,OPEN
+578,Maecenas pulvinar lobortis est.,868-823-1669,197734,CLOSED
+584,Quisque porta volutpat erat.,429-800-4656,198985,OPEN
+586,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",361-920-7010,35932,OPEN
+588,Donec vitae nisi.,411-151-8916,7818,CLOSED
+590,"Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",974-469-3085,199863,CLOSED
+592,Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.,749-621-3020,80110,CLOSED
+599,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.",693-867-1997,16906,OPEN
+600,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien.",326-448-1857,113556,OPEN
+602,"Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.",408-123-9356,166258,CLOSED
+605,Etiam pretium iaculis justo.,587-727-3766,187215,OPEN
+609,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",600-700-7785,110120,OPEN
+611,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.",563-493-1484,87985,OPEN
+615,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",167-890-6069,196028,CLOSED
+617,"In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",276-627-0130,103840,OPEN
+623,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",668-392-0969,123611,OPEN
+624,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",436-209-4435,185639,OPEN
+628,Nulla mollis molestie lorem. Quisque ut erat.,353-788-6327,81626,OPEN
+642,Suspendisse potenti. In eleifend quam a odio.,946-839-3876,6744,OPEN
+644,Donec quis orci eget orci vehicula condimentum.,409-454-1236,95070,OPEN
+648,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.",298-983-2650,56202,OPEN
+649,"Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",430-815-5840,101239,OPEN
+655,Proin risus.,452-763-9064,132386,CLOSED
+659,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit.,939-262-5662,163977,OPEN
+660,Praesent id massa id nisl venenatis lacinia.,648-346-8174,136393,CLOSED
+667,Pellentesque eget nunc.,234-279-8891,16526,OPEN
+671,Donec dapibus.,679-484-8832,79895,OPEN
+674,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",103-522-4221,182609,CLOSED
+675,Etiam faucibus cursus urna. Ut tellus.,471-582-5294,183327,CLOSED
+681,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien.",877-834-1101,185485,CLOSED
+682,Aliquam erat volutpat. In congue.,374-122-4657,9775,OPEN
+687,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",911-652-6892,129201,OPEN
+689,In congue. Etiam justo.,369-176-1909,49450,OPEN
+693,Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.,728-252-0217,98549,OPEN
+698,Fusce consequat.,986-944-7032,65140,OPEN
+699,Etiam pretium iaculis justo.,888-726-2183,44528,OPEN
+700,Ut tellus.,950-179-4478,34288,OPEN
+703,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",844-842-4934,114992,OPEN
+704,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",376-775-9728,148523,CLOSED
+706,Nulla mollis molestie lorem. Quisque ut erat.,906-292-0055,184922,OPEN
+707,Phasellus sit amet erat. Nulla tempus.,340-624-1682,196009,CLOSED
+710,"Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",131-628-5891,68026,OPEN
+713,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem.,926-328-6526,117319,OPEN
+717,"Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",497-918-3941,183465,OPEN
+719,Donec dapibus. Duis at velit eu est congue elementum.,348-371-8842,46565,OPEN
+721,"Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",372-339-5952,129992,CLOSED
+722,"Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.",247-522-6886,144607,OPEN
+724,"Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",990-371-2063,141799,OPEN
+731,Etiam faucibus cursus urna. Ut tellus.,367-229-1042,10920,OPEN
+734,"Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam. Nam tristique tortor eu pede.",882-162-3387,173140,OPEN
+736,Etiam justo. Etiam pretium iaculis justo.,232-155-3689,122144,OPEN
+738,Morbi quis tortor id nulla ultrices aliquet.,775-315-6817,9699,OPEN
+748,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.",563-596-3787,148995,OPEN
+749,Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.,364-619-0295,148570,OPEN
+755,Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum.,495-582-9661,153200,CLOSED
+756,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",755-160-4633,8677,OPEN
+757,Curabitur gravida nisi at nibh.,880-111-2917,74492,OPEN
+760,Integer a nibh.,946-212-3576,10333,OPEN
+765,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",261-605-6659,37478,OPEN
+766,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem.,996-922-5279,97839,OPEN
+768,Etiam justo. Etiam pretium iaculis justo.,237-157-6326,16577,OPEN
+772,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.",325-658-0444,58175,OPEN
+779,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.",855-898-1101,51243,OPEN
+783,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",343-198-4074,148249,OPEN
+787,Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.,877-407-8328,45152,OPEN
+791,Morbi a ipsum. Integer a nibh.,571-470-1591,104499,OPEN
+792,Donec posuere metus vitae ipsum. Aliquam non mauris.,922-806-7568,18071,OPEN
+798,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",255-109-4137,26508,OPEN
+806,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.",474-863-7428,20867,OPEN
+811,In eleifend quam a odio. In hac habitasse platea dictumst.,449-496-6423,6732,OPEN
+812,"Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",635-573-6494,190596,OPEN
+813,"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.",373-471-4308,193098,OPEN
+814,Morbi ut odio.,809-141-4217,25902,OPEN
+817,"Proin leo odio, porttitor id, consequat in, consequat ut, nulla.",659-310-9179,41002,OPEN
+821,"Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",206-826-9181,52417,OPEN
+825,In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.,576-632-8098,41674,OPEN
+827,Morbi vel lectus in quam fringilla rhoncus.,753-493-8507,94531,OPEN
+830,"In est risus, auctor sed, tristique in, tempus sit amet, sem.",234-472-7017,163236,OPEN
+833,"Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",648-746-5934,122082,OPEN
+834,Nulla facilisi. Cras non velit nec nisi vulputate nonummy.,916-537-1886,161844,OPEN
+835,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",215-962-0801,153299,OPEN
+837,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",543-497-1139,121759,OPEN
+838,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.",422-265-2115,106478,CLOSED
+839,"Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.",575-374-9627,88102,OPEN
+841,Praesent blandit lacinia erat.,598-864-0827,57945,OPEN
+845,Etiam pretium iaculis justo.,586-564-2048,121124,OPEN
+848,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",754-180-1674,37717,OPEN
+850,In blandit ultrices enim.,210-412-9080,185521,CLOSED
+853,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.",696-999-9482,126704,OPEN
+859,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor.,426-716-5943,30966,OPEN
+862,Nullam molestie nibh in lectus. Pellentesque at nulla.,586-804-9236,69482,OPEN
+867,"Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",361-154-1387,149374,OPEN
+868,Nulla nisl.,693-101-8139,57702,OPEN
+877,Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.,787-414-9146,100041,OPEN
+890,Pellentesque viverra pede ac diam.,656-512-5723,137556,OPEN
+906,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio.",356-414-2698,161264,OPEN
+909,Curabitur gravida nisi at nibh. In hac habitasse platea dictumst.,554-208-5201,171268,OPEN
+911,"Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.",477-546-9732,81774,OPEN
+912,Suspendisse accumsan tortor quis turpis. Sed ante.,332-653-0295,4296,OPEN
+913,"Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",217-127-0843,3686,OPEN
+914,Suspendisse potenti. Nullam porttitor lacus at turpis.,533-408-8984,167672,OPEN
+920,Morbi a ipsum.,363-263-5904,49148,OPEN
+926,Praesent blandit lacinia erat.,957-862-5049,78169,OPEN
+929,Nulla facilisi. Cras non velit nec nisi vulputate nonummy.,209-631-5367,26812,CLOSED
+933,Vivamus tortor.,639-378-2320,8567,OPEN
+934,Vivamus tortor. Duis mattis egestas metus.,590-569-4230,117956,OPEN
+935,Sed vel enim sit amet nunc viverra dapibus.,113-625-8902,150403,OPEN
+942,Morbi quis tortor id nulla ultrices aliquet.,386-447-4365,196777,CLOSED
+946,In eleifend quam a odio. In hac habitasse platea dictumst.,299-487-9407,105659,OPEN
+947,Phasellus in felis. Donec semper sapien a libero.,164-645-4857,186621,OPEN
+950,"Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",582-541-8476,54889,OPEN
+960,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien.",100-705-3690,157099,OPEN
+961,Praesent blandit lacinia erat.,775-827-9755,62989,OPEN
+965,Nunc purus. Phasellus in felis.,878-214-7039,69679,OPEN
+967,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis.",375-354-2967,13903,OPEN
+968,Aliquam non mauris.,853-583-2518,75730,OPEN
+970,Suspendisse potenti.,209-547-8123,52954,OPEN
+971,"Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.",782-652-1034,12533,OPEN
+972,Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.,502-458-1809,58863,OPEN
+974,Donec dapibus.,630-629-9921,92609,OPEN
+976,Integer ac neque.,645-773-1195,52607,OPEN
+980,Donec semper sapien a libero.,840-595-2460,149420,OPEN
+983,Curabitur gravida nisi at nibh.,505-334-6108,3439,CLOSED
+988,In hac habitasse platea dictumst. Maecenas ut massa quis augue luctus tincidunt.,115-612-7621,196226,OPEN
+990,Morbi porttitor lorem id ligula.,982-968-1479,171652,OPEN
+992,"In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",183-376-9904,184574,OPEN
+1000,Donec dapibus. Duis at velit eu est congue elementum.,573-622-8999,71226,OPEN

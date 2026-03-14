@@ -1,0 +1,62 @@
+@charset "UTF-8";
+/* ad_restaurant.css */
+
+/* 1. 본문 영역: 배경색은 유지하되, 푸터 높이를 고려하여 최소 높이 조절 */
+.content-wrapper { 
+    background-color: #F6F6F6 !important; 
+    /* 푸터가 바닥에 고정되면서도 본문과 겹치지 않게 하단 패딩 부여 */
+    padding-bottom: 40px !important; 
+    min-height: calc(100vh - 60px) !important;
+}
+
+/* 사이드바 여백 유지 */
+body:not(.sidebar-collapse) .content-wrapper {
+    margin-left: 250px; 
+}
+
+/* 2. 카드 설정: 아래쪽 마진을 제거하여 푸터와 밀착 */
+.card { 
+    border: none; 
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); 
+    margin-bottom: 0 !important; 
+}
+
+/* 3. 테이블 및 버튼 스타일 */
+.table tbody td { font-size: 0.9rem; vertical-align: middle; }
+
+.btn-res-primary, .input-group .btn { 
+    background-color: #01D281 !important; 
+    color: white !important; 
+    border: none;
+    border-radius: 8px;
+}
+.btn-res-primary:hover { background-color: #01b06c; color: white; }
+
+/* 4. 푸터 간격 강제 조정: 본문 바로 아래에 붙도록 설정 */
+.main-footer {
+     margin-top: 0 !important;
+     /* 위아래 패딩을 30px로 늘려 푸터의 폭을 크게 확보합니다 */
+    padding: 30px 0 !important; 
+    border-top: 1px solid #dee2e6 !important;
+    background-color: #fff !important;
+    display: block !important;
+    text-align: center !important;
+    /* 폰트 크기를 키워 존재감을 줍니다 */
+    font-size: 1rem; 
+    color: #333; /* 글자색을 조금 더 진하게 조정 */
+    letter-spacing: 1px; /* 글자 간격을 넓혀 고급스럽게 설정 */
+}
+
+/* 사이드바 보정 (이 부분이 있어야 수평 중앙이 맞습니다) */
+body:not(.sidebar-collapse) .main-footer {
+    margin-left: 250px !important;
+}
+
+/* 페이징 중앙 정렬 유지 */
+.card-footer { 
+    display: flex !important; 
+    justify-content: center !important; 
+    background-color: #fff !important; 
+    align-items: center !important;
+}
+.pagination { margin: 0 !important; }

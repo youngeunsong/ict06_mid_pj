@@ -42,7 +42,7 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		Paging paging = new Paging(pageNum);
 		
 		//3. map으로 데이터 전달		
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap();
 		map.put("sc", sc);
 		map.put("paging", paging);
 

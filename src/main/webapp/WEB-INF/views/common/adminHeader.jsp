@@ -4,7 +4,7 @@
 
 <!-- ================= header ================= -->
 <!--begin::Header-->
-<nav class="app-header navbar navbar-expand bg-body">
+<nav class="app-header navbar navbar-expand bg-body border-bottom">
 	<!--begin::Container-->
 	<div class="container-fluid">
 		<!--begin::Left-->

@@ -2,22 +2,38 @@
 <%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
 
 <!-- ==============================================
-
-[사용 시 참고 사항]
-맛집 전용 사용
+[공통 카드 구조]
+맛집 전용 카드
+- mode = top10
 =============================================== -->
 
-<div class="${mode eq 'top10' ? 'top10-card-wrap' : ''}">
+
+<div class="
+    ${mode eq 'top10' ? 'top10-card-wrap' : ''}
+    ${mode eq 'best' ? 'best-card-wrap' : ''}
+    ${mode eq 'bestMain' ? 'best-main-card-wrap' : ''}
+">
     <a href="${path}/restaurantDetail.rs?place_id=${place.place_id}" class="place-card text-decoration-none text-dark">
+        
         <div class="place-card__thumb-wrap position-relative">
-            <img src="${place.image_url}" alt="${place.name}" loading="lazy" class="thumb-img" />
-				
-			<!-- MAIN > TOP10 전용 랭킹 표기 -->	
+            <img src="${place.image_url}" 
+                 alt="${place.name}" 
+                 loading="lazy" 
+                 class="thumb-img" />
+            
+            <!-- main.js TOP10 슬라이더용 -->
             <c:if test="${mode eq 'top10'}">
                 <span class="rank-badge ${rankCls}">${rank}위</span>
             </c:if>
+            
+            <!-- main.js BEST 추천 빅카드용  -->
+			<c:if test="${mode eq 'bestMain'}">
+			    <span class="rank-badge top1">
+			        1위 평균 <c:out value="${avgRatingMap[place.place_id]}" default="0"/>점
+			    </span>
+			</c:if>
 
-			<!-- 즐겨찾기 -->
+            <!-- [유지] bookmark.js 대응 -->
             <button type="button"
                     class="bookmark-btn"
                     data-place-id="${place.place_id}"
@@ -34,10 +50,11 @@
                 ${place.address}
             </div>
 
-            <div class="d-flex gap-3 text-muted small mt-2">
+            <!-- [수정] 공통 meta 구조 -->
+            <div class="place-card__meta">
                 <span><i class="fa-regular fa-eye"></i> ${place.view_count}</span>
-                <span><i class="fa-regular fa-heart"></i> ${avgRatingMap[place.place_id]}</span>
-                <span><i class="fa-regular fa-comment"></i> ${reviewCountMap[place.place_id]}</span>
+                <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[place.place_id]}" default="0"/></span>
+                <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[place.place_id]}" default="0"/></span>
             </div>
         </div>
     </a>

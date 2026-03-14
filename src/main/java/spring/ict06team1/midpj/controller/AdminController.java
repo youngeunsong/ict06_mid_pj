@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.service.UserServiceImpl;
 
-
 @Controller
 public class AdminController {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	
 	@Autowired

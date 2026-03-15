@@ -71,5 +71,22 @@ public class SearchController {
 		
 	}
 	
+	// [자동완성]
+	@RequestMapping("/search/autocomplete")
+	@ResponseBody
+	public java.util.List<String> getAutoComplete(@RequestParam String keyword) {
+	    logger.info("<<< url => /search/autocomplete >>>");
+	    logger.info("[Controller] keyword => ", keyword);
+	    return searchService.getAutoComplete(keyword);
+	}
+
+	//[최근 검색어]
+	@RequestMapping("/search/recent")
+	@ResponseBody
+	public java.util.List<spring.ict06team1.midpj.dto.SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {
+	    logger.info("<<< url => /search/recent >>>");
+	    return searchService.getRecentKeywords(request);
+	}
+	
 
 }

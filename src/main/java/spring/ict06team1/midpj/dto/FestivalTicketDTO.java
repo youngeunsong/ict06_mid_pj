@@ -8,7 +8,7 @@ public class FestivalTicketDTO {
 	private int price;
 	private int stock;
 	private String description;
-
+    
 	public FestivalTicketDTO() {
 		super();
 	}
@@ -27,36 +27,47 @@ public class FestivalTicketDTO {
 	public int getTicket_id() {
 		return ticket_id;
 	}
+
 	public void setTicket_id(int ticket_id) {
 		this.ticket_id = ticket_id;
 	}
+
 	public int getFestival_id() {
 		return festival_id;
 	}
+
 	public void setFestival_id(int festival_id) {
 		this.festival_id = festival_id;
 	}
+
 	public String getTicket_type() {
 		return ticket_type;
 	}
+
 	public void setTicket_type(String ticket_type) {
 		this.ticket_type = ticket_type;
 	}
+
 	public int getPrice() {
 		return price;
 	}
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
+
 	public int getStock() {
 		return stock;
 	}
+
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -66,5 +77,4 @@ public class FestivalTicketDTO {
 		return "FestivalTicketDTO [ticket_id=" + ticket_id + ", festival_id=" + festival_id + ", ticket_type="
 				+ ticket_type + ", price=" + price + ", stock=" + stock + ", description=" + description + "]";
 	}
-	
 }

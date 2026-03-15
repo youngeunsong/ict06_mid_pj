@@ -13,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.service.AdFestivalServiceImpl;
 
 @Controller
@@ -61,6 +63,14 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 		logger.info("[url => /showFestivalDetail.adfe]");
 		adFestService.getFestivalDetail(request, response, model); 
 		return "admin/place/festival/showFestivalDetail";
+	}
+	
+	// [관리자 - 장소 관리] 축제 1건 상세 조회 - Ajax 용
+	@ResponseBody
+	@RequestMapping("/getFestivalDetail.adfe")
+	public FestivalDTO getFestivalDetail(@RequestParam int festival_id){
+
+	    return adFestService.getFestivalDetailAjax(festival_id);
 	}
 	
 	// [관리자 - 장소 관리] 축제 수정

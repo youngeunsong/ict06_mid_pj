@@ -99,6 +99,18 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		model.addAttribute("twoDayTicket", ticketMap.get("TwoDay"));
 		model.addAttribute("allDayTicket", ticketMap.get("AllDay"));
 	}
+	
+	// 축제 상세 정보 조회 - Ajax용
+	public FestivalDTO getFestivalDetailAjax(int festival_id){
+
+	    FestivalDTO festivalDTO = dao.getFestivalDetail(festival_id);
+
+	    List<FestivalTicketDTO> ticketList = dao.getFestivalTickets(festival_id);
+
+	    festivalDTO.setTicketList(ticketList);
+
+	    return festivalDTO;
+	}
 
 	// 축제 정보 수정
 	@Override
@@ -216,4 +228,6 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	    }
 	    return Double.parseDouble(value);
 	}
+
+	
 }

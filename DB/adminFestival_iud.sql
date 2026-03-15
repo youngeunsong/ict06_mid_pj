@@ -50,7 +50,7 @@ SELECT SEQ_PLACE.NEXTVAL FROM DUAL;
 -- SEQ_PLACE.NEXTVAL이 현재 PLACE 테이블이의 최대 place_id가 동일한 크기가 아닐 때 적용
 DROP SEQUENCE SEQ_PLACE;
 CREATE SEQUENCE SEQ_PLACE
-START WITH 1008 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
+START WITH 1004 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
 INCREMENT BY 1;
 
 -- SEQ_TICKET의 최댓값 확인

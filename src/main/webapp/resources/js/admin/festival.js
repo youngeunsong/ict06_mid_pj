@@ -57,10 +57,133 @@ function keywordSearch() {
 					+ (sortType ? '&sortType=' + sortType : '');
 }
 
-/* 축제 상세 정보 조회 modal */
+/* 축제 상세 조회 modal */
+function viewFestivalDetail(id){
+
+ $.ajax({
+
+  url : path + "/getFestivalDetail.adfe",
+  type : "get",
+  data : {festival_id : id},
+
+  success : function(data){
+
+   $('#modal_name').text(data.placeDTO.name);
+   if(data.status == "UPCOMING"){
+		$('#modal_status').text("시작 전"); 
+	}
+	else if(data.status =="ONGOING"){
+		$('#modal_status').text("진행 중"); 
+	}
+	else if(data.status =="ENDED"){
+		$('#modal_status').text("종료"); 
+	}
+   		
+   $('#modal_address').text(data.placeDTO.address);
+   $('#modal_latitude').text(data.placeDTO.latitude);
+   $('#modal_longitude').text(data.placeDTO.longitude);
+
+   $('#modal_start_date').text(data.start_date);
+   $('#modal_end_date').text(data.end_date);
+
+   $('#modal_description').text(data.description);
+
+   $('#modal_image').attr("src",data.placeDTO.image_url);
+
+   // 티켓 표시
+   if(data.ticketList){
+    data.ticketList.forEach(function(ticket){
+
+     if(ticket.ticket_type == "Free"){
+      $('#priceFree').val(ticket.price);
+      $('#stockFree').val(ticket.stock);
+      $('#ticketDescFreeDay').val(ticket.description);
+     }
+
+     if(ticket.ticket_type == "OneDay"){
+      $('#priceOneDay').val(ticket.price);
+      $('#stockOneDay').val(ticket.stock);
+      $('#ticketDescOneDay').val(ticket.description);
+     }
+
+     if(ticket.ticket_type == "TwoDay"){
+      $('#priceTwoDay').val(ticket.price);
+      $('#stockTwoDay').val(ticket.stock);
+      $('#ticketDescTwoDay').val(ticket.description);
+     }
+
+     if(ticket.ticket_type == "AllDay"){
+      $('#priceAllDay').val(ticket.price);
+      $('#stockAllDay').val(ticket.stock);
+      $('#ticketDescAllDay').val(ticket.description);
+     }
+
+    });
+   }
+
+   $('#festivalDetailModal').modal("show");
+
+  }
+ });
+}
 
 /* 축제 수정 modal */
+function editFestival(id){
+ $.ajax({
+
+  url : path + "/getFestivalDetail.adfe",
+  type : "get",
+  data : {festival_id : id},
+  dataType : "json",
+
+  success : function(data){
+
+   // 축제 정보	
+   $('#inputName').val(data.placeDTO.name);
+   $('#inputAddress').val(data.placeDTO.address); 
+   $('#inputLatitude').val(data.placeDTO.latitude);
+   $('#inputLongitude').val(data.placeDTO.longitude); 
+   $('#inputImgAddress').val(data.placeDTO.image_url);
+   $('#inputDescription').val(data.description);
+   $('#inputStartDate').val(data.start_date);
+   $('#inputEndDate').val(data.end_date);
+   
+   // TODO: 티켓 정보
+   // $('#inputEndDate').val(data.ticketList.);
+
+   $('#festivalUpdateModal').modal("show");
+  }
+ });
+}
+
 /* 축제 수정 처리 */ 
+function updateFestival(){
+ $.ajax({
+
+  url : path + "/updateFestival.adfe",
+  type : "post",
+
+  data : {
+
+   name : $('#update_name').val(),
+   start_date : $('#update_start_date').val(),
+   end_date : $('#update_end_date').val(),
+   description : $('#update_description').val()
+
+  },
+
+  success : function(res){
+
+   if(res=="success"){
+
+    alert("수정 완료");
+    $('#festivalUpdateModal').modal('hide');
+    location.reload();
+
+   }
+  }
+ });
+}
 
 /* 축제 삭제 처리 */
 function deleteFestival(festival_id){

@@ -34,6 +34,12 @@
 
 		<!-- ================= CONTENT ================= -->
 		<div class="content-wrapper">
+			<!-- 목록 버튼 시작 -->
+          	<div align="left">
+				<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/festivalList.adfe'">축제 목록</button>
+			</div>
+            <!-- 목록 버튼 끝 -->
+			
 			<div class="app-content-header py-3">
 				<div class="container-fluid">
 					<h3 class="mb-0 font-weight-bold">축제 상세 정보</h3>
@@ -47,8 +53,10 @@
             <div class="card card-primary">
               	<!-- card-body 시작  -->
                 <div class="card-body">
+                	
                 	<!-- 정보 테이블 영역 시작 -->
                 	<table class="table">
+                		
                 		<!-- 축제 이름 시작-->
                 		<tr>
                 			<th><label for="inputName">* 축제 이름</label></th>

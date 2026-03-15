@@ -107,23 +107,24 @@
 								<table class="table table-hover align-middle m-0">
 									<thead class="thead-light">
 										<tr>
-											<th style="width:80px;">축제번호</th>
-											<th style="width:120px;">축제명</th>
-											<th style="width:120px;">주소</th>
-											<th style="width:80px;">조회수</th>
-											<th style="width:80px;">위도</th>
-											<th style="width:80px;">경도</th>
-											<th style="width:120px;">대표 이미지</th>
-											<th style="width:80px;">축제 시작일</th>
-											<th style="width:80px;">축제 종료일</th>
-											<th style="width:80px;">축제 상태</th>
-											<th style="width:80px;">등록일</th>
-											<th style="width:100px;">관리</th>
+											<th>축제번호</th>
+											<th>축제명</th>
+											<th>주소</th>
+											<th>조회수</th>
+											<th>위도</th>
+											<th>경도</th>
+											<th>대표 이미지</th>
+											<th>축제 시작일</th>
+											<th>축제 종료일</th>
+											<th>축제 상태</th>
+											<th>등록일</th>
+											<th>관리</th>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach var="dto" items="${list}">
-											<tr onclick="location.href='${path}/showFestivalDetail.adfe?festival_id=${dto.festival_id}';" style="cursor:pointer;"> <!-- TODO: 나중에 수정하기 -->
+											<tr style="cursor:pointer;" onclick="viewFestivalDetail('${dto.festival_id}')">
+											<%-- <tr onclick="location.href='${path}/showFestivalDetail.adfe?festival_id=${dto.festival_id}';" style="cursor:pointer;">  --%>
 												<td>${dto.festival_id}</td>
 												<td>${dto.placeDTO.name}</td>
 												<td>${dto.placeDTO.address}</td>
@@ -149,8 +150,17 @@
 												<td><fmt:formatDate value="${dto.placeDTO.placeRegDate}" pattern="yyyy-MM-dd" /></td>
 												<%-- event.stopPropagation();: 수정, 삭제 버튼 클릭 시 행클릭 이벤트 차단 --%>
 												<td class="text-center">
-							                        <button class="btn btn-xs btn-outline-secondary" onclick="event.stopPropagation(); location.href='${path}/modifyFestival.adfe?place_id=${dto.festival_id}&pageNum=${paging.pageNum}'">수정</button>
-							                        <button class="btn btn-xs btn-outline-danger" onclick="event.stopPropagation(); deleteFestival(${dto.festival_id});">삭제</button>
+							                        <%-- <button class="btn btn-xs btn-outline-secondary" 
+							                        onclick="event.stopPropagation(); 
+							                        location.href='${path}/modifyFestival.adfe?place_id=${dto.festival_id}&pageNum=${paging.pageNum}'">
+							                        	수정
+							                        </button> --%>
+							                        <button class="btn btn-xs btn-outline-secondary"
+														onclick="event.stopPropagation(); editFestival('${dto.festival_id}')">
+															수정
+													</button>
+							                        <button class="btn btn-xs btn-outline-danger" 
+							                        	onclick="event.stopPropagation(); deleteFestival(${dto.festival_id});">삭제</button>
 							                    </td>
 											</tr>
 										</c:forEach>
@@ -243,6 +253,266 @@
 		<!-- 관련 SQL 끝 -->
 	</div>
 	<!--end::div Wrapper-->
+	
+	<!-- 축제 상세 조회 Modal 시작 -->
+	<!-- 축제 상세보기 Modal -->
+	<div class="modal fade" id="festivalDetailModal" tabindex="-1">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="modal-header bg-success text-white">
+	                <h5 class="modal-title">
+	                    <i class="bi bi-info-circle mr-2"></i>축제 상세 정보
+	                </h5>
+	                <button type="button" class="close text-white" data-dismiss="modal">
+	                    <span>&times;</span>
+	                </button>
+	            </div>
+	
+	            <div class="modal-body">
+	                <table class="table table-bordered">
+	                    <tr>
+	                        <th>축제명</th>
+	                        <td id="modal_name"></td>
+	                        <th>상태</th>
+	                        <td id="modal_status"></td>
+	                    </tr>
+	
+	                    <tr>
+	                        <th>주소</th>
+	                        <td colspan="3" id="modal_address"></td>
+	                    </tr>
+	
+	                    <tr>
+	                        <th>위도</th>
+	                        <td id="modal_latitude"></td>
+	                        <th>경도</th>
+	                        <td id="modal_longitude"></td>
+	                    </tr>
+	
+	                    <tr>
+	                        <th>시작일</th>
+	                        <td id="modal_start_date"></td>
+	                        <th>종료일</th>
+	                        <td id="modal_end_date"></td>
+	                    </tr>
+	
+	                    <tr>
+	                        <th>설명</th>
+	                        <td colspan="3" id="modal_description"></td>
+	                    </tr>
+	
+	                    <tr>
+	                        <th>이미지</th>
+	                        <td colspan="3">
+	                            <img id="modal_image" style="width:40%">
+	                        </td>
+	                    </tr>
+	                    <!-- 티켓 정보 입력 시작 -->
+			           	<tr>
+			           		<th>티켓 정보</th>
+			           		<td> 
+			           			<!-- 티켓 표 시작 -->
+			            		<table class="table">
+			            			<!-- 헤더 시작: 티켓 종류, 가격, 재고, 설명 -->
+			            			<tr>
+			            				<th>티켓 종류</th>
+			            				<th>가격</th>
+			            				<th>재고</th>
+			            				<th>설명</th>
+			            			</tr>
+			            			<!-- 헤더 끝 -->
+			            			<!-- 무료 티켓 시작 -->
+			            			<tr>
+			            				<td>무료</td>
+			            				<td><input type="number" id="priceFree" name="priceFree" placeholder="가격" disabled>원</td>
+			            				<td><input type="number" id="stockFree" name="stockFree" placeholder="재고" disabled></td>
+			            				<td><textarea id="ticketDescFreeDay" name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
+			            			</tr>
+			            			<!-- 무료 티켓 끝 -->
+			            			<!-- 1일권 시작 -->
+			            			<tr>
+			            				<td>1일권</td>
+			            				<td><input type="number" id="priceOneDay" name="priceOneDay" placeholder="가격" disabled>원</td>
+			            				<td><input type="number" id="stockOneDay" name="stockOneDay" placeholder="재고" disabled></td>
+			            				<td><textarea id="ticketDescOneDay" name="ticketDescOneDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
+			            			</tr>
+			            			<!-- 1일권 끝 -->
+			            			<!-- 2일권 시작 -->
+			            			<tr>
+			            				<td>2일권</td>
+			            				<td><input type="number" id="priceTwoDay" name="priceTwoDay" placeholder="가격" disabled>원</td>
+			            				<td><input type="number" id="stockTwoDay" name="stockTwoDay" placeholder="재고" disabled></td>
+			            				<td><textarea id="ticketDescTwoDay" name="ticketDescTwoDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
+			            			</tr>
+			            			<!-- 2일권 끝 -->
+			            			<!-- 전일권 시작 -->
+			            			<tr>
+			            				<td>전일권</td>
+			            				<td><input type="number" id="priceAllDay" name="priceAllDay" placeholder="가격" disabled>원</td>
+			            				<td><input type="number" id="stockAllDay" name="stockAllDay" placeholder="재고" disabled></td>
+			            				<td><textarea id="ticketDescAllDay" name="ticketDescAllDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
+			            			</tr>
+			            			<!-- 전일권 끝 -->
+			              		</table>
+			              		<!-- 티켓 표 끝 -->
+			           		</td>
+			           	</tr>
+			           	<!-- 티켓 정보 입력 끝 -->
+	                </table>
+	            </div>
+	
+	            <div class="modal-footer">
+	                <button class="btn btn-success"
+	                	onclick="editFestival($('#modal_festival_id').text())">
+	                	수정
+	                </button>
+	                
+	                <button class="btn btn btn-outline-danger" 
+                       	onclick="deleteFestival(${dto.festival_id})">
+                       	삭제
+                    </button>
+	
+	                <button class="btn btn-secondary" data-dismiss="modal">
+	                	닫기
+	                </button>
+	            </div>
+	
+	        </div>
+	    </div>
+	</div>
+	<!-- 축제 상세 조회 Modal 끝 -->
+	
+	<%-- 축제 수정 Modal 시작 --%>
+	<div class="modal fade" id="festivalUpdateModal" tabindex="-1">
+	 <div class="modal-dialog">
+	  <div class="modal-content">
+	
+	   <div class="modal-header bg-success text-white">
+	    <h5>축제 수정</h5>
+	   </div>
+	
+	   <div class="modal-body">
+	
+	    <!-- 정보 입력 테이블 영역 시작 -->
+        <table class="table">
+        	<!-- 축제 이름 시작-->
+        	<tr>
+       			<th><label for="inputName">* 축제 이름</label></th>
+       			<td><input type="text" id="inputName" name="name" placeholder="축제 이름을 입력해주세요" required></td>
+        	</tr>
+        	<!-- 축제 이름 끝-->
+           	<!-- 축제 주소 시작-->
+           	<tr>
+       			<th><label for="inputAddress">* 축제 주소</label></th>
+       			<td><input type="text" id="inputAddress" name="address" placeholder="축제 주소를 입력해주세요" required></td>
+        	</tr>
+           	<!-- 축제 주소 끝-->
+           	<!-- 축제 위도 시작-->
+           	<tr>
+       			<th><label for="inputLatitude">* 축제 위도</label></th>
+       			<td><input type="number" step="0.00000001" id="inputLatitude" name="latitude" placeholder="축제 위도를 입력해주세요" required></td>
+       		</tr>
+           	<!-- 축제 위도 끝-->
+           	<!-- 축제 경도 시작-->
+           	<tr>
+       			<th><label for="inputLongitude">* 축제 경도</label></th>
+       			<td><input type="number" step="0.00000001" name="longitude" id="inputLongitude" placeholder="축제 경도를 입력해주세요" required></td>
+       		</tr>
+           	<!-- 축제 경도 끝-->
+           	<!-- 축제 이미지 URL 시작 -->
+           	<tr>
+       			<th><label for="inputImgAddress">* 축제 이미지 웹주소</label></th>
+       			<td><input type="text" id="inputImgAddress" name="image_url" placeholder="축제 이미지 웹주소를 입력해주세요" required></td>
+       		</tr>
+           	<!-- 축제 이미지 URL 끝 -->
+           	<!-- 축제 설명 시작 -->
+           	<tr>
+       			<th><label for="inputDescription">* 축제 설명</label></th>
+       			<td><textarea id="inputDescription" name="description" cols="50" rows="10" placeholder="축제에 대한 설명문을 입력해주세요." required></textarea></td>
+       		</tr>
+           	<!-- 축제 설명 끝 -->
+           	<!-- 축제 시작일 시작 -->
+           	<tr>
+       			<th><label for="inputStartDate">* 축제 시작일</label></th>
+       			<td><input type="date" id="inputStartDate" name="start_date" required></td>
+       		</tr>
+           	<!-- 축제 시작일 끝 -->
+           	<!-- 축제 종료일 시작 -->
+           	<tr>
+       			<th><label for="inputEndDate">* 축제 종료일</label></th>
+       			<td><input type="date" id="inputEndDate" name="end_date" required></td>
+       		</tr>
+           	<!-- 축제 종료일 끝 -->
+           	<!-- 티켓 정보 입력 시작 -->
+           	<tr>
+           		<th>티켓 정보</th>
+           		<td> 
+           			<!-- 티켓 표 시작 -->
+            		<table class="table">
+            			<!-- 헤더 시작: 티켓 종류, 가격, 재고, 설명 -->
+            			<tr>
+            				<th>티켓 종류</th>
+            				<th>가격</th>
+            				<th>재고</th>
+            				<th>설명</th>
+            			</tr>
+            			<!-- 헤더 끝 -->
+            			<!-- 무료 티켓 시작 -->
+            			<tr>
+            				<td>무료</td>
+            				<td><input type="number" name="priceFree" placeholder="가격" >원</td>
+            				<td><input type="number" name="stockFree" placeholder="재고" ></td>
+            				<td><textarea name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
+            			</tr>
+            			<!-- 무료 티켓 끝 -->
+            			<!-- 1일권 시작 -->
+            			<tr>
+            				<td>1일권</td>
+            				<td><input type="number" id="priceOneDay" name="priceOneDay" placeholder="가격" >원</td>
+            				<td><input type="number" id="stockOneDay" name="stockOneDay" placeholder="재고" ></td>
+            				<td><textarea id="ticketDescOneDay" name="ticketDescOneDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
+            			</tr>
+            			<!-- 1일권 끝 -->
+            			<!-- 2일권 시작 -->
+            			<tr>
+            				<td>2일권</td>
+            				<td><input type="number" id="priceTwoDay" name="priceTwoDay" placeholder="가격" >원</td>
+            				<td><input type="number" id="stockTwoDay" name="stockTwoDay" placeholder="재고" ></td>
+            				<td><textarea id="ticketDescTwoDay" name="ticketDescTwoDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
+            			</tr>
+            			<!-- 2일권 끝 -->
+            			<!-- 전일권 시작 -->
+            			<tr>
+            				<td>전일권</td>
+            				<td><input type="number" id="priceAllDay" name="priceAllDay" placeholder="가격" >원</td>
+            				<td><input type="number" id="stockAllDay" name="stockAllDay" placeholder="재고" ></td>
+            				<td><textarea id="ticketDescAllDay" name="ticketDescAllDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
+            			</tr>
+            			<!-- 전일권 끝 -->
+              		</table>
+              		<!-- 티켓 표 끝 -->
+           		</td>
+           	</tr>
+           	<!-- 티켓 정보 입력 끝 -->
+           	</table>
+           	<!-- 정보 입력 테이블 영역 끝 -->
+	
+	   </div>
+	
+	   <div class="modal-footer">
+	    <button class="btn btn-success" onclick="updateFestival()">
+	     수정 저장
+	    </button>
+	
+	    <button class="btn btn-secondary" data-dismiss="modal">
+	     취소
+	    </button>
+	   </div>
+	
+	  </div>
+	 </div>
+	</div>
+	<%-- 축제 수정 Modal 끝 --%>
 
 	<!-- ================= JS ================= -->
 	<script>const path = "${path}";</script>

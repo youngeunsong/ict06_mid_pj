@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${path}/resources/js/admin/request.js"></script>
-
 <script type="text/javascript">
 
 $(function(){
@@ -70,15 +69,7 @@ $(function(){
 			    <option value="5">광주광역시 (05)</option>
 			    <option value="6">부산광역시 (06)</option>
 			    <option value="7">울산광역시 (07)</option>
-			    <option value="8">세종특별자치시 (08)</option>
-			    <option value="31">경기도 (31)</option>
-			    <option value="32">강원특별자치도 (32)</option>
-			    <option value="33">충청북도 (33)</option>
-			    <option value="34">충청남도 (34)</option>
-			    <option value="35">경상북도 (35)</option>
-			    <option value="36">경상남도 (36)</option>
-			    <option value="37">전북특별자치도 (37)</option>
-			    <option value="38">전라남도 (38)</option>
+			    <option value="31">경기 (31)</option>
 			    <option value="39">제주도 (39)</option>
 			</select>
         </div>

@@ -68,6 +68,7 @@
       font-size:17px;
       font-weight:800;
       color:#374151;
+      cursor:pointer;
     }
 
     .rk-tab:last-child{
@@ -101,6 +102,7 @@
       color:#374151;
       font-size:14px;
       font-weight:700;
+      cursor:pointer;
     }
 
     .rk-chip.active{
@@ -172,71 +174,71 @@
       color:#111827;
     }
 
-    /* TOP 영역에서 restCard를 조금 더 크게 보이게 */
-    
     .rk-top1 .thumb-img{
-	  width:100%;
-	  height:320px;
-	  object-fit:cover;
-	  display:block;
-	}
-	
-	.rk-top1 .place-card__body{
-	  padding:20px;
-	}
-	
-	.rk-top1 .place-card__title{
-	  font-size:1.25rem;
-	  font-weight:900;
-	}
-	
-	.rk-topSub .thumb-img{
-	  width:100%;
-	  height:220px;
-	  object-fit:cover;
-	  display:block;
-	}
-	
-	.rk-topSub .place-card__body{
-	  padding:16px;
-	}
-	
-	.rk-topSub .place-card__title{
-	  font-size:1.05rem;
-	  font-weight:800;
-	}
-	
-	.rk-moreGrid .thumb-img{
-	  width:100%;
-	  height:180px;
-	  object-fit:cover;
-	  display:block;
-	}
+      width:100%;
+      height:320px;
+      object-fit:cover;
+      display:block;
+    }
+
+    .rk-top1 .place-card__body{
+      padding:20px;
+    }
+
+    .rk-top1 .place-card__title{
+      font-size:1.25rem;
+      font-weight:900;
+    }
+
+    .rk-topSub .thumb-img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      display:block;
+    }
+
+    .rk-topSub .place-card__body{
+      padding:16px;
+    }
+
+    .rk-topSub .place-card__title{
+      font-size:1.05rem;
+      font-weight:800;
+    }
+
+    .rk-moreGrid .thumb-img{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      display:block;
+    }
 
     @media (max-width: 991.98px){
       .rk-title{
         font-size:34px;
       }
+
       .rk-section{
         padding:22px;
       }
-
     }
 
     @media (max-width: 575.98px){
       .rk-page{
         padding-top:22px;
       }
+
       .rk-title{
         font-size:28px;
       }
+
       .rk-sectionTitle{
         font-size:24px;
       }
+
       .rk-pagination{
         justify-content:center;
       }
-
     }
   </style>
 </head>
@@ -257,112 +259,41 @@
 
       <!-- 탭 -->
       <div class="rk-tabs">
-        <button type="button" class="rk-tab active">🔥 실시간 인기</button>
-        <button type="button" class="rk-tab">
-          <i class="fa-solid fa-location-dot text-danger me-1"></i> 지역 TOP
-        </button>
-        <button type="button" class="rk-tab">
-          <i class="fa-solid fa-compass me-1" style="color:var(--rk-brand);"></i> 테마 추천
-        </button>
-      </div>
+		  <button type="button" class="rk-tab active" data-tab="realtime">🔥 실시간 인기</button>
+		  <button type="button" class="rk-tab" data-tab="region">
+		    <i class="fa-solid fa-location-dot text-danger me-1"></i> 지역 TOP
+		  </button>
+		  <button type="button" class="rk-tab" data-tab="theme">
+		    <i class="fa-solid fa-compass me-1" style="color:var(--rk-brand);"></i> 테마 추천
+		  </button>
+		</div>
 
       <!-- 필터 -->
       <div class="rk-filterRow">
         <div class="rk-chipWrap">
-          <button type="button" class="rk-chip active">전체</button>
-          <button type="button" class="rk-chip">한식</button>
-          <button type="button" class="rk-chip">카페</button>
-          <button type="button" class="rk-chip">술집</button>
-          <button type="button" class="rk-chip">양식</button>
+          <button type="button" class="rk-chip active" data-category="ALL">전체</button>
+          <button type="button" class="rk-chip" data-category="KOREAN">한식</button>
+          <button type="button" class="rk-chip" data-category="CAFE">카페</button>
+          <button type="button" class="rk-chip" data-category="BAR">술집</button>
+          <button type="button" class="rk-chip" data-category="WESTERN">양식</button>
         </div>
 
         <div class="rk-meta">신촌 · 강남 · TOP50 · 00:00 기준 실시간 집계</div>
       </div>
 
-      <!-- TOP5 -->
-      <section class="rk-section">
-		  <h2 class="rk-sectionTitle">🔥 실시간 인기 TOP 5</h2>
-		  <div class="rk-sectionSub">조회수와 반응이 빠르게 상승 중인 맛집</div>
-		
-		  <div class="rk-topWrap">
-		
-		    <!-- TOP 1 -->
-		<c:forEach var="item" items="${topList}" begin="0" end="0">
-		  <div class="rk-top1 mb-4">
-		    <c:set var="place" value="${item}" scope="request"/>
-		    <c:set var="mode" value="top10" scope="request"/>
-		    <c:set var="rank" value="1" scope="request"/>
-		    <c:set var="rankCls" value="rank-1" scope="request"/>
-		
-		    <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
-		  </div>
-		</c:forEach>
-		
-		<!-- TOP 2 ~ 5 -->
-		<div class="row g-4">
-		  <c:forEach var="item" items="${topList}" begin="1" end="4" varStatus="st">
-		    <div class="col-12 col-md-6 rk-topSub">
-		      <c:set var="place" value="${item}" scope="request"/>
-		      <c:set var="mode" value="top10" scope="request"/>
-		      <c:set var="rank" value="${st.index + 2}" scope="request"/>
-		
-		      <c:choose>
-		        <c:when test="${st.index + 2 == 2}">
-		          <c:set var="rankCls" value="rank-2" scope="request"/>
-		        </c:when>
-		        <c:when test="${st.index + 2 == 3}">
-		          <c:set var="rankCls" value="rank-3" scope="request"/>
-		        </c:when>
-		        <c:otherwise>
-		          <c:set var="rankCls" value="rank-default" scope="request"/>
-		        </c:otherwise>
-		      </c:choose>
-		
-		      <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
-		    </div>
-		  </c:forEach>
-		</div>
-		
-		  </div>
-		</section>
-
-      <!-- 더보기 -->
-      <h2 class="rk-moreTitle">더보기+</h2>
-
-      <div class="row g-4 rk-moreGrid" id="moreListWrap">
-		  <c:forEach var="item" items="${pageList}">
-			  <div class="col-6 col-md-4 col-lg-3">
-			    <c:set var="place" value="${item}" scope="request"/>
-			    <c:set var="mode" value="default" scope="request"/>
-			    <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
-			  </div>
-			</c:forEach>
-		</div>
-
-      <div class="text-center mt-4 d-flex justify-content-center gap-2">
-		    <button type="button"
-		            id="moreBtn"
-		            class="btn btn-outline-dark px-4 py-2"
-		            data-offset="${nextOffset}"
-		            data-limit="${limit}">
-		        더보기
-		    </button>
-		
-		    <button type="button"
-		            id="collapseBtn"
-		            class="btn btn-outline-secondary px-4 py-2"
-		            style="display:none;">
-		        접기
-		    </button>
-		</div>
+      <!-- AJAX/Fragment 교체 영역 -->
+      <div id="rankingContent">
+        <jsp:include page="/WEB-INF/views/user/restaurant/bestRestaurantsContent.jsp"/>
+      </div>
 
     </div>
   </main>
-	<script>
-	    const path = "${path}";
-	</script>
-	
-	<script src="${path}/resources/js/restaurant/bestRestaurants.js"></script>
+
+  <script>
+    const path = "${path}";
+  </script>
+
+  <script src="${path}/resources/js/restaurant/bestRestaurants.js"></script>
   <%@ include file="../../common/footer.jsp" %>
 </body>
 </html>

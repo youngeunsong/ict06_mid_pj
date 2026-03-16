@@ -91,17 +91,26 @@ public class RestaurantController {
 	// [restaurantRanking] ----------------------------------------------------------------------
 	// [restaurantRanking] 맛집 랭킹 더보기 AJAX
 	// offset 이후 맛집 목록을 JSON으로 반환
-	@RequestMapping("/bestRestaurantsMore.rs")
-	@ResponseBody
-	public List<PlaceDTO> bestRestaurantsMore(
-	        @RequestParam("offset") int offset,
-	        @RequestParam(value = "limit", defaultValue = "12") int limit) {
+	 @RequestMapping("/bestRestaurantsMore.rs")
+	 @ResponseBody
+	 public List<PlaceDTO> bestRestaurantsMore(
+	         @RequestParam(value = "tab", defaultValue = "realtime") String tab,
+	         @RequestParam("offset") int offset,
+	         @RequestParam(value = "limit", defaultValue = "12") int limit) {
 
-	    int start = offset;
-	    int end = offset + limit;
+	     int start = offset;
+	     int end = offset + limit;
 
-	    return service.getBestRestaurantPageList(start, end);
-	}
+	     if ("realtime".equals(tab)) {
+	         return service.getBestRestaurantPageList(start, end);
+	     } else if ("region".equals(tab)) {
+	         return service.getBestRestaurantPageList(start, end);
+	     } else if ("theme".equals(tab)) {
+	         return service.getBestRestaurantPageList(start, end);
+	     }
+
+	     return new ArrayList<>();
+	 }
 
     // [restaurant] 지역별 베스트 맛집 페이지로 이동
     @RequestMapping("/bestRestaurantsRegion.rs")
@@ -200,4 +209,43 @@ public class RestaurantController {
 
         return (obj == null) ? null : String.valueOf(obj);
     }
+    
+    @RequestMapping("/bestRestaurantsTabAjax.rs")
+    public String bestRestaurantsTabAjax(
+            @RequestParam(value = "tab", defaultValue = "realtime") String tab,
+            Model model) {
+
+        int limit = 12;
+
+        List<PlaceDTO> topList = new ArrayList<>();
+        List<PlaceDTO> pageList = new ArrayList<>();
+
+        if ("realtime".equals(tab)) {
+            topList = service.getBestRestaurantTop5();
+            pageList = service.getBestRestaurantPageList(5, 17);
+        } else if ("region".equals(tab)) {
+            topList = service.getBestRestaurantTop5();
+            pageList = service.getBestRestaurantPageList(5, 17);
+        } else if ("theme".equals(tab)) {
+            topList = service.getBestRestaurantTop5();
+            pageList = service.getBestRestaurantPageList(5, 17);
+        }
+
+        if (topList == null) topList = new ArrayList<>();
+        if (pageList == null) pageList = new ArrayList<>();
+
+        int totalCount = service.getBestRestaurantCount();
+        int remainCount = Math.max(totalCount - 5, 0);
+
+        model.addAttribute("topList", topList);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("limit", limit);
+        model.addAttribute("nextOffset", 17);
+        model.addAttribute("remainCount", remainCount);
+        model.addAttribute("currentTab", tab);
+
+        return "user/restaurant/bestRestaurantsContent";
+    }
+    
+    
 }

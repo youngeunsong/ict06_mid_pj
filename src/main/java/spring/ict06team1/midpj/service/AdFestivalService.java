@@ -1,5 +1,7 @@
 package spring.ict06team1.midpj.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,4 +28,9 @@ public interface AdFestivalService {
 	
 	// 축제 정보 삭제 
 	public int deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model);
+
+	// 오픈 API로 축제 정보 가져오기
+	public void importFestivalFromApi(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws Exception;
+
 }

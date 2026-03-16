@@ -69,6 +69,13 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 	}
 	
 	// 신규 축제 등록: 3단계
+	// (0) 기존 테이블에 있는 데이터인지 확인
+	@Override
+	public Integer findPlaceIdByNameAndAddress(PlaceDTO dto) {
+		System.out.println("[AdFestivalDAOImpl - updateTicket()]");	
+		return sqlSession.getMapper(AdFestivalDAO.class).findPlaceIdByNameAndAddress(dto);
+	}
+	
 	// (1) 신규 장소 등록 
 	@Override
 	public int insertPlace(PlaceDTO dto) {
@@ -104,6 +111,22 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 		System.out.println("[AdFestivalDAOImpl - deleteFestival()]");
 		return sqlSession.getMapper(AdFestivalDAO.class).deleteFestival(festival_id);
 	}
+
+	// 공공축제 데이터 넣기
+	@Override
+	public void insertFestivalBatch(List<FestivalDTO> list) {
+		for(FestivalDTO dto : list){
+			PlaceDTO placeDTO = dto.getPlaceDTO();
+			
+			// 1단계: 신규 장소 등록
+			sqlSession.getMapper(AdFestivalDAO.class).insertPlace(placeDTO);
+			
+			// 2단계: 신규 축제 등록
+			sqlSession.getMapper(AdFestivalDAO.class).insertFestival(dto);
+	    }
+	}
+
+	
 
 	
 }

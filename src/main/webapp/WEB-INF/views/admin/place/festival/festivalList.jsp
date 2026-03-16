@@ -177,7 +177,14 @@
 								</div>
 								
 								<div align="left">
-									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">새 축제 추가</button>
+									<!-- 새 축제 추가 버튼 -->
+									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">
+										새 축제 추가
+									</button>
+									<!-- 오픈 API에서 데이터 가져오기 -->										
+									<button onclick="location.href='${path}/festivalImport.adfe'" class="btn btn-block btn-warning" style="width:30%;">
+										오픈 API로 축제 데이터 가져오기(주의)
+									</button>
 								</div>
 							</div>
 						</div>

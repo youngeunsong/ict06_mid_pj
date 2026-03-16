@@ -83,7 +83,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		List<FestivalTicketDTO> ticketList = dao.getFestivalTickets(festival_id); 
 		System.out.println(ticketList);
 		
-		Map<String, FestivalTicketDTO> ticketMap = new HashMap<>();
+		Map<String, FestivalTicketDTO> ticketMap = new HashMap();
 
 		for(FestivalTicketDTO ticket : ticketList){
 		    ticketMap.put(ticket.getTicket_type(), ticket);

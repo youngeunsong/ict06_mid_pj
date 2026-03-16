@@ -68,7 +68,7 @@ public class MainServiceImpl implements MainService {
     public Map<Integer, Double> getAvgRatingMap(List<Integer> placeIds) {
 		System.out.println("[MainServiceImpl - getAvgRatingMap()]");
 
-        Map<Integer, Double> avgRatingMap = new HashMap<>();
+        Map<Integer, Double> avgRatingMap = new HashMap();
 
         if (placeIds == null || placeIds.isEmpty()) return avgRatingMap;
 
@@ -95,7 +95,7 @@ public class MainServiceImpl implements MainService {
 	    String user_id = (String) request.getSession().getAttribute("sessionID");
 	    
 	    if (user_id == null || user_id.trim().isEmpty()) {
-	        return new ArrayList<>();
+	        return new ArrayList();
 	    }
 	    
 	    List<Integer> favoriteList = dao.getFavoritePlaceIds(user_id);

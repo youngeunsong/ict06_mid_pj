@@ -37,40 +37,110 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	private AdRestaurantDAO adResDao;
 
 	//맛집 등록 조회
-			
 	@Override
 	public void getRestaurant_list(HttpServletRequest request, HttpServletResponse response, Model model) {
 	    System.out.println("AdRestaurantServiceImpl - getRestaurant_list()");
 	    
-	    //parameter값 수집
+	    // parameter값 수집
 	    String pageNum = request.getParameter("pageNum");
 	    String areaCode = request.getParameter("areaCode");
+	    String category = request.getParameter("category");
 	    
-	    //페이징 객체 생성
+	    // 페이징 객체 생성
 	    Paging paging = new Paging(pageNum);
-	    
-	    //지역코드 담을 map 생성
+	    // 지역코드 담을 map 생성
 	    Map<String, Object> map = new HashMap<String, Object>();
 	    map.put("areaCode", areaCode);
+	    map.put("category", category);
 	    
-	    //전체 건수 조회
+	    // 전체 건수 조회
 	    int total = adResDao.placeCnt(map); 
 	    System.out.println("total : " + total);
 	    paging.setTotalCount(total);
 	    map.put("start", paging.getStartRow());
 	    map.put("end", paging.getEndRow());
 	    
-	    // [수정] List 타입을 Map으로 선택과 목록 조회
+	    // List 타입을 Map으로 선택과 목록 조회
 	    List<Map<String, Object>> list = adResDao.placeList(map); 
 	    System.out.println("list size : " + (list != null ? list.size() : 0));
 	    
-	    //model에 값을 담아서 jsp로 전달
+	    // model에 값을 담아서 jsp로 전달
 	    model.addAttribute("list", list);
 	    model.addAttribute("paging", paging);
 	    model.addAttribute("areaCode", areaCode);
-	    
+	    model.addAttribute("category", category);
+	    model.addAttribute("totalCount", total);
 	}
+	
+	// 맛집 정보 검색
+	@Override
+	public void getRestaurantSearch(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("AdRestaurantServiceImpl - getRestaurantSearch()");
+		
+		//파라미터로 jsp에서 받은 값 전달
+		String areaCode = request.getParameter("areaCode");
+		String pageNum = request.getParameter("pageNum");
+	    
+		// \\d+: 숫자(\d)가 하나 이상(+) 반복된다는 뜻
+		if (request.getParameter("keyword") != null && request.getParameter("keyword").matches("\\d+")) {
+		    // 숫자인 경우 (0~9로만 구성됨)
+		    int keyword = Integer.parseInt(request.getParameter("keyword"));
+		    System.out.println("keyword"+keyword);
+		    
+		    // 페이징 객체 생성
+		    Paging paging = new Paging(pageNum);
+		    
+			// 지역코드 담을 map 생성
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("intKeyword", keyword);
+		    
+			// 전체 건수 조회
+		    int total = adResDao.placeCnt(map); 
+		    System.out.println("total : " + total);
+		    paging.setTotalCount(total);
+		    map.put("start", paging.getStartRow());
+		    map.put("end", paging.getEndRow());
+		    
+		    // List 타입을 Map으로 선택과 목록 조회
+		    List<Map<String, Object>> list = adResDao.getRestaurantSearchInt(map);
+		    System.out.println("list=>"+list);
+		    model.addAttribute("list",list);
+		    model.addAttribute("keyword",keyword);
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("areaCode",areaCode);
+		    model.addAttribute("totalCount", total);
+		    model.addAttribute("pageNum", pageNum);
+		    model.addAttribute("keyword", keyword);
+		} else {
+		    // 문자가 포함되어 있거나 null인 경우
+			String keyword = request.getParameter("keyword");
+			System.out.println("keyword"+keyword);
 			
+			// 페이징 객체 생성
+		    Paging paging = new Paging(pageNum);
+		    
+			// 지역코드 담을 map 생성
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("strKeyword", keyword);
+		    
+			// 전체 건수 조회
+		    int total = adResDao.placeCnt(map); 
+		    System.out.println("total : " + total);
+		    paging.setTotalCount(total);
+		    map.put("start", paging.getStartRow());
+		    map.put("end", paging.getEndRow());
+		    //둘이상 조회될수있기에 list로 담는다
+			List<Map<String, Object>> list = adResDao.getRestaurantSearchString(map);
+		    System.out.println("list =>"+list);
+		    model.addAttribute("list",list);
+		    model.addAttribute("keyword",keyword);
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("areaCode",areaCode);
+		    model.addAttribute("totalCount", total);
+		    model.addAttribute("pageNum", pageNum);
+		    model.addAttribute("keyword", keyword);
+		}
+	}
 	//맛집 정보 등록		
 	@Override
 	public void getRestaurantInsert(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
@@ -120,7 +190,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		            fos.write(buffer, 0, len);
 	        	}
 	        
-		        // 서버 상의 웹 애플리케이션 식별 경로(Context Path)를 동적으로 가져옵
+		        // 서버 상의 웹 애플리케이션 식별 경로(Context Path)를 동적으로 가져옴
 		        // ict06_team1_midpj 
 		        String contextPath = request.getContextPath(); 
 		        // DB에 저장할 최종 이미지 접근 경로(URL)를 조립
@@ -180,12 +250,16 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	        pageNum1 = "1";
 	    }
 		int pageNum = Integer.parseInt(pageNum1);
-		String areaCode = request.getParameter("areaCode");
-		
+		//jsp에서 받은 areaCode1/ category1/ keyword model에 담기 -> 이전 화면에서 했던 페이지번호, 필터 내용 등록 완료후 다시 목록 화면 돌아갈 시에도 유지하기 위함 
+		String areaCode = request.getParameter("areaCode1");
+		String category = request.getParameter("category1");
+		String keyword = request.getParameter("keyword");
 		// model에 각가 값 넣고 jsp로 전달
 		model.addAttribute("pageNum",pageNum);
 		model.addAttribute("areaCode",areaCode);
 		model.addAttribute("insertCnt",insertCnt);
+		model.addAttribute("category",category);
+		model.addAttribute("keyword",keyword);
 		System.out.println("insertCnt"+insertCnt);
 	}
 	
@@ -198,7 +272,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		// parameter로 place_id와 pageNum 그리고 areaCode값 전달받음 그리고 정수형으로 변환
 		int place_id = Integer.parseInt(request.getParameter("place_id"));
 		String pageNum1 = request.getParameter("pageNum");
-		
+		String category = request.getParameter("category");
+		String keyword = request.getParameter("keyword");
 		if (pageNum1 == null || pageNum1.trim().isEmpty()) {
 	        pageNum1 = "1";
 	    }
@@ -216,7 +291,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		model.addAttribute("rDto", rDto);
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("areaCode", areaCode);
-		
+		model.addAttribute("category",category);
+		model.addAttribute("keyword", keyword);
 	}
 	
 	// 맛집 정보 수정
@@ -229,10 +305,14 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		String pageNum = request.getParameter("pageNum");
 		int hiddenPageNum = Integer.parseInt(request.getParameter("pageNum")); 
 		String oldImg = request.getParameter("oldImg");
-		String areaCode = request.getParameter("areaCode");
+		String areaCode1 = request.getParameter("areaCode1");
+		String category1 = request.getParameter("category1");
+		String keyword = request.getParameter("keyword");
 		System.out.println("hiddenPageNum : "+hiddenPageNum);
 		System.out.println("oldImg : "+oldImg);
-		System.out.println("areaCode : "+areaCode);
+		System.out.println("areaCode1 : "+areaCode1);
+		System.out.println("category1 : "+category1);
+		System.out.println("keyword : "+keyword);
 		
 		// 수정한이미지 객체 MultipartFile로 받기 
 		MultipartFile file = request.getFile("pdImg");
@@ -315,18 +395,21 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    rDto.setRestdate(request.getParameter("restdate"));
 	    rDto.setAreaCode(request.getParameter("areaCode"));
 	    rDto.setStatus("open");
-		 
+		
+	    // updateCntP = 1 인 경우, 즉 수정 성공 할 경우 레스토랑 업데이트 진행
 	    int updateCntP = adResDao.getPlaceUpdateAction(pDto);
-		int updateCntR = adResDao.getRestaurantUpdateAction(rDto);
-		
-		
-		//부모테이블(PLACE) 먼저 insert
-		//부모테이블 insert 성공 여부 확인
-		
+	    int updateCntR = 0;
+	    if(updateCntP >0) {
+	    	updateCntR = adResDao.getRestaurantUpdateAction(rDto);
+	    }
+	    // 각각의 값들 model에 담아서 jsp로 전달
 		model.addAttribute("updateCnt",updateCntR);
 		model.addAttribute("hiddenPageNum",hiddenPageNum);
-		model.addAttribute("areaCode",areaCode);
-		System.out.println("수정 후 areaCode 확인 : " + areaCode);
+		model.addAttribute("areaCode1",areaCode1);
+		model.addAttribute("category1",category1);
+		model.addAttribute("keyword",keyword);
+		
+		System.out.println("수정 후 areaCode 확인 : " + areaCode1);
 		System.out.println("전달된 맛집 이름: " + pDto.getName());
 		System.out.println("전달된 상세 설명: " + rDto.getDescription());
 		System.out.println("전달된 장소 ID: " + pDto.getPlace_id());
@@ -341,6 +424,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    String strPlace_id = request.getParameter("place_id");
 	    String pageNum = request.getParameter("pageNum");
 	    String areaCode = request.getParameter("areaCode");
+	    String category = request.getParameter("category");
+	    String keyword = request.getParameter("keyword");
 	    int deleteCnt = 0;
 
 	    // 2. [오류 해결 포인트] place_id가 있을 때만 삭제 로직 실행
@@ -357,82 +442,109 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    model.addAttribute("deleteCnt", deleteCnt);
 	    model.addAttribute("pageNum", pageNum);
 	    model.addAttribute("areaCode", areaCode);
+	    model.addAttribute("category", category);
+	    model.addAttribute("keyword",keyword);
 	}
 
 	@Override
 	public void testRegister(HttpServletRequest request, HttpServletResponse response, Model model) 
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
+	    // 1. 요청 파라미터에서 지역 코드(keyword)를 가져옴
 	    String areaCode = request.getParameter("keyword");
-	    int pageNo = 1;
+	    int pageNo = 1; // 기본 페이지 번호 설정
+	    
+	    // 2. 지역 코드가 없으면 기본값 "1"(서울)로 설정
 	    if (areaCode == null || areaCode.isEmpty()) areaCode = "1";
+	    
+	    // 3. 특정 조건("1-1")인 경우 서울의 2페이지 데이터를 가져오도록 설정
 	    if(areaCode.equals("1-1")) {
-	    	areaCode = "1";
-	    	pageNo = 2;
+	        areaCode = "1";
+	        pageNo = 2;
 	    }
-	    int successCountRes = 0;
-	    int successCountPlace = 0;
+	    
+	    // 4. 성공 횟수를 저장할 카운터 변수 초기화
+	    int successCountRes = 0;   // 맛집 정보 저장 성공 횟수
+	    int successCountPlace = 0; // 장소 정보 저장 성공 횟수
+	    
+	    // 5. 공공데이터포털 API 서비스 키
 	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
 
+	    // 6. 외부 API 호출을 위한 RestTemplate과 JSON 파싱을 위한 ObjectMapper 생성
 	    RestTemplate restTemplate = new RestTemplate();
 	    ObjectMapper mapper = new ObjectMapper();
 
 	    try {
-	        //1. 지역 기반 목록 조회
+	        // 7. [1단계] 지역 기반 관광 정보 목록 조회 API URL 생성 (음식점 타입: contentTypeId=39)
 	        String url = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2?serviceKey=" + serviceKey
 	                + "&areaCode=" + areaCode
 	                + "&contentTypeId=39"
 	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=100"
 	                + "&pageNo="+pageNo;
 
+	        // 8. API 호출 및 JSON 응답 받기
 	        String jsonResponse = restTemplate.getForObject(url, String.class);
+	        
+	        // 9. 응답받은 JSON에서 실제 아이템 목록(item) 노드까지 접근
 	        JsonNode items = mapper.readTree(jsonResponse).path("response").path("body").path("items").path("item");
 
+	        // 10. 아이템 목록이 배열 형태인지 확인 후 반복문 실행
 	        if (items.isArray()) {
 	            for (JsonNode item : items) {
+	                // 11. 각 아이템의 콘텐츠 ID와 대표 이미지 URL 추출
 	                String contentId = item.path("contentid").asText().trim();
 	                String imageUrl = item.path("firstimage").asText("");
 	                
-	                // 1. 이미지가 없거나 비어있는 경우 저장하지 않고 다음 아이템으로 건너뜀
+	                // 12. [필터링] 이미지가 없는 장소는 우리 서비스 품질을 위해 저장하지 않고 건너뜀
 	                if (imageUrl == null || imageUrl.trim().isEmpty()) {
 	                    System.out.println(">>> [건너뛰기] 이미지 정보가 없는 장소입니다.");
 	                    continue; 
 	                }
-	                // 중복 체크
+	                
+	                // 13. [중복 체크] 이미 DB에 존재하는 contentId인지 확인하여 중복 저장 방지
 	                if (adResDao.checkDuplicate(contentId) > 0) continue;
 
+	                // 14. DTO 객체 생성 및 기본 정보 세팅 (Place: 공통 정보, Restaurant: 음식점 전용)
 	                RestaurantDTO rdto = new RestaurantDTO();
 	                PlaceDTO pdto = new PlaceDTO();
+	                
 	                pdto.setPlace_id(Integer.parseInt(contentId));
 	                rdto.setRestaurant_id(Integer.parseInt(contentId));
-	                pdto.setName(item.path("title").asText(""));
-	                pdto.setAddress(item.path("addr1").asText());
-	                pdto.setImage_url(imageUrl);
-	                pdto.setLongitude(item.path("mapx").asDouble());
-	                pdto.setLatitude(item.path("mapy").asDouble());
-	                rdto.setPhone(item.path("tel").asText(""));
-	                rdto.setAreaCode(item.path("areacode").asText("")); 
+	                pdto.setName(item.path("title").asText("")); // 가게명
+	                pdto.setAddress(item.path("addr1").asText()); // 주소
+	                pdto.setImage_url(imageUrl); // 이미지 경로
+	                pdto.setLongitude(item.path("mapx").asDouble()); // 경도
+	                pdto.setLatitude(item.path("mapy").asDouble());  // 위도
+	                rdto.setPhone(item.path("tel").asText("")); // 전화번호
+	                rdto.setAreaCode(item.path("areacode").asText("")); // 지역 코드
 
-	                // 2️⃣ 공통 상세 정보 호출 (개요, 카테고리 등)
+	                // 15. [2단계] 공통 상세 정보(카테고리 등) 수집을 위한 추가 메서드 호출
 	                testRegisterDetail(contentId, rdto);
+	                
+	                // 16. [3단계] 소개 정보(개요 등) 수집을 위한 추가 메서드 호출
 	                testRegisterIntro(contentId, rdto);
 	                
+	                // 17. PLACE 테이블에 기본 정보 저장 후 카운트 증가
 	                if (adResDao.testInsertPlace(pdto) > 0) {
 	                    successCountPlace++;
 	                }
 	                
+	                // 18. RESTAURANT 테이블에 상세 정보 저장 후 카운트 증가
 	                if(adResDao.testInsertRes(rdto)> 0) {
 	                    successCountRes++;
 	                }
-
-	                
 	            }
 	        }
+	        
+	        // 19. 수집 결과 로그 출력
 	        System.out.println("🚩 place 수집 완료 : " + successCountPlace + "건");
 	        System.out.println("🚩 RESTAURANT 수집 완료 : " + successCountRes + "건");
 
 	    } catch (Exception e) {
+	        // 20. 에러 발생 시 스택 트레이스 출력
 	        e.printStackTrace();
 	    }
+	    
+	    // 21. 화면(JSP)에 수집된 결과 건수를 보여주기 위해 모델에 저장
 	    model.addAttribute("countPlace", successCountPlace);
 	    model.addAttribute("countRes", successCountRes);
 	}
@@ -440,15 +552,19 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	// [메서드 추가] 소개 정보 조회 (영업시간, 휴무일, 주차시설 등)
 	@Override
 	public void testRegisterIntro(String contentId, RestaurantDTO rdto) {
-		
+	    
+	    // 1. API 접근을 위한 인증키 설정
 	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
 	    
+	    // 2. 외부 API 호출을 위한 RestTemplate 설정
 	    RestTemplate restTemplate = new RestTemplate();
 	    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+	    
+	    // 3. 서비스 키에 포함된 특수문자(%, + 등)가 변형되지 않도록 인코딩 모드를 NONE으로 설정
 	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); 
 	    restTemplate.setUriTemplateHandler(factory);
 
-	    // detailIntro1 오퍼레이션 사용 (contentTypeId=39 필수)
+	    // 4. 소개 정보 전용 API(detailIntro2) URL 생성 (음식점 타입인 39번 필수 지정)
 	    String url = "https://apis.data.go.kr/B551011/KorService2/detailIntro2?serviceKey=" + serviceKey
 	            + "&contentId=" + contentId
 	            + "&contentTypeId=39"
@@ -456,53 +572,67 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 
 	    try {
 	        ObjectMapper mapper = new ObjectMapper();
+	        // 5. API로부터 JSON 응답 문자열을 받아옴
 	        String res = restTemplate.getForObject(url, String.class);
+	        
+	        // 6. JSON 트리 구조에서 item 노드를 찾아감
 	        JsonNode itemNode = mapper.readTree(res).path("response").path("body").path("items").path("item");
 
+	        // 7. API 응답이 배열 형태인 경우 첫 번째 요소를 가져오고, 아니면 바로 노드를 선택
 	        JsonNode item = itemNode.isArray() ? itemNode.get(0) : itemNode;
 
+	        // 8. 수집된 데이터가 유효한지 확인
 	        if (item != null && !item.isMissingNode()) {
-	            // 음식점(39) 전용 필드 매핑
-	        	String restdate = item.path("restdatefood").asText("");
+	            // 9. 음식점 전용 필드인 '휴무일(restdatefood)' 정보 추출
+	            String restdate = item.path("restdatefood").asText("");
 	            
+	            // 10. 값이 비어있을 경우 null로 처리하여 후속 로직 오류 방지
 	            if (restdate == null || restdate.isEmpty()) restdate = null ;
 
-	            // 1. 핵심 키워드 축약 (부피 줄이기)
-	            String compressed = restdate.replaceAll("\\s+", "")  // 공백 제거
-		                                    .replace("요일", "")      // 월요일 -> 월
-		                                    .replace("매주", "")      // 매주 월 -> 월
-		                                    .replace("연중무휴", "무휴")
-		                                    .replace("공휴일", "공휴")
-		                                    .replace("마지막주", "막주")
-		                                    .replace("첫째주", "1주")
-		                                    .replace("둘째주", "2주");
+	            // 11. [전처리] DB 컬럼 크기에 맞추기 위해 불필요한 단어들을 짧게 축약 (부피 줄이기)
+	            // 예: "매주 월요일" -> "월", "연중무휴" -> "무휴"
+	            String compressed = restdate.replaceAll("\\s+", "")  // 모든 공백 제거
+	                                    .replace("요일", "")      // '요일' 삭제
+	                                    .replace("매주", "")      // '매주' 삭제
+	                                    .replace("연중무휴", "무휴")
+	                                    .replace("공휴일", "공휴")
+	                                    .replace("마지막주", "막주")
+	                                    .replace("첫째주", "1주")
+	                                    .replace("둘째주", "2주");
 
-	            // 2. 30바이트 단위로 안전하게 자르기 (한글 깨짐 방지)
+	            // 12. [안전 장치] DB의 VARCHAR2(30) 등 한정된 크기를 넘지 않도록 30바이트 단위 절삭
 	            int maxByte = 30;
 	            StringBuilder sb = new StringBuilder();
 	            int currentByte = 0;
 
+	            // 13. 문자열을 한 글자씩 돌면서 바이트 수 계산 (한글 깨짐 방지 로직)
 	            for (char c : compressed.toCharArray()) {
 	                try {
-	                    // DB 인코딩에 맞춰 바이트 계산 (보통 UTF-8 3바이트)
+	                    // 14. UTF-8 기준으로 한글은 3바이트, 영어/숫자는 1바이트로 계산
 	                    int charByte = String.valueOf(c).getBytes("UTF-8").length;
 	                    
+	                    // 15. 현재 누적 바이트가 30바이트 이하일 때만 결과 문자열에 추가
 	                    if (currentByte + charByte <= maxByte) {
 	                        sb.append(c);
 	                        currentByte += charByte;
 	                    } else {
-	                        break; // 30바이트를 넘기지 않음
+	                        // 16. 30바이트를 초과하게 되면 반복 중단 (데이터 유실 최소화하며 절단)
+	                        break; 
 	                    }
 	                } catch (java.io.UnsupportedEncodingException e) {
 	                    break;
 	                }
 	            }
+	            
+	            // 17. 최종 가공된 휴무일 정보를 DTO에 저장
 	            rdto.setRestdate(sb.toString());
 	            System.out.println(">>> " + contentId + " 소개 정보(영업/주차) 수집 완료");
-	        }else {
+	        } else {
+	            // 18. 데이터가 아예 없는 경우 빈 문자열 세팅
 	            rdto.setRestdate("");
 	        }
 	    } catch (Exception e) {
+	        // 19. 네트워크 장애나 파싱 오류 발생 시 에러 메시지 출력
 	        System.err.println("소개 정보 수집 에러: " + e.getMessage());
 	    }
 	}
@@ -510,33 +640,55 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	// 2. 수정된 공통 상세 정보 메서드 (YN 파라미터 모두 제거)
 	@Override
 	public void testRegisterDetail(String contentId, RestaurantDTO rdto) {
+	    
+	    // 1. 공공데이터 API 호출을 위한 인증키(Service Key) 설정
 	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
 	    
+	    // 2. Spring에서 제공하는 HTTP 통신 객체 RestTemplate 생성
 	    RestTemplate restTemplate = new RestTemplate();
+	    
+	    // 3. API 요청 URL 빌더 팩토리 생성
 	    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+	    
+	    // 4. [매우 중요] 인증키 내의 특수문자가 인코딩되어 API 호출이 실패하는 것을 방지하기 위해 
+	    // 인코딩 모드를 NONE(인코딩 하지 않음)으로 설정
 	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); 
 	    restTemplate.setUriTemplateHandler(factory);
 
-	    // 중요: 최신 매뉴얼 규격에 따라 모든 YN 파라미터를 삭제했습니다.
+	    // 5. [API 요청 URL 구성] detailCommon2 오퍼레이션을 사용
+	    // 최신 공공데이터 매뉴얼 규격에 맞춰 불필요한 YN(Yes/No) 파라미터들을 모두 제거하여 호출 최적화
 	    String url = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?serviceKey=" + serviceKey
 	            + "&contentId=" + contentId
 	            + "&MobileOS=ETC&MobileApp=AppTest&_type=json";
 
 	    try {
+	        // 6. JSON 파싱을 위한 Jackson 라이브러리의 ObjectMapper 객체 생성
 	        ObjectMapper mapper = new ObjectMapper();
+	        
+	        // 7. 구성된 URL로 GET 요청을 보내 응답 결과를 String 형태로 수신
 	        String res = restTemplate.getForObject(url, String.class);
+	        
+	        // 8. JSON 응답 결과에서 실제 데이터가 담긴 item 노드까지 경로 추적
 	        JsonNode itemNode = mapper.readTree(res).path("response").path("body").path("items").path("item");
 
+	        // 9. 결과 데이터가 리스트(Array) 형태면 첫 번째 요소를 가져오고, 단일 객체면 그대로 선택
 	        JsonNode item = itemNode.isArray() ? itemNode.get(0) : itemNode;
 
+	        // 10. 노드가 존재하고 유효한 데이터가 있는지 확인
 	        if (!item.isMissingNode()) {
+	            
+	            // 11. 'overview' 필드에서 맛집의 전체적인 개요(상세 설명)를 가져와 DTO에 저장
 	            rdto.setDescription(item.path("overview").asText(""));
+	            
+	            // 12. 'cat3' 필드에서 소분류 카테고리 코드(예: 한식, 중식 등)를 가져와 DTO에 저장
 	            rdto.setCategory(item.path("cat3").asText(""));
+	            
+	            // 13. 콘솔에 수집 성공 여부 출력
 	            System.out.println(">>> " + contentId + " 공통 상세 수집 완료");
 	        }
 	    } catch (Exception e) {
+	        // 14. 통신 오류나 데이터 파싱 중 에러 발생 시 에러 메시지 출력
 	        System.err.println("공통 상세 에러: " + e.getMessage());
 	    }
 	}
-	
 }

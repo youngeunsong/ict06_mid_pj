@@ -62,22 +62,32 @@
         background-color: #fff !important;
     }
 </style>
-<c:if test="${insertCnt == 1}">
-	<script type="text/javascript">
-		setTimeout(function(){
-			alert("맛집등록 성공!!");
-			window.location="${path}/restaurant.ad?pageNum=${pageNum}&areaCode=${areaCode}";
-		},1000);
-	</script>
-</c:if>
-<c:if test="${insertCnt != 1}">
-	<script type="text/javascript">
-		setTimeout(function(){
-			alert("맛집등록 실패!!");
-			window.location="${path}/restaurantInsert.ad?pageNum=${pageNum}&areaCode=${areaCode}";
-		},1000);
-	</script>
-</c:if>
+<c:choose>
+    <c:when test="${insertCnt == 1}">
+        <script type="text/javascript">
+            setTimeout(function(){
+                alert("맛집등록 성공!!");
+                <%-- 키워드 유무에 따라 서블릿 주소 결정 --%>
+                <c:if test="${not empty keyword}">
+                    window.location="${path}/restaurantSearch.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+                </c:if>
+                <c:if test="${empty keyword}">
+                    window.location="${path}/restaurant.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
+                </c:if>
+            }, 1000);
+        </script>
+    </c:when>
+    
+    <c:otherwise>
+        <script type="text/javascript">
+            setTimeout(function(){
+                alert("맛집등록 실패!!");
+                <%-- 실패 시 다시 등록 폼으로 돌아갈 때도 검색어 유지 --%>
+                window.location="${path}/restaurantInsert.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+            }, 1000);
+        </script>
+    </c:otherwise>
+</c:choose>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -116,6 +126,7 @@
                         <form action="${path}/restaurantInsertAction.ad" method="post" enctype="multipart/form-data" name="insertForm">
                         	<input type="hidden" name="areaCode" value="${param.areaCode}">
     						<input type="hidden" name="pageNum" value="${param.pageNum}">
+    						<input type="hidden" name="category" value="${category}">
                             <div class="card-body p-4">
                                 <div class="row g-4">
                                     <div class="col-md-6">
@@ -190,7 +201,6 @@
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
     </div>
-
 <script>
     // 주소 검색 및 좌표 변환 (기존 로직 유지)
     const geocoder = new kakao.maps.services.Geocoder();

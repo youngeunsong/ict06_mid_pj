@@ -69,17 +69,19 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	@ResponseBody
 	@RequestMapping("/getFestivalDetail.adfe")
 	public FestivalDTO getFestivalDetail(@RequestParam int festival_id){
-
+		logger.info("[url => /getFestivalDetail.adfe]");
 	    return adFestService.getFestivalDetailAjax(festival_id);
 	}
 	
-	// [관리자 - 장소 관리] 축제 수정
-	@RequestMapping("/modifyFestival.adfe")
-	public String modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		logger.info("[url => /modifyFestival.adfe]");
-		// adFestService.getFestivalDetail(request, response, model); 
-		return "admin/place/festival/modifyFestival";
+	// [관리자 - 장소 관리] 축제 수정 처리 액션 
+	@ResponseBody
+	@RequestMapping("/updateFestival.adfe")
+	public int updateFestival(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+
+	    logger.info("[url => /updateFestival.adfe]");
+
+	    return adFestService.modifyFestival(request, response, model);
 	}
 	
 	// [관리자 - 장소 관리] 축제 삭제

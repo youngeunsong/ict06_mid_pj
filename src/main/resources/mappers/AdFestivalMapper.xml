@@ -127,7 +127,39 @@
 		</where>
 	</select>
 	
-	<!-- 축제 정보 수정 -->
+	<!-- 축제 정보 수정 : 3단계 -->
+	<!-- (1) 장소 수정 -->
+	<update id="updatePlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
+		UPDATE PLACE
+		SET
+		    name = #{name},
+		    address = #{address},
+		    latitude = #{latitude},
+		    longitude = #{longitude},
+		    image_url = #{image_url}
+		WHERE place_id = #{place_id}
+	</update>
+	
+	<!-- (2) 축제 수정 -->
+	<update id="modifyFestival" parameterType="spring.ict06team1.midpj.dto.FestivalDTO">
+		UPDATE FESTIVAL
+		SET
+		    description = #{description, jdbcType=CLOB},
+		    start_date = #{start_date},
+		    end_date = #{end_date}
+		WHERE festival_id = #{festival_id}
+	</update>
+	
+	<!-- (3) 티켓 수정  -->
+	<update id="updateTicket" parameterType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+		UPDATE FESTIVAL_TICKET
+		SET
+		    price = #{price},
+		    stock = #{stock},
+		    description = #{description, jdbcType=CLOB}
+		WHERE festival_id = #{festival_id}
+		AND ticket_type = #{ticket_type}
+	</update>
 	
 	<!-- 신규 축제 등록: 3단계 -->
 	<!-- (1) 신규 장소 등록 -->

@@ -150,11 +150,6 @@
 												<td><fmt:formatDate value="${dto.placeDTO.placeRegDate}" pattern="yyyy-MM-dd" /></td>
 												<%-- event.stopPropagation();: 수정, 삭제 버튼 클릭 시 행클릭 이벤트 차단 --%>
 												<td class="text-center">
-							                        <%-- <button class="btn btn-xs btn-outline-secondary" 
-							                        onclick="event.stopPropagation(); 
-							                        location.href='${path}/modifyFestival.adfe?place_id=${dto.festival_id}&pageNum=${paging.pageNum}'">
-							                        	수정
-							                        </button> --%>
 							                        <button class="btn btn-xs btn-outline-secondary"
 														onclick="event.stopPropagation(); editFestival('${dto.festival_id}')">
 															수정
@@ -256,7 +251,8 @@
 	
 	<!-- 축제 상세 조회 Modal 시작 -->
 	<!-- 축제 상세보기 Modal -->
-	<div class="modal fade" id="festivalDetailModal" tabindex="-1">
+	<div class="modal fade" id="modal_festival_detail" tabindex="-1">
+		<input type="hidden" id="modal_festival_detail_id"> <!-- festival_id 저장용 -->
 	    <div class="modal-dialog modal-xl">
 	        <div class="modal-content">
 	            <div class="modal-header bg-success text-white">
@@ -267,7 +263,7 @@
 	                    <span>&times;</span>
 	                </button>
 	            </div>
-	
+	            
 	            <div class="modal-body">
 	                <table class="table table-bordered">
 	                    <tr>
@@ -324,33 +320,33 @@
 			            			<!-- 무료 티켓 시작 -->
 									<tr>
 									    <td>무료</td>
-									    <td id="priceFree"></td>
-									    <td id="stockFree"></td>
-									    <td id="ticketDescFreeDay" style="white-space: pre-wrap;"></td>
+									    <td id="detail_priceFree"></td>
+									    <td id="detail_stockFree"></td>
+									    <td id="detail_ticketDescFreeDay" style="white-space: pre-wrap;"></td>
 									</tr>
 									<!-- 무료 티켓 끝 -->
 									<!-- 1일권 시작 -->
 									<tr>
 									    <td>1일권</td>
-									    <td id="priceOneDay"></td>
-									    <td id="stockOneDay"></td>
-									    <td id="ticketDescOneDay" style="white-space: pre-wrap;"></td>
+									    <td id="detail_priceOneDay"></td>
+									    <td id="detail_stockOneDay"></td>
+									    <td id="detail_ticketDescOneDay" style="white-space: pre-wrap;"></td>
 									</tr>
 									<!-- 1일권 끝 -->
 									<!-- 2일권 시작 -->
 									<tr>
 									    <td>2일권</td>
-									    <td id="priceTwoDay"></td>
-									    <td id="stockTwoDay"></td>
-									    <td id="ticketDescTwoDay" style="white-space: pre-wrap;"></td>
+									    <td id="detail_priceTwoDay"></td>
+									    <td id="detail_stockTwoDay"></td>
+									    <td id="detail_ticketDescTwoDay" style="white-space: pre-wrap;"></td>
 									</tr>
 									<!-- 2일권 끝 -->
 									<!-- 전일권 시작 -->
 									<tr>
 									    <td>전일권</td>
-									    <td id="priceAllDay"></td>
-									    <td id="stockAllDay"></td>
-									    <td id="ticketDescAllDay"></td>
+									    <td id="detail_priceAllDay"></td>
+									    <td id="detail_stockAllDay"></td>
+									    <td id="detail_ticketDescAllDay"></td>
 									</tr>
 									<!-- 전일권 끝 -->
 			              		</table>
@@ -363,12 +359,12 @@
 	
 	            <div class="modal-footer">
 	                <button class="btn btn-success"
-	                	onclick="editFestival($('#modal_festival_id').text())">
+	                	onclick="openEditFromDetail()">
 	                	수정
 	                </button>
 	                
 	                <button class="btn btn btn-outline-danger" 
-                       	onclick="deleteFestival(${dto.festival_id})">
+                       	onclick="deleteFestival($('#modal_festival_detail_id').val())">
                        	삭제
                     </button>
 	
@@ -383,7 +379,7 @@
 	<!-- 축제 상세 조회 Modal 끝 -->
 	
 	<%-- 축제 수정 Modal 시작 --%>
-	<div class="modal fade" id="festivalUpdateModal" tabindex="-1">
+	<div class="modal fade" id="modal_festival_modify" tabindex="-1">
 	 <div class="modal-dialog modal-xl">
 	  <div class="modal-content">
 	
@@ -392,6 +388,7 @@
 	   </div>
 	
 	   <div class="modal-body">
+	   	<input type="hidden" id="modal_festival_modify_id">
 	
 	    <!-- 정보 입력 테이블 영역 시작 -->
         <table class="table">
@@ -416,7 +413,7 @@
            	<!-- 축제 경도 시작-->
            	<tr>
        			<th><label for="inputLongitude">* 축제 경도</label></th>
-       			<td><input type="number" step="0.00000001" name="longitude" id="inputLongitude" placeholder="축제 경도를 입력해주세요" required></td>
+       			<td><input type="number" step="0.00000001" id="inputLongitude" name="longitude" placeholder="축제 경도를 입력해주세요" required></td>
        		</tr>
            	<!-- 축제 경도 끝-->
            	<!-- 축제 이미지 URL 시작 -->
@@ -499,7 +496,7 @@
 	   </div>
 	
 	   <div class="modal-footer">
-	    <button class="btn btn-success" onclick="updateFestival()">
+	    <button class="btn btn-success" onclick="updateFestival($('#modal_festival_modify_id').val())">
 	     	수정 저장
 	    </button>
 	

@@ -67,6 +67,7 @@ function viewFestivalDetail(id){
   data : {festival_id : id},
 
   success : function(data){
+   $('#modal_festival_detail_id').val(data.festival_id);	
 
    $('#modal_name').text(data.placeDTO.name);
    if(data.status == "UPCOMING"){
@@ -83,8 +84,8 @@ function viewFestivalDetail(id){
    $('#modal_latitude').text(data.placeDTO.latitude);
    $('#modal_longitude').text(data.placeDTO.longitude);
 
-   $('#modal_start_date').text(data.start_date);
-   $('#modal_end_date').text(data.end_date);
+   $('#modal_start_date').text(data.start_date_str);
+   $('#modal_end_date').text(data.end_date_str);
 
    $('#modal_description').text(data.description);
 
@@ -94,35 +95,47 @@ function viewFestivalDetail(id){
    if(data.ticketList){
     data.ticketList.forEach(function(ticket){
 
-     if(ticket.ticket_type == "Free"){
-     	$('#priceFree').text(ticket.price + "원");
-		$('#stockFree').text(ticket.stock);
-		$('#ticketDescFreeDay').text(ticket.description);
-     }
-
-     if(ticket.ticket_type == "OneDay"){
-      	$('#priceOneDay').text(ticket.price + "원");
-		$('#stockOneDay').text(ticket.stock);
-		$('#ticketDescOneDay').text(ticket.description);
-     }
-
-     if(ticket.ticket_type == "TwoDay"){
-     	$('#priceTwoDay').text(ticket.price + "원");
-		$('#stockTwoDay').text(ticket.stock);
-		$('#ticketDescOneDay').text(ticket.description);
-     }
-
-     if(ticket.ticket_type == "AllDay"){
-      	$('#priceAllDay').text(ticket.price + "원");
-		$('#stockAllDay').text(ticket.stock);
-		$('#ticketDescAllDay').text(ticket.description);
-     }
+	 	if(ticket.ticket_type == "Free"){
+			 $('#detail_priceFree').text(ticket.price + "원");
+			 $('#detail_stockFree').text(ticket.stock);
+			 $('#detail_ticketDescFreeDay').text(ticket.description);
+			}
+		
+		if(ticket.ticket_type == "OneDay"){
+			 $('#detail_priceOneDay').text(ticket.price + "원");
+			 $('#detail_stockOneDay').text(ticket.stock);
+			 $('#detail_ticketDescOneDay').text(ticket.description);
+		}
+		
+		if(ticket.ticket_type == "TwoDay"){
+			 $('#detail_priceTwoDay').text(ticket.price + "원");
+			 $('#detail_stockTwoDay').text(ticket.stock);
+			 $('#detail_ticketDescTwoDay').text(ticket.description);
+		}
+		
+		if(ticket.ticket_type == "AllDay"){
+			 $('#detail_priceAllDay').text(ticket.price + "원");
+			 $('#detail_stockAllDay').text(ticket.stock);
+			 $('#detail_ticketDescAllDay').text(ticket.description);
+		}
     });
    }
 
-   $('#festivalDetailModal').modal("show");
+   $('#modal_festival_detail').modal("show");
   }
  });
+}
+
+/* 축제 상세 조회 modal 닫고 수정 modal 열기*/ 
+function openEditFromDetail(){
+
+ const id = $('#modal_festival_detail_id').val();
+
+ $('#modal_festival_detail').on('hidden.bs.modal', function(){
+     editFestival(id);
+ });
+
+ $('#modal_festival_detail').modal('hide');
 }
 
 /* 축제 수정 modal */
@@ -135,6 +148,8 @@ function editFestival(id){
   dataType : "json",
 
   success : function(data){
+   // festival_id 저장
+   $('#modal_festival_modify_id').val(data.festival_id);	
 
    // 축제 정보	
    $('#inputName').val(data.placeDTO.name);
@@ -143,8 +158,8 @@ function editFestival(id){
    $('#inputLongitude').val(data.placeDTO.longitude); 
    $('#inputImgAddress').val(data.placeDTO.image_url);
    $('#inputDescription').val(data.description);
-   $('#inputStartDate').val(data.start_date);
-   $('#inputEndDate').val(data.end_date);
+   $('#inputStartDate').val(data.start_date_str);
+   $('#inputEndDate').val(data.end_date_str);
    
    // 티켓 정보
    data.ticketList.forEach(function(ticket){
@@ -173,33 +188,53 @@ function editFestival(id){
 	 }
 	});
 
-   $('#festivalUpdateModal').modal("show");
+   $('#modal_festival_modify').modal("show");
   }
  });
 }
 
 /* 축제 수정 처리 */ 
-function updateFestival(){
+function updateFestival(id){
  $.ajax({
 
   url : path + "/updateFestival.adfe",
   type : "post",
 
   data : {
-
-   name : $('#update_name').val(),
-   start_date : $('#update_start_date').val(),
-   end_date : $('#update_end_date').val(),
-   description : $('#update_description').val()
-
+   festival_id : id,
+    
+   name : $('#inputName').val(),
+   address : $('#inputAddress').val(),
+   latitude : $('#inputLatitude').val(),
+   longitude : $('#inputLongitude').val(),
+   image_url : $('#inputImgAddress').val(),
+   description : $('#inputDescription').val(),
+   start_date : $('#inputStartDate').val(),
+   end_date : $('#inputEndDate').val(),
+   
+   priceFree : $('#priceFree').val(),
+   stockFree : $('#stockFree').val(),
+   ticketDescFreeDay : $('#ticketDescFreeDay').val(),
+   
+   priceOneDay : $('#priceOneDay').val(),
+   stockOneDay : $('#stockOneDay').val(),
+   ticketDescOneDay : $('#ticketDescOneDay').val(),
+   
+   priceTwoDay : $('#priceTwoDay').val(),
+   stockTwoDay : $('#stockTwoDay').val(),
+   ticketDescTwoDay : $('#ticketDescTwoDay').val(),
+   
+   priceAllDay : $('#priceAllDay').val(),
+   stockAllDay : $('#stockAllDay').val(),
+   ticketDescAllDay : $('#ticketDescAllDay').val()
   },
 
   success : function(res){
 
-   if(res=="success"){
+   if(res == 1){
 
     alert("수정 완료");
-    $('#festivalUpdateModal').modal('hide');
+    $('#modal_festival_modify').modal('hide');
     location.reload();
 
    }

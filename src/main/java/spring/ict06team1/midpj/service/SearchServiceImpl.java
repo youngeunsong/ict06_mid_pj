@@ -228,7 +228,7 @@ public class SearchServiceImpl implements SearchService {
 		System.out.println("[SearchServiceImpl] keyword=> " + keyword);
 		
 	    // 1. 반환할 리스트 미리 생성
-	    List<String> resultList = new ArrayList<>();
+	    List<String> resultList = new ArrayList();
 
 	    // 2. 검증: 키워드가 비어있다면 빈 리스트 그대로 반환
 	    if (keyword == null || keyword.trim().isEmpty()) {

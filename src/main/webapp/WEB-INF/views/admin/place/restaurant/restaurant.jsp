@@ -50,21 +50,44 @@
 function handleCombinedSearch() {
     // 1. 엘리먼트가 있는지 확인하며 값을 가져옵니다.
     const areaCodeEl = document.getElementById("areaCode");
+    const categoryEl = document.getElementById("category");
     const keywordEl = document.getElementById("keyword");
     
     // 2. 값이 있으면 가져오고, 없으면 빈 문자열 처리
     const areaCode = areaCodeEl ? areaCodeEl.value : "";
+    const category = categoryEl ? categoryEl.value : ""
     const keyword = keywordEl ? keywordEl.value : "";
     
     // 3. 카테고리는 화면에서 뺐으므로 파라미터에서 제외하거나 빈 값 처리
-    // 리다이렉트 시 category 파라미터가 필요 없다면 삭제해도 됩니다.
     location.href = "${path}/restaurant.ad?areaCode=" + areaCode + 
+    				"&category=" + category +
                     "&keyword=" + encodeURIComponent(keyword) + 
                     "&pageNum=1";
 }
+
+function searchRestaurant() {
+    // 1. 입력창(input)의 ID가 'keyword'인 요소에서 값을 가져옵니다.
+    const keywordElement = document.getElementById("keyword");
+    const keyword = keywordElement ? keywordElement.value : "";
+    
+    const categoryElement = document.getElementById("category");
+    const category = categoryElement ? categoryElement.value : "";
+    // 2. 검색어가 비어있을 경우 유효성 검사 (선택 사항)
+    if (!keyword.trim()) {
+        alert("검색어를 입력해주세요.");
+        keywordElement.focus();
+        return;
+    }
+
+    // 3. 지역 코드는 현재 '0'으로 고정하여 이동
+    // [수정] 세미콜론 위치를 조정하고 category를 끝에 붙인다.
+    location.href = `${path}/restaurantSearch.ad?areaCode=0&keyword=` 
+                    + encodeURIComponent(keyword) 
+                    + `&pageNum=1`
+                    + `&category=` + category; // 이제 URL에 category가 포함됩니다.
+}
 </script>
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
@@ -84,11 +107,11 @@ function handleCombinedSearch() {
                         <div class="filter-left">
                             <div class="input-group input-group-sm" style="width:220px;">
                                 <input type="text" id="keyword" name="keyword" class="form-control"
-                                    placeholder="맛집 키워드 입력" value="${param.keyword}">
+                                    placeholder="맛집명 또는 번호 입력">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="handleCombinedSearch()">
-                                        <i class="bi bi-search"></i>
-                                    </button>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="searchRestaurant()">
+                                     <i>검색</i>
+                                     </button>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +120,12 @@ function handleCombinedSearch() {
                             <div class="filter-row">
                                 <span class="filter-row-label">지역</span>
                                 <select id="areaCode" name="areaCode" class="filter-select">
-							        <option value="" ${empty param.areaCode ? 'selected' : ''}>전체 지역</option>
+							       
+							        <!-- 검색어가 있고, 지역 선택이 없는 경우에만 표시 -->
+						            <c:if test="${not empty keyword}">
+						                <option value="" selected>검색중</option>
+						            </c:if>
+						             <option value="" ${empty param.areaCode and empty keyword ? 'selected' : ''}>전체 지역</option>
 							        <option value="1" ${areaCode == '1' ? 'selected' : ''}>서울</option>
 							        <option value="31" ${areaCode == '31' ? 'selected' : ''}>경기</option>
 							        <option value="2" ${areaCode == '2' ? 'selected' : ''}>인천</option>
@@ -109,6 +137,25 @@ function handleCombinedSearch() {
 							        <option value="39" ${areaCode == '39' ? 'selected' : ''}>제주</option>
 							    </select>
                             </div>
+                            <div class="filter-row mt-1">
+						        <span class="filter-row-label">유형</span>
+						        <select id="category" name="category" class="filter-select">
+						            
+						            <c:if test="${not empty keyword}">
+						                <option value="" selected>검색중</option>
+						            </c:if>
+						            <option value="" ${empty param.category and empty keyword ? 'selected' : ''}>전체 유형</option>
+						            <option value="A05020100" ${category == 'A05020100' ? 'selected' : ''}>한식</option>
+						            <option value="A05020200" ${category == 'A05020200' ? 'selected' : ''}>양식</option>
+						            <option value="A05020300" ${category == 'A05020300' ? 'selected' : ''}>일식</option>
+						            <option value="A05020400" ${category == 'A05020400' ? 'selected' : ''}>중식</option>
+						            <option value="A05020500" ${category == 'A05020500' ? 'selected' : ''}>기타</option>
+						            <option value="A05020600" ${category == 'A05020600' ? 'selected' : ''}>카페</option>
+						            <option value="A05020700" ${category == 'A05020700' ? 'selected' : ''}>이색음식</option>
+						            <option value="A05020900" ${category == 'A05020900' ? 'selected' : ''}>식음료</option>
+								        
+						        </select>
+						    </div>
                             <div class="filter-row mt-1">
                                 <button type="button" class="btn btn-search-dark" onclick="handleCombinedSearch()">
                                     <i class="bi bi-search mr-1"></i>검색
@@ -146,7 +193,10 @@ function handleCombinedSearch() {
 							                            <c:when test="${dto.category == 'A05020200'}"><span class="badge border text-danger">양식</span></c:when>
 							                            <c:when test="${dto.category == 'A05020300'}"><span class="badge border text-primary">일식</span></c:when>
 							                            <c:when test="${dto.category == 'A05020400'}"><span class="badge border text-warning">중식</span></c:when>
-							                            <c:otherwise><span class="badge border text-secondary">카페</span></c:otherwise>
+							                            <c:when test="${dto.category == 'A05020500'}"><span class="badge border text-warning">기타</span></c:when>
+							                            <c:when test="${dto.category == 'A05020600'}"><span class="badge border text-warning">카페</span></c:when>
+							                            <c:when test="${dto.category == 'A05020700'}"><span class="badge border text-warning">이색음식</span></c:when>
+							                            <c:when test="${dto.category == 'A05020900'}"><span class="badge border text-warning">식음료</span></c:when>
 							                        </c:choose>
 							                    </td>
 							                    <td class="fw-bold col-name">${dto.name}</td>
@@ -157,8 +207,8 @@ function handleCombinedSearch() {
 							                    </td>
 							                    <td class="text-muted small text-center">${fn:substring(dto.placeRegDate, 0, 10)}</td>
 							                    <td class="text-center">
-							                        <button class="btn btn-xs btn-outline-secondary" onclick="location.href='${path}/restaurantModify.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}'">수정</button>
-							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) { location.href='${path}/restaurantDeleteAction.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}';}">삭제</button>
+							                        <button class="btn btn-xs btn-outline-secondary" onclick="location.href='${path}/restaurantModify.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}'">수정</button>
+							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) { location.href='${path}/restaurantDeleteAction.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}&category=${dto.category}&keyword=${keyword}';}">삭제</button>
 							                    </td>
 							                </tr>
 							            </c:forEach>
@@ -183,7 +233,7 @@ function handleCombinedSearch() {
                             
                             <div class="add-btn-area">
                                 <button type="button" class="btn btn-res-primary px-4 py-2"
-                                        onclick="location.href='${path}/restaurantInsert.ad?areaCode=${areaCode}&pageNum=${paging.pageNum}'">
+                                        onclick="location.href='${path}/restaurantInsert.ad?areaCode=${areaCode}&pageNum=${paging.pageNum}&category=${category}&keyword=${keyword}'">
                                     새 맛집 추가
                                 </button>
                             </div>

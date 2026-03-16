@@ -7,8 +7,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 @Repository
@@ -18,31 +19,48 @@ public class SearchDAOImpl implements SearchDAO {
 	private SqlSession sqlSession;
 
 	// [검색 결과] -----------------------------------------------------------
-	// 1. 검색어 기준 장소 목록
+	// 1. 검색어 기준 식당 목록
 	@Override
-	public List<PlaceDTO> getSearchList(String keyword) {
-		System.out.println("[SearchDAOImpl - getSearchList()]");
+	public List<RestaurantDTO> getRestList(String keyword) {
+		System.out.println("[SearchDAOImpl - getRestList()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getSearchList(keyword);
+		List<RestaurantDTO> restList = dao.getRestList(keyword);
+		
+		return restList;
+	}
+	
+	// 1. 검색어 기준 숙소 목록
+	@Override
+	public List<AccommodationDTO> getAccList(String keyword) {
+		System.out.println("[SearchDAOImpl - getAccList()]");
+
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		List<AccommodationDTO> accList = dao.getAccList(keyword);
+		
+		return accList;
 	}
 
-	// 2. 검색어 기준 축제 목록
+	// 3. 검색어 기준 축제 목록
 	@Override
 	public List<FestivalDTO> getFestList(String keyword) {
 		System.out.println("[SearchDAOImpl - getFestList()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getFestList(keyword);
+		List<FestivalDTO> festList = dao.getFestList(keyword);
+		
+		return festList;
 	}
 
-	// 3. 검색어 기준 장소별 리뷰 통계
+	// 4. 검색어 기준 장소별 리뷰 통계
 	@Override
 	public List<Map<String, Object>> getPlaceReviewStats(String keyword) {
 		System.out.println("[SearchDAOImpl - getPlaceReviewStats()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getPlaceReviewStats(keyword);
+		List<Map<String, Object>> reviewStatsList = dao.getPlaceReviewStats(keyword);
+		
+		return reviewStatsList;
 	}
 
 	// [즐겨찾기] -----------------------------------------------------------
@@ -52,7 +70,9 @@ public class SearchDAOImpl implements SearchDAO {
 		System.out.println("[SearchDAOImpl - checkFavorite()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.checkFavorite(checkFavorite);
+		int exist = dao.checkFavorite(checkFavorite);
+		
+		return exist;
 	}
 
 	// 2. 즐겨찾기 추가
@@ -61,7 +81,9 @@ public class SearchDAOImpl implements SearchDAO {
 		System.out.println("[SearchDAOImpl - addFavorite()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.addFavorite(addFavorite);
+		int addCnt = dao.addFavorite(addFavorite);
+		
+		return addCnt;
 	}
 
 	// 3. 즐겨찾기 삭제
@@ -70,7 +92,9 @@ public class SearchDAOImpl implements SearchDAO {
 		System.out.println("[SearchDAOImpl - deleteFavorite()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.deleteFavorite(deleteFavorite);
+		int delectCnt = dao.deleteFavorite(deleteFavorite);
+		
+		return delectCnt;
 	}
 
 	// 4. 즐겨찾기 한 정보 끌고오기
@@ -79,36 +103,84 @@ public class SearchDAOImpl implements SearchDAO {
 		System.out.println("[SearchDAOImpl - getFavoritePlaceIds()]");
 
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getFavoritePlaceIds(user_id);
+		List<Integer> favoritePlaceIds = dao.getFavoritePlaceIds(user_id);
+		
+		return favoritePlaceIds;
 	}
 
 	// [AJAX] -----------------------------------------------------------
-	// 1. AJAX 카드 목록
+	// AJAX맛집 카드 목록 + 카드 건수
 	@Override
-	public List<PlaceDTO> getSearchAjax(Map<String, Object> param) {
-		System.out.println("[SearchDAOImpl - getSearchAjax()]");
-
+	public List<RestaurantDTO> getRestAjaxList(Map<String, Object> param){
+		System.out.println("[SearchDAOImpl - getRestAjaxList()]");
+		
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getSearchAjax(param);
-	}
-
-	// 2. AJAX 전체 건수
+		List<RestaurantDTO> restAjaxList = dao.getRestAjaxList(param);
+		
+		return restAjaxList;
+	};
+	
 	@Override
-	public int getSearchAjaxCount(Map<String, Object> param) {
-		System.out.println("[SearchDAOImpl - getSearchAjaxCount()]");
-
+	public int getRestAjaxCount(Map<String, Object> param) {
+		System.out.println("[SearchDAOImpl - getRestAjaxCount()]");
+		
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getSearchAjaxCount(param);
-	}
+		int restAjaxCount = dao.getRestAjaxCount(param);
+		
+		return restAjaxCount;
+	};
 
-	// 3. AJAX 목록 대상 장소들의 리뷰 통계
+	// AJAX숙소 카드 목록 + 카드 건수
 	@Override
-	public List<Map<String, Object>> getSearchAjaxReviewStats(Map<String, Object> param) {
-		System.out.println("[SearchDAOImpl - getSearchAjaxReviewStats()]");
-
+	public List<AccommodationDTO> getAccAjaxList(Map<String, Object> param){
+		System.out.println("[SearchDAOImpl - getAccAjaxList()]");
+		
 		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
-		return dao.getSearchAjaxReviewStats(param);
-	}
+		List<AccommodationDTO> accAjaxList = dao.getAccAjaxList(param);
+		
+		return accAjaxList;
+	};
+	
+	@Override
+	public int getAccAjaxCount(Map<String, Object> param) {
+		System.out.println("[SearchDAOImpl - getAccAjaxCount()]");
+		
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		int accAjaxCount = dao.getAccAjaxCount(param);
+		
+		return accAjaxCount;
+	};
+
+	// AJAX축제 카드 목록 + 카드 건수
+	@Override
+	public List<FestivalDTO> getFestAjaxList(Map<String, Object> param){
+		System.out.println("[SearchDAOImpl - getFestAjaxList()]");
+		
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		List<FestivalDTO> festAjaxList = dao.getFestAjaxList(param);
+		
+		return festAjaxList;
+	};
+	
+	@Override
+	public int getFestAjaxCount(Map<String, Object> param) {
+		System.out.println("[SearchDAOImpl - getFestAjaxCount()]");
+		
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		int festAjaxCount = dao.getFestAjaxCount(param);
+		
+		return festAjaxCount;
+	};
+	
+	// AJAX리뷰 통계
+	public List<Map<String, Object>> getPlaceReviewStatsByIds(List<Integer> placeIds){
+		System.out.println("[SearchDAOImpl - getPlaceReviewStatsByIds()]");
+		
+		SearchDAO dao = sqlSession.getMapper(SearchDAO.class);
+		List<Map<String, Object>> statsList = dao.getPlaceReviewStatsByIds(placeIds);
+		
+		return statsList;
+	};
 
 	// 자동완성 10개
 	@Override

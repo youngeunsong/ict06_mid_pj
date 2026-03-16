@@ -149,8 +149,8 @@
 				<!-- 커뮤니티 관리 메뉴 끝 -->
 				
 				<!-- 장소 관리 메뉴 시작 -->
-				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'menu-open' : ''}">
-					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'active' : ''}"> 
+				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') || fn:contains(currentURI, 'ad') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl')|| fn:contains(currentURI, 'restaurant') ? 'active' : ''}"> 
 						<i class="fa-solid fa-location-dot"></i>
 						장소 관리
 						<i class="right fas fa-angle-left"></i>

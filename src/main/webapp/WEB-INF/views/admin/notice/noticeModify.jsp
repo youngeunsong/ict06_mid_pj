@@ -103,9 +103,9 @@
 							</div>
 							
 							<%--버튼--%>
-							<div class="form-group row">
-								<div class="col-sm-12 text-right">
-									<a href="${path}/noticeList.adnt" class="btn btn-secondary mr-2">취소</a>
+							<div class="form-group d-flex justify-content-between">
+								<a href="${path}/noticeList.adnt" class="btn btn-secondary mr-2">목록</a>
+								<div>
 									<button type="button" class="btn btn-danger mr-2"
 											onclick="deleteNotice('${dto.notice_id}')">삭제</button>
 									<button type="submit" class="btn btn-primary">수정</button>
@@ -128,6 +128,7 @@
 </div>
 <%--end::wrapper--%>
 
+<script>const path = "${path}";</script>
 <script src="${path}/resources/js/admin/notice.js"></script>
 
 </body>

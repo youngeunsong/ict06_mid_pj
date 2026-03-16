@@ -35,10 +35,24 @@
 	<select id="loginCheck" parameterType="java.util.Map" resultType="int">
 		SELECT count(*) FROM MEMBER
 		 WHERE user_id = #{user_id}
-		   AND password = #{password}
-		   AND status != 'OUT'
+		   AND status = 'ACTIVE'
 	</select>
 	
+	<!-- 3-1. 비밀번호 찾기 본인확인 -->
+	<select id="findPasswordCheck" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE user_id = #{user_id}
+		  AND name = #{name}
+		  AND email = #{email}
+		  AND status = 'ACTIVE'
+	</select>
+	
+	<!-- 3-1. 임시 비밀번호 발급 -->
+	<update id="updatePassword" parameterType="java.util.Map">
+		UPDATE MEMBER
+		   SET password = #{password}
+		 WHERE user_id = #{user_id}
+	</update>
 	<!-- 회원정보 삭제 (탈퇴) -->
 	<update id="deleteUser" parameterType="String">
     UPDATE MEMBER 
@@ -56,13 +70,23 @@
 	<update id="updateUser" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
 	    UPDATE MEMBER
 	    SET password = #{password, jdbcType=VARCHAR},
-	        name = #{name, jdbcType=VARCHAR},
-	        email = #{email, jdbcType=VARCHAR},
-	        phone = #{phone, jdbcType=VARCHAR},
-	        address = #{address, jdbcType=VARCHAR},
-	        gender = #{gender, jdbcType=CHAR},
-	        birth_date = #{birth_date, jdbcType=DATE} 
+			name = #{name, jdbcType=VARCHAR},
+			email = #{email, jdbcType=VARCHAR},
+			phone = #{phone, jdbcType=VARCHAR},
+			address = #{address, jdbcType=VARCHAR},
+			gender = #{gender, jdbcType=CHAR},
+			birth_date = #{birth_date, jdbcType=DATE} 
 	    WHERE user_id = #{user_id, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 관리자 정보 수정 -->
+	<update id="updateAdmin" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
+	    UPDATE MEMBER
+	    SET password = #{password, jdbcType=VARCHAR},
+			name = #{name, jdbcType=VARCHAR},
+			email = #{email, jdbcType=VARCHAR},
+	        phone = #{phone, jdbcType=VARCHAR}
+	    WHERE user_id = #{user_id}
 	</update>
 
 </mapper>	

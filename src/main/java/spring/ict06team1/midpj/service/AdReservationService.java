@@ -16,5 +16,7 @@ public interface AdReservationService {
 	public void cancelReservation(HttpServletRequest request, HttpServletResponse response, Model model);
 
 	public void getDashboard(HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	public int getPendingCount();
 
 }

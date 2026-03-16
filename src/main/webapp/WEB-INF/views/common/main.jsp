@@ -22,7 +22,41 @@
 
 </head>
 <body>
+
 <div class="wrap">
+
+  <%-- 관리자 접근 차단 알림 --%>
+  <%
+    String alertMsg = (String) session.getAttribute("alertMsg");
+    if(alertMsg != null) {
+        session.removeAttribute("alertMsg");
+  %>
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:9999">
+	<div id="adminToast" class="toast align-items-center text-bg-danger border-0" role="alert">
+		<div class="d-flex">
+			<div class="toast-body fw-bold">
+				⚠️ <%= alertMsg %>
+			</div>
+			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+		</div>
+	</div>
+</div>
+<script>
+	window.onload = function() {
+		var toastEl = document.getElementById('adminToast');
+		var toast = new bootstrap.Toast(toastEl, {
+			delay: 5000,
+			autohide: false
+		});
+		toast.show();
+		
+		//모달 밖 클릭 시 닫기
+		toastEl.addEventListener('click', function(e) {
+			if(e.target === toastEl) toast.hide();
+		});
+	};
+</script>
+<% } %>
 
   <!-- header -->
   <%@ include file="header.jsp" %>

@@ -97,6 +97,7 @@ public class MainServiceImpl implements MainService {
 	}
 	
 	//즐겨찾기
+	@Override
 	public List<Integer> getFavoritePlaceIds(HttpServletRequest request) {
 		System.out.println("[MainServiceImpl - getFavoritePlaceIds()]");
 		

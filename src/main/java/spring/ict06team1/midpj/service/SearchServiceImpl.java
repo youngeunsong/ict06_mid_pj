@@ -238,6 +238,7 @@ public class SearchServiceImpl implements SearchService {
 		System.out.println("[SearchServiceImpl - getAutoComplete()]");
 		System.out.println("[SearchServiceImpl] keyword=> " + keyword);
 
+		//1. 반환할 리스트 미리 생성
 	    List<String> resultList = new ArrayList<String>();
 
 	    if (keyword == null || keyword.trim().isEmpty()) {

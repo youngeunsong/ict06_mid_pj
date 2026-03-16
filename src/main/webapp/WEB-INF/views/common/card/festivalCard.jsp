@@ -14,12 +14,11 @@
 <div class="${cardWrapClass}">
     <div class="place-card-wrap position-relative">
 
-        <button type="button"
-                class="bookmark-btn"
-                data-place-id="${fest.placeDTO.place_id}"
-                onclick="toggleBookmark(event, this)">
-            <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(fest.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-        </button>
+		<button type="button"
+		        class="bookmark-btn"
+		        data-place-id="${fest.placeDTO.place_id}">
+		    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(fest.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+		</button>
 
         <a href="${path}/festivalDetail.fe?place_id=${fest.placeDTO.place_id}"
            class="place-card text-decoration-none text-dark d-block">
@@ -31,11 +30,11 @@
                      class="thumb-img"
                      onerror="this.src='${path}/resources/images/common/no-image.png';" />
 
-                <c:if test="${mode eq 'bestMain'}">
-                    <span class="rank-badge top1">
-                        1위 평균 <c:out value="${avgRatingMap[fest.placeDTO.place_id]}" default="0"/>점
-                    </span>
-                </c:if>
+				 <c:if test="${mode eq 'bestMain'}">
+				    <span class="rank-badge top1">
+				        1위 평균 <c:out value="${fest.placeDTO.avg_rating}" default="0"/>점
+				    </span>
+				</c:if>
 
                 <span class="status-badge">
                     ${fest.status}

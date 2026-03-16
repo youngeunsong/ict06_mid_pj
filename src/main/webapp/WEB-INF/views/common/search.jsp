@@ -18,6 +18,7 @@
 
 <script src="${path}/resources/js/search/search.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
+<script> window.contextPath = '${path}'; </script>
 
 </head>
 <body>

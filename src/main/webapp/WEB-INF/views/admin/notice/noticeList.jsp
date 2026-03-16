@@ -150,6 +150,21 @@
 	</div>
 	<%--end::content-wrapper--%>
 	
+	<%--삭제 완료 토스트--%>
+	<div class="toast-container" style="position:fixed; transform:translateX(-50%); top:20px; left:50%; z-index:9999;">
+		<div id="deleteToast" class="toast"	role="alert" style="display:block;" data-autohide="false">
+			<div class="toast-header bg-success text-white">
+				<strong class="mr-auto">✅ 알림</strong>
+				<button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="toast-body fw-bold">
+				삭제가 완료되었습니다.
+			</div>
+		</div>
+	</div>
+	
 	<!-- ================= FOOTER ================= -->
 	<footer class="main-footer">
 		<strong>Copyright &copy; 2026</strong>
@@ -157,7 +172,17 @@
 </div>
 <%--end::wrapper--%>
 
+<script>const path = "${path}";</script>
 <script src="${path}/resources/js/admin/notice.js"></script>
 
+<script>
+$(document).ready(function() {
+	const urlParams = new URLSearchParams(window.location.search);
+	if(urlParams.get('deleted') === 'true') {
+		$('#deleteToast').toast({delay: 5000});
+		$('#deleteToast').toast('show');
+	}
+});
+</script>
 </body>
 </html>

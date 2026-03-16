@@ -43,6 +43,7 @@ public class MainController {
 		List<RestaurantDTO> RESTtop10 = mainService.getTop10ByREST();
 		List<AccommodationDTO> ACCtop10 = mainService.getTop10ByACC();
 
+
 		// 메인 축제
 		List<FestivalDTO> festivalList = mainService.getTop8ThisMonthFestival();
 
@@ -78,8 +79,8 @@ public class MainController {
 		logger.info("ACCtop10 => {}", ACCtop10);
 
 		// 리뷰/평점/즐겨찾기
-		model.addAttribute("reviewCountMap", mainService.getReviewCountMap(placeIds));
-		model.addAttribute("avgRatingMap", mainService.getAvgRatingMap(placeIds));
+		//model.addAttribute("reviewCountMap", mainService.getReviewCountMap(placeIds));
+		//model.addAttribute("avgRatingMap", mainService.getAvgRatingMap(placeIds));
 		model.addAttribute("favoritePlaceIds", favoritePlaceIds);
 
 		// BEST 초기값

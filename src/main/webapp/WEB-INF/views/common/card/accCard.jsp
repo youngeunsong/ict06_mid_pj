@@ -25,13 +25,13 @@
 
 <div class="${cardWrapClass}">
     <div class="place-card-wrap position-relative">
-
-        <button type="button"
-                class="bookmark-btn"
-                data-place-id="${placeId}"
-                onclick="toggleBookmark(event, this)">
-            <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(placeId) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-        </button>
+    
+		<!-- 북마크 -->
+		<button type="button"
+		        class="bookmark-btn"
+		        data-place-id="${acc.placeDTO.place_id}">
+		    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(acc.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+		</button>
 
         <a href="${path}/accommodationDetail.ac?place_id=${placeId}"
            class="place-card text-decoration-none text-dark d-block">
@@ -48,10 +48,10 @@
                 </c:if>
 
                 <c:if test="${mode eq 'bestMain'}">
-                    <span class="rank-badge top1">
-                        1위 평균 <c:out value="${avgRatingMap[placeId]}" default="0"/>점
-                    </span>
-                </c:if>
+				    <span class="rank-badge top1">
+				        1위 평균 <c:out value="${acc.placeDTO.avg_rating}" default="0"/>점
+				    </span>
+				</c:if>
             </div>
 
             <div class="place-card__body">
@@ -76,6 +76,10 @@
                         <c:out value="${displayReviewCount}" default="0"/>
                     </span>
                 </div>
+                
+                <div class="place-card__price">
+			        <fmt:formatNumber value="${acc.price}" type="number" />원
+			    </div>
             </div>
         </a>
     </div>

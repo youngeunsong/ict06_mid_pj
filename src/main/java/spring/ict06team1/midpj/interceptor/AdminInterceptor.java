@@ -4,54 +4,64 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import spring.ict06team1.midpj.service.AdReservationService;
+
+@Component
 public class AdminInterceptor extends HandlerInterceptorAdapter {
 
+	@Autowired
+	private AdReservationService resService;
+	
+	//관리자 페이지 접근 제어 위해 Spring Interceptor 사용
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 		throws Exception {
+		//관리자 url 판별
 		String uri = request.getRequestURI();
 		
-		String extension = "";
-		int lastDotIndex = uri.lastIndexOf(".");
-		if(lastDotIndex != -1) {
-			extension = uri.substring(lastDotIndex);
-		}
-
-		//브라우저 확장자가 ".ad"로 시작하는지 확인(admin 관련 페이지)
-		boolean isAdminPage = extension.startsWith(".ad");
+		boolean isAdminPage = uri.contains(".ad");
 		
 		//관리자 페이지 아니면 통과
 		if(!isAdminPage) return true;
 		
-		HttpSession session = request.getSession();
+		//세션 없으면 null 반환
+		HttpSession session = request.getSession(false);
 		
-		//세션에서 userRole 가져오기
-		String userRole = (String)session.getAttribute("userRole");
-		String sessionID = (String)session.getAttribute("sessionID");
+		//세션 검사(userRole값 확인해 관리자 권한 여부 판단)
+		String userRole = null;
+		String sessionID = null;
 		
-		//로그인상태가 아니거나 관리자 아닌 경우 차단
-		if(userRole == null || !"ADMIN".equals(userRole) || sessionID == null) {
-			response.reset();
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("text/html; charset=UTF-8");
+		//session값 없는 경우: userRole과 sessionID 설정
+		if(session != null) {
+			userRole = (String)session.getAttribute("userRole");
+			sessionID = (String)session.getAttribute("sessionID");
+		}
+		
+		//로그인 안했거나 관리자 아닌 경우
+		if(userRole == null || sessionID == null || !"ADMIN".equals(userRole)) {
+			HttpSession alertSession = request.getSession();
+			alertSession.setAttribute("alertMsg", "관리자 권한이 없습니다.");
 			
-			java.io.PrintWriter out = response.getWriter();
-			out.println("<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>");
-			out.println("<script>");
-			out.println("alert('관리자 권한이 없습니다.');");
-			out.println("location.href='" + request.getContextPath() + "/main.do';");
-			//out.println("setTimeout(function() {location.href='" + request.getContextPath() + "/main.do';}, 500);");
-			out.println("</script>");
-			out.println("</body></html>");
-			
-			out.flush();
-			out.close();
+		    System.out.println("=== alertMsg 세션 저장 완료: " + alertSession.getAttribute("alertMsg"));
+		    System.out.println("=== 세션ID: " + alertSession.getId());
+			response.sendRedirect(request.getContextPath() + "/main.do");
 			
 			return false;
 		}
-		System.out.println("추출된 확장자:" + extension);
 		return true;
+	}
+	
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView mav)
+			throws Exception {
+		if(mav != null) {
+			int pendingCount = resService.getPendingCount();
+			mav.addObject("pendingCount", pendingCount);
+		}
 	}
 }

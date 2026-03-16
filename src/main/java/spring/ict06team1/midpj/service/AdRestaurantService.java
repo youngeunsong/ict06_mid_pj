@@ -13,22 +13,25 @@ import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface AdRestaurantService {
 	
-	//맛집 목록 조회
+	// 맛집 목록 조회
 	public void getRestaurant_list(HttpServletRequest request, HttpServletResponse response, Model model);
 	
-	//맛집 정보 등록
+	// 맛집 목록 검색
+	public void getRestaurantSearch(HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	// 맛집 정보 등록
 	public void getRestaurantInsert(MultipartHttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException;
 	
-	//맛집 상세 정보 조회
+	// 맛집 상세 정보 조회
 	public void getRestaurantDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	//맛집 정보 수정
+	// 맛집 정보 수정
 	public void getRestaurantUpdateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	//맛집 정보 삭제
+	// 맛집 정보 삭제
 	public void getRestaurantDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	

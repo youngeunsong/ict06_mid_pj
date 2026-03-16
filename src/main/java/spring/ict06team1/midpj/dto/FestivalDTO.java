@@ -3,11 +3,17 @@ package spring.ict06team1.midpj.dto;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FestivalDTO {
 
 	private int festival_id;
 	private String description;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date start_date;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date end_date;
 	private String status;
 	private PlaceDTO placeDTO;

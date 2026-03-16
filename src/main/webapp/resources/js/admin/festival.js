@@ -95,34 +95,32 @@ function viewFestivalDetail(id){
     data.ticketList.forEach(function(ticket){
 
      if(ticket.ticket_type == "Free"){
-      $('#priceFree').val(ticket.price);
-      $('#stockFree').val(ticket.stock);
-      $('#ticketDescFreeDay').val(ticket.description);
+     	$('#priceFree').text(ticket.price + "원");
+		$('#stockFree').text(ticket.stock);
+		$('#ticketDescFreeDay').text(ticket.description);
      }
 
      if(ticket.ticket_type == "OneDay"){
-      $('#priceOneDay').val(ticket.price);
-      $('#stockOneDay').val(ticket.stock);
-      $('#ticketDescOneDay').val(ticket.description);
+      	$('#priceOneDay').text(ticket.price + "원");
+		$('#stockOneDay').text(ticket.stock);
+		$('#ticketDescOneDay').text(ticket.description);
      }
 
      if(ticket.ticket_type == "TwoDay"){
-      $('#priceTwoDay').val(ticket.price);
-      $('#stockTwoDay').val(ticket.stock);
-      $('#ticketDescTwoDay').val(ticket.description);
+     	$('#priceTwoDay').text(ticket.price + "원");
+		$('#stockTwoDay').text(ticket.stock);
+		$('#ticketDescOneDay').text(ticket.description);
      }
 
      if(ticket.ticket_type == "AllDay"){
-      $('#priceAllDay').val(ticket.price);
-      $('#stockAllDay').val(ticket.stock);
-      $('#ticketDescAllDay').val(ticket.description);
+      	$('#priceAllDay').text(ticket.price + "원");
+		$('#stockAllDay').text(ticket.stock);
+		$('#ticketDescAllDay').text(ticket.description);
      }
-
     });
    }
 
    $('#festivalDetailModal').modal("show");
-
   }
  });
 }
@@ -148,8 +146,32 @@ function editFestival(id){
    $('#inputStartDate').val(data.start_date);
    $('#inputEndDate').val(data.end_date);
    
-   // TODO: 티켓 정보
-   // $('#inputEndDate').val(data.ticketList.);
+   // 티켓 정보
+   data.ticketList.forEach(function(ticket){
+	 if(ticket.ticket_type == "Free"){
+	   $('#priceFree').val(ticket.price);
+	   $('#stockFree').val(ticket.stock);
+	   $('#ticketDescFreeDay').val(ticket.description);
+	 }
+	
+	 if(ticket.ticket_type == "OneDay"){
+	   $('#priceOneDay').val(ticket.price);
+	   $('#stockOneDay').val(ticket.stock);
+	   $('#ticketDescOneDay').val(ticket.description);
+	 }
+	
+	 if(ticket.ticket_type == "TwoDay"){
+	   $('#priceTwoDay').val(ticket.price);
+	   $('#stockTwoDay').val(ticket.stock);
+	   $('#ticketDescTwoDay').val(ticket.description);
+	 }
+	
+	 if(ticket.ticket_type == "AllDay"){
+	   $('#priceAllDay').val(ticket.price);
+	   $('#stockAllDay').val(ticket.stock);
+	   $('#ticketDescAllDay').val(ticket.description);
+	 }
+	});
 
    $('#festivalUpdateModal').modal("show");
   }

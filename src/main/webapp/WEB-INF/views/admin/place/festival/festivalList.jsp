@@ -257,7 +257,7 @@
 	<!-- 축제 상세 조회 Modal 시작 -->
 	<!-- 축제 상세보기 Modal -->
 	<div class="modal fade" id="festivalDetailModal" tabindex="-1">
-	    <div class="modal-dialog modal-lg">
+	    <div class="modal-dialog modal-xl">
 	        <div class="modal-content">
 	            <div class="modal-header bg-success text-white">
 	                <h5 class="modal-title">
@@ -298,7 +298,7 @@
 	
 	                    <tr>
 	                        <th>설명</th>
-	                        <td colspan="3" id="modal_description"></td>
+	                        <td colspan="3"><div id="modal_description" style="white-space: pre-wrap;"></div></td>
 	                    </tr>
 	
 	                    <tr>
@@ -310,7 +310,7 @@
 	                    <!-- 티켓 정보 입력 시작 -->
 			           	<tr>
 			           		<th>티켓 정보</th>
-			           		<td> 
+			           		<td colspan="3"> 
 			           			<!-- 티켓 표 시작 -->
 			            		<table class="table">
 			            			<!-- 헤더 시작: 티켓 종류, 가격, 재고, 설명 -->
@@ -322,37 +322,37 @@
 			            			</tr>
 			            			<!-- 헤더 끝 -->
 			            			<!-- 무료 티켓 시작 -->
-			            			<tr>
-			            				<td>무료</td>
-			            				<td><input type="number" id="priceFree" name="priceFree" placeholder="가격" disabled>원</td>
-			            				<td><input type="number" id="stockFree" name="stockFree" placeholder="재고" disabled></td>
-			            				<td><textarea id="ticketDescFreeDay" name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
-			            			</tr>
-			            			<!-- 무료 티켓 끝 -->
-			            			<!-- 1일권 시작 -->
-			            			<tr>
-			            				<td>1일권</td>
-			            				<td><input type="number" id="priceOneDay" name="priceOneDay" placeholder="가격" disabled>원</td>
-			            				<td><input type="number" id="stockOneDay" name="stockOneDay" placeholder="재고" disabled></td>
-			            				<td><textarea id="ticketDescOneDay" name="ticketDescOneDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
-			            			</tr>
-			            			<!-- 1일권 끝 -->
-			            			<!-- 2일권 시작 -->
-			            			<tr>
-			            				<td>2일권</td>
-			            				<td><input type="number" id="priceTwoDay" name="priceTwoDay" placeholder="가격" disabled>원</td>
-			            				<td><input type="number" id="stockTwoDay" name="stockTwoDay" placeholder="재고" disabled></td>
-			            				<td><textarea id="ticketDescTwoDay" name="ticketDescTwoDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
-			            			</tr>
-			            			<!-- 2일권 끝 -->
-			            			<!-- 전일권 시작 -->
-			            			<tr>
-			            				<td>전일권</td>
-			            				<td><input type="number" id="priceAllDay" name="priceAllDay" placeholder="가격" disabled>원</td>
-			            				<td><input type="number" id="stockAllDay" name="stockAllDay" placeholder="재고" disabled></td>
-			            				<td><textarea id="ticketDescAllDay" name="ticketDescAllDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." disabled></textarea></td>
-			            			</tr>
-			            			<!-- 전일권 끝 -->
+									<tr>
+									    <td>무료</td>
+									    <td id="priceFree"></td>
+									    <td id="stockFree"></td>
+									    <td id="ticketDescFreeDay" style="white-space: pre-wrap;"></td>
+									</tr>
+									<!-- 무료 티켓 끝 -->
+									<!-- 1일권 시작 -->
+									<tr>
+									    <td>1일권</td>
+									    <td id="priceOneDay"></td>
+									    <td id="stockOneDay"></td>
+									    <td id="ticketDescOneDay" style="white-space: pre-wrap;"></td>
+									</tr>
+									<!-- 1일권 끝 -->
+									<!-- 2일권 시작 -->
+									<tr>
+									    <td>2일권</td>
+									    <td id="priceTwoDay"></td>
+									    <td id="stockTwoDay"></td>
+									    <td id="ticketDescTwoDay" style="white-space: pre-wrap;"></td>
+									</tr>
+									<!-- 2일권 끝 -->
+									<!-- 전일권 시작 -->
+									<tr>
+									    <td>전일권</td>
+									    <td id="priceAllDay"></td>
+									    <td id="stockAllDay"></td>
+									    <td id="ticketDescAllDay"></td>
+									</tr>
+									<!-- 전일권 끝 -->
 			              		</table>
 			              		<!-- 티켓 표 끝 -->
 			           		</td>
@@ -384,7 +384,7 @@
 	
 	<%-- 축제 수정 Modal 시작 --%>
 	<div class="modal fade" id="festivalUpdateModal" tabindex="-1">
-	 <div class="modal-dialog">
+	 <div class="modal-dialog modal-xl">
 	  <div class="modal-content">
 	
 	   <div class="modal-header bg-success text-white">
@@ -460,9 +460,9 @@
             			<!-- 무료 티켓 시작 -->
             			<tr>
             				<td>무료</td>
-            				<td><input type="number" name="priceFree" placeholder="가격" >원</td>
-            				<td><input type="number" name="stockFree" placeholder="재고" ></td>
-            				<td><textarea name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
+            				<td><input type="number" id="priceFree" name="priceFree" placeholder="가격" >원</td>
+            				<td><input type="number" id="stockFree" name="stockFree" placeholder="재고" ></td>
+            				<td><textarea id="ticketDescFreeDay" name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
             			</tr>
             			<!-- 무료 티켓 끝 -->
             			<!-- 1일권 시작 -->
@@ -496,16 +496,15 @@
            	<!-- 티켓 정보 입력 끝 -->
            	</table>
            	<!-- 정보 입력 테이블 영역 끝 -->
-	
 	   </div>
 	
 	   <div class="modal-footer">
 	    <button class="btn btn-success" onclick="updateFestival()">
-	     수정 저장
+	     	수정 저장
 	    </button>
 	
 	    <button class="btn btn-secondary" data-dismiss="modal">
-	     취소
+	     	취소
 	    </button>
 	   </div>
 	

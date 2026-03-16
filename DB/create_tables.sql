@@ -258,7 +258,6 @@ SELECT * FROM INQUIRY;
 
 
 -- 18. NOTICE (공지사항 및 이벤트) 
->>>>>>> origin/dev
 CREATE TABLE NOTICE (
     notice_id    NUMBER PRIMARY KEY,
     admin_id	VARCHAR2(50) REFERENCES MEMBER(user_id), -- 관리자 user_id

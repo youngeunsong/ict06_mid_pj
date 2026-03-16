@@ -163,7 +163,14 @@
 			<version>2.6</version>
 		</dependency>
 		<!-- fileupload용 끝 -->
-
+		
+		<!-- BCrypt 암호화 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>5.7.3</version>
+		</dependency>
+		
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>

@@ -302,7 +302,12 @@
 								</td>
 								<th class="table-light">인원수</th>
 								<td>
-									<input type="number" id="update_guest_count" class="form-control form-control-sm" min="1">
+									<div class="input-group input-group-sm">
+										<input type="number" id="update_guest_count" class="form-control form-control-sm" min="1">
+										<div class="input-group-append">
+											<span class="input-group-text">명</span>
+										</div>
+									</div>
 								</td>
 							</tr>
 							<tr>

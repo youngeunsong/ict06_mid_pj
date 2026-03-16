@@ -231,6 +231,12 @@ function editReservation(resId) {
 		data: 'resId=' + resId,
 		dataType: 'json',
 		success: function(data) {
+			//날짜 형식 변환(2026.01.01 -> 2026-01-01)
+			function formatDate(dateStr) {
+				if(!dateStr) return '';
+				return dateStr.replaceAll('.', '-');
+			}
+			
 			//readonly 필드
 			$('#update_res_id').text(data.reservation_id);
 			$('#update_user_id').text(data.user_id);
@@ -238,10 +244,10 @@ function editReservation(resId) {
 			
 			//수정가능 필드
 			$('#update_status').val(data.status);
-			$('#update_check_in').val(data.check_in);
-			$('#update_check_out').val(data.check_out);
+			$('#update_check_in').val(formatDate(data.check_in));
+			$('#update_check_out').val(formatDate(data.check_out));
 			$('#update_visit_time').val(data.visit_time || '');
-			$('#update_guest_count').val(data.guest_count + "명");
+			$('#update_guest_count').val(data.guest_count);
 			$('#update_request_note').val(data.request_note || '');
 			$('#resUpdateModal').modal('show');
 		},

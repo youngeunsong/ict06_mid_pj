@@ -44,29 +44,14 @@
 			        <input type="submit" value="로그인" class="btn_login_submit">
 			        
 			        <div class="login_bottom_links">
-			            <a href="${path}/join.do">회원가입</a> | <a href="#">ID/PW 찾기</a>
+			            <a href="${path}/join.do">회원가입</a> | <a href="${path}/findPassword.do">ID/PW 찾기</a>
 			        </div>
 			    </form>
 			</div>
          </div>
       </div>
       
-      <!-- 관련 SQL -->
-      SQL 쿼리 : 로그인  
-  		<pre>
-			<code>
-			<c:out escapeXml="true" value="
-		         SELECT COUNT(*) 
-        FROM MEMBER
-        WHERE user_id = #${'{'}user_id} 
-          AND password = #${'{'}password}
-          AND status = 'ACTIVE'
-			" />
-			</code> 
-		</pre>
-      
       <script src="${path}/resources/js/user/login.js" defer></script>
-      <!-- 관련 SQL  -->
       <%@ include file="../../common/footer.jsp" %>
    </div>
 </body>

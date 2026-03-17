@@ -38,8 +38,7 @@
 
 /* hover 시 노출 */
 .top10-card-wrap:hover .bookmark-btn,
-.place-card:hover .bookmark-btn,
-.place-card__thumb-wrap:hover .bookmark-btn,
+.place-card-wrap:hover .bookmark-btn,
 .best-sub-card:hover .bookmark-btn,
 .best-sub-card .img-wrap:hover .bookmark-btn {
     opacity: 1;

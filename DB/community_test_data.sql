@@ -31,6 +31,7 @@ ORDER BY is_top DESC, created_at DESC;
 DELETE FROM COMMUNITY_COMMENT;
 DELETE FROM COMMUNITY;
 DELETE FROM NOTICE;
+ROLLBACK ;
 COMMIT;
 
 -- 2. 시퀀스 초기화
@@ -96,3 +97,84 @@ END;
 
 -- 4. 중지했던 트리거 다시 활성화
 ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK ENABLE;
+
+
+
+
+
+-- COMMUNITY_COMMENT 500개 생성 스크립트
+DECLARE
+    -- 테스트에 사용할 문구 배열
+    TYPE t_content IS TABLE OF VARCHAR2(100);
+    v_contents t_content := t_content(
+        '정말 유익한 정보 감사합니다!', 
+        '저도 여기 가봤는데 너무 좋았어요.', 
+        '좋은 글 잘 읽고 갑니다. 추천 꾹!', 
+        '궁금한 점이 있는데 쪽지 드려도 될까요?', 
+        '사진이 너무 예쁘네요. 카메라 뭐 쓰시나요?',
+        '다음에 저도 꼭 가보고 싶네요.',
+        '공유해주셔서 감사합니다~',
+        '댓글 남기고 갑니다!',
+        '완전 공감되네요 ㅎㅎ',
+        '혹시 비용은 어느 정도 들었나요?'
+    );
+
+    v_user_id   VARCHAR2(50);
+    v_post_id   NUMBER;
+    v_random_content VARCHAR2(500);
+BEGIN
+    -- 500번 반복 실행
+    FOR i IN 1..500 LOOP
+        
+        -- 1. 존재하는 회원 중 랜덤하게 한 명 선택
+        SELECT user_id INTO v_user_id 
+        FROM (SELECT user_id FROM MEMBER ORDER BY DBMS_RANDOM.VALUE) 
+        WHERE ROWNUM = 1;
+
+        -- 2. 존재하는 게시글 중 랜덤하게 하나 선택
+        SELECT post_id INTO v_post_id 
+        FROM (SELECT post_id FROM COMMUNITY ORDER BY DBMS_RANDOM.VALUE) 
+        WHERE ROWNUM = 1;
+
+        -- 3. 준비된 문구 중 랜덤하게 하나 선택
+        v_random_content := v_contents(TRUNC(DBMS_RANDOM.VALUE(1, 11)));
+
+        -- 4. 댓글 인서트 (시퀀스 사용)
+        INSERT INTO COMMUNITY_COMMENT (
+            comment_id,
+            post_id,
+            user_id,
+            content,
+            status,
+            created_at
+        ) VALUES (
+            SEQ_COMMENT.NEXTVAL,
+            v_post_id,
+            v_user_id,
+            v_random_content || ' (테스트 댓글 #' || i || ')',
+            'DISPLAY',
+            SYSTIMESTAMP - DBMS_RANDOM.VALUE(0, 10) -- 최근 10일 내 랜덤 날짜
+        );
+    END LOOP;
+
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('500개의 댓글 데이터 생성이 완료되었습니다.');
+END;
+/
+
+-- ==================================
+-- 날짜, 조회수, 좋아요를 한 번에 랜덤 업데이트
+UPDATE COMMUNITY
+SET 
+    created_at = (SYSTIMESTAMP - DBMS_RANDOM.VALUE(0, 30)),
+    updated_at = (SYSTIMESTAMP - DBMS_RANDOM.VALUE(0, 30)),
+    view_count = TRUNC(DBMS_RANDOM.VALUE(50, 1000)),
+    like_count = TRUNC(DBMS_RANDOM.VALUE(0, 100))
+WHERE post_id IS NOT NULL; -- 전체 업데이트를 위해 조건 명시 (안전)
+-- 반영 확인
+COMMIT;
+
+-- 결과 확인 (최신순 정렬)
+SELECT post_id, title, view_count, like_count, created_at 
+FROM COMMUNITY 
+ORDER BY created_at DESC;

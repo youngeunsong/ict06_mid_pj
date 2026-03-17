@@ -202,6 +202,33 @@
 				</li> -->
 				<!-- 커뮤니티 관리 메뉴 끝 -->
 				
+				<!-- 장소 관리 메뉴 시작 -->
+				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') || fn:contains(currentURI, 'ad') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl')|| fn:contains(currentURI, 'restaurant') ? 'active' : ''}"> 
+						<i class="fa-solid fa-location-dot"></i>
+						장소 관리
+						<i class="right fas fa-angle-left"></i>
+					</a>
+					
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a href="${path}/restaurant.ad" class="nav-link ${fn:contains(currentURI, 'restaurant') ? 'active' : ''}"> 
+								맛집 관리
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="${path}/accommodationList.adpl" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
+								숙소 관리
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="${path}/festivalList.adfe" class="nav-link ${fn:contains(currentURI, 'festivalList') ? 'active' : ''}">
+								축제 관리
+							</a>
+						</li>
+					</ul>
+				</li>
+				<!-- 장소 관리 메뉴 끝 -->
 			</ul>
 		</nav>
 	</div>

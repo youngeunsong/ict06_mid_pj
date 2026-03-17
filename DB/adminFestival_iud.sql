@@ -30,6 +30,15 @@ SELECT
   FROM  FESTIVAL_TICKET
  WHERE  festival_id = 1009;
 
+-- 축제 정보 삭제
+-- 1) 관련 티켓 먼저 삭제
+DELETE FROM FESTIVAL_TICKET
+ WHERE festival_id = 1007;
+ 
+-- 2) 축제 삭제
+DELETE FROM FESTIVAL
+ WHERE festival_id = 1007;
+
 -----------------------------------------
 -- 축제 등록 시 문제가 생길 때 체크 
 -- PLACE 테이블의 place_id 최댓값 확인
@@ -41,7 +50,7 @@ SELECT SEQ_PLACE.NEXTVAL FROM DUAL;
 -- SEQ_PLACE.NEXTVAL이 현재 PLACE 테이블이의 최대 place_id가 동일한 크기가 아닐 때 적용
 DROP SEQUENCE SEQ_PLACE;
 CREATE SEQUENCE SEQ_PLACE
-START WITH 1008 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
+START WITH 1004 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
 INCREMENT BY 1;
 
 -- SEQ_TICKET의 최댓값 확인

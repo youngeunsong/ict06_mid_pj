@@ -32,8 +32,10 @@
                         </div>
                         
                         <form action="${path}/restaurantInsertAction.ad" method="post" enctype="multipart/form-data" name="insertForm">
-                            <input type="hidden" name="areaCode" id="areaCodeHidden" value="${param.areaCode}">
+                            <input type="hidden" name="areaCode1" id="areaCodeHidden" value="${param.areaCode}">
                             <input type="hidden" name="pageNum" value="${param.pageNum}">
+                            <input type="hidden" name="category1" value="${param.category}">
+                            <input type="hidden" name="keyword" value="${param.keyword}">
                             
                             <div class="card-body px-5 pb-5">
                                 <div class="row g-4">
@@ -43,16 +45,17 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">지역 선택 *</label>
-                                        <select id="areaCodeSelect" class="form-select" required onchange="document.getElementById('areaCodeHidden').value=this.value">
-                                            <option value="">-- 지역 선택 --</option>
-                                            <option value="1" ${param.areaCode == '1' ? 'selected' : ''}>서울</option>
-                                            <option value="2" ${param.areaCode == '2' ? 'selected' : ''}>인천</option>
-                                            <option value="31" ${param.areaCode == '31' ? 'selected' : ''}>경기</option>
-                                            <option value="32" ${param.areaCode == '32' ? 'selected' : ''}>강원</option>
-                                            <option value="3" ${param.areaCode == '3' ? 'selected' : ''}>대전</option>
-                                            <option value="4" ${param.areaCode == '4' ? 'selected' : ''}>대구</option>
-                                            <option value="5" ${param.areaCode == '5' ? 'selected' : ''}>광주</option>
-                                            <option value="6" ${param.areaCode == '6' ? 'selected' : ''}>부산</option>
+                                        <select id="areaCodeSelect" class="form-select"name="areaCode" required>
+                                        	<option value="">지역을 선택해주세요</option>
+                                            <option value="1">서울</option>
+									        <option value="31">경기</option>
+									        <option value="2">인천</option>
+									        <option value="6">부산</option>
+									        <option value="4">대구</option>
+									        <option value="3">대전</option>
+									        <option value="5">광주</option>
+									        <option value="7">울산</option>
+									        <option value="39">제주</option>
                                         </select>
                                     </div>
 
@@ -80,7 +83,10 @@
                                             <option value="A05020200">양식</option>
                                             <option value="A05020300">일식</option>
                                             <option value="A05020400">중식</option>
-                                            <option value="A05020600">카페/찻집</option>
+                                            <option value="A05020500">기타</option>
+                                            <option value="A05020600">카페</option>
+                                            <option value="A05020700">이색음식</option>
+                                            <option value="A05020900">식음료</option>
                                         </select>
                                     </div>
                                     
@@ -98,7 +104,7 @@
                             
                             <div class="card-footer bg-white border-top-0 py-5 text-center">
                                 <button type="submit" class="btn-submit me-3">등록하기</button>
-                                <button type="button" class="btn-cancel" onclick="location.href='${path}/restaurant.ad?areaCode=${param.areaCode}&pageNum=${param.pageNum}'">취소하기</button>
+                                <button type="button" class="btn-cancel" onclick="history.back()">돌아가기</button>
                             </div>
                         </form>
                     </div>
@@ -143,7 +149,6 @@ window.addEventListener('DOMContentLoaded', function() {
                 alert("좌표 정보가 없습니다. 주소를 다시 검색해주세요.");
                 return false;
             }
-            
             return true; 
         };
     }
@@ -156,7 +161,6 @@ function execPostcode() {
         areaSelect.focus();
         return;
     }
-
     new daum.Postcode({
         oncomplete: function (data) {
             let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;

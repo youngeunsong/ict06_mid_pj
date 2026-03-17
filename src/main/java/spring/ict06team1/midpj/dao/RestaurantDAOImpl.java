@@ -65,17 +65,17 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     }
     
     @Override
-    public int getBestRestaurantCount() {
-        return session.selectOne(NAMESPACE + "getBestRestaurantCount");
+    public int getBestRestaurantCount(String region) {
+    	return session.selectOne(NAMESPACE + "getBestRestaurantCount", region);
     }
     
     @Override
     public List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map) {
         return session.selectList(NAMESPACE + "getBestRestaurantPageList", map);
     }
-    
+
     @Override
-    public List<PlaceDTO> getBestRestaurantTop5() {
-        return session.selectList(NAMESPACE + "getBestRestaurantTop5");
+    public List<PlaceDTO> getBestRestaurantTop5(String region) {
+    	return session.selectList(NAMESPACE + "getBestRestaurantTop5", region);
     }
 }

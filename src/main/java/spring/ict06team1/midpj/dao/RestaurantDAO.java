@@ -36,11 +36,11 @@ public interface RestaurantDAO {
     double getAvgRating(int place_id);
     
     // 맛집 총 갯수
-    int getBestRestaurantCount();
+    int getBestRestaurantCount(String region);
     
     // 맛집 페이지 리스트
     List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map);
     
     // 맛집 랭킹 top5
-    List<PlaceDTO> getBestRestaurantTop5();
+    List<PlaceDTO> getBestRestaurantTop5(String region);
 }

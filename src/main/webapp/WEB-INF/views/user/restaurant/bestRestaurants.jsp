@@ -111,12 +111,6 @@
       color:var(--rk-brand2);
     }
 
-    .rk-meta{
-      color:var(--rk-muted);
-      font-size:14px;
-      font-weight:600;
-    }
-
     .rk-section{
       border:1px solid var(--rk-line);
       border-radius:24px;
@@ -240,6 +234,10 @@
         justify-content:center;
       }
     }
+    
+    #regionSelect {
+	  margin-left: auto;
+	}
   </style>
 </head>
 <body>
@@ -254,7 +252,7 @@
           <i class="fa-solid fa-utensils me-2" style="color:var(--rk-brand);"></i>
           맛집 랭킹
         </h1>
-        <div class="rk-sub">실시간 인기, 지역별 TOP, 테마별 추천 맛집을 한눈에 확인해보세요.</div>
+        <div class="rk-sub">실시간 인기, 지역별 TOP, 추천 맛집을 한눈에 확인해보세요.</div>
       </div>
 
       <!-- 탭 -->
@@ -263,22 +261,49 @@
 		  <button type="button" class="rk-tab" data-tab="region">
 		    <i class="fa-solid fa-location-dot text-danger me-1"></i> 지역 TOP
 		  </button>
-		  <button type="button" class="rk-tab" data-tab="theme">
-		    <i class="fa-solid fa-compass me-1" style="color:var(--rk-brand);"></i> 테마 추천
+		  <button type="button" class="rk-tab" data-tab="recommend">
+		    <i class="fa-solid fa-compass me-1" style="color:var(--rk-brand);"></i> 추천
 		  </button>
 		</div>
 
       <!-- 필터 -->
       <div class="rk-filterRow">
-        <div class="rk-chipWrap">
-          <button type="button" class="rk-chip active" data-category="ALL">전체</button>
-          <button type="button" class="rk-chip" data-category="KOREAN">한식</button>
-          <button type="button" class="rk-chip" data-category="CAFE">카페</button>
-          <button type="button" class="rk-chip" data-category="BAR">술집</button>
-          <button type="button" class="rk-chip" data-category="WESTERN">양식</button>
-        </div>
 
-        <div class="rk-meta">신촌 · 강남 · TOP50 · 00:00 기준 실시간 집계</div>
+  <!-- 추천 탭 전용 필터 -->
+	  <div id="recommendFilterArea" style="display:none; width:100%;">
+	    <div class="rk-chipWrap" id="recommendChipWrap">
+	      <button type="button" class="rk-chip active" data-category="ALL">전체</button>
+	      <button type="button" class="rk-chip" data-category="KOREAN">한식</button>
+	      <button type="button" class="rk-chip" data-category="CAFE">카페</button>
+	      <button type="button" class="rk-chip" data-category="BAR">술집</button>
+	      <button type="button" class="rk-chip" data-category="WESTERN">양식</button>
+	
+	      <!-- 처음엔 숨길 추가 필터 -->
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="JAPANESE">일식</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="CHINESE">중식</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="DESSERT">디저트</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="SNACK">분식</button>
+	    </div>
+	
+	    <div class="mt-2">
+	      <button type="button" id="filterMoreBtn" class="btn btn-sm btn-outline-secondary">
+	        필터 더보기
+	      </button>
+	      <button type="button" id="filterCollapseBtn" class="btn btn-sm btn-outline-secondary d-none">
+	        필터 접기
+	      </button>
+	    </div>
+	  </div>
+	
+	  <!-- 지역 탭 전용 셀렉트 -->
+	  <select id="regionSelect" class="form-select" style="width:160px; display:none;">
+	    <option value="all">전체 지역</option>
+	    <option value="강남">강남</option>
+	    <option value="신촌">신촌</option>
+	    <option value="홍대">홍대</option>
+	    <option value="이태원">이태원</option>
+	  </select>
+
       </div>
 
       <!-- AJAX/Fragment 교체 영역 -->

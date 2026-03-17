@@ -40,77 +40,75 @@ public class RestaurantController {
         return "user/restaurant/restaurant";
     }
 
- // [restaurantRanking] ----------------------------------------------------------------------
- // [restaurantRanking] 맛집 랭킹 페이지 이동
- // TOP5 + 더보기 첫 목록을 준비해서 JSP로 이동
-	 @RequestMapping("/bestRestaurants.rs")
-	 public String bestRestaurants(Model model) {
-	
-	     // 한 번 더보기 시 가져올 개수
-	     int limit = 12;
-	
-	     // 상단 고정 TOP5
-	     List<PlaceDTO> topList = service.getBestRestaurantTop5();
-	
-	     // 더보기 첫 목록 (6위부터 12개)
-	     List<PlaceDTO> pageList = service.getBestRestaurantPageList(5, 17);
-	
-	     if (topList == null) topList = new ArrayList<>();
-	     if (pageList == null) pageList = new ArrayList<>();
-	
-	     Map<Integer, Double> avgRatingMap = new HashMap<>();
-	     Map<Integer, Integer> reviewCountMap = new HashMap<>();
-	
-	     for (PlaceDTO place : topList) {
-	         avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-	         reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-	     }
-	
-	     for (PlaceDTO place : pageList) {
-	         avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-	         reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-	     }
-	
-	     int totalCount = service.getBestRestaurantCount();
-	     int remainCount = Math.max(totalCount - 5, 0);
-	
-	     model.addAttribute("topList", topList);
-	     model.addAttribute("pageList", pageList);
-	     model.addAttribute("avgRatingMap", avgRatingMap);
-	     model.addAttribute("reviewCountMap", reviewCountMap);
-	     model.addAttribute("favoritePlaceIds", new ArrayList<Integer>());
-	
-	     // 더보기 관련
-	     model.addAttribute("limit", limit);
-	     model.addAttribute("nextOffset", 17);
-	     model.addAttribute("remainCount", remainCount);
-	
-	     return "user/restaurant/bestRestaurants";
-	 }
-	 
-	// [restaurantRanking] ----------------------------------------------------------------------
-	// [restaurantRanking] 맛집 랭킹 더보기 AJAX
-	// offset 이후 맛집 목록을 JSON으로 반환
-	 @RequestMapping("/bestRestaurantsMore.rs")
-	 @ResponseBody
-	 public List<PlaceDTO> bestRestaurantsMore(
-	         @RequestParam(value = "tab", defaultValue = "realtime") String tab,
-	         @RequestParam("offset") int offset,
-	         @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    // [restaurantRanking] ----------------------------------------------------------------------
+    // [restaurantRanking] 맛집 랭킹 페이지 이동
+    // TOP5 + 더보기 첫 목록을 준비해서 JSP로 이동
+    @RequestMapping("/bestRestaurants.rs")
+    public String bestRestaurants(Model model) {
 
-	     int start = offset;
-	     int end = offset + limit;
+        int limit = 12;
 
-	     if ("realtime".equals(tab)) {
-	         return service.getBestRestaurantPageList(start, end);
-	     } else if ("region".equals(tab)) {
-	         return service.getBestRestaurantPageList(start, end);
-	     } else if ("theme".equals(tab)) {
-	         return service.getBestRestaurantPageList(start, end);
-	     }
+        // 기본 진입은 전체(실시간) 기준
+        List<PlaceDTO> topList = service.getBestRestaurantTop5(null);
+        List<PlaceDTO> pageList = service.getBestRestaurantPageList(5, 17, null);
 
-	     return new ArrayList<>();
-	 }
+        if (topList == null) topList = new ArrayList<>();
+        if (pageList == null) pageList = new ArrayList<>();
+
+        Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
+        Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
+
+        for (PlaceDTO place : topList) {
+            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
+            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
+        }
+
+        for (PlaceDTO place : pageList) {
+            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
+            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
+        }
+
+        int totalCount = service.getBestRestaurantCount(null);
+        int remainCount = Math.max(totalCount - 5, 0);
+
+        model.addAttribute("topList", topList);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("avgRatingMap", avgRatingMap);
+        model.addAttribute("reviewCountMap", reviewCountMap);
+        model.addAttribute("favoritePlaceIds", new ArrayList<Integer>());
+
+        model.addAttribute("limit", limit);
+        model.addAttribute("nextOffset", 17);
+        model.addAttribute("remainCount", remainCount);
+        model.addAttribute("currentTab", "realtime");
+        model.addAttribute("currentRegion", "all");
+
+        return "user/restaurant/bestRestaurants";
+    }
+
+    // [restaurantRanking] ----------------------------------------------------------------------
+    // [restaurantRanking] 맛집 랭킹 더보기 AJAX
+    @RequestMapping("/bestRestaurantsMore.rs")
+    @ResponseBody
+    public List<PlaceDTO> bestRestaurantsMore(
+            @RequestParam(value = "tab", defaultValue = "realtime") String tab,
+            @RequestParam(value = "region", defaultValue = "all") String region,
+            @RequestParam("offset") int offset,
+            @RequestParam(value = "limit", defaultValue = "12") int limit) {
+
+        int start = offset;
+        int end = offset + limit;
+
+        if ("realtime".equals(tab)) {
+            return service.getBestRestaurantPageList(start, end, null);
+        } else if ("region".equals(tab)) {
+            return service.getBestRestaurantPageList(start, end, region);
+        } else if ("theme".equals(tab)) {
+            return service.getBestRestaurantPageList(start, end, null);
+        }
+
+        return new ArrayList<>();
+    }
 
     // [restaurant] 지역별 베스트 맛집 페이지로 이동
     @RequestMapping("/bestRestaurantsRegion.rs")
@@ -209,32 +207,38 @@ public class RestaurantController {
 
         return (obj == null) ? null : String.valueOf(obj);
     }
-    
+
     @RequestMapping("/bestRestaurantsTabAjax.rs")
     public String bestRestaurantsTabAjax(
             @RequestParam(value = "tab", defaultValue = "realtime") String tab,
+            @RequestParam(value = "region", defaultValue = "all") String region,
             Model model) {
 
         int limit = 12;
 
         List<PlaceDTO> topList = new ArrayList<>();
         List<PlaceDTO> pageList = new ArrayList<>();
+        int totalCount = 0;
 
         if ("realtime".equals(tab)) {
-            topList = service.getBestRestaurantTop5();
-            pageList = service.getBestRestaurantPageList(5, 17);
+            topList = service.getBestRestaurantTop5(null);
+            pageList = service.getBestRestaurantPageList(5, 17, null);
+            totalCount = service.getBestRestaurantCount(null);
+
         } else if ("region".equals(tab)) {
-            topList = service.getBestRestaurantTop5();
-            pageList = service.getBestRestaurantPageList(5, 17);
+            topList = service.getBestRestaurantTop5(region);
+            pageList = service.getBestRestaurantPageList(5, 17, region);
+            totalCount = service.getBestRestaurantCount(region);
+
         } else if ("theme".equals(tab)) {
-            topList = service.getBestRestaurantTop5();
-            pageList = service.getBestRestaurantPageList(5, 17);
+            topList = service.getBestRestaurantTop5(null);
+            pageList = service.getBestRestaurantPageList(5, 17, null);
+            totalCount = service.getBestRestaurantCount(null);
         }
 
         if (topList == null) topList = new ArrayList<>();
         if (pageList == null) pageList = new ArrayList<>();
 
-        int totalCount = service.getBestRestaurantCount();
         int remainCount = Math.max(totalCount - 5, 0);
 
         model.addAttribute("topList", topList);
@@ -243,9 +247,8 @@ public class RestaurantController {
         model.addAttribute("nextOffset", 17);
         model.addAttribute("remainCount", remainCount);
         model.addAttribute("currentTab", tab);
+        model.addAttribute("currentRegion", region);
 
         return "user/restaurant/bestRestaurantsContent";
     }
-    
-    
 }

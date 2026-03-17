@@ -1,9 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     const rankingContent = document.getElementById("rankingContent");
+    const regionSelect = document.getElementById("regionSelect");
+    const recommendFilterArea = document.getElementById("recommendFilterArea");
+
     if (!rankingContent) return;
 
     const state = {
-        tab: "realtime"
+        tab: "realtime",
+        region: "all",
+        category: "ALL"
     };
 
     function escapeHtml(value) {
@@ -15,6 +20,17 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
     }
+
+    function updateFilterVisibility() {
+	    if (regionSelect) {
+	        regionSelect.style.display =
+	            (state.tab === "region" || state.tab === "recommend") ? "block" : "none";
+	    }
+	
+	    if (recommendFilterArea) {
+	        recommendFilterArea.style.display = (state.tab === "recommend") ? "block" : "none";
+	    }
+	}
 
     function renderMoreCards(list) {
         let html = "";
@@ -58,7 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function loadTabContent(tabType) {
-        fetch(path + "/bestRestaurantsTabAjax.rs?tab=" + encodeURIComponent(tabType))
+        const url =
+            path +
+            "/bestRestaurantsTabAjax.rs?tab=" + encodeURIComponent(tabType) +
+            "&region=" + encodeURIComponent(state.region) +
+            "&category=" + encodeURIComponent(state.category);
+
+        fetch(url)
             .then(function (response) {
                 if (!response.ok) {
                     throw new Error("HTTP " + response.status);
@@ -85,15 +107,76 @@ document.addEventListener("DOMContentLoaded", function () {
             const tabType = this.dataset.tab || "realtime";
             state.tab = tabType;
 
+            updateFilterVisibility();
             loadTabContent(tabType);
         });
     });
 
-    // 더보기 / 접기 : 이벤트 위임
+    // 지역 변경
+    if (regionSelect) {
+        regionSelect.addEventListener("change", function () {
+            state.region = this.value || "all";
+
+            if (state.tab === "region" || state.tab === "recommend") {
+                loadTabContent(state.tab);
+            }
+        });
+    }
+
+    // 문서 전체 클릭 이벤트 위임
     document.addEventListener("click", function (e) {
         const moreBtn = e.target.closest("#moreBtn");
         const collapseBtn = e.target.closest("#collapseBtn");
+        const filterMoreBtn = e.target.closest("#filterMoreBtn");
+        const filterCollapseBtn = e.target.closest("#filterCollapseBtn");
+        const chip = e.target.closest("#recommendChipWrap .rk-chip");
 
+        // 추천 필터 칩 클릭
+        if (chip) {
+            document.querySelectorAll("#recommendChipWrap .rk-chip").forEach(function (btn) {
+                btn.classList.remove("active");
+            });
+
+            chip.classList.add("active");
+            state.category = chip.dataset.category || "ALL";
+
+            if (state.tab === "recommend") {
+                loadTabContent("recommend");
+            }
+            return;
+        }
+
+        // 추천 필터 더보기
+        if (filterMoreBtn) {
+            document.querySelectorAll(".extra-filter").forEach(function (item) {
+                item.classList.remove("d-none");
+            });
+
+            filterMoreBtn.classList.add("d-none");
+
+            const btn = document.getElementById("filterCollapseBtn");
+            if (btn) {
+                btn.classList.remove("d-none");
+            }
+            return;
+        }
+
+        // 추천 필터 접기
+        if (filterCollapseBtn) {
+            document.querySelectorAll(".extra-filter").forEach(function (item) {
+                item.classList.add("d-none");
+            });
+
+            filterCollapseBtn.classList.add("d-none");
+
+            const btn = document.getElementById("filterMoreBtn");
+            if (btn) {
+                btn.classList.remove("d-none");
+            }
+            return;
+        }
+
+        // 랭킹 더보기
         if (moreBtn) {
             const moreListWrap = document.getElementById("moreListWrap");
             if (!moreListWrap) return;
@@ -101,15 +184,20 @@ document.addEventListener("DOMContentLoaded", function () {
             const offset = parseInt(moreBtn.dataset.offset || "17", 10);
             const limit = parseInt(moreBtn.dataset.limit || "12", 10);
 
-            fetch(
+            const url =
                 path +
                 "/bestRestaurantsMore.rs?tab=" +
                 encodeURIComponent(state.tab) +
+                "&region=" +
+                encodeURIComponent(state.region) +
+                "&category=" +
+                encodeURIComponent(state.category) +
                 "&offset=" +
                 offset +
                 "&limit=" +
-                limit
-            )
+                limit;
+
+            fetch(url)
                 .then(function (response) {
                     if (!response.ok) {
                         throw new Error("HTTP " + response.status);
@@ -142,8 +230,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(function (error) {
                     console.error("더보기 로딩 실패:", error);
                 });
+
+            return;
         }
 
+        // 랭킹 접기
         if (collapseBtn) {
             document.querySelectorAll(".ranking-added-item").forEach(function (item) {
                 item.remove();
@@ -159,4 +250,6 @@ document.addEventListener("DOMContentLoaded", function () {
             collapseBtn.style.display = "none";
         }
     });
+
+    updateFilterVisibility();
 });

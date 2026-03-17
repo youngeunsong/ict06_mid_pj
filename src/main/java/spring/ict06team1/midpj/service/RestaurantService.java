@@ -29,11 +29,11 @@ public interface RestaurantService {
     double getAvgRating(int place_id);
     
     // 맛집 총 갯수
-    int getBestRestaurantCount();
+    int getBestRestaurantCount(String region);
     
     // 맛집 페이지 리스트
-    List<PlaceDTO> getBestRestaurantPageList(int start, int end);
+    List<PlaceDTO> getBestRestaurantPageList(int start, int end, String region);
     
     // 맛집 top 5
-    List<PlaceDTO> getBestRestaurantTop5();
+    List<PlaceDTO> getBestRestaurantTop5(String region);
 }

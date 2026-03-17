@@ -83,24 +83,21 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
     
     @Override
-    public int getBestRestaurantCount() {
-        return dao.getBestRestaurantCount();
+    public int getBestRestaurantCount(String region) {
+    	return dao.getBestRestaurantCount(region);
     }
-    
+
     @Override
-    public List<PlaceDTO> getBestRestaurantPageList(int start, int end) {
-
-        Map<String,Object> map = new HashMap<>();
-
+    public List<PlaceDTO> getBestRestaurantPageList(int start, int end, String region) {
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("start", start);
         map.put("end", end);
-
+        map.put("region", region);
         return dao.getBestRestaurantPageList(map);
     }
     
     @Override
-    public List<PlaceDTO> getBestRestaurantTop5() {
-        return dao.getBestRestaurantTop5();
+    public List<PlaceDTO> getBestRestaurantTop5(String region) {
+    	return dao.getBestRestaurantTop5(region);
     }
-    
 }

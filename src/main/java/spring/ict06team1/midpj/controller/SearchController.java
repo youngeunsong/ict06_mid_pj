@@ -46,17 +46,21 @@ public class SearchController {
 			@RequestParam(defaultValue = "1") int page,
 			Model model){
 		
-		logger.info("<<< url => search/ajax>>>");
+		logger.info("<<< url => search/ajax >>>");
 		
 		Map<String, Object> data = searchService.getSearchAjax(keyword, type, sort, page);
 		
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("list", data.get("list"));
+		model.addAttribute("type", data.get("type"));
+		model.addAttribute("restList", data.get("restList"));
+		model.addAttribute("accList", data.get("accList"));
+		model.addAttribute("festList", data.get("festList"));
+	    model.addAttribute("totalCnt", data.get("totalCnt"));
 	    model.addAttribute("totalPages", data.get("totalPages"));
 	    model.addAttribute("currentPage", data.get("currentPage"));
 	    model.addAttribute("reviewCountMap", data.get("reviewCountMap"));
 		model.addAttribute("avgRatingMap", data.get("avgRatingMap"));
-		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds")); // 즐겨찾기
+		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds"));
 		
 		return "common/search_fragment";
 	}
@@ -76,7 +80,7 @@ public class SearchController {
 	@ResponseBody
 	public java.util.List<String> getAutoComplete(@RequestParam String keyword) {
 	    logger.info("<<< url => /search/autocomplete >>>");
-	    logger.info("[Controller] keyword => ", keyword);
+	    logger.info("[Controller] keyword => {}", keyword);
 	    return searchService.getAutoComplete(keyword);
 	}
 
@@ -87,6 +91,4 @@ public class SearchController {
 	    logger.info("<<< url => /search/recent >>>");
 	    return searchService.getRecentKeywords(request);
 	}
-	
-
 }

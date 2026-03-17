@@ -97,7 +97,9 @@
     <id column="INQUIRY_ID" property="inquiry_id" />
     <result column="USER_ID" property="user_id" />
     <result column="TITLE" property="title" />
+    <result column="CONTENT" property="content" />
     <result column="STATUS" property="status" />
+    <result column="ADMIN_REPLY" property="admin_reply" />
     <result column="CREATED_AT" property="inquiryDate" />
     <result column="ANSWERED_AT" property="answerDate" />
 	</resultMap>
@@ -133,5 +135,20 @@
 	    </if>
 	</select>
 	
-
+	<!-- 내 문의 상세 -->
+	<select id="selectMyInquiryDetail" parameterType="java.util.Map" resultMap="InquiryMap">
+	    SELECT
+	          INQUIRY_ID
+	        , USER_ID
+	        , TITLE
+	        , CONTENT
+	        , STATUS
+	        , ADMIN_REPLY
+	        , CREATED_AT
+	        , ANSWERED_AT
+	    FROM INQUIRY
+	    WHERE INQUIRY_ID = #{inquiry_id}
+	      AND USER_ID = #{user_id}
+	</select>
+	
 </mapper>	

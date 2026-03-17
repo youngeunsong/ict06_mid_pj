@@ -46,6 +46,10 @@ public interface UserService {
     public void viewInquiriesAction(HttpServletRequest request, HttpServletResponse response, Model model)
     	throws ServletException, IOException;
     
+    // 나의 문의 상세
+    public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+        throws ServletException, IOException;
+    
     
     
 }

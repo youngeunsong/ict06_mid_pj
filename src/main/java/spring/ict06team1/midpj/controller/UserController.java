@@ -245,6 +245,14 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => inquiryDetail.do>>>");
 		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		if (sessionID == null) {
+			return "redirect:/login.do";
+		}
+		
+		service.inquiryDetailAction(request, response, model);
+		
 		return "user/mypage/inquiryDetail";
 	}
 	

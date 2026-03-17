@@ -105,4 +105,14 @@ public class UserDAOImpl implements UserDAO {
 		
 		return selectCnt;
 	}
+
+	// 나의 문의 상세
+	@Override
+	public InquiryDTO selectMyInquiryDetail(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - selectMyInquiryDetail()");
+		
+		InquiryDTO dto = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.selectMyInquiryDetail", map);
+		
+		return dto;
+	}
 }

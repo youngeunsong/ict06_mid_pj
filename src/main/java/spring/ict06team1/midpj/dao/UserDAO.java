@@ -36,5 +36,8 @@ public interface UserDAO {
     
     // 나의 문의 총 개수 조회
     public int selectMyInquiryCount(Map<String, Object> map);
+    
+    // 나의 문의 상세
+    public InquiryDTO selectMyInquiryDetail(Map<String, Object> map);
 
 }    

@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		// 4. 페이징 객체 생성 및 전체 문의글 개수 조회
-		spring.ict06team1.midpj.page.Paging paging = new spring.ict06team1.midpj.page.Paging(pageNum);
+		spring.ict06team1.midpj.SearchCriteria.Paging paging = new spring.ict06team1.midpj.SearchCriteria.Paging(pageNum);
 		
 		// DAO에 던질 파라미터 묶기 (아이디와 필터링 상태)
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -336,5 +336,24 @@ public class UserServiceImpl implements UserService {
 		System.out.println("시작 번호(start): " + paging.getStartRow());
 		System.out.println("끝 번호(end): " + paging.getEndRow());
 		
+	}
+	
+	// 나의 문의 상세
+	@Override
+	public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - inquiryDetailAction()");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		int inquiry_id = Integer.parseInt(request.getParameter("inquiryId"));
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", sessionID);
+		map.put("inquiry_id", inquiry_id);
+		
+		InquiryDTO dto = dao.selectMyInquiryDetail(map);
+		System.out.println("sessionID => [" + sessionID + "]");
+		
+		model.addAttribute("dto", dto);
 	}
 }

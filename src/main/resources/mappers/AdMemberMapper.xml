@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="spring.ict06team1.midpj.dao.AdMemberDAO">
+  
+	<resultMap id="adMemberMap" type="spring.ict06team1.midpj.dto.MemberDTO">
+		<id property="user_id" column="user_id" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<result property="name" column="name" />
+		<result property="birth_date" column="birth_date" />
+		<result property="gender" column="gender" />
+		<result property="phone" column="phone" />
+		<result property="address" column="address" />
+		<result property="point_balance" column="point_balance" />
+		<result property="role" column="role" />
+		<result property="status" column="status" />
+		<result property="joinDate" column="created_at" />
+		<result property="updateDate" column="updated_at" />
+	</resultMap>
+  	
+  	<!-- 공통 WHERE 조건 쿼리 -->
+  	<sql id="memberSearchWhere">
+  		WHERE 1=1
+		<if test="sf.status != null and sf.status != ''">
+			AND status = #{sf.status}
+		</if>
+		<if test="sf.role != null and sf.role != ''">
+			AND role = #{sf.role}
+		</if>
+		<if test="sf.keyword != null and sf.keyword != ''">
+			<choose>
+				<when test="sf.searchType == 'name'">
+					AND name LIKE '%' || #{sf.keyword} || '%'
+				</when>
+				<otherwise>
+					AND user_id LIKE '%' || #{sf.keyword} || '%'
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+  	
+  	<!-- 1. 전체 회원 목록 -->
+  	<select id="getMemberList" parameterType="map" resultMap="adMemberMap">
+  		SELECT *
+  		  FROM (
+  		  		SELECT ROWNUM AS rn, a.*
+  		  	  	  FROM (
+	  		  	  		SELECT user_id, name, email, phone,
+				  			   role, status, created_at
+				  		  FROM MEMBER
+				  		  <include refid="memberSearchWhere" />
+				  		ORDER BY created_at DESC
+		  		  	  ) a
+		  		 WHERE ROWNUM <![CDATA[<=]]> #{paging.endRow}
+  		  		)
+  		 WHERE rn <![CDATA[>=]]> #{paging.startRow}
+  	</select>
+  	
+  	<!-- 1-1. 전체 회원 수 -->
+  	<select id="getMemberCount" parameterType="map" resultType="int">
+  		SELECT COUNT(*)
+  		  FROM MEMBER
+  		  <include refid="memberSearchWhere" />
+  	</select>
+
+  	<!-- 제재 회원 공통 WHERE 조건 쿼리 -->
+  	<sql id="bannedSearchWhere">
+  		WHERE status = 'BANNED'
+		<if test="sf.role != null and sf.role != ''">
+			AND role = #{sf.role}
+		</if>
+		<if test="sf.keyword != null and sf.keyword != ''">
+			<choose>
+				<when test="sf.searchType == 'name'">
+					AND name LIKE '%' || #{sf.keyword} || '%'
+				</when>
+				<otherwise>
+					AND user_id LIKE '%' || #{sf.keyword} || '%'
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+  	
+  	<!-- 2. 제재 회원 목록 -->
+  	<select id="getBannedList" parameterType="map" resultMap="adMemberMap">
+  		SELECT *
+  		  FROM (
+  		  		SELECT ROWNUM AS rn, a.*
+  		  		  FROM (
+  		  		  		SELECT user_id, name, email, phone, role, status, created_at
+  		  		  		  FROM MEMBER
+  		  		  		<include refid="bannedSearchWhere" />
+  		  				ORDER BY created_at DESC
+  		  		  		) a
+  		  		 WHERE ROWNUM <![CDATA[<=]]> #{paging.endRow}
+  		  		)
+  		  WHERE rn <![CDATA[>=]]> #{paging.startRow}
+  	</select>
+  	
+  	<!-- 2-1. 제재 회원 수 -->
+  	<select id="getBannedCount" parameterType="map" resultType="int">
+  		SELECT COUNT(*)
+  		  FROM MEMBER
+		<include refid="bannedSearchWhere" />
+  	</select>
+  	
+	<!-- 3. 작성자 제재 -->
+	<update id="banUser" parameterType="String">
+		UPDATE MEMBER
+		   SET status='BANNED',
+			   updated_at=SYSTIMESTAMP
+		 WHERE user_id=#{user_id}
+	</update>
+  	
+  	<!-- 4. 작성자 제재 해제 -->
+	<update id="unbanUser" parameterType="String">
+		UPDATE MEMBER
+		   SET status='ACTIVE',
+			   updated_at=SYSTIMESTAMP
+		 WHERE user_id=#{user_id}
+	</update>
+  	
+  	<!-- 5. 작성자 상태 조회 -->
+	<select id="getUserStatus" parameterType="String" resultMap="adMemberMap">
+  		SELECT user_id, status
+  		  FROM MEMBER
+  		 WHERE user_id=#{user_id}
+	</select>
+	
+</mapper>

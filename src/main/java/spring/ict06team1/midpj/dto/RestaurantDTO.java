@@ -14,9 +14,9 @@ public class RestaurantDTO {
 		super();
 	}
 
-
 	public RestaurantDTO(int restaurant_id, String description, String phone, String category, String status,
 			String restdate, String areaCode) {
+		super();
 		this.restaurant_id = restaurant_id;
 		this.description = description;
 		this.phone = phone;
@@ -25,7 +25,6 @@ public class RestaurantDTO {
 		this.restdate = restdate;
 		this.areaCode = areaCode;
 	}
-
 
 	public int getRestaurant_id() {
 		return restaurant_id;
@@ -82,11 +81,12 @@ public class RestaurantDTO {
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
 	}
+
 	@Override
 	public String toString() {
 		return "RestaurantDTO [restaurant_id=" + restaurant_id + ", description=" + description + ", phone=" + phone
 				+ ", category=" + category + ", status=" + status + ", restdate=" + restdate + ", areaCode=" + areaCode
 				+ "]";
 	}
-	
+
 }

@@ -53,9 +53,9 @@ public class FestivalController {
 	public String festivalDetail(@RequestParam("place_id") int place_id, HttpSession session, Model model) 
             		throws ServletException, IOException {
 		logger.info("<<< url => festivalDetail.fe >>>");
-		// System.out.println("place_id: " + place_id); 제대로 들어오는 지 확인 
+		System.out.println("place_id: " + place_id); // 제대로 들어오는 지 확인 
 		FestivalDTO festival = service.getFestivalDetail(place_id);
-		System.out.println("festival: " + festival);
+		// System.out.println("festival: " + festival);
 
         if (festival == null) {
             return "redirect:/main.do";

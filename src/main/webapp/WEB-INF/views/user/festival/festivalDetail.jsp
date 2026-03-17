@@ -379,7 +379,19 @@
               		<!-- 티켓 정보 가져오기 시작 -->
               		<c:forEach var="ticket" items="${festival.ticketList}">
 					    <tr>
-					        <td>${ticket.ticket_type}
+					        <td>
+					        	<c:if test="${ticket.ticket_type eq 'Free'}">
+								    무료
+								</c:if>
+								<c:if test="${ticket.ticket_type eq 'OneDay'}">
+								    1일권
+								</c:if>
+								<c:if test="${ticket.ticket_type eq 'TwoDay'}">
+								    2일권
+								</c:if>
+								<c:if test="${ticket.ticket_type eq 'AllDay'}">
+								    전일권
+								</c:if>
 					        </td>
 					        <td>${ticket.price}</td>
 					        <td>${ticket.stock}</td>

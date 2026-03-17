@@ -3,6 +3,10 @@
 SELECT *
 FROM "MEMBER" m 
 
+SELECT *
+FROM FAVORITE f 
+WHERE f.USER_ID = 'user10'
+
 -- [통합 전체 페이지]
 -- 검색어 기준 맛집 목록 
  SELECT r.RESTAURANT_ID

@@ -233,6 +233,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		
 		// Place 테이블에 먼저 추가 시도하여 성공 시 
 		if(insertCntPlace > 0) {
+			
 			int insertFestivalCnt = dao.insertFestival(dto);
 			
 			// Festival 테이블에 추가 시도하여 성공 시

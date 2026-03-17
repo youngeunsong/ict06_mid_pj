@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDAO dao;
+	
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	

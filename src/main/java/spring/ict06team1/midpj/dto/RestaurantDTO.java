@@ -9,14 +9,15 @@ public class RestaurantDTO {
 	private String status;
 	private String restdate;
 	private String areaCode;
+	private PlaceDTO placeDTO;
 	
 	public RestaurantDTO() {
 		super();
 	}
 
-
 	public RestaurantDTO(int restaurant_id, String description, String phone, String category, String status,
-			String restdate, String areaCode) {
+			String restdate, String areaCode, PlaceDTO placeDTO) {
+		super();
 		this.restaurant_id = restaurant_id;
 		this.description = description;
 		this.phone = phone;
@@ -24,8 +25,8 @@ public class RestaurantDTO {
 		this.status = status;
 		this.restdate = restdate;
 		this.areaCode = areaCode;
+		this.placeDTO = placeDTO;
 	}
-
 
 	public int getRestaurant_id() {
 		return restaurant_id;
@@ -82,11 +83,23 @@ public class RestaurantDTO {
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
 	}
+
+	public PlaceDTO getPlaceDTO() {
+		return placeDTO;
+	}
+
+	public void setPlaceDTO(PlaceDTO placeDTO) {
+		this.placeDTO = placeDTO;
+	}
+
 	@Override
 	public String toString() {
 		return "RestaurantDTO [restaurant_id=" + restaurant_id + ", description=" + description + ", phone=" + phone
 				+ ", category=" + category + ", status=" + status + ", restdate=" + restdate + ", areaCode=" + areaCode
-				+ "]";
+				+ ", placeDTO=" + placeDTO + "]";
 	}
+
+
+	
 	
 }

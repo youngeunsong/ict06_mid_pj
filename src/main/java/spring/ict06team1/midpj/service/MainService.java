@@ -8,20 +8,21 @@ import javax.servlet.http.HttpServletRequest;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface MainService {
 
 	//맛집 TOP10
-	public List<PlaceDTO> getTop10ByREST();
+	public List<RestaurantDTO> getTop10ByREST();
 
     //숙소 TOP10
 	public List<AccommodationDTO> getTop10ByACC();
     
     //각 플레이스 별 리뷰 카운트
-	public Map<Integer, Integer> getReviewCountMap(List<Integer> placeIds);
+	public Map<String, Integer> getReviewCountMap(List<Integer> placeIds);
 
     //각 플레이스 별 리뷰 평균
-	public Map<Integer, Double> getAvgRatingMap(List<Integer> placeIds);
+	public Map<String, Double> getAvgRatingMap(List<Integer> placeIds);
 
     //즐겨찾기
 	public List<Integer> getFavoritePlaceIds(HttpServletRequest request);
@@ -33,7 +34,7 @@ public interface MainService {
 	public List<Map<String, Object>> getBestAllTop4();
 	
 	//BEST 추천 - 맛집 5개
-	public List<PlaceDTO> getBestRestTop5();
+	public List<RestaurantDTO> getBestRestTop5();
 	
 	//BEST 추천 - 숙소 5개
 	public List<AccommodationDTO> getBestAccTop5();

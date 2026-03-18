@@ -6,12 +6,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>등록 장소 관리</title>
+<title>축제 수정 처리</title>
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
-	<!--begin::Body-->
+	<!--begin::div wrapper-->
 	<div class="wrapper">
 		<!-- Preloader -->
 		<div
@@ -27,35 +28,29 @@
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
 		<!-- ================= CONTENT ================= -->
-		<!-- 컨텐츠 시작 -->
-		<div class="content-wrapper">
-			<img src="${path}/resources/images/admin/placeList.png" width="100%"
-				alt="main">
-		</div>
-		<!-- 컨텐츠 끝 -->
+		<c:if test="${updateCnt == 1}">
+			<script type="text/javascript">
+				alert("축제 수정 성공!!"); 
+				window.location="${path}/festivalList.adfe"; 
+			</script>
+		</c:if>		
+		
+		<c:if test="${updateCnt != 1}">
+			<script type="text/javascript">
+				alert("축제 수정 실패!!"); 
+				editFestival(festival_id); 
+			</script>
+		</c:if>
+
 
 		<!-- ================= FOOTER ================= -->
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
 		
-		<!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : 숙소 목록 조회</div>
-		
-		<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-		<!-- #${'{'} : #과 { 표시 -->
-		<!-- &lt; : < 표시 -->
-		<!-- &gt; : > 표시 -->
-		<div>
-			<pre><code>
-				
-			</code></pre>
-		</div>
-		<!-- 관련 SQL 끝 -->
 	</div>
 	<!--end::div wrapper-->
-	
+
 	<!-- ================= JS ================= -->
 </body>
-<!--end::Body-->
 </html>

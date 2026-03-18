@@ -3,21 +3,26 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
+import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 public interface SearchDAO {
 	
 	
 	// [검색 결과] -----------------------------------------------------------
-	// 1. 검색어 기준 장소 목록
-	public List<PlaceDTO> getSearchList(String keyword);
+	// 1. 검색어 기준 식당 목록
+	public List<RestaurantDTO> getRestList(String keyword);
 	
-	// 2. 검색어 기준 축제 목록
-	public List<FestivalDTO> getFestList (String keyword);
+	// 2. 검색어 기준 숙소 목록
+	List<AccommodationDTO> getAccList(String keyword);
+	
+	// 3. 검색어 기준 축제 목록
+	public List<FestivalDTO> getFestList(String keyword);
 
-	// 3. 검색어 기준 장소별 리뷰 통계
+	// 4. 검색어 기준 장소별 리뷰 통계
 	public List<Map<String,Object>> getPlaceReviewStats(String keyword);
 	
 	// [즐겨찾기] -----------------------------------------------------------
@@ -34,14 +39,20 @@ public interface SearchDAO {
 	public List<Integer> getFavoritePlaceIds(String user_id);
 	
 	// [AJAX] -----------------------------------------------------------
-	// 1. AJAX 카드 목록
-	public List<PlaceDTO> getSearchAjax (Map<String, Object> param);
+	// AJAX맛집 카드 목록 + 카드 건수
+	public List<RestaurantDTO> getRestAjaxList(Map<String, Object> param);
+	public int getRestAjaxCount(Map<String, Object> param);
+
+	// AJAX숙소 카드 목록 + 카드 건수
+	public List<AccommodationDTO> getAccAjaxList(Map<String, Object> param);
+	public int getAccAjaxCount(Map<String, Object> param);
+
+	// AJAX축제 카드 목록 + 카드 건수
+	public List<FestivalDTO> getFestAjaxList(Map<String, Object> param);
+	public int getFestAjaxCount(Map<String, Object> param);
 	
-	// 2. AJAX 전체 건수
-	public int getSearchAjaxCount (Map<String, Object> param);
-	
-	// 3. AJAX 목록 대상 장소들의 리뷰 통계
-	List<Map<String, Object>> getSearchAjaxReviewStats(Map<String, Object> param);
+	// AJAX리뷰 통계
+	public List<Map<String, Object>> getPlaceReviewStatsByIds(List<Integer> placeIds);
 	
 	// [자동완성] -----------------------------------------------------------
 	//자동완성 10개

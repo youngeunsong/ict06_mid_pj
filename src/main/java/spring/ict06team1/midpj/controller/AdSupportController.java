@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import spring.ict06team1.midpj.service.AdSupportService;
 import spring.ict06team1.midpj.service.AdSupportServiceImpl;
 
 @Controller

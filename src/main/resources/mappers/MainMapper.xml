@@ -4,6 +4,34 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="spring.ict06team1.midpj.dao.MainDAO">
 
+	<!-- =====================================================
+	     [매핑]
+	     RestaurantDTO/ AccommodationDTO/ festivalDTO
+	===================================================== -->
+
+	<!-- Restaurant DTO 매핑 -->
+  	<resultMap id="restResultMap" type="spring.ict06team1.midpj.dto.RestaurantDTO">
+	    <id property="restaurant_id" column="RESTAURANT_ID"/>
+	    <result property="description" column="DESCRIPTION"/>
+	    <result property="phone" column="PHONE"/>
+	    <result property="category" column="CATEGORY"/>
+	    <result property="status" column="REST_STATUS"/>
+	    <result property="restdate" column="RESTDATE"/>
+	    <result property="areaCode" column="AREACODE"/>
+
+		<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+		    <id property="place_id" column="PLACE_ID"/>
+		    <result property="place_type" column="PLACE_TYPE"/>
+		    <result property="name" column="NAME"/>
+		    <result property="address" column="ADDRESS"/>
+		    <result property="view_count" column="VIEW_COUNT"/>
+		    <result property="image_url" column="IMAGE_URL"/>
+		    <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+		    <result property="review_count" column="REVIEW_COUNT"/>
+		    <result property="avg_rating" column="AVG_RATING"/>
+		</association>
+	</resultMap>
+
 	<!-- Accommodation DTO 매핑 -->
   	<resultMap id="accResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
 	    <id property="accommodation_id" column="ACCOMMODATION_ID"/>
@@ -12,15 +40,17 @@
 	    <result property="price" column="PRICE"/>
 	    <result property="status" column="ACC_STATUS"/>
 	
-	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	        <id property="place_id" column="PLACE_ID"/>
-	        <result property="place_type" column="PLACE_TYPE"/>
-	        <result property="name" column="NAME"/>
-	        <result property="address" column="ADDRESS"/>
-	        <result property="view_count" column="VIEW_COUNT"/>
-	        <result property="image_url" column="IMAGE_URL"/>
-	        <result property="placeRegDate" column="PLACE_CREATED_AT"/>
-	    </association>
+		<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+		    <id property="place_id" column="PLACE_ID"/>
+		    <result property="place_type" column="PLACE_TYPE"/>
+		    <result property="name" column="NAME"/>
+		    <result property="address" column="ADDRESS"/>
+		    <result property="view_count" column="VIEW_COUNT"/>
+		    <result property="image_url" column="IMAGE_URL"/>
+		    <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+		    <result property="review_count" column="REVIEW_COUNT"/>
+		    <result property="avg_rating" column="AVG_RATING"/>
+		</association>
 	</resultMap>
 	
 	<!-- festival DTO 매핑 -->
@@ -32,51 +62,67 @@
 	    <result property="status" column="FEST_STATUS"/>
 	
 	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	        <id property="place_id" column="PLACE_ID"/>
-	        <result property="place_type" column="PLACE_TYPE"/>
-	        <result property="name" column="NAME"/>
-	        <result property="address" column="ADDRESS"/>
-	        <result property="view_count" column="VIEW_COUNT"/>
-	        <result property="image_url" column="IMAGE_URL"/>
-	        <result property="placeRegDate" column="PLACE_CREATED_AT"/>
-	    </association>
+		    <id property="place_id" column="PLACE_ID"/>
+		    <result property="place_type" column="PLACE_TYPE"/>
+		    <result property="name" column="NAME"/>
+		    <result property="address" column="ADDRESS"/>
+		    <result property="view_count" column="VIEW_COUNT"/>
+		    <result property="image_url" column="IMAGE_URL"/>
+		    <result property="placeRegDate" column="PLACE_CREATED_AT"/>
+		    <result property="review_count" column="REVIEW_COUNT"/>
+		    <result property="avg_rating" column="AVG_RATING"/>
+		</association>
 	</resultMap>
 	
+	
+	<!-- =====================================================
+	     [TOP10]
+	     30일 동안 조회수가 가장 높은 10개 가져오기
+	     (30일 내 10개가 안된다면 기간을 60일로 조회하여 10개 맞추기)
+	===================================================== -->
 	<!-- 맛집 TOP10 -->
-    <select id="getTop10ByREST" parameterType="string" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-	    SELECT *
+    <select id="top10ByREST" resultMap="restResultMap">
+    SELECT *
 	    FROM (
-	        SELECT p.PLACE_ID
+	        SELECT r.RESTAURANT_ID
+	             , TO_CHAR(r.DESCRIPTION) AS DESCRIPTION
+	             , r.PHONE
+	             , r.CATEGORY
+	             , r.STATUS AS REST_STATUS
+	             , r.RESTDATE
+	             , r.AREACODE
+	             , p.PLACE_ID
 	             , p.PLACE_TYPE
 	             , p.NAME
 	             , p.ADDRESS
 	             , p.VIEW_COUNT
 	             , p.IMAGE_URL
-	             , p.CREATED_AT AS placeRegDate
-	        FROM PLACE p
-	        WHERE p.PLACE_TYPE = 'REST'
-	          AND p.CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP -
-	              CASE
-	                  WHEN (
-	                      SELECT COUNT(*)
-	                      FROM PLACE
-	                      WHERE PLACE_TYPE = 'REST'
-	                        AND CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP - INTERVAL '30' DAY
-	                  ) <![CDATA[ < ]]> 10
-	                  THEN INTERVAL '60' DAY
-	                  ELSE INTERVAL '30' DAY
-	              END
+	             , p.CREATED_AT AS PLACE_CREATED_AT
+	             , NVL(rs.REVIEW_COUNT, 0) AS REVIEW_COUNT
+	             , NVL(rs.AVG_RATING, 0) AS AVG_RATING
+	        FROM RESTAURANT r
+	        JOIN PLACE p
+	          ON r.RESTAURANT_ID = p.PLACE_ID
+	        LEFT JOIN (
+	            SELECT rv.PLACE_ID
+	                 , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+	                 , ROUND(AVG(rv.RATING), 1) AS AVG_RATING
+	            FROM REVIEW rv
+	            WHERE rv.STATUS = 'DISPLAY'
+	            GROUP BY rv.PLACE_ID
+	        ) rs
+	          ON p.PLACE_ID = rs.PLACE_ID
 	        ORDER BY p.VIEW_COUNT DESC
 	    )
 	    WHERE ROWNUM <![CDATA[ <= ]]> 10
 	</select>
     
     <!-- 숙소 TOP10 - 가격 추가 -->
-    <select id="getTop10ByACC" parameterType="string" resultMap="accResultMap">
+    <select id="top10ByACC" resultMap="accResultMap">
 	    SELECT *
 	    FROM (
 	        SELECT a.ACCOMMODATION_ID
-	             , a.DESCRIPTION
+	             , TO_CHAR(a.DESCRIPTION) AS DESCRIPTION
 	             , a.PHONE
 	             , a.PRICE
 	             , a.STATUS AS ACC_STATUS
@@ -87,52 +133,57 @@
 	             , p.VIEW_COUNT
 	             , p.IMAGE_URL
 	             , p.CREATED_AT AS PLACE_CREATED_AT
+	             , NVL(rs.REVIEW_COUNT, 0) AS REVIEW_COUNT
+	             , NVL(rs.AVG_RATING, 0) AS AVG_RATING
 	        FROM ACCOMMODATION a
 	        JOIN PLACE p
 	          ON a.ACCOMMODATION_ID = p.PLACE_ID
-	        WHERE p.PLACE_TYPE = 'ACC'
-	          AND p.CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP -
-	              CASE
-	                  WHEN (
-	                      SELECT COUNT(*)
-	                      FROM PLACE
-	                      WHERE PLACE_TYPE = 'ACC'
-	                        AND CREATED_AT <![CDATA[ >= ]]> SYSTIMESTAMP - INTERVAL '30' DAY
-	                  ) <![CDATA[ < ]]> 10
-	                  THEN INTERVAL '60' DAY
-	                  ELSE INTERVAL '30' DAY
-	              END
+	        LEFT JOIN (
+	            SELECT rv.PLACE_ID
+	                 , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+	                 , ROUND(AVG(rv.RATING), 1) AS AVG_RATING
+	            FROM REVIEW rv
+	            WHERE rv.STATUS = 'DISPLAY'
+	            GROUP BY rv.PLACE_ID
+	        ) rs
+	          ON p.PLACE_ID = rs.PLACE_ID
 	        ORDER BY p.VIEW_COUNT DESC
 	    )
 	    WHERE ROWNUM <![CDATA[ <= ]]> 10
 	</select>
-
-	<!--  -->
-    <select id="getFavoritePlaceIds" parameterType="string" resultType="int">
-        SELECT place_id
-        FROM FAVORITE
-        WHERE user_id = #{user_id}
-    </select>
-
-	<!--  -->
-    <select id="getPlaceReviewStatsByIds" parameterType="list" resultType="map">
-        SELECT p.PLACE_ID
-             , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
-             , NVL(ROUND(AVG(rv.RATING),1),0) AS AVG_RATING
-        FROM PLACE p
-        LEFT JOIN REVIEW rv
-          ON p.PLACE_ID = rv.PLACE_ID
-         AND rv.STATUS = 'DISPLAY'
-        WHERE p.PLACE_ID IN
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-        GROUP BY p.PLACE_ID
-    </select>
+	
+  	<!-- 즐겨찾기 place_id 조회 -->
+	<select id="favoritePlaceIds" parameterType="string" resultType="int">
+	    SELECT place_id
+	    FROM FAVORITE
+	    WHERE user_id = #{user_id}
+	</select>
+	
+	<!-- =====================================================
+	     [리뷰]
+	     플레이스 별 리뷰 조회/ 플레이스 별 리뷰 갯수 및 평균 조회
+	===================================================== -->
+	<!-- 플레이스 별 리뷰 갯수 및 평균 조회 -->
+	<select id="placeReviewStatsByIds" parameterType="list" resultType="map">
+	    SELECT p.PLACE_ID
+	         , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+	         , NVL(ROUND(AVG(rv.RATING),1),0) AS AVG_RATING
+	    FROM PLACE p
+	    LEFT JOIN REVIEW rv
+	      ON p.PLACE_ID = rv.PLACE_ID
+	     AND rv.STATUS = 'DISPLAY'
+	    WHERE p.PLACE_ID IN
+	    <foreach collection="list" item="id" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
+	    GROUP BY p.PLACE_ID
+	</select>
     
-    <!-- 이달의 추천 국내 축제 -->
-    <!-- 현 달의 진행하는 축제 중, 조회수 기준 상위 8개를 평점 높은 순으로 정렬 -->
-    <select id="getTop8ThisMonthFestival" resultMap="festivalResultMap">
+    <!-- =====================================================
+	     [이달의 추천 국내 축제]
+	     현 달의 진행하는 축제 중, 조회수 기준 상위 8개를 평점 높은 순으로 정렬
+	===================================================== -->
+    <select id="top8ThisMonthFestival" resultMap="festivalResultMap">
     SELECT *
 	    FROM (
 	        SELECT top8.*
@@ -181,10 +232,12 @@
 	</select>
 	
 	<!-- =====================================================
-	     [추가] BEST 추천 - 전체 탭 우측 4개
+	     [BEST 추천]
 	     최근 1주일 리뷰 기준 / 리뷰 1개 이상 / 통합 정렬
+	     (전체 탭은 맛집/숙소/축제 통합하여 리뷰평균이 가장 높은 4개)
 	===================================================== -->
-	<select id="getBestAllTop4" resultType="map">
+	<!-- BEST 추천 - 전체 탭 우측 4개  -->
+	<select id="bestAllTop4" resultType="map">
 	    SELECT *
 	    FROM (
 	        SELECT
@@ -212,27 +265,43 @@
 	    WHERE ROWNUM <![CDATA[<=]]> 4
 	</select>
 	
-	<!-- =====================================================
-     [추가] BEST 추천 - 맛집 5개
-	===================================================== -->
-	<select id="getBestRestTop5" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	<!-- BEST 추천 - 맛집 5개 -->
+	<select id="bestRestTop5" resultMap="restResultMap">
 	    SELECT *
 	    FROM (
 	        SELECT
+	            r.RESTAURANT_ID,
+	            TO_CHAR(r.DESCRIPTION) AS DESCRIPTION,
+	            r.PHONE,
+	            r.CATEGORY,
+	            r.STATUS AS REST_STATUS,
+	            r.RESTDATE,
+	            r.AREACODE,
 	            p.PLACE_ID,
 	            p.PLACE_TYPE,
 	            p.NAME,
 	            p.ADDRESS,
 	            p.VIEW_COUNT,
 	            p.IMAGE_URL,
-	            p.CREATED_AT AS placeRegDate
-	        FROM PLACE p
+	            p.CREATED_AT AS PLACE_CREATED_AT,
+	            ROUND(AVG(rv.RATING), 1) AS AVG_RATING,
+	            COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
+	        FROM RESTAURANT r
+	        JOIN PLACE p
+	          ON r.RESTAURANT_ID = p.PLACE_ID
 	        JOIN REVIEW rv
 	          ON p.PLACE_ID = rv.PLACE_ID
 	         AND rv.STATUS = 'DISPLAY'
 	         AND rv.CREATED_AT <![CDATA[>=]]> SYSTIMESTAMP - INTERVAL '7' DAY
 	        WHERE p.PLACE_TYPE = 'REST'
 	        GROUP BY
+	            r.RESTAURANT_ID,
+	            TO_CHAR(r.DESCRIPTION),
+	            r.PHONE,
+	            r.CATEGORY,
+	            r.STATUS,
+	            r.RESTDATE,
+	            r.AREACODE,
 	            p.PLACE_ID,
 	            p.PLACE_TYPE,
 	            p.NAME,
@@ -247,10 +316,8 @@
 	    WHERE ROWNUM <![CDATA[<=]]> 5
 	</select>
 	
-	<!-- =====================================================
-     [추가] BEST 추천 - 숙소 5개
-	===================================================== -->
-	<select id="getBestAccTop5" resultMap="accResultMap">
+	<!-- BEST 추천 - 숙소 5개 -->
+	<select id="bestAccTop5" resultMap="accResultMap">
 	    SELECT *
 	    FROM (
 	        SELECT
@@ -296,10 +363,8 @@
 	    WHERE ROWNUM <![CDATA[<=]]> 5
 	</select>
 	
-	<!-- =====================================================
-     [추가] BEST 추천 - 축제 5개
-	===================================================== -->
-	<select id="getBestFestTop5" resultMap="festivalResultMap">
+	<!-- BEST 추천 - 축제 5개 -->
+	<select id="bestFestTop5" resultMap="festivalResultMap">
 	    SELECT *
 	    FROM (
 	        SELECT

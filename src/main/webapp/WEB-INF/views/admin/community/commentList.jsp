@@ -11,7 +11,7 @@
 	href="${path}/resources/css/admin/ad_reservation.css" />
 
 <meta charset="UTF-8">
-<title>커뮤니티 관리</title>
+<title>댓글 관리</title>
 </head>
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -34,31 +34,29 @@
 			<!-- 컨텐츠 시작 -->
 			<section class="content-header">
 				<div class="container-fluid">
-					<h1>커뮤니티 게시글 관리</h1>
+					<h1>댓글 관리</h1>
 				</div>
 			</section>
 			
 			<section class="content">
 				<div class="container-fluid">
+				
+					<!-- 게시글 정보 카드 -->
 					<div class="card">
 						<div class="card-header">
-							<!-- 일괄처리 버튼 -->
-							<button type="button" class="tag tag-warning active" onclick="bulkAction('hide')">숨김</button>
-							<button type="button" class="tag tag-success active" onclick="bulkAction('show')">숨김해제</button>
-							<button type="button" class="tag tag-danger active" onclick="bulkAction('delete')">삭제</button>
+							<button type="button" class="tag tag-warning active" onclick="bulkCommentAction('hide')">선택 숨김</button>
+							<button type="button" class="tag tag-success active" onclick="bulkCommentAction('show')">선택 숨김해제</button>
+							<button type="button" class="tag tag-danger active" onclick="bulkCommentAction('delete')">선택 삭제</button>
 						</div>
-						
 						<div class="card-body table-responsive p-0">
 							<table class="table table-hover text-nowrap text-center">
 								<thead>
 									<tr>
 										<th><input type="checkbox" id="checkAll"></th>
 										<th>번호</th>
-										<th>카테고리</th>
 										<th>제목</th>
 										<th>작성자</th>
-										<th>조회</th>
-										<th>추천</th>
+										<th>댓글 내용</th>
 										<th>상태</th>
 										<th>작성일</th>
 										<th>관리</th>
@@ -66,52 +64,49 @@
 								</thead>
 								<tbody>
 									<c:choose>
-										<c:when test="${empty postList}">
+										<c:when test="${empty commentList}">
 											<tr>
-												<td colspan="10">게시글이 없습니다.</td>
+												<td colspan="8">댓글이 없습니다.</td>
 											</tr>
 										</c:when>
 										<c:otherwise>
-											<c:forEach var="post" items="${postList}">
+											<c:forEach var="comment" items="${commentList}">
 												<tr>
-													<td><input type="checkbox" class="post-check" value="${post.post_id}"></td>
-													<td>${post.post_id}</td>
-													<td>${post.category}</td>
+													<td><input type="checkbox" class="comment-check" value="${comment.comment_id}"></td>
+													<td>${comment.comment_id}</td>
 													<td>
-														<a href="${path}/communityDetail.adco?post_id=${post.post_id}">
-															${post.title}
+														<a href="${path}/communityDetail.adco?post_id=${comment.post_id}">
+															${comment.communityDTO.title}
 														</a>
 													</td>
-													<td>${post.user_id}</td>
-													<td>${post.view_count}</td>
-													<td>${post.like_count}</td>
+													<td>${comment.user_id}</td>
+													<td>${comment.content}</td>
 													<td>
 														<c:choose>
-															<c:when test="${post.status eq 'DISPLAY'}">
+															<c:when test="${comment.status eq 'DISPLAY'}">
 																<span class="badge badge-success">정상</span>
 															</c:when>
-															<c:when test="${post.status eq 'HIDDEN'}">
+															<c:when test="${comment.status eq 'HIDDEN'}">
 																<span class="badge badge-warning">숨김</span>
 															</c:when>
-															<c:when test="${post.status eq 'DELETED'}">
+															<c:when test="${comment.status eq 'DELETED'}">
 																<span class="badge badge-danger">삭제</span>
 															</c:when>
 														</c:choose>
 													</td>
-													<td><fmt:formatDate value="${post.postDate}" pattern="yyyy.MM.dd" /></td>
+													<td><fmt:formatDate value="${comment.commentDate}" pattern="yyyy.MM.dd HH:mm" /></td>
 													<td>
 														<c:choose>
-															<c:when test="${post.status eq 'DISPLAY'}">
-																<button type="button" class="tag tag-warning" onclick="hidePost(${post.post_id})">숨김</button>
+															<c:when test="${comment.status eq 'DISPLAY'}">
+																<button type="button" class="tag tag-warning" onclick="hideComment(${comment.comment_id})">숨김</button>
 															</c:when>
-															<c:when test="${post.status eq 'HIDDEN'}">
-																<button type="button" class="tag tag-success" onclick="showPost(${post.post_id})">숨김해제</button>
+															<c:when test="${comment.status eq 'HIDDEN'}">
+																<button type="button" class="tag tag-success" onclick="showComment(${comment.comment_id})">숨김해제</button>
 															</c:when>
 														</c:choose>
-														<c:if test="${post.status ne 'DELETED'}">
-															<button type="button" class="tag tag-danger" onclick="deletePost(${post.post_id})">삭제</button>
+														<c:if test="${comment.status ne 'DELETED'}">
+															<button type="button" class="tag tag-danger" onclick="deleteComment(${comment.comment_id})">삭제</button>
 														</c:if>
-														<button type="button" class="tag tag-info" onclick="location.href='${path}/communityDetail.adco?post_id=${post.post_id}'">상세보기</button>
 													</td>
 												</tr>
 											</c:forEach>
@@ -137,7 +132,7 @@
 	<!--end::div Wrapper-->
 
 <script>const path = "${path}";</script>
-<script src="${path}/resources/js/admin/community.js"></script>
+<script src="${path}/resources/js/admin/comment.js"></script>
 
 </body>
 <!--end::Body-->

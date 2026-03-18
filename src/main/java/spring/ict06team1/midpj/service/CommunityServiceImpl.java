@@ -51,15 +51,24 @@ public class CommunityServiceImpl implements CommunityService {
 
 	    int post_id = Integer.parseInt(request.getParameter("post_id"));
 
-	    dao.increaseViewCount(post_id);
 
 	    CommunityDTO dto = dao.getBoardDetail(post_id);
+	    
+	    //숨김 or 삭제된 게시글이면 접근 차단
+	    if(dto == null || dto.getStatus().equals("HIDDEN") || dto.getStatus().equals("DELETED")) {
+	    	model.addAttribute("errorMsg", "존재하지 않는 게시글입니다.");
+	    	return;
+	    }
+	    
+	    //숨김 or 삭제되지 않은 정상 게시글만 조회수 증가
+	    dao.increaseViewCount(post_id);
+
 	    List<CommunityCommentDTO> commentList = commentDao.getCommentList(post_id);
 
 	    model.addAttribute("dto", dto);
 	    model.addAttribute("commentList", commentList);
-	}
-	
+    }
+
 	// 댓글 등록
 	@Override
 	public void insertComment(HttpServletRequest request) {

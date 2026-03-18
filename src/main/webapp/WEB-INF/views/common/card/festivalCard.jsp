@@ -10,7 +10,6 @@
 - mode = festival  / 메인 이달의 추천 축제
 - mode = search    / 검색 화면 카드용
 =============================================== -->
-
 <div class="${cardWrapClass}">
     <div class="place-card-wrap position-relative">
 

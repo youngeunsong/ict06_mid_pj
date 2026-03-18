@@ -99,7 +99,4 @@ public class RestaurantDTO {
 				+ ", placeDTO=" + placeDTO + "]";
 	}
 
-
-	
-	
 }

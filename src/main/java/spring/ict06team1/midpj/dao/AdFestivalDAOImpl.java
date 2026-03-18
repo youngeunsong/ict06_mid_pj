@@ -125,8 +125,4 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 			sqlSession.getMapper(AdFestivalDAO.class).insertFestival(dto);
 	    }
 	}
-
-	
-
-	
 }

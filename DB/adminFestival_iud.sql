@@ -15,9 +15,10 @@ SELECT *
     OR f.DESCRIPTION LIKE '%신나는%';
 
 -- 축제 상세 조회
-SELECT * 
-  FROM FESTIVAL
- WHERE FESTIVAL_ID = 417;
+SELECT f.*, p.name, p.address
+FROM FESTIVAL f
+JOIN place p ON f.festival_id = p.PLACE_ID
+WHERE f.festival_id = 1051;
 
 -- 축제 티켓 조회
 SELECT
@@ -50,7 +51,7 @@ SELECT SEQ_PLACE.NEXTVAL FROM DUAL;
 -- SEQ_PLACE.NEXTVAL이 현재 PLACE 테이블이의 최대 place_id가 동일한 크기가 아닐 때 적용
 DROP SEQUENCE SEQ_PLACE;
 CREATE SEQUENCE SEQ_PLACE
-START WITH 1004 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
+START WITH 3551927 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
 INCREMENT BY 1;
 
 -- SEQ_TICKET의 최댓값 확인

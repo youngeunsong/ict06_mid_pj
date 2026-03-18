@@ -30,7 +30,10 @@ public interface AdFestivalService {
 	public int deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model);
 
 	// 오픈 API로 축제 정보 가져오기
-	public void importFestivalFromApi(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String bringFestivalFromAPI(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+	
+	// 오픈API로 가져온 정보 DB에 넣기 
+	public void insertFestivalsFromApi(String json)
 			throws Exception;
 
 }

@@ -175,9 +175,9 @@
 	<!-- (1) 신규 장소 등록 -->
 	<insert id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
 		<selectKey keyProperty="place_id" resultType="int" order="BEFORE">
-        	SELECT SEQ_PLACE.NEXTVAL FROM DUAL
-    	</selectKey>
-		
+	        SELECT SEQ_PLACE.NEXTVAL FROM DUAL
+	    </selectKey>
+	    
 		INSERT INTO PLACE (
 		    place_id,
 		    place_type,
@@ -223,7 +223,7 @@
 		    description
 		) VALUES (
 		    SEQ_TICKET.NEXTVAL,
-		    SEQ_PLACE.CURRVAL,
+		    #{festival_id},
 		    #{ticket_type},
 		    #{price}, 
 		    #{stock},

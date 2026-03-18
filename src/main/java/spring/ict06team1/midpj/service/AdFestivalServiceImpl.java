@@ -1,5 +1,6 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -309,13 +310,18 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 	// 전국문화축제표준데이터 오픈 API로 축제 정보 가져오기
 	@Override
-	public void importFestivalFromApi(HttpServletRequest request, HttpServletResponse response, Model model) 
-			throws Exception {
+	public String bringFestivalFromAPI(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		int page = Integer.parseInt(request.getParameter("pageNo"));
 		int numOfRows = Integer.parseInt(request.getParameter("numOfRows"));
-
-		String json = apiClient.callApi(page, numOfRows);
-
+		String json = apiClient.callAPI(page, numOfRows);
+		return json; 
+	}
+	
+	// 오픈API로 가져온 정보 DB에 넣기 
+	@Override
+	@Transactional
+	public void insertFestivalsFromApi(String json) 
+			throws Exception {
 		List<FestivalDTO> list = parseFestivalJson(json);
 
 		for(FestivalDTO dto : list){

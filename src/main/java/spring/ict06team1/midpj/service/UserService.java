@@ -1,10 +1,8 @@
 package spring.ict06team1.midpj.service;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +24,10 @@ public interface UserService {
     public void loginAction(HttpServletRequest request, HttpServletResponse response, Model model)
     	throws ServletException, IOException;
     
+    // 3-1. 비밀번호 찾기
+    public void findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
+    	throws ServletException, IOException;
+    
     // 4. 회원정보 인증처리 및 탈퇴
     public void deleteUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
@@ -37,5 +39,12 @@ public interface UserService {
     // 6. 회원정보 수정 
     public int modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+    
+    //------------------------------
+    //관리자 정보 조회 및 수정
+    public MemberDTO getAdminDetail(String user_id);
+    public int modifyAdminAction(HttpServletRequest request, HttpServletResponse response, Model model)
+    	throws ServletException, IOException;
+    
     
 }

@@ -152,7 +152,7 @@ public class AdReservationServiceImpl implements AdReservationService {
 		if(totalPages == 0) totalPages = 1;
 		
 		//6-3. DAO에 Map으로 전달
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap();
 		map.put("startRow", (currentPage - 1) * pageSize + 1);
 		map.put("endRow", currentPage * pageSize);
 		
@@ -165,7 +165,12 @@ public class AdReservationServiceImpl implements AdReservationService {
 		//7. 최근 예약 5건
 		List<ReservationDTO> recentList = adResDao.getRecentReservations();
 		model.addAttribute("recentList", recentList);
-		
-		
+	}
+
+	//미처리예약 
+	@Override
+	public int getPendingCount() {
+		System.out.println("[AdminServiceImpl - getPendingCount()]");
+		return adResDao.getPendingCount();
 	}
 }

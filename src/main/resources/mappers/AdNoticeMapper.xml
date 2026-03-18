@@ -59,7 +59,7 @@
 		SELECT COUNT(*) FROM NOTICE
 		<where>
 			<if test="sc.keyword != null and sc.keyword != ''">
-				title LIKE CONCAT('%', #{sc.keyword}, '%')
+				title LIKE '%' || #{sc.keyword} || '%'
 			</if>
 			<if test="sc.category != null and sc.category != ''">
 				AND category = #{sc.category}
@@ -90,10 +90,10 @@
 		SET category    = #{category},
 			title 	    = #{title},
 			content	    = #{content},
-			image_url   = #{image_url},
+			image_url   = #{image_url, jdbcType=VARCHAR},
 			is_top	    = #{is_top},
 			updated_at  = SYSTIMESTAMP
-		WHERE notice_id = #{noticeId}
+		WHERE notice_id = #{notice_id}
 	</update>
 
 	<!-- 6. 삭제 -->

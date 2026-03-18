@@ -1,6 +1,5 @@
 package spring.ict06team1.midpj.dao;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -43,6 +42,22 @@ public class UserDAOImpl implements UserDAO {
 		
 		return selectCnt;
 	}
+	
+	// 비밀번호 찾기 본인확인
+	@Override
+	public int findPasswordCheck(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - findPasswordCheck()");
+
+		return sqlSession.getMapper(UserDAO.class).findPasswordCheck(map);
+	}
+	
+	// 임시 비밀번호 발급
+	@Override
+	public int updatePassword(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - loginCheck()");
+		
+		return sqlSession.getMapper(UserDAO.class).updatePassword(map);
+	}
 
 	 // 4. 회원정보 인증 및 회원 삭제 (탈퇴)
 	@Override
@@ -73,4 +88,13 @@ public class UserDAOImpl implements UserDAO {
 		
 		return updateCnt;
 	}
+
+	//관리자 정보 수정
+	@Override
+	public int updateAdmin(MemberDTO dto) {
+		System.out.println("UserDAOImpl - updateAdminInfo()");
+
+		return sqlSession.getMapper(UserDAO.class).updateAdmin(dto);
+	}
+
 }

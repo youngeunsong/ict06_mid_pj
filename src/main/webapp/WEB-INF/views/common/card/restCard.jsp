@@ -1,44 +1,80 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!-- ==============================================
-
-[사용 시 참고 사항]
-맛집 전용 사용
+[공통 카드 구조]
+맛집 전용 카드
+- mode = top10     / 슬라이더
+- mode = bestMain  / BEST 추천 빅카드용
+- mode = best      / BEST 추천 우측 카드용
+- mode = search    / 검색 화면 카드용
 =============================================== -->
 
-<div class="${mode eq 'top10' ? 'top10-card-wrap' : ''}">
-    <a href="${path}/restaurantDetail.rs?place_id=${place.place_id}" class="place-card text-decoration-none text-dark">
-        <div class="place-card__thumb-wrap position-relative">
-            <img src="${place.image_url}" alt="${place.name}" loading="lazy" class="thumb-img" />
-				
-			<!-- MAIN > TOP10 전용 랭킹 표기 -->	
-            <c:if test="${mode eq 'top10'}">
-                <span class="rank-badge ${rankCls}">${rank}위</span>
-            </c:if>
+<c:set var="placeId" value="${rest.placeDTO.place_id}" />
+<c:choose>
+    <c:when test="${mode eq 'search'}">
+        <c:set var="displayAvgRating" value="${avgRatingMap[placeId]}" />
+        <c:set var="displayReviewCount" value="${reviewCountMap[placeId]}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="displayAvgRating" value="${rest.placeDTO.avg_rating}" />
+        <c:set var="displayReviewCount" value="${rest.placeDTO.review_count}" />
+    </c:otherwise>
+</c:choose>
 
-			<!-- 즐겨찾기 -->
-            <button type="button"
-                    class="bookmark-btn"
-                    data-place-id="${place.place_id}"
-                    onclick="toggleBookmark(event, this)">
-                <i class="${favoritePlaceIds.contains(place.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-            </button>
-        </div>
+<div class="${cardWrapClass}">
+    <div class="place-card-wrap position-relative">
 
-        <div class="place-card__body">
-            <div class="place-card__title">${place.name}</div>
+        <button type="button"
+        class="bookmark-btn"
+        data-place-id="${rest.placeDTO.place_id}">
+		    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(rest.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+		</button>
 
-            <div class="place-card__address">
-                <i class="bi bi-geo-alt-fill text-danger"></i>
-                ${place.address}
+        <a href="${path}/restaurantDetail.rs?place_id=${placeId}"
+           class="place-card text-decoration-none text-dark d-block">
+
+            <div class="place-card__thumb-wrap position-relative">
+                <img src="${rest.placeDTO.image_url}"
+                     alt="${rest.placeDTO.name}"
+                     loading="lazy"
+                     class="thumb-img"
+                     onerror="this.src='${path}/resources/images/common/no-image.png';" />
+
+                <c:if test="${mode eq 'top10'}">
+                    <span class="rank-badge ${rankCls}">${rank}위</span>
+                </c:if>
+
+	             <c:if test="${mode eq 'bestMain'}">
+				    <span class="rank-badge top1">
+				        1위 평균 <c:out value="${rest.placeDTO.avg_rating}" default="0"/>점
+				    </span>
+				</c:if>
             </div>
 
-            <div class="d-flex gap-3 text-muted small mt-2">
-                <span><i class="fa-regular fa-eye"></i> ${place.view_count}</span>
-                <span><i class="fa-regular fa-heart"></i> ${avgRatingMap[place.place_id]}</span>
-                <span><i class="fa-regular fa-comment"></i> ${reviewCountMap[place.place_id]}</span>
+            <div class="place-card__body">
+                <div class="place-card__title">${rest.placeDTO.name}</div>
+
+                <div class="place-card__address">
+                    <i class="bi bi-geo-alt-fill text-danger"></i>
+                    ${rest.placeDTO.address}
+                </div>
+
+                <div class="place-card__meta">
+                    <span>
+                        <i class="fa-regular fa-eye"></i>
+                        ${rest.placeDTO.view_count}
+                    </span>
+                    <span>
+                        <i class="fa-regular fa-heart"></i>
+                        <c:out value="${displayAvgRating}" default="0"/>
+                    </span>
+                    <span>
+                        <i class="fa-regular fa-comment"></i>
+                        <c:out value="${displayReviewCount}" default="0"/>
+                    </span>
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+    </div>
 </div>

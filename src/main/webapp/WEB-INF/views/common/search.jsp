@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>검색바 화면 페이지</title>
+<title>단순 검색 결과 요약</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="bootstrapSettings.jsp" %>
@@ -18,6 +18,7 @@
 
 <script src="${path}/resources/js/search/search.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
+<script> window.contextPath = '${path}'; </script>
 
 </head>
 <body>
@@ -56,42 +57,16 @@
 			        <input type="hidden" id="restListCnt" value="${restListCnt}">
 			    </div>
 			
-			    <div class="row g-3">
+				<!-- restCard.jsp 호출 -->
+				<div class="row g-3">
 				    <c:forEach var="restDTO" items="${restList}" varStatus="st">
-				        <div class="col-6 col-md-4 col-lg-3 searchRestCard ${st.index >= 8 ? 'd-none' : ''}">
-				            <a href="${path}/restaurantDetail.rs?place_id=${restDTO.place_id}" class="place-card text-decoration-none text-dark">
-				
-				                <div class="place-card__thumb-wrap position-relative">
-				                    <img src="${restDTO.image_url}"
-				                         class="thumb-img"
-				                         alt="${restDTO.name}">
-				
-				                    <button type="button"
-				                            class="bookmark-btn"
-				                            data-place-id="${restDTO.place_id}"
-				                            onclick="toggleBookmark(event, this)">
-				                        <i class="${favoritePlaceIds.contains(restDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-				                    </button>
-				                </div>
-				
-				                <div class="place-card__body">
-				                    <div class="place-card__title">${restDTO.name}</div>
-				
-				                    <div class="place-card__address">
-				                        <i class="bi bi-geo-alt-fill text-danger"></i>
-				                        ${restDTO.address}
-				                    </div>
-				
-				                    <div class="d-flex gap-3 text-muted small mt-2">
-				                        <span><i class="fa-regular fa-eye"></i> ${restDTO.view_count}</span>
-				                        <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[restDTO.place_id]}" default="0"/></span>
-				                        <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[restDTO.place_id]}" default="0"/></span>
-				                    </div>
-				                </div>
-				
-				            </a>
-				        </div>
-				    </c:forEach>
+					    <div class="col-6 col-md-4 col-lg-3 searchRestCard ${st.index >= 8 ? 'd-none' : ''}">
+					        <c:set var="rest" value="${restDTO}" />
+					        <c:set var="mode" value="search" />
+				        <c:set var="cardWrapClass" value="search-card-wrap" />
+					        <%@ include file="/WEB-INF/views/common/card/restCard.jsp" %>
+					    </div>
+					</c:forEach>
 				</div>
 			
 		    	<!-- 더보기 버튼 -->
@@ -110,41 +85,14 @@
 				    </div>
 			
 			    <div class="row g-3">
-				    <c:forEach var="accDTO" items="${accList}" varStatus="st">
-				        <div class="col-6 col-md-4 col-lg-3 searchAccCard ${st.index >= 8 ? 'd-none' : ''}">
-				            <a href="${path}/place/detail?id=${accDTO.place_id}" class="place-card text-decoration-none text-dark">
-				
-				                <div class="place-card__thumb-wrap position-relative">
-				                    <img src="${accDTO.image_url}"
-				                         class="thumb-img"
-				                         alt="${accDTO.name}">
-				
-				                    <button type="button"
-				                            class="bookmark-btn"
-				                            data-place-id="${accDTO.place_id}"
-				                            onclick="toggleBookmark(event, this)">
-				                        <i class="${favoritePlaceIds.contains(accDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-				                    </button>
-				                </div>
-				
-				                <div class="place-card__body">
-				                    <div class="place-card__title">${accDTO.name}</div>
-				
-				                    <div class="place-card__address">
-				                        <i class="bi bi-geo-alt-fill text-danger"></i>
-				                        ${accDTO.address}
-				                    </div>
-				
-				                    <div class="d-flex gap-3 text-muted small mt-2">
-				                        <span><i class="fa-regular fa-eye"></i> ${accDTO.view_count}</span>
-				                        <span><i class="fa-regular fa-heart"></i> <c:out value="${avgRatingMap[accDTO.place_id]}" default="0"/></span>
-				                        <span><i class="fa-regular fa-comment"></i> <c:out value="${reviewCountMap[accDTO.place_id]}" default="0"/></span>
-				                    </div>
-				                </div>
-				
-				            </a>
-				        </div>
-				    </c:forEach>
+				   <c:forEach var="accDTO" items="${accList}" varStatus="st">
+					    <div class="col-6 col-md-4 col-lg-3 searchAccCard ${st.index >= 8 ? 'd-none' : ''}">
+					        <c:set var="acc" value="${accDTO}" />
+					        <c:set var="mode" value="search" />
+				        <c:set var="cardWrapClass" value="search-card-wrap" />
+					        <%@ include file="/WEB-INF/views/common/card/accCard.jsp" %>
+					    </div>
+					</c:forEach>
 				</div>
 			
 		    	<!-- 더보기 버튼 -->
@@ -169,44 +117,25 @@
 				    <div id="eventCarousel" class="carousel slide" data-bs-ride="false">
 				
 				        <div class="carousel-inner">
-							<c:forEach var="festDTO" items="${festList}" varStatus="st">
-								<!-- 4개 슬라이드 시작 -->
-								<c:if test="${st.index % 4 == 0}">
-						            <!-- 1페이지 (슬라이드 1) -->
+						    <c:forEach var="festDTO" items="${festList}" varStatus="st">
+						        <c:if test="${st.index % 4 == 0}">
 						            <div class="carousel-item ${st.index == 0 ? 'active' : ''}">
 						                <div class="row g-3">
-								</c:if>		
-											<!-- 카드 -->					
+						        </c:if>
+						
 						                    <div class="col-6 col-md-3">
-						                        <div class="card border-0 shadow-sm search-card">
-						                            <div class="position-relative">
-						                                <img src="${festDTO.placeDTO.image_url}"
-														     class="card-img-top thumb-img"
-														     alt="${festDTO.placeDTO.name}">
-						                                     
-						                                <button type="button" class="bookmark-btn" data-place-id="${festDTO.placeDTO.place_id}"
-													            	onclick="toggleBookmark(event, this)">
-													        <i class="${favoritePlaceIds.contains(festDTO.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-													    </button>
-						                                     
-						                                <span class="badge bg-dark position-absolute bottom-0 start-0 m-2"
-						                                      style="font-size:0.65rem;">${festDTO.status}</span>
-						                            </div>
-						                            
-						                            <div class="card-body px-1 pt-2 pb-1">
-						                                <div class="fw-semibold small text-truncate">${festDTO.placeDTO.name}</div>
-						                                <div class="text-muted" style="font-size:0.72rem;">${festDTO.start_date} ~ ${festDTO.end_date}</div>
-						                            </div>
-						                        </div>
+						                        <c:set var="fest" value="${festDTO}" />
+						                        <c:set var="mode" value="search" />
+				                        <c:set var="cardWrapClass" value="search-card-wrap" />
+						                        <%@ include file="/WEB-INF/views/common/card/festivalCard.jsp" %>
 						                    </div>
-					                    <!-- 4개 슬라이드 닫기 -->
-					            <c:if test="${st.index % 4 == 3 || st.last }">
-					                    </div>
-				    				</div>
-					            </c:if>
-				            </c:forEach>
-				        
-				        </div>
+						
+						        <c:if test="${st.index % 4 == 3 || st.last}">
+						                </div>
+						            </div>
+						        </c:if>
+						    </c:forEach>
+						</div>
 			
 				        <!-- 하단 : 페이지 표시 + 화살표 -->
 				        <div class="d-flex align-items-center justify-content-between mt-3">
@@ -238,6 +167,7 @@
 			        	</div>
 			        <!-- 하단 : 페이지 표시 + 화살표 -->
 			    </div>
+				</div>
 			    <!-- 축제 섹션 E -->
 			</section>
 			<!-- 전체화면 : 기본화면E -->

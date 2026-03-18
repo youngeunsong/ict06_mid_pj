@@ -147,12 +147,51 @@ DELETE FROM RESERVATION ON DELETE CASCADE;
 SELECT check_in, TRUNC(check_in), TO_CHAR(check_in, 'YYYY-MM-DD HH24:MI:SS') FROM RESERVATION WHERE ROWNUM = 1;
 
 -- =============================================
--- 예약 테스트 데이터 50건
+-- 예약 테스트 데이터 1200건
 -- status: PENDING/RESERVED/COMPLETED/CANCELLED/NOSHOW 분포
 -- user: user01~user07 분포
 -- 날짜: 과거/현재/미래 분포
--- 축제 티켓 포함
 -- =============================================
+-- 시퀀스 삭제 후 재생성
+DROP SEQUENCE SEQ_RES;
+CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 테이블 비우기
+INSERT INTO RESERVATION (user_id, place_id, check_in, check_out, guest_count, status, created_at)
+WITH TempData AS (
+    SELECT
+        LEVEL AS lvl,
+        TRUNC(DBMS_RANDOM.VALUE(0, 5)) AS status_idx,
+        TRUNC(SYSDATE + (DBMS_RANDOM.NORMAL * 20) - 30) AS rand_created_at,
+        FLOOR(DBMS_RANDOM.VALUE(0, 11)) AS check_in_offset
+    FROM DUAL
+    CONNECT BY LEVEL <= 1200
+)
+SELECT
+    'user0' || (MOD(lvl - 1, 7) + 1),
+    100 + MOD(lvl, 100),
+    TRUNC(rand_created_at + check_in_offset),
+    TRUNC(rand_created_at + check_in_offset + FLOOR(DBMS_RANDOM.VALUE(1, 4))),
+    CEIL(DBMS_RANDOM.VALUE(1, 5)),
+    CASE status_idx
+        WHEN 0 THEN 'PENDING'
+        WHEN 1 THEN 'RESERVED'
+        WHEN 2 THEN 'COMPLETED'
+        WHEN 3 THEN 'CANCELLED'
+        ELSE 'NOSHOW'
+    END,
+    rand_created_at
+FROM TempData;
+
+SELECT * FROM RESERVATION;
+COMMIT;
+
+--테이블에 이미 데이터가 있는 상태라면 SEQ가 작동하지 않아 데이터 자동 생성 시 오류 발생할 수 있음.
+--이런 경우 아래 쿼리 실행하여 시퀀스 삭제, 새로 생성 후 다시 데이터 생성하기
+-- 1. 기존 시퀀스 삭제
+--DROP SEQUENCE SEQ_RES;
+-- 2. 새로 생성 (1부터 시작)
+--CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 -- [맛집 예약 - COMPLETED (과거)]
 INSERT INTO RESERVATION (USER_ID, PLACE_ID, GUEST_COUNT, STATUS, CHECK_IN, VISIT_TIME, CREATED_AT)

@@ -1,55 +1,53 @@
-/* 카드 이미지 상단 북마크 */
-// 꼭 css > bookmark.css와 함께 사용하세요.
-
 function toggleBookmark(event, btn) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const contextPath = document.getElementById('contextPath').value;
-    const loginUserId = document.getElementById('loginUserId').value;
-
-    if (!loginUserId) {
-        alert('로그인 후 사용이 가능합니다.');
-        location.href = contextPath + '/login.do';
-        return;
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
     }
 
-	const placeId = btn.dataset.placeId;
-    const icon = btn.querySelector('i');
+    const placeId = btn.dataset.placeId;
+    if (!placeId) return;
 
-   fetch(contextPath + "/favorite/toggle", {
+    const contextPath =
+        window.contextPath ||
+        document.body.dataset.contextPath ||
+        '';
 
+    fetch(contextPath + "/favorite/toggle", {
         method: "POST",
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest"
         },
-
-        body: "place_id=" + placeId
-
+        body: "place_id=" + encodeURIComponent(placeId)
     })
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
+        console.log("북마크 응답:", data);
 
-        if (data.status === "added") {
-
-            icon.classList.remove("fa-regular");
-            icon.classList.add("fa-solid");
-
-        } else if (data.status === "removed") {
-
-            icon.classList.remove("fa-solid");
-            icon.classList.add("fa-regular");
-
-        } else if (data.status === "logout") {
-
+        if (data.status === "logout") {
             alert("로그인이 필요합니다.");
-            location.href = contextPath + "/login.do";
-
+            return;
         }
 
-    })
-    .catch(err => {
+        const icon = btn.querySelector("i");
+        if (!icon) return;
 
-        console.error("즐겨찾기 오류:", err);
+        if (data.status === "added") {
+            icon.classList.remove("fa-regular");
+            icon.classList.add("fa-solid");
+        } else if (data.status === "removed") {
+            icon.classList.remove("fa-solid");
+            icon.classList.add("fa-regular");
+        }
+    })
+    .catch(error => {
+        console.error("북마크 처리 오류:", error);
     });
 }
+
+document.addEventListener("click", function(event) {
+    const btn = event.target.closest(".bookmark-btn");
+    if (!btn) return;
+
+    toggleBookmark(event, btn);
+});

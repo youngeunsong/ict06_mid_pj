@@ -104,12 +104,11 @@ function deleteNotice(noticeId) {
 	
 	$.ajax({
 		url: path + '/noticeDelete.adnt',
-		type: 'POST',
+		type: 'post',
 		data: {noticeId: noticeId},
 		success: function(result) {
 			if(result === 'success') {
-				alert('삭제 완료');
-				location.href = path + '/noticeList.adnt';
+				location.href = path + '/noticeList.adnt?deleted=true';
 			}
 			else {
 				alert('삭제 실패');

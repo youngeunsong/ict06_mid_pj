@@ -2,7 +2,6 @@
 /* ad_reservation.css */
 
 
-
 body {
 	background-color: #F6F6F6 !important;
 }
@@ -102,6 +101,16 @@ body.dark-mode .table-light th {
 	gap: 12px;
 }
 
+.filter-left select {
+	cursor: pointer;
+}
+
+.filter-left select,
+.filter-left input {
+	height: 34px;
+	line-height: 34px;
+}
+
 /* ── 오른쪽: 필터 내부 박스 ── */
 .filter-right {
     display: flex;
@@ -124,11 +133,11 @@ body.dark-mode .table-light th {
 }
 
 .filter-title {
-	font-size: 0.78rem;
-	font-weight: 700;
-	color: #343a40;
+	font-size: 0.9rem;
+	font-weight: 800;
+	color: #000;
 	padding-bottom: 7px;
-	border-bottom: 1px solid #dee2e6;
+	border-bottom: 2px solid #dee2e6;
 	margin-bottom: 8px;
 }
 
@@ -142,6 +151,10 @@ body.dark-mode .table-light th {
 
 .filter-row .btn {
 	margin-left: 70px;
+}
+
+.filter-row:last-child {
+	justify-content: center;
 }
 
 .filter-row+.filter-row {

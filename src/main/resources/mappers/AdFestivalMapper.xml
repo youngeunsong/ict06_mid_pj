@@ -162,8 +162,25 @@
 	</update>
 	
 	<!-- 신규 축제 등록: 3단계 -->
+	<!-- (0) 기존 테이블에 있는 데이터인지 확인 -->
+	<select id="checkDuplication"
+        parameterType="spring.ict06team1.midpj.dto.FestivalDTO"
+        resultType="int">
+		SELECT p.place_id
+		  FROM PLACE p
+		  JOIN FESTIVAL f
+		    ON f.FESTIVAL_ID = p.PLACE_ID
+		 WHERE name = #{placeDTO.name}
+		   AND address = #{placeDTO.address}
+		   AND f.START_DATE = #{start_date}
+	</select>
+	
 	<!-- (1) 신규 장소 등록 -->
 	<insert id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
+		<selectKey keyProperty="place_id" resultType="int" order="BEFORE">
+	        SELECT SEQ_PLACE.NEXTVAL FROM DUAL
+	    </selectKey>
+	    
 		INSERT INTO PLACE (
 		    place_id,
 		    place_type,
@@ -173,13 +190,13 @@
 		    longitude,
 		    image_url
 		) VALUES (
-		    SEQ_PLACE.NEXTVAL,
+		    #{place_id},
 		    'FEST',
-		    #{name},
-		    #{address},
-		    #{latitude},
-    		#{longitude},
-		    #{image_url}
+		    #{name, jdbcType=VARCHAR},
+		    #{address, jdbcType=VARCHAR},
+		    #{latitude, jdbcType=NUMERIC},
+    		#{longitude, jdbcType=NUMERIC},
+		    #{image_url, jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -191,10 +208,10 @@
 		    start_date,
 		    end_date
 		) VALUES (
-		    SEQ_PLACE.CURRVAL,
+		    #{festival_id},
 		    #{description, jdbcType=CLOB},
-		    #{start_date},
-		    #{end_date}
+		    #{start_date, jdbcType=DATE},
+		    #{end_date, jdbcType=DATE}
 		)
 	</insert>
 	
@@ -209,7 +226,7 @@
 		    description
 		) VALUES (
 		    SEQ_TICKET.NEXTVAL,
-		    SEQ_PLACE.CURRVAL,
+		    #{festival_id},
 		    #{ticket_type},
 		    #{price}, 
 		    #{stock},

@@ -234,7 +234,7 @@
     <div class="row g-3 mb-3">
       <div class="col-lg-8">
         <div class="r-hero shadow-sm">
-          <img src="<c:out value='${festival.placeDTO.image_url}' default='/resources/img/sample_food.jpg'/>" alt="대표 이미지"/>
+          <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="대표 이미지"/>
           <div class="r-heroCount">
             <i class="fa-regular fa-images"></i>
             <span>0+</span>
@@ -245,7 +245,7 @@
       <div class="col-lg-4">
         <div class="d-flex flex-lg-column flex-row gap-3">
           <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${festival.placeDTO.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
+            <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
             <div class="r-thumbInfo">
               <div class="r-thumbTitle">축제포스터</div>
               <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
@@ -253,7 +253,7 @@
           </div>
 
           <div class="r-thumb shadow-sm">
-           <img src="<c:out value='${festival.placeDTO.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
+           <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
             <div class="r-thumbInfo">
               <div class="r-thumbTitle">축제 사진</div>
               <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
@@ -261,7 +261,7 @@
           </div>
 
           <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${festival.placeDTO.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
+            <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
             <div class="r-thumbInfo">
               <div class="r-thumbTitle">후기 사진</div>
               <div class="r-thumbSub"><i class="fa-regular fa-image"></i> <span>0</span></div>

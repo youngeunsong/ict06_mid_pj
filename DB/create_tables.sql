@@ -244,11 +244,20 @@ CREATE TABLE INQUIRY (
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
     status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
+    category	 VARCHAR2(50),
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
     CONSTRAINT CHK_INQUIRY_STATUS CHECK(status IN('PENDING', 'ANSWERED'))
 );
+
+
+ALTER TABLE INQUIRY DROP CONSTRAINT CHK_INQUIRY_STATUS;
+
+
+ALTER TABLE INQUIRY ADD CONSTRAINT CHK_INQUIRY_STATUS 
+    CHECK(status IN('PENDING', 'PROGRESS', 'ANSWERED'));
+
 SELECT * FROM INQUIRY;
 
 -- 18. NOTICE (공지사항 및 이벤트)

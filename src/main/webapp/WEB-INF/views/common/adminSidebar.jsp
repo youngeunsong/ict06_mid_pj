@@ -47,12 +47,29 @@
 					</a>
 				</li>
 				
-				<!-- 고객 지원 메뉴 시작 -->
-				<li class="nav-item">
-					<a href="${path}/supportHome.adsp" class="nav-link"> 
-						<i class="fa-solid fa-headset"></i>
-						고객지원
-					</a>
+				<!-- 고객 지원 메뉴 시작 : 하위 메뉴 있음 -->
+				<li class="nav-item ${currentURI.contains('Inquiry') || currentURI.contains('Faq') ? 'menu-open' : ''}">
+				    <a href="#" class="nav-link ${currentURI.contains('Inquiry') || currentURI.contains('Faq') ? 'active' : ''}"> 
+				        <i class="fa-solid fa-comments"></i>
+				        <p>
+				            문의/FAQ 관리
+				            <i class="right fas fa-angle-left"></i>
+				        </p>
+				    </a>
+				    
+				    <ul class="nav nav-treeview">
+				        <li class="nav-item">
+				            <a href="${path}/adInquiryList.adsp" class="nav-link ${currentURI.contains('Inquiry') ? 'active' : ''}">
+				                <p>1:1 문의 관리</p>
+				            </a>
+				        </li>
+				        
+				        <li class="nav-item">
+				            <a href="${path}/adFaqList.adsp" class="nav-link ${currentURI.contains('Faq') ? 'active' : ''}">
+				                <p>FAQ 관리</p>
+				            </a>
+				        </li>
+				    </ul>
 				</li>
 				<!-- 고객 지원 메뉴 끝 -->
 				

@@ -47,9 +47,10 @@ public class AdSupportDAOImpl implements AdSupportDAO {
     }
 
 	// ===== [FAQ 관리] =====
+	
     // 5. FAQ 목록 조회
 	@Override
-    public List<FaqDTO> getFaqList() {
+    public List<FaqDTO> getFaqList(Map<String, Object> map) {
         System.out.println("AdSupportDAOImpl - getFaqList()");
         return sqlSession.selectList("spring.ict06team1.midpj.dao.AdSupportDAO.getFaqList");
     }
@@ -61,14 +62,21 @@ public class AdSupportDAOImpl implements AdSupportDAO {
         return sqlSession.insert("spring.ict06team1.midpj.dao.AdSupportDAO.insertFaq", dto);
     }
 
-	// 7. 수정
+	// 7. FAQ 상세 조회 (수정 폼 데이터 불러오기용)
+	@Override
+	public FaqDTO getFaqDetail(int faq_id) {
+		System.out.println("AdSupportDAOImpl - getFaqDetail()");
+	    return sqlSession.selectOne("spring.ict06team1.midpj.dao.AdSupportDAO.getFaqDetail", faq_id);
+	}
+	
+	// 8. 수정
 	@Override
     public int updateFaq(FaqDTO dto) {
         System.out.println("AdSupportDAOImpl - updateFaq()");
         return sqlSession.update("spring.ict06team1.midpj.dao.AdSupportDAO.updateFaq", dto);
     }
 
-	// 8. 삭제
+	// 9. 삭제
 	@Override
     public int deleteFaq(int faq_id) {
         System.out.println("AdSupportDAOImpl - deleteFaq()");

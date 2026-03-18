@@ -5,12 +5,40 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>맛집 정보 수정</title>
-<link rel="stylesheet"
-	href="${path}/resources/css/admin/ad_restaurantModify.css">
+<title>숙소 정보 수정</title>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_accommodationModify.css">
+<c:if test="${updateCnt == 1}">
+    <script type="text/javascript">
+        setTimeout(function(){
+            alert("숙소 수정 성공!!");
+            
+            <%-- 키워드가 있을 때는 accommodationSearch.acc로, 없을 때는 accommodation.acc로 분기 --%>
+            <c:choose>
+                <c:when test="${not empty keyword}">
+                    window.location="${path}/accommodationSearch.acc?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+                </c:when>
+                <c:otherwise>
+                    window.location="${path}/accommodation.acc?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}";
+                </c:otherwise>
+            </c:choose>
+        }, 1000);
+    </script>
+</c:if>
+
+<c:if test="${updateCnt != 1}">
+    <script type="text/javascript">
+        setTimeout(function(){
+            alert("숙소 수정 실패!!");
+            <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
+            window.location="${path}/accommodation.acc?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+        }, 1000);
+    </script>
+</c:if>
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
@@ -21,12 +49,12 @@
                 <div class="container-fluid">
                     <div class="row mb-2 p-3">
                         <div class="col-sm-6">
-                            <h1 class="m-0 fw-bold">맛집 관리</h1>
+                            <h1 class="m-0 fw-bold">숙소 관리</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="${path}/admin/home">Home</a></li>
-                                <li class="breadcrumb-item"><a href="${path}/restaurant.ad">맛집 목록</a></li>
+                                <li class="breadcrumb-item"><a href="${path}/accommodation.acc">숙소 목록</a></li>
                                 <li class="breadcrumb-item active">정보 수정</li>
                             </ol>
                         </div>
@@ -39,11 +67,11 @@
                     <div class="card shadow-sm mx-2">
                         <div class="card-header py-3 bg-white border-bottom-0">
                             <h3 class="card-title fw-bold m-0" style="color:#333;">
-                                <span style="border-left:5px solid #01D281; padding-left:10px;">맛집 정보 수정</span>
+                                <span style="border-left:5px solid #01D281; padding-left:10px;">숙소 정보 수정</span>
                             </h3>
                         </div>
                         
-                        <form action="${path}/restaurantModifyAction.ad" method="post" enctype="multipart/form-data" name="updateForm">
+                        <form action="${path}/accommodationModifyAction.acc" method="post" enctype="multipart/form-data" name="updateForm">
                             <input type="hidden" name="oldImg" value="${pDto.image_url}">
                             <input type="hidden" name="pageNum" value="${pageNum}">
                             <input type="hidden" name="category1" value="${category}">
@@ -51,7 +79,6 @@
                             <input type="hidden" name="keyword" value="${keyword}">
                             
                             <div class="card-body p-4">
-                            <c:set var="addrArray" value="${fn:split(pDto.address, '-')}" />
                                 <div class="row g-4">
                                     <div class="col-md-4">
                                         <label class="form-label">장소 번호</label>
@@ -59,71 +86,74 @@
                                     </div>
 
                                     <div class="col-md-8">
-                                        <label class="form-label">맛집 이름</label>
+                                        <label class="form-label">숙소 이름</label>
                                         <input type="text" name="pdName" class="form-control" value="${pDto.name}" required>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">맛집 유형</label>
-                                        <input type="text" class="form-control" value="맛집" readonly>
-                                        <input type="hidden" name="place_type" value="REST">
+                                        <label class="form-label">장소 유형</label>
+                                        <input type="text" class="form-control" value="숙소" readonly>
+                                        <input type="hidden" name="place_type" value="ACC">
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label">지역 선택</label>
                                         <select name="areaCode" id="areaCodeSelect" class="form-select" required onchange="updateAddressGuide()">
-									        <option value="" ${empty (rDto.areaCode) ? 'selected' : ''}>지역을 선택하세요</option>
-									        <option value="1" ${(rDto.areaCode == '1') ? 'selected' : ''}>서울</option>
-									        <option value="31" ${(rDto.areaCode == '31') ? 'selected' : ''}>경기</option>
-									        <option value="2" ${(rDto.areaCode == '2') ? 'selected' : ''}>인천</option>
-									        <option value="6" ${(rDto.areaCode == '6') ? 'selected' : ''}>부산</option>
-									        <option value="4" ${(rDto.areaCode == '4') ? 'selected' : ''}>대구</option>
-									        <option value="3" ${(rDto.areaCode == '3') ? 'selected' : ''}>대전</option>
-									        <option value="5" ${(rDto.areaCode == '5') ? 'selected' : ''}>광주</option>
-									        <option value="7" ${(rDto.areaCode == '7') ? 'selected' : ''}>울산</option>
-									        <option value="39" ${(rDto.areaCode == '39') ? 'selected' : ''}>제주</option>
+									        <option value="" ${empty (aDto.areaCode) ? 'selected' : ''}>지역을 선택하세요</option>
+									        <option value="1" ${(aDto.areaCode == '1') ? 'selected' : ''}>서울</option>
+									        <option value="31" ${(aDto.areaCode == '31') ? 'selected' : ''}>경기</option>
+									        <option value="2" ${(aDto.areaCode == '2') ? 'selected' : ''}>인천</option>
+									        <option value="6" ${(aDto.areaCode == '6') ? 'selected' : ''}>부산</option>
+									        <option value="4" ${(aDto.areaCode == '4') ? 'selected' : ''}>대구</option>
+									        <option value="3" ${(aDto.areaCode == '3') ? 'selected' : ''}>대전</option>
+									        <option value="5" ${(aDto.areaCode == '5') ? 'selected' : ''}>광주</option>
+									        <option value="7" ${(aDto.areaCode == '7') ? 'selected' : ''}>울산</option>
+									        <option value="39" ${(aDto.areaCode == '39') ? 'selected' : ''}>제주</option>
 									    </select>
                                     </div>
 
                                     <div class="col-md-12">
                                         <label class="form-label">주소</label>
                                         <div class="input-group mb-2">
-                                            <input type="text" id="address" name="address" class="form-control" value="${fn:trim(addrArray[0])}">
+                                            <input type="text" id="address" name="address" class="form-control" value="${pDto.address}">
                                             <button type="button" class="btn btn-dark" onclick="execPostcode()">주소 검색</button>
                                         </div>
-                                        <input type="text" id="address_detail" name="address_detail" class="form-control" value="${fn:length(addrArray) > 1 ? fn:trim(addrArray[1]) : ''}" placeholder="상세 주소를 입력하세요~~~">
+                                        <input type="text" id="address_detail" name="address_detail" class="form-control" placeholder="상세 주소를 입력하세요~~~" required>
                                         <input type="hidden" id="latitude" name="latitude" value="${pDto.latitude}">
                                         <input type="hidden" id="longitude" name="longitude" value="${pDto.longitude}">
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="form-label">전화번호</label>
-                                        <input type="text" name="phone" class="form-control" value="${rDto.phone}" placeholder="번호를 수정해주세요">
+                                        <input type="text" name="phone" class="form-control" value="${aDto.phone}" placeholder="ex) 02-1234-5678">
                                     </div>
                                     
                                     <div class="col-md-4">
-                                        <label class="form-label">음식점 카테고리</label>
+                                        <label class="form-label">숙소 유형</label>
                                         <select name="category" class="form-select" required>
-                                            <option value="A05020100" ${rDto.category == 'A05020100' ? 'selected' : ''}>한식</option>
-                                            <option value="A05020200" ${rDto.category == 'A05020200' ? 'selected' : ''}>양식</option>
-                                            <option value="A05020300" ${rDto.category == 'A05020300' ? 'selected' : ''}>일식</option>
-											<option value="A05020400" ${rDto.category == 'A05020400' ? 'selected' : ''}>중식</option>
-											<option value="A05020500" ${rDto.category == 'A05020500' ? 'selected' : ''}>기타</option>
-										    <option value="A05020600" ${rDto.category == 'A05020600' ? 'selected' : ''}>카페</option>                    
-								            <option value="A05020700" ${rDto.category == 'A05020700' ? 'selected' : ''}>이색음식</option>        
-							                <option value="A05020900" ${rDto.category == 'A05020900' ? 'selected' : ''}>식음료</option>           
+                                            <option value="B02010100" ${aDto.category == 'B02010100' ? 'selected' : ''}>일반호텔</option>
+                                            <option value="B02011100" ${aDto.category == 'B02011100' ? 'selected' : ''}>호스텔</option>
+                                            <option value="B02010700" ${aDto.category == 'B02010700' ? 'selected' : ''}>펜션</option>
+											<option value="B02011200" ${aDto.category == 'B02011200' ? 'selected' : ''}>서비스드레지던스</option>
+											<option value="B02011600" ${aDto.category == 'B02011600' ? 'selected' : ''}>한옥스테이</option>
+										    <option value="B02010900" ${aDto.category == 'B02010900' ? 'selected' : ''}>홈스테이</option>                    
+								            <option value="B02011400" ${aDto.category == 'B02011400' ? 'selected' : ''}>휴양펜션</option>        
+							                <option value="B02011000" ${aDto.category == 'B02011000' ? 'selected' : ''}>유스호스텔</option> 
+							                <option value="B02010600" ${aDto.category == 'B02010600' ? 'selected' : ''}>가족호텔</option>
+							                <option value="B02010500" ${aDto.category == 'B02010500' ? 'selected' : ''}>한국전통호텔</option>
+							                <option value="B02010300" ${aDto.category == 'B02010300' ? 'selected' : ''}>수상관광호텔</option>
                                         </select>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label class="form-label">휴무일</label>
-                                        <input type="text" name="restdate" class="form-control" value="${rDto.restdate}">
                                     </div>
 
                                     <div class="col-md-12">
                                         <label class="form-label">상세 소개</label>
-                                        <textarea name="pdContent" class="form-control" rows="4">${rDto.description}</textarea>
+                                        <textarea name="pdContent" class="form-control" rows="4">${aDto.description}</textarea>
                                     </div>
+                                    
+                                    <div class="col-md-6">
+									    <label class="form-label">가격</label>
+									    <input type="text" name="price" class="form-control" value="${aDto.price}">
+									</div>
 
                                     <div class="col-md-12">
                                         <label class="form-label">대표 이미지 수정</label>

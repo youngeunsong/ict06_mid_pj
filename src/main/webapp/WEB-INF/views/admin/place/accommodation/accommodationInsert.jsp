@@ -5,11 +5,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>맛집 정보 등록</title>
-<link rel="stylesheet"
-	href="${path}/resources/css/admin/ad_restaurantInsert.css">
+<title>숙소 정보 등록</title>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_accommodationInsert.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -22,11 +22,11 @@
                     <div class="card shadow-sm mx-2 mt-4">
                         <div class="card-header py-4 bg-white border-bottom-0">
                             <h4 class="card-title fw-bold m-0">
-                                <span style="border-left:5px solid #01D281; padding-left:15px;">새로운 맛집 등록</span>
+                                <span style="border-left:5px solid #01D281; padding-left:15px;">새로운 숙소 등록</span>
                             </h4>
                         </div>
                         
-                        <form action="${path}/restaurantInsertAction.ad" method="post" enctype="multipart/form-data" name="insertForm">
+                        <form action="${path}/accommodationInsertAction.acc" method="post" enctype="multipart/form-data" name="insertForm">
                             <input type="hidden" name="areaCode1" id="areaCodeHidden" value="${param.areaCode}">
                             <input type="hidden" name="pageNum" value="${param.pageNum}">
                             <input type="hidden" name="category1" value="${param.category}">
@@ -35,8 +35,8 @@
                             <div class="card-body px-5 pb-5">
                                 <div class="row g-4">
                                     <div class="col-md-6">
-                                        <label class="form-label">맛집 이름 *</label>
-                                        <input type="text" name="pdName" class="form-control" placeholder="맛집명을 입력하세요" required>
+                                        <label class="form-label">숙소 이름 *</label>
+                                        <input type="text" name="pdName" class="form-control" placeholder="숙소명을 입력하세요" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">지역 선택 *</label>
@@ -53,7 +53,6 @@
 									        <option value="39">제주</option>
                                         </select>
                                     </div>
-
                                     <div class="col-md-12">
                                         <label class="form-label">주소 *</label>
                                         <div class="input-group mb-2">
@@ -62,37 +61,39 @@
                                         </div>
                                         <input type="text" id="address_detail" name="address_detail" class="form-control" placeholder="상세 주소를 입력하세요~~~" required>
                                     </div>
-                                    
                                     <input type="hidden" id="latitude" name="latitude" required>
                                     <input type="hidden" id="longitude" name="longitude" required>
-
                                     <div class="col-md-6">
                                         <label class="form-label">전화번호</label>
                                         <input type="text" name="phone" class="form-control" placeholder="ex) 02-1234-5678">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">맛집 유형 *</label>
+                                        <label class="form-label">숙소 유형 *</label>
                                         <select name="category" class="form-select" required>
-                                            <option value="">-- 맛집 유형 선택 --</option>
-                                            <option value="A05020100">한식</option>
-                                            <option value="A05020200">양식</option>
-                                            <option value="A05020300">일식</option>
-                                            <option value="A05020400">중식</option>
-                                            <option value="A05020500">기타</option>
-                                            <option value="A05020600">카페</option>
-                                            <option value="A05020700">이색음식</option>
-                                            <option value="A05020900">식음료</option>
+                                            <option value="">-- 숙소 유형 선택 --</option>
+                                            <option value="B02010100">일반호텔</option>
+                                            <option value="B02011100">호스텔</option>
+                                            <option value="B02010700">펜션</option>
+                                            <option value="B02011200">서비스드레지던스</option>
+                                            <option value="B02011600">한옥스테이</option>
+                                            <option value="B02010900">홈스테이</option>
+                                            <option value="B02011400">휴양펜션</option>
+                                            <option value="B02011000">유스호스텔</option>
+                                            <option value="B02010600">가족호텔</option>
+                                            <option value="B02010500">한국전통호텔</option>
+                                            <option value="B02010300">수상관광호텔</option>
+                                            <option value="B02011300">콘도미니엄</option>
                                         </select>
                                     </div>
                                     
                                     <div class="col-md-12">
                                         <label class="form-label">상세 소개</label>
-                                        <textarea name="pdContent" class="form-control" rows="4"placeholder="맛집을 상세히 소개해주세요"></textarea>
+                                        <textarea name="pdContent" class="form-control" rows="4" placeholder="숙소를 상세히 소개해주세요"></textarea>
                                     </div>
                                     
                                     <div class="col-md-6">
-									    <label class="form-label">휴무일</label>
-									    <input type="text" name="restdate" class="form-control" placeholder="예: 매주 월요일, 연중무휴">
+									    <label class="form-label">가격</label>
+									    <input type="text" name="price" class="form-control" placeholder="ex) 50000원">
 									</div>
 
                                     <div class="col-md-12">

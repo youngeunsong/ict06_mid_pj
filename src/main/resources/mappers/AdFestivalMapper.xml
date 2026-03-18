@@ -163,13 +163,16 @@
 	
 	<!-- 신규 축제 등록: 3단계 -->
 	<!-- (0) 기존 테이블에 있는 데이터인지 확인 -->
-	<select id="findPlaceIdByNameAndAddress"
-        parameterType="spring.ict06team1.midpj.dto.PlaceDTO"
+	<select id="checkDuplication"
+        parameterType="spring.ict06team1.midpj.dto.FestivalDTO"
         resultType="int">
-		SELECT place_id
-		FROM PLACE
-		WHERE name = #{name}
-		AND address = #{address}
+		SELECT p.place_id
+		  FROM PLACE p
+		  JOIN FESTIVAL f
+		    ON f.FESTIVAL_ID = p.PLACE_ID
+		 WHERE name = #{placeDTO.name}
+		   AND address = #{placeDTO.address}
+		   AND f.START_DATE = #{start_date}
 	</select>
 	
 	<!-- (1) 신규 장소 등록 -->

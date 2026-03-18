@@ -1,6 +1,17 @@
+/**
+ * @author 송영은
+ * 최초작성일: 26.03.10
+ * 최종수정일: 26.03.18
+ * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
+ * 
+ * 코드 변경사항
+ * v260318: 
+ *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
+ * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ */
+
 package spring.ict06team1.midpj.service;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,6 +209,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 	// 신규 축제 등록
 	@Override
+	@Transactional
 	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - insertFestival()]");
 		
@@ -229,12 +241,17 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		dto.setStart_date(start_date);
 		dto.setEnd_date(end_date);
 		
-		// DAO 호출하여 DB에 데이터 추가 시도  
-		int insertCntPlace = dao.insertPlace(plDto);
+		// 기존 DB에 있는 축제인지 확인
+		Integer placeId = dao.checkDuplication(dto);
+		System.out.println("placeId : "+ placeId);
+		int insertCntPlace = 0; 
+		if(placeId == null){
+	        // 새로운 장소 DB에 추가
+			insertCntPlace = dao.insertPlace(plDto);
+	    	placeId = plDto.getPlace_id();
 		
-		// Place 테이블에 먼저 추가 시도하여 성공 시 
-		if(insertCntPlace > 0) {
-			
+	    	// Place 테이블에 먼저 추가 시도하여 성공 시 
+			dto.setFestival_id(placeId);
 			int insertFestivalCnt = dao.insertFestival(dto);
 			
 			// Festival 테이블에 추가 시도하여 성공 시
@@ -246,6 +263,9 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 				
 				for(int i = 0; i < ticket_types.length; i++) {
 					FestivalTicketDTO ticketDTO = new FestivalTicketDTO();
+					
+					ticketDTO.setFestival_id(placeId);
+					
 					ticketDTO.setTicket_type(ticket_types[i]);			
 					ticketDTO.setPrice(parseInteger(request.getParameter("price" + ticket_types[i])));
 					ticketDTO.setStock(parseInteger(request.getParameter("stock" + ticket_types[i])));
@@ -268,6 +288,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		} 
 		// Place 테이블에 추가 실패 시 
 		else {
+			System.out.println("이미 등록된 축제");
 			//Model에 담아서 jsp로 전달
 			model.addAttribute("insertCnt", 0); 
 		}
@@ -326,7 +347,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 		for(FestivalDTO dto : list){
 		    PlaceDTO place = dto.getPlaceDTO();
-		    Integer placeId = dao.findPlaceIdByNameAndAddress(place);
+		    Integer placeId = dao.checkDuplication(dto);
 
 		    if(placeId == null){
 		        // 새로운 장소

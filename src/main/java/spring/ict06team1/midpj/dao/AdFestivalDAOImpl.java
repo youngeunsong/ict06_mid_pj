@@ -71,9 +71,9 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 	// 신규 축제 등록: 3단계
 	// (0) 기존 테이블에 있는 데이터인지 확인
 	@Override
-	public Integer findPlaceIdByNameAndAddress(PlaceDTO dto) {
+	public Integer checkDuplication(FestivalDTO dto) {
 		System.out.println("[AdFestivalDAOImpl - updateTicket()]");	
-		return sqlSession.getMapper(AdFestivalDAO.class).findPlaceIdByNameAndAddress(dto);
+		return sqlSession.getMapper(AdFestivalDAO.class).checkDuplication(dto);
 	}
 	
 	// (1) 신규 장소 등록 

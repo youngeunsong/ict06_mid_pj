@@ -28,4 +28,19 @@ public interface RestaurantDAO {
 
     // 즐겨찾기 삭제
     int deleteFavorite(Map<String, Object> map);
+    
+    // 맛집 랭킹 목록 조회
+    List<PlaceDTO> getBestRestaurantList();
+    
+    // 별점 평균
+    double getAvgRating(int place_id);
+    
+    // 맛집 총 갯수
+    int getBestRestaurantCount(String region);
+    
+    // 맛집 페이지 리스트
+    List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map);
+    
+    // 맛집 랭킹 top5
+    List<PlaceDTO> getBestRestaurantTop5(String region);
 }

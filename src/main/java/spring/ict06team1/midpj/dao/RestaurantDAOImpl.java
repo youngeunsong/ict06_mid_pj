@@ -52,4 +52,30 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     public int deleteFavorite(Map<String, Object> map) {
         return session.delete(NAMESPACE + "deleteFavorite", map);
     }
+    
+    @Override
+    public List<PlaceDTO> getBestRestaurantList() {
+        return session.selectList(NAMESPACE + "getBestRestaurantList");
+    }
+
+    @Override
+    public double getAvgRating(int place_id) {
+        Double result = session.selectOne(NAMESPACE + "getAvgRating", place_id);
+        return result == null ? 0.0 : result;
+    }
+    
+    @Override
+    public int getBestRestaurantCount(String region) {
+    	return session.selectOne(NAMESPACE + "getBestRestaurantCount", region);
+    }
+    
+    @Override
+    public List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map) {
+        return session.selectList(NAMESPACE + "getBestRestaurantPageList", map);
+    }
+
+    @Override
+    public List<PlaceDTO> getBestRestaurantTop5(String region) {
+    	return session.selectList(NAMESPACE + "getBestRestaurantTop5", region);
+    }
 }

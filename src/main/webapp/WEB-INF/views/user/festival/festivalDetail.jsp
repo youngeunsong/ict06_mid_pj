@@ -3,6 +3,7 @@
  * 최초작성일: 2026-03-17
  * 최종수정일: 2026-03-17
  * 참고 코드: restaurantDetail.jsp
+ 맛집 상세 페이지와 달리 행사기간, 티켓 메뉴 가짐. 
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -404,7 +405,7 @@
             
               <!-- 티켓 정보 없을 경우 안내문 출력 -->	
               <c:if test="${empty festival.ticketList}">
-                <div class="r-muted">등록된 티켓이 없습니다.</div>
+                <div class="r-muted">등록된 티켓 정보가 없습니다.</div>
               </c:if>
 
               <div class="mt-3 r-muted" style="font-size:13px;">
@@ -462,7 +463,7 @@
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="fw-bold fs-5">테이블 예약하기</div>
+                <div class="fw-bold fs-5">티켓 예약하기</div>
                 <span class="badge bg-light text-dark">
                   <i class="fa-solid fa-bolt me-1"></i>빠른예약
                 </span>

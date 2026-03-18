@@ -6,80 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>맛집 정보 수정</title>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_restaurantModify.css">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
-<style>
-    /* AdminLTE 3 표준 배경색 및 레이아웃 유지 */
-    .content-wrapper { 
-        background-color: #F6F6F6 !important; 
-        /* 화면 전체를 강제로 채우지 않고 콘텐츠 양에 맞게 조절 */
-        min-height: calc(100vh - 150px) !important; 
-        padding-bottom: 20px !important;
-    }
-    
-    .card { 
-        border: none; 
-        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
-        border-radius: 12px;
-        margin-bottom: 0 !important; /* 카드 아래 여백 제거 */
-    }
-
-    .form-label { font-weight: 600; color: #495057; font-size: 0.9rem; }
-
-    /* 읽기 전용 필드 스타일 */
-    .form-control:read-only { 
-        background-color: #f8f9fa !important;
-        cursor: not-allowed; 
-        color: #333333 !important;
-    }
-
-    /* 버튼 및 하단 푸터 간격 조정 */
-    .card-footer {
-        background-color: white !important;
-        border-top: none !important;
-        padding-top: 10px !important;
-        padding-bottom: 30px !important; /* 버튼 아래 적당한 여백 */
-    }
-
-    /* 버튼 스타일 */
-    .btn-submit { 
-        background-color: #01D281 !important; 
-        color: white !important; 
-        border-radius: 8px; 
-        padding: 10px 30px; 
-        border: none; 
-        font-weight: 600; 
-    }
-    .btn-submit:hover { background-color: #01b06c !important; }
-    
-    .btn-cancel { 
-        background-color: #adb5bd !important; 
-        color: white !important; 
-        border-radius: 8px; 
-        padding: 10px 30px; 
-        border: none; 
-    }
-    
-    /* 관리자 푸터 스타일 미세 조정 */
-    .main-footer {
-        margin-top: 0 !important;
-        /* 위아래 패딩을 30px로 늘려 푸터의 폭을 크게 확보합니다 */
-        padding: 30px 0 !important; 
-        border-top: 1px solid #dee2e6 !important;
-        background-color: #fff !important;
-        display: block !important;
-        text-align: center !important;
-        /* 폰트 크기를 키워 존재감을 줍니다 */
-        font-size: 1rem; 
-        color: #333; /* 글자색을 조금 더 진하게 조정 */
-        letter-spacing: 1px; /* 글자 간격을 넓혀 고급스럽게 설정 */
-    }
-    .img-preview { max-width: 200px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd; }
-</style>
 <c:if test="${updateCnt == 1}">
     <script type="text/javascript">
         setTimeout(function(){
-            alert("맛집수정 성공!!");
+            alert("맛집 수정 성공!!");
             
             <%-- 키워드가 있을 때는 restaurantSearch.ad로, 없을 때는 restaurant.ad로 분기 --%>
             <c:choose>
@@ -97,14 +31,13 @@
 <c:if test="${updateCnt != 1}">
     <script type="text/javascript">
         setTimeout(function(){
-            alert("맛집수정 실패!!");
+            alert("맛집 수정 실패!!");
             <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
             window.location="${path}/restaurantModify.ad?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
         }, 1000);
     </script>
 </c:if>
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
@@ -156,7 +89,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">장소 유형</label>
+                                        <label class="form-label">맛집 유형</label>
                                         <input type="text" class="form-control" value="맛집" readonly>
                                         <input type="hidden" name="place_type" value="REST">
                                     </div>

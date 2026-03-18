@@ -6,62 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>맛집 정보 등록</title>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_restaurantInsert.css">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
-
-<style>
-    /* 1. 본문 영역: 배경색 유지 및 푸터 밀착 조절 */
-    .content-wrapper { 
-        background-color: #F6F6F6 !important; 
-        /* 화면 전체를 채우되 푸터 높이만큼 제외하여 공백 방지 */
-        min-height: calc(100vh - 60px) !important; 
-        padding-bottom: 0 !important;
-    }
-    
-    /* 2. 카드 스타일: 하단 마진 제거하여 푸터와 연결 */
-    .card { 
-        border: none; 
-        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
-        border-radius: 12px; 
-        margin-bottom: 0 !important; 
-    }
-    
-    .form-label { font-weight: 600; color: #495057; font-size: 0.9rem; }
-    .form-control, .form-select { border-radius: 8px !important; border: 1px solid #dee2e6; padding: 0.6rem; }
-    
-    /* 버튼 스타일 */
-    .btn-submit { 
-        background-color: #01D281 !important; 
-        color: white; 
-        border-radius: 8px; 
-        padding: 10px 30px; 
-        border: none; 
-        font-weight: 600; 
-    }
-    .btn-submit:hover { background-color: #01b06c !important; }
-    .btn-cancel { 
-        background-color: #adb5bd !important; 
-        color: white; 
-        border-radius: 8px; 
-        padding: 10px 30px; 
-        border: none; 
-    }
-
-    /* 3. 푸터 강제 밀착 */
-    .main-footer {
-        margin-top: 0 !important;
-        padding: 15px 20px !important;
-        border-top: 1px solid #dee2e6 !important;
-        background-color: #fff !important;
-    }
-
-    /* 카드 하단 버튼 영역 패딩 조정 */
-    .card-footer {
-        padding-top: 10px !important;
-        padding-bottom: 30px !important;
-        background-color: #fff !important;
-    }
-</style>
 <c:choose>
     <c:when test="${insertCnt == 1}">
         <script type="text/javascript">
@@ -89,7 +37,6 @@
     </c:otherwise>
 </c:choose>
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>

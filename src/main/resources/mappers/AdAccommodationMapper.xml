@@ -3,19 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
- <mapper namespace="spring.ict06team1.midpj.dao.AdRestaurantDAO">  <!-- namespace="패키지명.인터페이스" -->
-	 
-	<!--관리자 장소 - 맛집 관리  -->
-	<!--맛집 목록 갯수 구하기  -->
+ <mapper namespace="spring.ict06team1.midpj.dao.AdAccommodationDAO">  <!-- namespace="패키지명.인터페이스" -->
+ 	
+ 	<!--관리자 장소 - 숙소 관리  -->
+	<!--숙소 목록 갯수 구하기  -->
 	<select id="placeCnt" parameterType="java.util.Map" resultType="int">
 	    SELECT COUNT(*) AS cnt 
-	    FROM PLACE p, RESTAURANT r
-	    WHERE p.place_id = r.restaurant_id
+	    FROM PLACE p, ACCOMMODATION a
+	    WHERE p.place_id = a.accommodation_id
 	    <if test="areaCode != null and areaCode != ''">
-	        AND r.areaCode = #{areaCode}
+	        AND a.areaCode = #{areaCode}
 	    </if>
 	    <if test="category != null and category != ''">
-	        AND r.category = #{category}
+	        AND a.category = #{category}
 	    </if>
 	    <if test="intKeyword != null and intKeyword != ''">
             AND p.place_id LIKE '%' || #{intKeyword} || '%'
@@ -25,8 +25,8 @@
         </if>
 	</select>
 	
-	<!-- 맛집 목록 조회
-    맛집과 관련된 정보를 Map 리스트 형태로 반환 (여러 테이블 JOIN 시 유용) -->
+	<!-- 숙소 목록 조회
+    숙소와 관련된 정보를 Map 리스트 형태로 반환 (여러 테이블 JOIN 시 유용) -->
 	<select id="placeList" parameterType="java.util.Map" resultType="java.util.HashMap">
 	    SELECT * FROM (
 	        SELECT A.*, ROWNUM AS rn FROM (
@@ -38,14 +38,14 @@
 	                p.view_count  AS "view_count",
 	                p.image_url   AS "image_url",
 	                p.updated_at  AS "placeUpdateDate",
-	                r.category    AS "category"
-	            FROM PLACE p, RESTAURANT r
-	            WHERE p.place_id = r.restaurant_id
+	                a.category    AS "category"
+	            FROM PLACE p, ACCOMMODATION a
+	            WHERE p.place_id = a.accommodation_id
 	            <if test="areaCode != null and areaCode != ''">
-	                AND r.areaCode = #{areaCode}
+	                AND a.areaCode = #{areaCode}
 	            </if>
 	            <if test="category != null and category != ''">
-	                AND r.category = #{category}
+	                AND a.category = #{category}
 	            </if>
 	            ORDER BY p.updated_at DESC 
 	        ) A
@@ -53,9 +53,9 @@
 	    ) WHERE rn &gt;= #{start}
 	</select>
 	
-	<!-- 맛집 정보 검색 (검색어가 숫자형인 경우)
+	<!-- 숙소 정보 검색 (검색어가 숫자형인 경우)
     예: ID로 검색할 때 호출 -->
-	<select id="getRestaurantSearchInt" parameterType="java.util.Map" resultType="java.util.HashMap">
+	<select id="getAccommodationSearchInt" parameterType="java.util.Map" resultType="java.util.HashMap">
     	SELECT * FROM (
 		    SELECT A.*, ROWNUM AS rn FROM (
 		        SELECT 
@@ -66,9 +66,9 @@
 		            p.view_count  AS "view_count",
 		            p.image_url   AS "image_url",
 		            p.updated_at  AS "placeUpdateDate",
-		            r.category    AS "category"
+		            a.category    AS "category"
 		        FROM PLACE p
-		        JOIN RESTAURANT r ON p.place_id = r.restaurant_id
+		        JOIN ACCOMMODATION a ON p.place_id = a.accommodation_id
 		        <where>
 		            <if test="intKeyword != null and intKeyword != ''">
 		                p.place_id LIKE '%' || #{intKeyword} || '%'
@@ -81,9 +81,9 @@
 		WHERE rn &gt;= #{start}
 	</select>
 	
-	<!-- 맛집 정보 검색 (검색어가 문자열인 경우)
-    예: 맛집 이름으로 검색할 때 호출 -->
-	<select id="getRestaurantSearchString" parameterType="java.util.Map" resultType="java.util.HashMap">
+	<!-- 숙소 정보 검색 (검색어가 문자열인 경우)
+    예: 숙소 이름으로 검색할 때 호출 -->
+	<select id="getAccommodationSearchString" parameterType="java.util.Map" resultType="java.util.HashMap">
 	    SELECT * FROM (
 		    SELECT A.*, ROWNUM AS rn FROM (
 		        SELECT 
@@ -94,9 +94,9 @@
 		            p.view_count  AS "view_count",
 		            p.image_url   AS "image_url",
 		            p.updated_at  AS "placeUpdateDate",
-		            r.category    AS "category"
+		            a.category    AS "category"
 		        FROM PLACE p
-		        JOIN RESTAURANT r ON p.place_id = r.restaurant_id
+		        JOIN ACCOMMODATION a ON p.place_id = a.accommodation_id
 		        <where>
 		            <if test="strKeyword != null and strKeyword != ''">
 		                p.name LIKE '%' || #{strKeyword} || '%'
@@ -117,17 +117,17 @@
 	    INSERT INTO PLACE (
 	        place_id, place_type, name, address, view_count, latitude, longitude, image_url, created_at
 	    ) VALUES (
-	        #{place_id}, 'REST', #{name}, #{address}, 0, #{latitude}, #{longitude}, #{image_url}, SYSTIMESTAMP
+	        #{place_id}, 'ACC', #{name}, #{address}, 0, #{latitude}, #{longitude}, #{image_url}, SYSTIMESTAMP
 	    )
 	</insert>
 	
 	<!-- 장소(기본 정보) 등록 -->
-	<insert id="getRestaurantInsert" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
-	    INSERT INTO RESTAURANT (
-	        restaurant_id, description, phone, category, status, restdate, areaCode
+	<insert id="getAccommodationInsert" parameterType="spring.ict06team1.midpj.dto.AccommodationDTO">
+	    INSERT INTO ACCOMMODATION (
+	        accommodation_id, description, phone, category, status, price, areaCode
 	    ) VALUES (
-	        #{restaurant_id}, #{description, jdbcType=CLOB}, #{phone, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, 
-	        'OPEN',#{restdate, jdbcType=VARCHAR}, #{areaCode, jdbcType=VARCHAR} 
+	        #{accommodation_id}, #{description, jdbcType=CLOB}, #{phone, jdbcType=VARCHAR}, #{category, jdbcType=VARCHAR}, 
+	        'OPEN',#{price, jdbcType=INTEGER}, #{areaCode, jdbcType=VARCHAR} 
 	    )
 	</insert>
 	
@@ -142,23 +142,23 @@
             latitude, 
             longitude, 
             image_url, 
-            created_at
+            updated_at
         FROM PLACE
         WHERE place_id = #{place_id}
     </select>
     
     <!-- 맛집 상세 정보 조회 -->
-    <select id="getRestaurantDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.RestaurantDTO">
+    <select id="getAccommodationDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.AccommodationDTO">
         SELECT 
-            restaurant_id, 
+            accommodation_id, 
             description, 
             TRIM(phone) AS phone, 
             category, 
             status, 
-            restdate, 
+            price, 
             TRIM(areaCode) AS areaCode
-        FROM RESTAURANT
-        WHERE restaurant_id = #{place_id}
+        FROM ACCOMMODATION
+        WHERE accommodation_id = #{place_id}
     </select>
     
     <!-- 장소 기본 정보 수정 처리 -->
@@ -174,24 +174,24 @@
 	</update>
 	
 	<!-- 장소 기본 정보 수정 처리 -->
-	<update id="getRestaurantUpdateAction" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
-        UPDATE RESTAURANT
+	<update id="getAccommodationUpdateAction" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
+        UPDATE ACCOMMODATION
            SET description = #{description},
                phone = #{phone},
                category = #{category},
-               restdate = #{restdate},
+               price = #{price},
                areaCode = #{areaCode}
-         WHERE restaurant_id = #{restaurant_id}
+         WHERE accommodation_id = #{accommodation_id}
     </update>
     
-    <!--맛집 정보 삭제  -->
-    <delete id="getRestaurantDeleteAction" parameterType="int">
+    <!--숙소 정보 삭제  -->
+    <delete id="getAccommodationDeleteAction" parameterType="int">
 	    DELETE FROM PLACE 
 	    WHERE place_id = #{place_id}
 	</delete>
 	
 	<!--  API 수집 데이터 전용 장소 삽입 -->
-	<update id="testInsertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
+	<update id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
 	    MERGE INTO PLACE p
 	    USING DUAL ON (p.place_id = #{place_id})
 	    WHEN MATCHED THEN
@@ -203,31 +203,31 @@
 	            image_url = #{image_url, jdbcType=VARCHAR}
 	    WHEN NOT MATCHED THEN
 	        INSERT (place_id, place_type, name, address, view_count, latitude, longitude, image_url, created_at)
-	        VALUES (#{place_id}, 'REST', #{name, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, 0, 
+	        VALUES (#{place_id}, 'ACC', #{name, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, 0, 
 	                #{latitude, jdbcType=DOUBLE}, #{longitude, jdbcType=DOUBLE}, #{image_url, jdbcType=VARCHAR}, SYSTIMESTAMP)
 	</update>
 	
 	<!--  API 수집 데이터 전용 장소 삽입 -->
-	<update id="testInsertRes" parameterType="spring.ict06team1.midpj.dto.RestaurantDTO">
-	    MERGE INTO RESTAURANT r
-	    USING DUAL ON (r.restaurant_id = #{restaurant_id})
+	<update id="insertAcc" parameterType="spring.ict06team1.midpj.dto.AccommodationDTO">
+	    MERGE INTO ACCOMMODATION a
+	    USING DUAL ON (a.accommodation_id = #{accommodation_id})
 	    WHEN MATCHED THEN
 	        UPDATE SET 
 	            description = #{description, jdbcType=VARCHAR}, 
 	            phone = #{phone, jdbcType=VARCHAR}, 
 	            category = #{category, jdbcType=VARCHAR}, 
-	            restdate = #{restdate, jdbcType=VARCHAR}, 
+	            price = #{price, jdbcType=INTEGER}, 
 	            areaCode = #{areaCode, jdbcType=VARCHAR}
 	    WHEN NOT MATCHED THEN
-	        INSERT (restaurant_id, description, phone, category, status, restdate, areaCode)
-	        VALUES (#{restaurant_id}, #{description, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR}, 
-	                #{category, jdbcType=VARCHAR}, 'OPEN', #{restdate, jdbcType=VARCHAR}, #{areaCode, jdbcType=VARCHAR})
+	        INSERT (accommodation_id, description, phone, category, status, price, areaCode)
+	        VALUES (#{accommodation_id}, #{description, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR}, 
+	                #{category, jdbcType=VARCHAR}, 'OPEN', #{price, jdbcType=INTEGER}, #{areaCode, jdbcType=VARCHAR})
 	</update>
 	
 	<!-- 중복 데이터 체크 -->
 	<select id="checkDuplicate" parameterType="string" resultType="int">
         SELECT COUNT(*) 
         FROM RESTAURANT 
-        WHERE Restaurant_ID = #{restaurant_id}
+        WHERE accommodation_id = #{accommodation_id}
     </select>
  </mapper> 

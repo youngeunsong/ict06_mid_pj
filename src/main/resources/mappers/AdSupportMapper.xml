@@ -91,13 +91,18 @@
 	        <if test="category != null and category != ''">
 	            AND category = #{category}
 	        </if>
+	        
+	        <if test="visible != null and visible != ''">
+	            AND visible = #{visible}
+	        </if>
+	
 	        <if test="keyword != null and keyword != ''">
-	            AND (question LIKE '%' || #{keyword} || '%' OR answer LIKE '%' || #{keyword} || '%')
+	            AND (question LIKE '%' || #{keyword} || '%' 
+	                 OR answer LIKE '%' || #{keyword} || '%')
 	        </if>
 	    </where>
-	    ORDER BY order_no ASC
+	    ORDER BY order_no ASC, faq_id DESC
 	</select>
-
 	<!-- 6. 신규 FAQ 등록 -->
     <insert id="insertFaq" parameterType="spring.ict06team1.midpj.dto.FaqDTO">
 	    INSERT INTO FAQ (

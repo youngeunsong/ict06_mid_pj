@@ -45,6 +45,10 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
+	<!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+       <img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+    </div>
 	<!-- ================= HEADER ================= -->
     <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
     <!-- ================= SIDEBAR ================= -->
@@ -194,24 +198,10 @@
 </div>
 
 <script type="text/javascript">
-    function goSearch() {
-        const keyword = $('#faqSearch').val();
-        // 검색 실행 즉시 현재 열려있는 모든 답변을 강제 종료 (클래스 제거)
-        $('.answer-row').removeClass('open'); 
-        location.href = `adFaqList.adsp?category=${currCat}&visible=${currVis}&keyword=\${keyword}`;
-    }
-
-    function toggleAnswer(row) {
-        // 클릭 시에만 해당 답변 로우를 토글
-        $(row).next('.answer-row').toggleClass('open');
-    }
-    
-    function deleteFaq(faqId) {
-        if(confirm(faqId + "번 FAQ를 정말 삭제하시겠습니까?")) {
-            // 삭제 처리를 담당하는 Action 컨트롤러로 이동
-            location.href = "adFaqDeleteAction.adsp?faq_id=" + faqId;
-        }
-    }
+	// JS 파일에서 사용할 수 있게 전역 변수로 선언
+	const currCat = "${category}"; 
+	const currVis = "${visible}";
+	const currPath = "${path}";
 </script>
 <script src="${path}/resources/js/admin/adFaqList.js"></script>
 </body>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.service.SearchServiceImpl;
 
@@ -36,7 +37,6 @@ public class SearchController {
 		return "common/search";
 	}
 	
-	
 	//[검색페이지] AJAX 필터화면
 	@RequestMapping("/search/ajax")
 	public String searchAjax(
@@ -46,17 +46,49 @@ public class SearchController {
 			@RequestParam(defaultValue = "1") int page,
 			Model model){
 		
-		logger.info("<<< url => search/ajax>>>");
+		logger.info("<<< url => search/ajax >>>");
 		
 		Map<String, Object> data = searchService.getSearchAjax(keyword, type, sort, page);
 		
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("list", data.get("list"));
+		model.addAttribute("type", data.get("type"));
+		model.addAttribute("restList", data.get("restList"));
+		model.addAttribute("accList", data.get("accList"));
+		model.addAttribute("festList", data.get("festList"));
+	    model.addAttribute("totalCnt", data.get("totalCnt"));
 	    model.addAttribute("totalPages", data.get("totalPages"));
 	    model.addAttribute("currentPage", data.get("currentPage"));
+	    model.addAttribute("reviewCountMap", data.get("reviewCountMap"));
+		model.addAttribute("avgRatingMap", data.get("avgRatingMap"));
+		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds"));
 		
 		return "common/search_fragment";
 	}
-	
 
+	//[즐겨찾기]
+	@RequestMapping("/favorite/toggle")
+	@ResponseBody
+	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
+		logger.info("<<< url => /favorite/toggle>>>");
+		
+		return searchService.toggleFavorite(request);
+		
+	}
+	
+	// [자동완성]
+	@RequestMapping("/search/autocomplete")
+	@ResponseBody
+	public java.util.List<String> getAutoComplete(@RequestParam String keyword) {
+	    logger.info("<<< url => /search/autocomplete >>>");
+	    logger.info("[Controller] keyword => {}", keyword);
+	    return searchService.getAutoComplete(keyword);
+	}
+
+	//[최근 검색어]
+	@RequestMapping("/search/recent")
+	@ResponseBody
+	public java.util.List<spring.ict06team1.midpj.dto.SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {
+	    logger.info("<<< url => /search/recent >>>");
+	    return searchService.getRecentKeywords(request);
+	}
 }

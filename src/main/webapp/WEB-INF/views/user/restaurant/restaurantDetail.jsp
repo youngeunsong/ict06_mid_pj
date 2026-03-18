@@ -202,10 +202,12 @@
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-2 r-muted">
           <div class="d-flex align-items-center gap-2 r-stars">
-            <i class="fa-solid fa-star"></i>
-            <span class="r-score">0.0</span>
-			<span>(0개)</span>
-          </div>
+			  <i class="fa-solid fa-star"></i>
+			  <span class="r-score">
+			    <fmt:formatNumber value="${restaurant.avg_rating}" pattern="0.0"/>
+			  </span>
+			  <span>(${restaurant.review_count}개)</span>
+			</div>
           <span>·</span>
           <span>${restaurant.address}</span>
         </div>
@@ -405,14 +407,19 @@
 
           <div id="reviewList">
             <c:forEach var="rv" items="${reviews}">
-              <div class="review-item border rounded-3 p-3 mb-2" data-initial="1">
-                <div class="fw-bold">${rv.user_id}</div>
-                <div class="text-muted" style="font-size:12px;">
-                  <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/>
-                </div>
-                <div class="mt-2">${rv.content}</div>
-              </div>
-            </c:forEach>
+			  <div class="review-item border rounded-3 p-3 mb-2" data-initial="1">
+			    <div class="d-flex justify-content-between align-items-center">
+			      <div class="fw-bold">${rv.user_id}</div>
+			      <div style="color:#22c55e; font-weight:700;">
+			        <i class="fa-solid fa-star"></i> ${rv.rating}
+			      </div>
+			    </div>
+			    <div class="text-muted" style="font-size:12px;">
+			      <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/>
+			    </div>
+			    <div class="mt-2">${rv.content}</div>
+			  </div>
+			</c:forEach>
           </div>
 
           <c:if test="${not empty reviews}">
@@ -490,183 +497,15 @@
     </div>
 
   </div>
-  <script>
-  var CTX = '<c:out value="${pageContext.request.contextPath}"/>';
-	</script>
+
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  var CTX = '<c:out value="${pageContext.request.contextPath}"/>';
-  var PLACE_ID = '<c:out value="${place_id}"/>';
-
-  // =========================
-  // 1) 더보기 / 접기
-  // =========================
-  var btnMore = document.getElementById("btnMoreReviews");
-  if(btnMore){
-    btnMore.dataset.mode = "more";
-
-    btnMore.addEventListener("click", function(){
-      if(btnMore.dataset.mode === "collapse"){
-        collapseReviews();
-        return;
-      }
-      loadMore();
-    });
-
-    function loadMore(){
-      var offset = parseInt(btnMore.getAttribute("data-offset") || "0", 10);
-      var limit = 5;
-      var total = parseInt(btnMore.getAttribute("data-total") || "0", 10);
-
-      if(!PLACE_ID){
-        console.error("PLACE_ID is empty. model.addAttribute('place_id', place_id) 확인");
-        return;
-      }
-
-      var url = CTX + "/restaurantReviewMore.rs"
-              + "?place_id=" + encodeURIComponent(PLACE_ID)
-              + "&offset=" + encodeURIComponent(offset)
-              + "&limit=" + encodeURIComponent(limit);
-
-      fetch(url)
-        .then(function(res){
-          if(!res.ok){
-            return res.text().then(function(t){ throw new Error("HTTP " + res.status + ": " + t); });
-          }
-          return res.json();
-        })
-        .then(function(list){
-          if(!list || list.length === 0){
-            btnMore.textContent = "접기";
-            btnMore.dataset.mode = "collapse";
-            return;
-          }
-
-          var wrap = document.getElementById("reviewList");
-
-          list.forEach(function(rv){
-            var div = document.createElement("div");
-            div.className = "review-item border rounded-3 p-3 mb-2";
-            div.setAttribute("data-loaded", "1");
-
-            div.innerHTML =
-                '<div class="fw-bold">' + escapeHtml(rv.user_id || "") + '</div>'
-              + '<div class="text-muted" style="font-size:12px;">' + formatDate(rv.reviewDate) + '</div>'
-              + '<div class="mt-2">' + escapeHtml(rv.content || "") + '</div>';
-
-            wrap.appendChild(div);
-          });
-
-          var newOffset = offset + list.length;
-          btnMore.setAttribute("data-offset", String(newOffset));
-
-          if(total > 0 && newOffset >= total){
-            btnMore.textContent = "접기";
-            btnMore.dataset.mode = "collapse";
-          }
-        })
-        .catch(function(err){
-          console.error(err);
-        });
-    }
-
-    function collapseReviews(){
-      var wrap = document.getElementById("reviewList");
-      wrap.querySelectorAll('[data-loaded="1"]').forEach(function(el){ el.remove(); });
-
-      btnMore.setAttribute("data-offset", "5");
-      btnMore.textContent = "더보기";
-      btnMore.dataset.mode = "more";
-    }
-  }
-
-  // =========================
-  // 2) 즐겨찾기(저장) 토글
-  // =========================
-  var btnFav = document.getElementById("btnFavorite");
-  var btnFavSide = document.getElementById("btnFavoriteSide");
-
-  function applyFavoriteState(isOn){
-    [btnFav, btnFavSide].forEach(function(btn){
-      if(!btn) return;
-
-      var icon = btn.querySelector("i");
-      if(isOn){
-        btn.classList.add("is-on");
-        if(icon){
-          icon.classList.remove("fa-regular");
-          icon.classList.add("fa-solid");
-        }
-      }else{
-        btn.classList.remove("is-on");
-        if(icon){
-          icon.classList.remove("fa-solid");
-          icon.classList.add("fa-regular");
-        }
-      }
-    });
-  }
-
-  function bindFavoriteButton(btn){
-    if(!btn) return;
-
-    btn.addEventListener("click", function(){
-      if(!PLACE_ID){
-        console.error("PLACE_ID is empty");
-        return;
-      }
-
-      fetch(CTX + "/favoriteToggle.rs?place_id=" + encodeURIComponent(PLACE_ID))
-        .then(function(res){
-          if(!res.ok){
-            return res.text().then(function(t){ throw new Error("HTTP " + res.status + ": " + t); });
-          }
-          return res.json();
-        })
-        .then(function(data){
-          if(data.needLogin){
-            alert("로그인이 필요합니다.");
-            location.href = CTX + "/login.do";
-            return;
-          }
-          if(!data.ok) return;
-
-          applyFavoriteState(data.favorite);
-        })
-        .catch(function(err){
-          console.error(err);
-        });
-    });
-  }
-
-  bindFavoriteButton(btnFav);
-  bindFavoriteButton(btnFavSide);
-
-  // =========================
-  // util
-  // =========================
-  function formatDate(v){
-    if(v === null || v === undefined || v === "") return "";
-
-    var d = new Date(Number(v));
-    if(isNaN(d.getTime())) d = new Date(v);
-    if(isNaN(d.getTime())) return String(v);
-
-    var y = d.getFullYear();
-    var m = String(d.getMonth()+1).padStart(2,"0");
-    var day = String(d.getDate()).padStart(2,"0");
-    var hh = String(d.getHours()).padStart(2,"0");
-    var mm = String(d.getMinutes()).padStart(2,"0");
-    return y + "-" + m + "-" + day + " " + hh + ":" + mm;
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, function(c){
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-    });
-  }
-});
+  // JSP에서만 가능한 값 전달
+  const CTX = '<c:out value="${pageContext.request.contextPath}"/>';
+  const PLACE_ID = '<c:out value="${place_id}"/>';
 </script>
-  <%@ include file="../../common/footer.jsp" %>
+
+<script src="${pageContext.request.contextPath}/resources/js/restaurant/restaurantDetail.js"></script>
+
+<%@ include file="../../common/footer.jsp" %>
 </body>
 </html>

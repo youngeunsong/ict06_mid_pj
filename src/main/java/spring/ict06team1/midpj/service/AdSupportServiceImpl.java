@@ -160,15 +160,15 @@ public class AdSupportServiceImpl implements AdSupportService {
 	}
 	
 	// ===== [FAQ 관리] =====
-
+	// 4. FAQ 목록 조회 
 	@Override
 	public void getFaqList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("AdSupportServiceImpl - getFaqList()");
-	    // 1. 서비스 안에서 직접 파라미터 꺼내기
+		// 1. 서비스 안에서 직접 파라미터 꺼내기
 	    String category = request.getParameter("category");
 	    String visible = request.getParameter("visible");
 	    String keyword = request.getParameter("keyword");
-
+	    System.out.println("검색 카테고리: [" + category + "]");
 	    // 2. DAO에 던질 Map 생성
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("category", category);

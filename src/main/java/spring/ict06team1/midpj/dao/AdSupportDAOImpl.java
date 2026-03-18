@@ -52,7 +52,7 @@ public class AdSupportDAOImpl implements AdSupportDAO {
 	@Override
     public List<FaqDTO> getFaqList(Map<String, Object> map) {
         System.out.println("AdSupportDAOImpl - getFaqList()");
-        return sqlSession.selectList("spring.ict06team1.midpj.dao.AdSupportDAO.getFaqList");
+        return sqlSession.selectList("spring.ict06team1.midpj.dao.AdSupportDAO.getFaqList", map);
     }
 
 	// 6. 신규 FAQ 등록

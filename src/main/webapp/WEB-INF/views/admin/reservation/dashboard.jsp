@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- TODO : 이 페이지의 작동 제대로 하는 지 체크 필요 -->
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <fmt:setTimeZone value="Asia/Seoul" />
 <!-- ad_reservation.css -->
 <link rel="stylesheet"
@@ -93,7 +93,7 @@
 						<%--=====통계 차트=====--%>
 						<div class="row mb-4">
 							<%--=====left::월별 추이+도넛 차트=====--%>
-							<div class="col-12 col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3 d-flex flex-column">
 								<%--월별 예약 추이--%>
 								<div class="card shadow-sm mb-3">
 									<div class="card-header">
@@ -103,28 +103,29 @@
 										<canvas id="monthlyChart"></canvas>
 									</div>
 								</div>
-								<%--예약상태별 비율(도넛차트)--%>
+								<%--예약상태별+장소분류별 비율 통합 - 필터 적용(도넛차트)--%>
 								<div class="card shadow-sm mb-3">
-									<div class="card-header">
+									<div class="card-header d-flex justify-content-between align-items-center">
 										<h5 class="card-title font-weight-bold mb-0">예약 상태별 비율</h5>
+										<div class="btn-group btn-group-sm">
+											<button type="button" class="btn btn-dark" id="btnStatusChart" onclick="switchRatioChart('status')">예약상태별</button>
+											<button type="button" class="btn btn-outline-dark" id="btnPlaceChart" onclick="switchRatioChart('place')">장소분류별</button>
+										</div>
 									</div>
 									<div class="card-body d-flex justify-content-center">
-										<canvas id="statusChart" height="120"></canvas>
+										<div id="statusChartWrap">
+											<canvas id="statusChart" height="120"></canvas>
+										</div>
+										<div id="placeChartWrap" style="display:none;">
+											<canvas id="placeTypeChart" height="120"></canvas>
+										</div>
+
 									</div>
 								</div>
-								<%--장소분류별 비율(도넛차트)--%>
-								<div class="card shadow-sm">
-									<div class="card-header">
-										<h5 class="card-title font-weight-bold mb-0">장소 분류별 비율</h5>
-									</div>
-									<div class="card-body d-flex justify-content-center">
-										<canvas id="placeTypeChart" height="120"></canvas>
-									</div>
 								</div>
-							</div>
 							
 							<%--=====right::요일별 분포+예약 처리 현황=====--%>
-							<div class="col-12 col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3 d-flex flex-column">
 								<%--=====요일별 분포=====--%>
 								<div class="card shadow-sm mb-3">
 									<div class="card-header">
@@ -135,7 +136,7 @@
 									</div>
 								</div>
 								<%--=====예약 처리 현황 요약=====--%>
-								<div class="card shadow-sm">
+								<div class="card shadow-sm h-100">
 									<div class="card-header">
 										<h5 class="card-title font-weight-bold mb-0">예약 처리 현황</h5>
 									</div>
@@ -143,7 +144,7 @@
 										<div class="list-group list-group-flush">
 											<div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
 												<span>대기 중인 예약</span>
-												<span class="badge badge-warning badge-pill">${pendingList.size()}건</span>
+												<span class="badge badge-warning badge-pill">${pendingTotalCount}건</span>
 											</div>
 											<div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
 												<span>금일 신규 예약</span>
@@ -160,14 +161,14 @@
 						</div>
 					
 						<%--=====미처리 목록+최근 예약=====--%>
-						<div class="row">
+						<div class="row mb-4">
 							<%--=====미처리 목록(PENDING)=====--%>
-							<div class="col-12 col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3 d-flex flex-column" id="pendingSection">
 								<div class="card shadow-sm">
 									<div class="card-header">
 										<h5 class="card-title font-weight-bold mb-0 text-danger">
 											<i class="bi bi-exclamation-circle mr-1"></i>미처리 예약
-											<span class="badge badge-danger ml-1">${pendingList.size()}</span>
+											<span class="badge badge-danger ml-1">${pendingTotalCount}</span>
 										</h5>
 									</div>
 									<div class="card-body p-0">
@@ -198,7 +199,30 @@
 										</table>
 									</div>
 									<div class="card-footer bg-white">
-										<div class="mt-3 p-3 bg-light rounded" style="font-size:0.9rem; color:#666">
+										<%--페이징--%>
+										<div class="d-flex justify-content-center mt-2">
+											<%--이전 버튼--%>
+											<c:if test="${pendingPage > 1}">
+												<a href="${path}/resDashboard.ad?pendingPage=${pendingPage-1}#pendingSection" 
+													class="btn btn-sm btn-outline-secondary mr-1">&lt;</a>
+											</c:if>
+											
+											<%--페이지 번호: 현재페이지 기준 앞뒤 2페이지씩 총 5페이지 표시--%>
+											<c:forEach begin="1" end="${pendingTotalPages}" var="p">
+												<c:if test="${p >= pendingPage - 2 && p <= pendingPage + 2}">
+													<a href="${path}/resDashboard.ad?pendingPage=${p}#pendingSection"
+														class="btn btn-sm ${p == pendingPage ? 'btn-dark' : 'btn-outline-secondary'} mr-1">${p}</a>
+												</c:if>
+											</c:forEach>
+											
+											<%--다음 버튼--%>
+											<c:if test="${pendingPage < pendingTotalPages}">
+												<a href="${path}/resDashboard.ad?pendingPage=${pendingPage+1}#pendingSection" 
+													class="btn btn-sm btn-outline-secondary">&gt;</a>
+											</c:if>
+										</div>
+										
+										<div class="mt-2 p-2 bg-light rounded" style="font-size:0.85rem; color:#666">
 											<i class="bi bi-info-circle me-1"></i>미처리 예약은 목록 클릭 시 상세 관리 페이지로 이동합니다.
 										</div>
 									</div>
@@ -206,7 +230,7 @@
 							</div>
 							
 							<%--최근 예약 5건--%>
-							<div class="col-12 col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3 d-flex flex-column">
 								<div class="card shadow-sm">
 									<div class="card-header">
 										<h5 class="card-title font-weight-bold mb-0">
@@ -270,8 +294,9 @@
 					</div>					
 				</section>
 			</div>
-		
-		<footer class="main-footer">
+		</div>
+		<!-- ================= FOOTER ================= -->
+		<footer class="main-footer" style="margin-top:150px;">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
 	</div>

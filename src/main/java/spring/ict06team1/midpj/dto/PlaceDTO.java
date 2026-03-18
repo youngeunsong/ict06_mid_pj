@@ -14,6 +14,9 @@ public class PlaceDTO {
 	private double latitude;
 	private double longitude;
 	private String image_url;  //-- 대표 이미지 경로
+	private ReviewDTO reviewDto;
+	private int review_count;  //-- 장소 별 리뷰 카운트
+	private double avg_rating;   //-- 장소 별 평균 별점
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
 	private Timestamp placeRegDate;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy.MM.dd")
@@ -24,7 +27,8 @@ public class PlaceDTO {
 	}
 
 	public PlaceDTO(int place_id, String place_type, String name, String address, int view_count, double latitude,
-			double longitude, String image_url, Timestamp placeRegDate, Timestamp placeUpdateDate) {
+			double longitude, String image_url, ReviewDTO reviewDto, Timestamp placeRegDate,int review_count, double avg_rating,
+			Timestamp placeUpdateDate) {
 		super();
 		this.place_id = place_id;
 		this.place_type = place_type;
@@ -34,8 +38,11 @@ public class PlaceDTO {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.image_url = image_url;
+		this.reviewDto = reviewDto;
 		this.placeRegDate = placeRegDate;
 		this.placeUpdateDate = placeUpdateDate;
+		this.review_count = review_count;
+		this.avg_rating = avg_rating;
 	}
 
 	public int getPlace_id() {
@@ -102,6 +109,14 @@ public class PlaceDTO {
 		this.image_url = image_url;
 	}
 
+	public ReviewDTO getReviewDto() {
+		return reviewDto;
+	}
+
+	public void setReviewDto(ReviewDTO reviewDto) {
+		this.reviewDto = reviewDto;
+	}
+
 	public Timestamp getPlaceRegDate() {
 		return placeRegDate;
 	}
@@ -117,13 +132,32 @@ public class PlaceDTO {
 	public void setPlaceUpdateDate(Timestamp placeUpdateDate) {
 		this.placeUpdateDate = placeUpdateDate;
 	}
+	
+	public int getReview_count() {
+		return review_count;
+	}
+	
+	public void setReview_count(int review_count) {
+		this.review_count = review_count;
+	}
+	
+	public double getAvg_rating() {
+		return avg_rating;
+	}
+	
+	public void setAvg_rating(double avg_rating) {
+		this.avg_rating = avg_rating;
+	}
+
+
+
 
 	@Override
 	public String toString() {
 		return "PlaceDTO [place_id=" + place_id + ", place_type=" + place_type + ", name=" + name + ", address="
 				+ address + ", view_count=" + view_count + ", latitude=" + latitude + ", longitude=" + longitude
-				+ ", image_url=" + image_url + ", placeRegDate=" + placeRegDate + ", placeUpdateDate=" + placeUpdateDate
-				+ "]";
+				+ ", image_url=" + image_url + ", reviewDto=" + reviewDto + ", placeRegDate=" + placeRegDate
+				+ ", placeUpdateDate=" + placeUpdateDate + ", avg_rating=" + avg_rating +"]";
 	}
-
+	
 }

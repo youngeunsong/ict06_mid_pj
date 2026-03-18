@@ -7,15 +7,18 @@
 <meta charset="UTF-8">
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>검색바 화면 페이지</title>
+<title>단순 검색 결과 요약</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/common/search.css">
+<link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
 
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
 
 <script src="${path}/resources/js/search/search.js" defer></script>
+<script src="${path}/resources/js/search/bookmark.js" defer></script>
+<script> window.contextPath = '${path}'; </script>
 
 </head>
 <body>
@@ -43,41 +46,28 @@
 			        <button class="btn btn-outline-success" onclick="openFilter('FEST')">축제</button>
 			    </div>
 	    		<hr>
+	    		
+	    		<!-- 즐겨찾기 중, 로그인 여부를 따지기 위한 세션 값 히든 -->
+	    		<input type="hidden" id="contextPath" value="${path}">
+				<input type="hidden" id="loginUserId" value="${sessionScope.sessionID}">
 			
 		    	<!-- 맛집 섹션 S -->
 			    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 			        <h5 class="fw-bold mb-0">맛집(${restListCnt})</h5>
+			        <input type="hidden" id="restListCnt" value="${restListCnt}">
 			    </div>
 			
-			    <div class="row g-3">
-			    	<c:forEach var="restDTO" items="${restList}" varStatus="st">
-				    	<!-- 카드 -->
-				        <div class="col-6 col-md-4 col-lg-3 searchRestCard
-				        	${st.index >= 8 ? 'd-none' : ''}">
-				        	
-				        	<a href="#">
-					            <div class="card border-0 shadow-sm h-100">
-				                	<img src="${restDTO.image_url}"
-					                     class="card-img-top"
-					                     style="aspect-ratio:16/9; object-fit:cover;">
-					
-					                <div class="card-body">
-					                    <div class="fw-semibold">${restDTO.name}</div>
-					
-					                    <div class="text-muted small mb-2">
-					                        ${restDTO.address}
-					                    </div>
-					
-					                    <div class="d-flex gap-3 text-muted small">
-					                        <span><i class="fa-regular fa-eye"></i> ${restDTO.view_count}</span>
-					                        <span><i class="fa-regular fa-comment"></i> ${restDTO.review_count}</span>
-					                    </div>
-					                </div>
-					            </div>
-				            </a>
-				        </div>
-			    	</c:forEach>
-			    </div>
+				<!-- restCard.jsp 호출 -->
+				<div class="row g-3">
+				    <c:forEach var="restDTO" items="${restList}" varStatus="st">
+					    <div class="col-6 col-md-4 col-lg-3 searchRestCard ${st.index >= 8 ? 'd-none' : ''}">
+					        <c:set var="rest" value="${restDTO}" />
+					        <c:set var="mode" value="search" />
+				        <c:set var="cardWrapClass" value="search-card-wrap" />
+					        <%@ include file="/WEB-INF/views/common/card/restCard.jsp" %>
+					    </div>
+					</c:forEach>
+				</div>
 			
 		    	<!-- 더보기 버튼 -->
 			    <div class="text-center mt-3">
@@ -91,37 +81,19 @@
 		    	<div class="mt-5 mb-4">
 				    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 				        <h5 class="fw-bold mb-0">숙소(${accListCnt})</h5>
+				        <input type="hidden" id="accListCnt" value="${accListCnt}">
 				    </div>
 			
 			    <div class="row g-3">
-			    	<c:forEach var="accDTO" items="${accList}" varStatus="st">
-				    	<!-- 카드 -->
-				        <div class="col-6 col-md-4 col-lg-3 searchAccCard
-				        	${st.index >= 8 ? 'd-none' : ''}">
-				        	
-				        	<a href="#">
-					            <div class="card border-0 shadow-sm h-100">
-					                <img src="${accDTO.image_url}"
-					                     class="card-img-top"
-					                     style="aspect-ratio:16/9; object-fit:cover;">
-					
-					                <div class="card-body">
-					                    <div class="fw-semibold">${accDTO.name}</div>
-					
-					                    <div class="text-muted small mb-2">
-					                        ${accDTO.address}
-					                    </div>
-					
-					                    <div class="d-flex gap-3 text-muted small">
-					                        <span><i class="fa-regular fa-eye"></i> ${accDTO.view_count}</span>
-					                        <span><i class="fa-regular fa-comment"></i> ${accDTO.review_count}</span>
-					                    </div>
-					                </div>
-					            </div>
-				            </a>
-				        </div>
-			    	</c:forEach>
-			    </div>
+				   <c:forEach var="accDTO" items="${accList}" varStatus="st">
+					    <div class="col-6 col-md-4 col-lg-3 searchAccCard ${st.index >= 8 ? 'd-none' : ''}">
+					        <c:set var="acc" value="${accDTO}" />
+					        <c:set var="mode" value="search" />
+				        <c:set var="cardWrapClass" value="search-card-wrap" />
+					        <%@ include file="/WEB-INF/views/common/card/accCard.jsp" %>
+					    </div>
+					</c:forEach>
+				</div>
 			
 		    	<!-- 더보기 버튼 -->
 			    <div class="text-center mt-3">
@@ -137,6 +109,7 @@
 		    	<div class="mt-5 mb-4">
 				    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
 				        <h6 class="fw-bold mb-0 fs-5">축제(${festListCnt})</h6>
+				        <input type="hidden" id="festListCnt" value="${festListCnt}">
 				        <a href="${path}/festival.fe" class="text-muted small text-decoration-none">전체 축제보기 ></a>
 				    </div>
 				
@@ -144,37 +117,25 @@
 				    <div id="eventCarousel" class="carousel slide" data-bs-ride="false">
 				
 				        <div class="carousel-inner">
-							<c:forEach var="festDTO" items="${festList}" varStatus="st">
-								<!-- 4개 슬라이드 시작 -->
-								<c:if test="${st.index % 4 == 0}">
-						            <!-- 1페이지 (슬라이드 1) -->
+						    <c:forEach var="festDTO" items="${festList}" varStatus="st">
+						        <c:if test="${st.index % 4 == 0}">
 						            <div class="carousel-item ${st.index == 0 ? 'active' : ''}">
 						                <div class="row g-3">
-								</c:if>							
+						        </c:if>
+						
 						                    <div class="col-6 col-md-3">
-						                        <div class="card border-0 shadow-sm">
-						                            <div class="position-relative">
-						                                <img src="${festDTO.placeDTO.image_url}"
-						                                     class="card-img-top"
-						                                     style="aspect-ratio:1/1; object-fit:cover;">
-						                                <span class="badge bg-dark position-absolute bottom-0 start-0 m-2"
-						                                      style="font-size:0.65rem;">${festDTO.status}</span>
-						                            </div>
-						                            
-						                            <div class="card-body px-1 pt-2 pb-1">
-						                                <div class="fw-semibold small text-truncate">${festDTO.placeDTO.name}</div>
-						                                <div class="text-muted" style="font-size:0.72rem;">${festDTO.start_date} ~ ${festDTO.end_date}</div>
-						                            </div>
-						                        </div>
+						                        <c:set var="fest" value="${festDTO}" />
+						                        <c:set var="mode" value="search" />
+				                        <c:set var="cardWrapClass" value="search-card-wrap" />
+						                        <%@ include file="/WEB-INF/views/common/card/festivalCard.jsp" %>
 						                    </div>
-					                    <!-- 4개 슬라이드 닫기 -->
-					            <c:if test="${st.index % 4 == 3 || st.last }">
-					                    </div>
-				    				</div>
-					            </c:if>
-				            </c:forEach>
-				        
-				        </div>
+						
+						        <c:if test="${st.index % 4 == 3 || st.last}">
+						                </div>
+						            </div>
+						        </c:if>
+						    </c:forEach>
+						</div>
 			
 				        <!-- 하단 : 페이지 표시 + 화살표 -->
 				        <div class="d-flex align-items-center justify-content-between mt-3">
@@ -206,6 +167,7 @@
 			        	</div>
 			        <!-- 하단 : 페이지 표시 + 화살표 -->
 			    </div>
+				</div>
 			    <!-- 축제 섹션 E -->
 			</section>
 			<!-- 전체화면 : 기본화면E -->

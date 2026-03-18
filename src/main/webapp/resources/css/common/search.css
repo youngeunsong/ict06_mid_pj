@@ -1,23 +1,96 @@
 @charset "UTF-8";
-/* main.css */
+/* =========================================================
+   search.css
+   검색 페이지 전용 스타일
+   
+   서치 카드 적용 기능(검색화면 카드 배치):
+   ※ 카드 공통 스타일은 card.css로 분리
+   - 검색 결과 grid
+   - 더보기 버튼 주변 spacing
+   - 검색 탭/필터와 카드 간격
+   - 검색 페이지 전용 카드 높이 보정 정도
+   
+========================================================= */
 
 body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    color: #1a1a2e;
+    background: #fff;
 }
 
-/* 최상단 버튼 css 설정 */
-.chip-tabs {
-	display: flex;
+/* =========================
+   1. 검색 필터 버튼
+========================= */
+.chip-tabs .btn {
+    border-radius: 999px;
+    font-size: .9rem;
+    padding: 7px 16px;
+    font-weight: 500;
+    transition: all .2s ease;
+}
+
+.chip-tabs .btn.active,
+.chip-tabs .btn:hover {
+    background: #00c473;
+    border-color: #00c473;
+    color: #fff;
+}
+
+/* =========================
+   2. AJAX 카드 열 높이 보정
+   - 검색 결과 카드 레이아웃 전용
+========================= */
+#ajaxResultWrap .col-6,
+#ajaxResultWrap .col-md-4,
+#ajaxResultWrap .col-lg-3 {
+    display: flex;
+}
+
+#ajaxResultWrap .place-card {
     width: 100%;
 }
 
-.chip-tabs .btn {
-	flex: 1;
-	text-align: center;
-    border-radius: 6px;
+/* =========================
+   3. 축제 캐러셀
+   - search 페이지 안의 캐러셀 전용
+   - 공통 카드가 아니라 search 전용 배치
+========================= */
+#eventCarousel .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.chip-tabs .btn.active {
-	background-color: #198754;
-	color: white;
+#eventCarousel .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.13);
+}
+
+#eventCarousel .thumb-img {
+    height: 180px;
+    object-fit: cover;
+}
+
+#eventCarousel .card-body {
+    padding: 10px 12px 12px;
+}
+
+/* =========================
+   4. 더보기 버튼
+========================= */
+.text-center .btn-outline-secondary {
+    border-radius: 999px;
+    font-size: .88rem;
+    padding: 8px 18px;
+}
+
+/* =========================
+   5. 모바일
+========================= */
+@media (max-width: 768px) {
+    #eventCarousel .thumb-img {
+        height: 150px;
+    }
 }

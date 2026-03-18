@@ -84,7 +84,7 @@
 									<h3 class="card-title font-weight-bold text-danger">1:1문의 미처리</h3>
 								</div>
 								<div class="card-body p-0">
-									<table class="table table-hover align-middle m-0">
+									<table class="table align-middle m-0">
 										<thead class="table-light text-center">
 											<tr>
 												<th>작성자</th>
@@ -101,6 +101,7 @@
 								</div>
 							</div>
 						</div>
+					</div>
 						
 						<!--사용자 만족도 설문 결과-->
 						<div class="row mb-4">
@@ -117,11 +118,11 @@
 								</div>
 							</div>
 						</div>
+						
 					</div>
+					<!--end::Container-fluid-->
 				</div>
 			</div>
-			<!--end::Container-fluid-->
-		</div>
 		<!--end::content-->
 				
 		<!-- ================= FOOTER ================= -->

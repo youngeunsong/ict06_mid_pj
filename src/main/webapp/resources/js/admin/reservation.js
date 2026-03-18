@@ -12,6 +12,7 @@ window.addEventListener('load', function() {
 	
 	/* 보기 전환 */
 	function showListView() {
+		document.getElementById('sortType').disabled = false;
 		listView.style.display  = 'block';
 		calView.style.display   = 'none';
 		listBtn.classList.replace('btn-outline-success','btn-success');
@@ -20,6 +21,7 @@ window.addEventListener('load', function() {
 	}
 	
 	function showCalView() {
+		document.getElementById('sortType').disabled = true;
 		listView.style.display  = 'none';
 		calView.style.display   = 'block';
 		calBtn.classList.replace('btn-outline-success','btn-success');
@@ -102,7 +104,7 @@ window.addEventListener('load', function() {
 	}
 	
 	/* 초기 뷰 복원 */
-	const currentView = localStorage.getItem('reservationView') || 'cal';
+	const currentView = localStorage.getItem('reservationView') || 'list';
 	if (currentView === 'cal') showCalView();
 	else showListView();
 
@@ -131,7 +133,11 @@ function filterData() {
 		});
 		
 	const params = [];
+	const view = localStorage.getItem('reservationView');
 	const sortType = document.getElementById('sortType').value;
+	if(view !== 'cal' && sortType) {
+		params.push('sortType=' + sortType);
+	}
 	if(statusList.length > 0) params.push('status=' + statusList.join(','));
 	if(typeList.length > 0) params.push('placeType=' + typeList.join(','));
 	if(sortType) params.push('sortType=' + sortType);
@@ -165,6 +171,15 @@ $(document).ready(function() {
 	}
 	if(sortParam) {
 		document.getElementById('sortType').value = sortParam;
+	}
+	
+	//OverlayScrollbars 추가
+	const sidebarWrapper = document.querySelector('.sidebar-wrapper');
+	if(sidebarWrapper && typeof OverlayScrollbarsGlobal !== 'undefined'
+			&& OverlayScrollbarsGlobal.OverlayScrollbars !== undefined) {
+		OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+			scrollbars: {theme: 'os-theme-light', autoHide: 'leave', clickScroll: true},
+		});
 	}
 });
 
@@ -216,6 +231,12 @@ function editReservation(resId) {
 		data: 'resId=' + resId,
 		dataType: 'json',
 		success: function(data) {
+			//날짜 형식 변환(2026.01.01 -> 2026-01-01)
+			function formatDate(dateStr) {
+				if(!dateStr) return '';
+				return dateStr.replaceAll('.', '-');
+			}
+			
 			//readonly 필드
 			$('#update_res_id').text(data.reservation_id);
 			$('#update_user_id').text(data.user_id);
@@ -223,10 +244,10 @@ function editReservation(resId) {
 			
 			//수정가능 필드
 			$('#update_status').val(data.status);
-			$('#update_check_in').val(data.check_in);
-			$('#update_check_out').val(data.check_out);
+			$('#update_check_in').val(formatDate(data.check_in));
+			$('#update_check_out').val(formatDate(data.check_out));
 			$('#update_visit_time').val(data.visit_time || '');
-			$('#update_guest_count').val(data.guest_count + "명");
+			$('#update_guest_count').val(data.guest_count);
 			$('#update_request_note').val(data.request_note || '');
 			$('#resUpdateModal').modal('show');
 		},

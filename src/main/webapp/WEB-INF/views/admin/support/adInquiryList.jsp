@@ -30,6 +30,10 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
+	<!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+       <img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+    </div>
 	<!-- ================= HEADER ================= -->
     <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
     <!-- ================= SIDEBAR ================= -->

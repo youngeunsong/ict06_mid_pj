@@ -238,6 +238,33 @@
     #regionSelect {
 	  margin-left: auto;
 	}
+	
+	/* 랭킹 페이지 TOP1 카드 하단 영역 과확장 방지 */
+	.rk-top1 .place-card,
+	.rk-top1 .place-card-wrap {
+	  height: auto !important;
+	  min-height: 0 !important;
+	}
+	
+	.rk-top1 .place-card__body {
+	  padding: 14px 16px !important;
+	  height: auto !important;
+	  min-height: 0 !important;
+	  flex: 0 0 auto !important;
+	}
+	
+	.rk-top1 .place-card__title {
+	  margin-bottom: 6px;
+	  line-height: 1.35;
+	}
+	
+	.rk-top1 .place-card__address {
+	  margin-bottom: 8px;
+	}
+	
+	.rk-top1 .place-card__meta {
+	  margin-top: 0 !important;
+	}
   </style>
 </head>
 <body>

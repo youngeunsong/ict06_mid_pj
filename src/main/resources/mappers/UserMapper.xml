@@ -79,6 +79,66 @@
 	    WHERE user_id = #{user_id, jdbcType=VARCHAR}
 	</update>
 	
+	<!-- 나의 즐겨찾기 목록 조회 -->
+	<select id="getFavoriteList" parameterType="String" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	    SELECT 
+	          p.PLACE_ID
+	        , p.PLACE_TYPE	<!-- 장소 유형 -->
+	        , p.NAME
+	        , p.ADDRESS
+	        , p.IMAGE_URL	<!-- 이미지 경로 -->
+	        , p.VIEW_COUNT	<!-- 조회수 -->
+	        , p.LATITUDE	
+	        , p.LONGITUDE
+	        , p.CREATED_AT AS placeRegDate	<!-- db의 CREATED_AT을 DTO의 placeRegDate 필드에 매핑 -->
+	        <!-- 서브쿼리 1 -->
+	        <!-- 해당 장소의 점수 평균, display(승인) 리뷰만 계산, round 반올림, nvl 리뷰없을경우 null 대신 0 -->
+	        , (SELECT NVL(ROUND(AVG(rv.RATING), 1), 0) 
+	           FROM REVIEW rv 
+	           WHERE rv.PLACE_ID = p.PLACE_ID AND rv.STATUS = 'DISPLAY') AS avg_rating
+	        <!-- 서브쿼리 2 -->
+	        <!-- 해당 장소에 달린 유효한 리뷰의 총 개수를 카운트함. -->
+	        , (SELECT COUNT(rv.REVIEW_ID) 
+	           FROM REVIEW rv 
+	           WHERE rv.PLACE_ID = p.PLACE_ID AND rv.STATUS = 'DISPLAY') AS review_count
+	    FROM PLACE p
+	    JOIN FAVORITE f ON p.PLACE_ID = f.PLACE_ID	<!-- favorite 테이블과 place 테이블을 place_id 기준으로 결합 -->
+	    WHERE f.USER_ID = #{user_id}	<!-- 현재 로그인한 유저의 데이터만 필터링 -->
+	    ORDER BY f.CREATED_AT DESC		<!-- 최근에 즐겨찾기에 추가한 순서대로 정렬(최신순) -->
+	</select>
+	
+	<resultMap id="InquiryMap" type="spring.ict06team1.midpj.dto.InquiryDTO">
+    <id column="INQUIRY_ID" property="inquiry_id" />
+    <result column="USER_ID" property="user_id" />
+    <result column="TITLE" property="title" />
+    <result column="CONTENT" property="content" />
+    <result column="STATUS" property="status" />
+    <result column="ADMIN_REPLY" property="admin_reply" />
+    <result column="CREATED_AT" property="inquiryDate" />
+    <result column="ANSWERED_AT" property="answerDate" />
+	</resultMap>
+	
+	<!-- 내 문의 목록 조회 -->
+	<select id="selectMyInquiryList" parameterType="java.util.Map" resultMap="InquiryMap">
+	    SELECT * FROM (		<!-- 매겨진 번호를 기준으로 필요한 범위만 추출 -->
+	        SELECT 
+	            ROW_NUMBER() OVER(ORDER BY created_at DESC) as rn,	<!-- 작성일 최신순으로 1번 번호 매김 -->
+	            INQUIRY_ID,
+	            USER_ID,
+	            TITLE,
+	            STATUS,		<!-- 답변상태 PENDING, ANSWERED -->
+	            CREATED_AT, 	<!-- DB의 작성일을 DTO의 inquiryDate 변수에 저장 -->
+	            ANSWERED_AT	<!-- DB의 답변일을 DTO의 answerDate 변수에 저장 -->
+	        FROM INQUIRY
+	        WHERE USER_ID = #{user_id}		<!-- 내 문의 글만 필터 -->
+	        
+	        <if test="status != null and status != 'all'">  <!-- 필터가 전체가 아닐 때만 실행 -->
+	            AND STATUS = #{status}		<!-- 선택한 상태값(대기/완료)만 골라냄 -->
+	        </if>
+	    )
+	    WHERE rn BETWEEN #{start} AND #{end}	<!-- 시작번호와 끝번호 사이의 데이터만 가져옴 (페이징) -->
+	</select>
+	
 	<!-- 관리자 정보 수정 -->
 	<update id="updateAdmin" parameterType="spring.ict06team1.midpj.dto.MemberDTO">
 	    UPDATE MEMBER
@@ -89,4 +149,30 @@
 	    WHERE user_id = #{user_id}
 	</update>
 
+	<!-- 내 문의 총 개수 조회(하단 페이징바를 위한) -->
+	<select id="selectMyInquiryCount" parameterType="java.util.Map" resultType="int">
+	    SELECT COUNT(*) FROM INQUIRY 		<!-- 조건에 맞는 전체 데이터의 개수 -->
+	    WHERE user_id = #{user_id}			<!-- 조건(본인이 쓴 글 중) -->
+	    
+	    <if test="status != null and status != 'all'">	<!-- 필터가 전체가 아닐 때만 실행 -->
+	        AND status = #{status}			<!-- 필터링된 상태의 글 개수만 정확히 파악 -->
+	    </if>
+	</select>
+	
+	<!-- 내 문의 상세 -->
+	<select id="selectMyInquiryDetail" parameterType="java.util.Map" resultMap="InquiryMap">
+	    SELECT
+	          INQUIRY_ID
+	        , USER_ID
+	        , TITLE
+	        , CONTENT
+	        , STATUS
+	        , ADMIN_REPLY
+	        , CREATED_AT
+	        , ANSWERED_AT
+	    FROM INQUIRY
+	    WHERE INQUIRY_ID = #{inquiry_id}
+	      AND USER_ID = #{user_id}
+	</select>
+	
 </mapper>	

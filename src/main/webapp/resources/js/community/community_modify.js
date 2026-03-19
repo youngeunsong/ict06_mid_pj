@@ -1,4 +1,4 @@
-/* community_insert.js */
+/* community_modify.js */
 
 const selectedFiles = [];
 const MAX_FILES = 5;
@@ -17,12 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
 function initSummernote() {
     const contentInput = document.getElementById("contentInput");
 
-    if (!contentInput) {
-        return;
-    }
+    if (!contentInput) return;
 
     if (!window.jQuery || !window.jQuery.fn || typeof window.jQuery.fn.summernote !== "function") {
-        console.warn("[community_insert] Summernote 로드 실패");
+        console.warn("[community_modify] Summernote 로드 실패");
         return;
     }
 
@@ -168,7 +166,7 @@ function countContent() {
     contentCounter.textContent = textLength + "자";
 }
 
-function validateInsertForm() {
+function validateModifyForm() {
     const titleInput = document.getElementById("titleInput");
     const title = titleInput ? titleInput.value.trim() : "";
     const contentText = getSummernotePlainText();

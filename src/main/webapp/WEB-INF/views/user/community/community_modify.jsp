@@ -1,192 +1,194 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!-- 본문 -->
-<div class="page-body">
-  <div class="container" style="max-width:860px;">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자유게시판 게시글 수정</title>
 
-    <!-- 경로 -->
-    <div class="breadcrumb-area">
-      <a href="#">커뮤니티</a>
-      <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
-      <a href="#">자유게시판</a>
-      <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
-      <a href="#">게시글 상세</a>
-      <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
-      <span class="cur">수정</span>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community_insert.css">
+
+<!-- Summernote -->
+<link rel="stylesheet" href="${path}/resources/admin/plugins/summernote/summernote-lite.css">
+
+<script>
+    window.__oldDefine = window.define;
+    window.__oldModule = window.module;
+    window.__oldExports = window.exports;
+
+    window.define = undefined;
+    window.module = undefined;
+    window.exports = undefined;
+</script>
+
+<script src="${path}/resources/admin/plugins/summernote/summernote-lite.js"></script>
+<script src="${path}/resources/admin/plugins/summernote/lang/summernote-ko-KR.js"></script>
+
+<script>
+    window.define = window.__oldDefine;
+    window.module = window.__oldModule;
+    window.exports = window.__oldExports;
+
+    delete window.__oldDefine;
+    delete window.__oldModule;
+    delete window.__oldExports;
+
+    window.contextPath = "${path}";
+</script>
+
+<script src="${path}/resources/js/community/community_modify.js" defer></script>
+</head>
+
+<body>
+<div class="wrap">
+
+    <%@ include file="../../common/header.jsp" %>
+
+    <div class="page-body">
+        <div class="container">
+       
+            <div class="breadcrumb-area">
+                <a href="${path}/community_free.co">커뮤니티</a>
+                <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
+                <a href="${path}/community_free.co">자유게시판</a>
+                <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
+                <span class="cur">게시글 수정</span>
+            </div>
+
+            <div class="write-card">
+                <div class="write-card-header">
+                    <i class="bi bi-pencil-square" style="color:var(--primary); font-size:1.1rem;"></i>
+                    <h2>게시글 수정</h2>
+                </div>
+
+                <form action="${path}/community_modifyAction.co"
+                      method="post"
+                      enctype="multipart/form-data"
+                      onsubmit="return validateModifyForm();">
+
+                    <input type="hidden" name="post_id" value="${dto.post_id}">
+
+                    <div class="write-form">
+
+                        <div>
+                            <div class="field-label">
+                                카테고리 <span class="required">*</span>
+                            </div>
+                            <div class="cat-select-wrap">
+                                <input type="radio" name="category" id="cat1" class="cat-radio" value="맛집수다" ${dto.category eq '맛집수다' ? 'checked' : ''}>
+                                <label for="cat1" class="cat-label">맛집수다</label>
+
+                                <input type="radio" name="category" id="cat2" class="cat-radio" value="숙소수다" ${dto.category eq '숙소수다' ? 'checked' : ''}>
+                                <label for="cat2" class="cat-label">숙소수다</label>
+
+                                <input type="radio" name="category" id="cat3" class="cat-radio" value="축제수다" ${dto.category eq '축제수다' ? 'checked' : ''}>
+                                <label for="cat3" class="cat-label">축제수다</label>
+
+                                <input type="radio" name="category" id="cat4" class="cat-radio" value="정보공유" ${dto.category eq '정보공유' ? 'checked' : ''}>
+                                <label for="cat4" class="cat-label">정보공유</label>
+
+                                <input type="radio" name="category" id="cat5" class="cat-radio" value="동행구해요" ${dto.category eq '동행구해요' ? 'checked' : ''}>
+                                <label for="cat5" class="cat-label">동행구해요</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="field-label">
+                                제목 <span class="required">*</span>
+                            </div>
+                            <input type="text"
+                                   name="title"
+                                   id="titleInput"
+                                   class="input-title"
+                                   value="<c:out value='${dto.title}'/>"
+                                   placeholder="제목을 입력하세요 (최대 200자)"
+                                   maxlength="200">
+                            <div class="char-counter" id="titleCounter">0 / 200</div>
+                            <div class="err-msg" id="titleErr" style="display:none;">제목을 입력해주세요.</div>
+                        </div>
+
+                        <div>
+                            <div class="field-label">
+                                내용 <span class="required">*</span>
+                            </div>
+                            <textarea name="content"
+                                      id="contentInput"
+                                      class="textarea-content">${dto.content}</textarea>
+                            <div class="char-counter" id="contentCounter">0자</div>
+                            <div class="err-msg" id="contentErr" style="display:none;">내용을 입력해주세요.</div>
+                        </div>
+
+                        <c:if test="${not empty dto.repImage and not empty dto.repImage.image_url}">
+                            <div>
+                                <div class="field-label">
+                                    현재 대표 이미지
+                                </div>
+                                <div class="existing-image-box">
+                                    <img src="${dto.repImage.image_url}" alt="현재 대표 이미지" class="existing-image-thumb">
+                                </div>
+                            </div>
+                        </c:if>
+
+                        <div>
+                            <div class="field-label">
+                                <i class="bi bi-images" style="color:#adb5bd; margin-right:5px;"></i>
+                                새 대표 이미지 첨부
+                                <span style="font-size:.7rem; color:#adb5bd; font-weight:400; margin-left:8px;">
+                                    (최대 5장 · JPG, PNG · 장당 10MB 이하)
+                                </span>
+                            </div>
+
+                            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                                <i class="bi bi-cloud-upload upload-icon"></i>
+                                <div class="upload-text">
+                                    이미지를 <strong>드래그&드롭</strong>하거나 클릭해서 업로드하세요
+                                </div>
+                                <div class="upload-hint">새 이미지를 올리지 않으면 기존 대표 이미지를 유지합니다</div>
+                            </div>
+
+                            <input type="file"
+                                   id="fileInput"
+                                   name="files"
+                                   accept="image/jpeg, image/png"
+                                   multiple
+                                   style="display:none;">
+
+                            <div class="preview-grid" id="previewGrid"></div>
+                        </div>
+
+                        <div class="notice-box">
+                            <strong>⚠️ 수정 전 꼭 확인해주세요</strong>
+                            <ul>
+                                <li>욕설·비방·홍보성 게시물은 예고 없이 삭제될 수 있습니다.</li>
+                                <li>개인정보(전화번호, 계좌번호 등)는 게시글에 포함하지 마세요.</li>
+                                <li>타인의 저작물을 무단 사용하지 마세요.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="write-footer">
+                        <a href="${path}/community_detail.co?post_id=${dto.post_id}"
+                           class="btn-cancel"
+                           onclick="return confirm('수정을 취소하시겠습니까? 변경사항은 저장되지 않습니다.');">
+                            <i class="bi bi-x"></i> 취소
+                        </a>
+                        <button type="submit" class="btn-submit">
+                            <i class="bi bi-check2-circle"></i> 수정하기
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
     </div>
 
-    <!-- 수정 카드 -->
-    <div class="write-card">
-
-      <!-- 카드 헤더 -->
-      <div class="write-card-header">
-        <div class="write-card-header-left">
-          <i class="bi bi-pencil-square" style="color:var(--primary);font-size:1.1rem;"></i>
-          <h2>게시글 수정</h2>
-          <!-- post_id (hidden으로 넘길 값 표시용) -->
-          <span class="post-id-badge">No. 42</span>
-        </div>
-        <span class="original-date">원본 작성일 : 2026.03.09</span>
-      </div>
-
-      <!-- 폼 (기존 데이터 pre-fill) -->
-      <div class="write-form">
-
-        <!-- 카테고리 : 기존값 pre-check (여행후기) -->
-        <div>
-          <div class="field-label">카테고리 <span class="required">*</span></div>
-          <div class="cat-select-wrap">
-            <input type="radio" name="category" id="cat1" class="cat-radio" value="여행후기" checked>
-            <label for="cat1" class="cat-label">여행후기</label>
-            <input type="radio" name="category" id="cat2" class="cat-radio" value="질문">
-            <label for="cat2" class="cat-label">질문</label>
-            <input type="radio" name="category" id="cat3" class="cat-radio" value="정보공유">
-            <label for="cat3" class="cat-label">정보공유</label>
-            <input type="radio" name="category" id="cat4" class="cat-radio" value="동행구해요">
-            <label for="cat4" class="cat-label">동행구해요</label>
-            <input type="radio" name="category" id="cat5" class="cat-radio" value="맛집추천">
-            <label for="cat5" class="cat-label">맛집추천</label>
-          </div>
-        </div>
-
-        <!-- 제목 : 기존값 pre-fill -->
-        <div>
-          <div class="field-label">제목 <span class="required">*</span></div>
-          <input type="text" id="titleInput" class="input-title"
-            value="도쿄 3박 4일 완벽 가이드 – 현지인이 알려주는 숨은 맛집"
-            maxlength="200" oninput="countTitle()">
-          <div class="char-counter" id="titleCounter">30 / 200</div>
-          <div class="err-msg" id="titleErr">제목을 입력해주세요.</div>
-        </div>
-
-        <!-- 본문 : 기존값 pre-fill -->
-        <div>
-          <div class="field-label">내용 <span class="required">*</span></div>
-          <textarea id="contentInput" class="textarea-content"
-            oninput="countContent()">안녕하세요! 지난달에 도쿄 3박 4일 다녀온 후기 공유드립니다. 현지 친구 덕분에 관광객들이 잘 모르는 숨은 맛집들을 많이 다녀올 수 있었어요 😊
-
-📍 1일차 – 신주쿠 / 시부야
-아사쿠사 도착 후 센소지 사원 구경. 아침 일찍 가면 인파가 적어서 좋아요. 점심은 근처 골목에 있는 텐동 전문점 추천드립니다.
-
-📍 2일차 – 아키하바라 / 우에노
-전자상가 구경 후 우에노 공원 산책. 벚꽃 시즌이 겹치면 정말 예뻐요.
-
-📍 3일차 – 하라주쿠 / 오모테산도
-다케시타도리 구경하고, 오모테산도 힐즈 근처 카페 투어.
-
-총 경비는 항공포함 70만원 초반대였고, 환전은 한국에서 미리 해가는 게 훨씬 이득이었어요. 궁금한 거 댓글로 질문 주세요! 🙌</textarea>
-          <div class="char-counter" id="contentCounter">0자</div>
-          <div class="err-msg" id="contentErr">내용을 입력해주세요.</div>
-        </div>
-
-        <!-- 이미지 관리 (기존 IMAGE_STORE + 새 업로드) -->
-        <div>
-          <div class="img-section-label">
-            <i class="bi bi-images" style="color:#adb5bd;"></i>
-            이미지 관리
-            <span class="img-section-sub">(최대 5장 · 기존 이미지 삭제 / 새 이미지 추가 가능)</span>
-          </div>
-
-          <!-- 기존 이미지 (IMAGE_STORE에서 가져온 imageList) -->
-          <div style="font-size:.72rem;color:#adb5bd;margin-bottom:7px;">
-            ● 기존 이미지 <span id="existCount">4</span>장
-            &nbsp;·&nbsp; ★ 클릭으로 대표 이미지 변경 &nbsp;·&nbsp; ✕ 삭제
-          </div>
-          <div class="existing-grid" id="existingGrid">
-
-            <div class="exist-item rep" id="exist_0">
-              <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=200&q=70" alt="">
-              <div class="rep-badge">대표</div>
-              <div class="exist-actions">
-                <button class="btn-img-act btn-img-del" onclick="deleteExist(0)" title="삭제">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="exist-item" id="exist_1">
-              <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=200&q=70" alt="">
-              <div class="exist-actions">
-                <button class="btn-img-act btn-img-rep" onclick="setRep(1)" title="대표로 설정">
-                  <i class="bi bi-star"></i>
-                </button>
-                <button class="btn-img-act btn-img-del" onclick="deleteExist(1)" title="삭제">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="exist-item" id="exist_2">
-              <img src="https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=200&q=70" alt="">
-              <div class="exist-actions">
-                <button class="btn-img-act btn-img-rep" onclick="setRep(2)" title="대표로 설정">
-                  <i class="bi bi-star"></i>
-                </button>
-                <button class="btn-img-act btn-img-del" onclick="deleteExist(2)" title="삭제">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="exist-item" id="exist_3">
-              <img src="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=200&q=70" alt="">
-              <div class="exist-actions">
-                <button class="btn-img-act btn-img-rep" onclick="setRep(3)" title="대표로 설정">
-                  <i class="bi bi-star"></i>
-                </button>
-                <button class="btn-img-act btn-img-del" onclick="deleteExist(3)" title="삭제">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- 변경사항 요약 -->
-          <div class="change-summary" id="changeSummary"></div>
-
-          <!-- 새 이미지 추가 업로드 -->
-          <div style="font-size:.72rem;color:#adb5bd;margin:12px 0 7px;">
-            ● 새 이미지 추가
-          </div>
-          <div class="upload-area" id="uploadArea"
-            onclick="document.getElementById('fileInput').click()"
-            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-            <i class="bi bi-cloud-upload upload-icon"></i>
-            <div class="upload-text">
-              클릭하거나 <strong>드래그&드롭</strong>으로 이미지를 추가하세요
-            </div>
-            <div class="upload-hint" id="uploadHint">현재 4장 · 최대 5장까지 가능 (1장 더 추가 가능)</div>
-          </div>
-          <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple
-            onchange="handleFiles(this.files)">
-          <div class="new-preview-grid" id="newPreviewGrid"></div>
-        </div>
-
-        <!-- 유의사항 -->
-        <div class="notice-box">
-          <strong>⚠️ 수정 시 유의사항</strong>
-          <ul>
-            <li>수정 후에는 게시글에 <b>수정됨</b> 표시가 함께 노출됩니다.</li>
-            <li>삭제 표시한 이미지는 저장 시 실제로 삭제되며 복구할 수 없습니다.</li>
-            <li>욕설·비방·홍보성 내용은 관리자에 의해 삭제될 수 있습니다.</li>
-          </ul>
-        </div>
-
-      </div><!-- /write-form -->
-
-      <!-- 하단 버튼 -->
-      <div class="write-footer">
-        <a href="#" class="btn-cancel"
-          onclick="if(!confirm('수정을 취소하고 상세 페이지로 돌아가시겠습니까?')) return false;">
-          <i class="bi bi-arrow-left me-1"></i>돌아가기
-        </a>
-        <button class="btn-submit" onclick="submitForm()">
-          <i class="bi bi-check-lg" style="font-size:.9rem;"></i> 수정 완료
-        </button>
-      </div>
-
-    </div><!-- /write-card -->
-  </div>
+    <%@ include file="../../common/footer.jsp" %>
 </div>
+</body>
+</html>

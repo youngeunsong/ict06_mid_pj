@@ -2,7 +2,62 @@
 --변경사항
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
---------------------------------------------------
+-- [변경사항 적용 임시 쿼리]--------------------------------------------------
+-- 1) RESTAURANT 테이블: restDate, areaCode 필드 추가
+ALTER TABLE RESTAURANT ADD (
+    restDate  VARCHAR2(30),
+    areaCode  VARCHAR2(30)
+);
+
+-- 2) INQUIRY 테이블: status 제약조건에 'PROGRESS' 추가
+-- 기존 제약조건을 먼저 삭제 (제약조건 이름 CHK_INQUIRY_STATUS)
+ALTER TABLE INQUIRY DROP CONSTRAINT CHK_INQUIRY_STATUS;
+
+-- 새로운 제약조건 추가
+ALTER TABLE INQUIRY ADD CONSTRAINT CHK_INQUIRY_STATUS 
+    CHECK (status IN ('PENDING', 'PROGRESS', 'ANSWERED'));
+
+----------------------------------------------------------------------------------------------------
+
+--Ver.260318
+--변경사항
+--1) COMMUNITY 테이블: status 필드 CHECK 제약 조건에 'BANNED' 추가
+--2) COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약 조건에 'BANNED' 추가
+-- DISPLAY: 노출 됨 | HIDDEN : 삭제 (db 숨김처리) | BANNED : 관리자에 의한 제제처리
+
+-- [1) 변경사항] --------------------------------------------------
+-- 기본 제약조건 먼저 삭제 (제약조건 이름 CHK_POST_STATUS)
+ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
+
+-- 새로운 제약조건 추가
+ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS 
+    CHECK (status IN ('DISPLAY','HIDDEN', 'BANNED'));
+
+-- [2) 변경사항] --------------------------------------------------
+-- 기본 제약조건 먼저 삭제 (제약조건 이름 CHK_COMMENT_STATUS)
+ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
+
+-- 새로운 제약조건 추가
+ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS 
+    CHECK (status IN ('DISPLAY','HIDDEN', 'BANNED'));
+
+----------------------------------------------------------------------------------------------------
+
+--Ver.260320
+--변경 요청사항
+--1) IMAGE_STORE 테이블: TARGET_TYPE 필드 CHECK 제약 조건에 'COMMUNITY' 추가
+
+-- [1) 변경 요청사항] --------------------------------------------------
+ALTER TABLE IMAGE_STORE DROP CONSTRAINT CHK_IMG_TARGETTYPE;
+
+ALTER TABLE IMAGE_STORE ADD CONSTRAINT CHK_IMG_TARGETTYPE
+CHECK (TARGET_TYPE IN ('PLACE', 'REVIEW', 'COMMUNITY'));
+
+-------------------------------------------------------------------
+
+
+
+
 --DB 테이블 생성
 
 -- 1. 회원
@@ -39,11 +94,11 @@ CREATE TABLE PLACE (
     CONSTRAINT CHK_PLACE_PLACETYPE CHECK(place_type IN ('REST','ACC','FEST'))
 );
 
-SELECT * FROM PLACE
+SELECT COUNT(*) FROM PLACE
 WHERE place_type = 'REST'; --563건
-SELECT * FROM PLACE
+SELECT COUNT(*) FROM PLACE
 WHERE place_type = 'ACC'; --288건
-SELECT * FROM PLACE
+SELECT COUNT(*) FROM PLACE
 WHERE place_type = 'FEST'; --149건
 
 -- 3. 맛집 (PLACE 참조)
@@ -181,12 +236,12 @@ CREATE TABLE COMMUNITY_COMMENT(
 CREATE TABLE IMAGE_STORE (
     image_id           NUMBER PRIMARY KEY,
     target_id          NUMBER NOT NULL,
-    target_type        VARCHAR2(20) NOT NULL, -- 'PLACE', 'REVIEW'
+    target_type        VARCHAR2(20) NOT NULL, -- 'PLACE', 'REVIEW', 'COMMUNITY'
     image_url          VARCHAR2(500) NOT NULL,
     is_representative  CHAR(1) DEFAULT 'N', 
     sort_order         NUMBER DEFAULT 0,
     created_at         TIMESTAMP DEFAULT SYSTIMESTAMP,	--DTO는 imgUploadDate
-    CONSTRAINT CHK_IMG_TARGETTYPE CHECK(TARGET_TYPE IN('PLACE','REVIEW')),
+    CONSTRAINT CHK_IMG_TARGETTYPE CHECK(TARGET_TYPE IN('PLACE','REVIEW', 'COMMUNITY')),
     CONSTRAINT CHK_IMG_ISREPRESENTATIVE CHECK(IS_REPRESENTATIVE IN('Y','N'))
 );
 SELECT * FROM IMAGE_STORE;
@@ -274,6 +329,20 @@ CREATE TABLE NOTICE (
 );
 SELECT * FROM NOTICE;
 
+
+
+-- updated_at 추가를 위한 임시 쿼리
+-- 이것만 비활성화
+ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK DISABLE;
+
+ALTER TABLE NOTICE 
+ADD updated_at TIMESTAMP DEFAULT SYSTIMESTAMP;
+
+-- 작업 끝나면 바로 활성화
+ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK ENABLE;
+
+
+
 -- 19. FAVORITE (즐겨찾기 / 북마크)
 CREATE TABLE FAVORITE (
     favorite_id  NUMBER PRIMARY KEY,
@@ -294,6 +363,17 @@ CREATE TABLE SEARCH_HISTORY (
 );
 SELECT * FROM SEARCH_HISTORY;
 
+-- 21. COMMUNITY_LIKE(커뮤니티 좋아요 관리 테이블)
+CREATE TABLE COMMUNITY_LIKE (
+    like_id      NUMBER PRIMARY KEY,
+    user_id      VARCHAR2(50) NOT NULL REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+    post_id      NUMBER NOT NULL REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
+    created_at   TIMESTAMP DEFAULT SYSTIMESTAMP, -- DTO는 resDate
+    CONSTRAINT UQ_COMMUNITY_LIKE UNIQUE (user_id, post_id)
+);
+
+
+
 --------------------------------------------------
 -- 시퀀스/트리거 생성
 --------------------------------------------------
@@ -313,7 +393,7 @@ CREATE SEQUENCE SEQ_FAVORITE START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_SEARCH START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_PAY START WITH 1 INCREMENT BY 1;
-
+CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
 
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함

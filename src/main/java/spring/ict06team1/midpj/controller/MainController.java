@@ -86,6 +86,10 @@ public class MainController {
 		// BEST 초기값
 		model.addAttribute("bestType", "ALL");
 		model.addAttribute("bestAllList", bestAllList);
+		
+		//최하단 공지 & 이벤트
+		model.addAttribute("mainNoticeList", mainService.getMainNoticeList());
+		model.addAttribute("mainEventList", mainService.getMainEventList());
 
 		return "common/main";
 	}

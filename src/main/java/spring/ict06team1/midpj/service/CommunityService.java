@@ -3,6 +3,7 @@ package spring.ict06team1.midpj.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface CommunityService {
 
@@ -19,15 +20,15 @@ public interface CommunityService {
     public void deleteComment(HttpServletRequest request);
     
     // 자유게시판 게시글 작성
-    public void insertBoard(HttpServletRequest request);
+    public void insertBoard(MultipartHttpServletRequest request);
     
     // 자유게시판 게시글 삭제
     public void deleteBoard(HttpServletRequest request);
     
-    // 자유게시판 수정 화면 정보
-    void getModifyBoardInfo(HttpServletRequest request, Model model);
+    // 자유게시판 게시글 수정
+    public void updateBoard(MultipartHttpServletRequest request);
     
+    // 자유게시판 게시글 좋아요
+    public String toggleLike(HttpServletRequest request);
     
-    
-   
 }

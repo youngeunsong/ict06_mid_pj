@@ -1,0 +1,662 @@
+@charset "UTF-8";
+/* =========================================================
+   community-common.css
+   자유게시판 / 공지 / 이벤트 공통 디자인 시스템
+========================================================= */
+
+/* =========================
+   1. design tokens
+========================= */
+:root {
+  --primary: #198754;
+  --primary-dark: #0f5c38;
+  --primary-light: #e8f5e9;
+
+  --event: #dc3545;
+  --event-light: #fff1f3;
+
+  --notice: #198754;
+  --notice-light: #e8f5e9;
+
+  --text-main: #212529;
+  --text-sub: #495057;
+  --text-muted: #868e96;
+  --text-meta: #adb5bd;
+
+  --line-main: #e9ecef;
+  --line-sub: #f1f3f5;
+
+  --bg-page: #f4f6f8;
+  --bg-card: #ffffff;
+  --bg-soft: #f8f9fa;
+
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+}
+
+/* =========================
+   2. reset
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--text-main);
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+}
+
+/* =========================
+   3. common layout
+========================= */
+.page-body {
+  padding: 28px 0 64px;
+  background: var(--bg-page);
+}
+
+.community-container {
+  max-width: 860px;
+}
+
+.detail-container {
+  max-width: 900px;
+}
+
+/* =========================
+   4. community tabs
+========================= */
+.comm-tabs {
+  background: #fff;
+  border-bottom: 2px solid var(--line-main);
+}
+
+.comm-tabs .tab {
+  display: inline-block;
+  padding: 11px 20px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.comm-tabs .tab:hover {
+  color: var(--primary);
+}
+
+.comm-tabs .tab.on {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+
+/* =========================
+   5. breadcrumb
+========================= */
+.breadcrumb-area {
+  font-size: 0.75rem;
+  color: var(--text-meta);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.breadcrumb-area a {
+  color: var(--text-meta);
+  text-decoration: none;
+}
+
+.breadcrumb-area a:hover {
+  color: var(--primary);
+}
+
+.breadcrumb-area .cur {
+  color: var(--text-sub);
+}
+
+/* =========================
+   6. title row
+========================= */
+.page-title-row {
+  margin-bottom: 14px;
+}
+
+.page-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.2px;
+}
+
+/* =========================
+   7. card system
+========================= */
+.board-card,
+.content-card,
+.detail-box,
+.post-box,
+.notice-box,
+.event-box {
+  background: var(--bg-card);
+  border: 1px solid var(--line-main);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card-section {
+  margin-bottom: 14px;
+}
+
+.info-card {
+  background: #fff;
+  border: 1px solid var(--line-main);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+
+/* =========================
+   8. badge system
+========================= */
+.bdg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bdg-notice {
+  background: var(--notice-light);
+  color: var(--notice);
+}
+
+.bdg-event {
+  background: var(--event-light);
+  color: var(--event);
+}
+
+.bdg-pin {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.bdg-soft {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.bdg-new {
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.62rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+/* =========================
+   9. buttons
+========================= */
+.btn-list,
+.btn-edit,
+.btn-del,
+.btn-outline-sm,
+.btn-primary-sm {
+  border-radius: 7px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 0.13s ease, color 0.13s ease, border-color 0.13s ease;
+}
+
+.btn-list,
+.btn-edit,
+.btn-outline-sm {
+  border: 1px solid #dee2e6;
+  background: #fff;
+  color: #495057;
+}
+
+.btn-list:hover,
+.btn-edit:hover,
+.btn-outline-sm:hover {
+  background: #f8f9fa;
+  color: #343a40;
+}
+
+.btn-del {
+  border: 1px solid #f1b0b7;
+  background: #fff5f5;
+  color: #dc3545;
+}
+
+.btn-del:hover {
+  background: #ffe3e3;
+}
+
+.btn-primary-sm {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary-sm:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* =========================
+   10. pagination
+========================= */
+.paging {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 20px 0 4px;
+}
+
+.pg {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #fff;
+  color: #495057;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.12s ease;
+}
+
+.pg.on,
+.pg:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* =========================
+   11. search row
+========================= */
+.search-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.search-box {
+  display: flex;
+  border: 1px solid #dee2e6;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: 100%;
+  max-width: 440px;
+  background: #fff;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  padding: 8px 13px;
+  font-size: 0.82rem;
+  outline: none;
+  background: #fff;
+}
+
+.search-box button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+/* =========================
+   12. empty state
+========================= */
+.empty {
+  padding: 56px 20px;
+  text-align: center;
+  color: #ced4da;
+  font-size: 0.875rem;
+}
+
+.empty i {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   13. common detail header/meta
+========================= */
+.detail-header,
+.notice-header,
+.event-header,
+.post-header {
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid var(--line-sub);
+}
+
+.detail-title,
+.notice-title,
+.event-title,
+.post-title {
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.45;
+  margin: 0 0 14px;
+  letter-spacing: -0.25px;
+}
+
+.detail-meta,
+.notice-meta,
+.event-meta,
+.post-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.meta-author,
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar,
+.admin-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #495057, #212529);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.author-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #343a40;
+}
+
+.author-role {
+  font-size: 0.68rem;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+
+.author-date {
+  font-size: 0.75rem;
+  color: var(--text-meta);
+  margin-top: 2px;
+}
+
+.meta-stats,
+.post-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--text-meta);
+}
+
+.meta-stats span,
+.post-stats span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-body,
+.notice-body,
+.event-body,
+.post-body {
+  padding: 26px;
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: #343a40;
+  border-bottom: 1px solid var(--line-sub);
+  word-break: break-word;
+}
+
+.detail-body p,
+.notice-body p,
+.event-body p,
+.post-body p {
+  margin-bottom: 14px;
+}
+
+.detail-body p:last-child,
+.notice-body p:last-child,
+.event-body p:last-child,
+.post-body p:last-child {
+  margin-bottom: 0;
+}
+
+.detail-body img,
+.notice-body img,
+.event-body img,
+.post-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* =========================
+   14. common media box / lightbox
+========================= */
+.media-box {
+  padding: 20px 26px 0;
+}
+
+.media-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6c757d;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.media-box img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  border: 1px solid #f1f3f5;
+  cursor: pointer;
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox.show {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: #fff;
+  font-size: 1.6rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* =========================
+   15. responsive
+========================= */
+@media (max-width: 991px) {
+  .community-container,
+  .detail-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-body {
+    padding: 22px 0 54px;
+  }
+
+  .comm-tabs .tab {
+    padding: 11px 14px;
+    font-size: 0.82rem;
+  }
+
+  .detail-title,
+  .notice-title,
+  .event-title,
+  .post-title {
+    font-size: 1.08rem;
+  }
+
+  .detail-header,
+  .notice-header,
+  .event-header,
+  .post-header,
+  .detail-body,
+  .notice-body,
+  .event-body,
+  .post-body,
+  .media-box {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+}
+
+/* =========================
+   common search box
+========================= */
+.search-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+}
+
+.search-box select {
+  width: 130px;
+  min-width: 130px;
+  border: none;
+  border-right: 1px solid #dee2e6;
+  padding: 9px 12px;
+  font-size: 0.8rem;
+  color: #495057;
+  background: #fff;
+  outline: none;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  padding: 9px 12px;
+  font-size: 0.82rem;
+  outline: none;
+  background: #fff;
+}
+
+.search-box button {
+  min-width: 74px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  padding: 9px 16px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.search-box button:hover {
+  background: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .search-box {
+    max-width: 100%;
+  }
+
+  .search-box select {
+    width: 108px;
+    min-width: 108px;
+    padding: 9px 8px;
+    font-size: 0.76rem;
+  }
+
+  .search-box input {
+    padding: 9px 10px;
+    font-size: 0.8rem;
+  }
+
+  .search-box button {
+    min-width: 64px;
+    padding: 9px 12px;
+    font-size: 0.78rem;
+  }
+}

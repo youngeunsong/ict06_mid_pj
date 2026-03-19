@@ -8,11 +8,12 @@
 
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>게시글 상세</title>
+<title>자유게시판 게시글 상세</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
-<link rel="stylesheet" href="${path}/resources/css/user/community/commuity_detail.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 
 <script src="${path}/resources/js/community/community_detail.js" defer></script>
 
@@ -20,15 +21,43 @@
 <body>
 <div class="wrap">
 
+	<c:if test="${param.msg == 'delete'}">
+	    <script>
+	        alert("게시글이 삭제되었습니다.");
+	    </script>
+	</c:if>
+	
+	<c:if test="${param.msg == 'write'}">
+	    <script>
+	        alert("게시글이 등록되었습니다.");
+	    </script>
+	</c:if>
+	
+	<c:if test="${param.msg == 'update'}">
+	    <script>
+	        alert("게시글이 수정되었습니다.");
+	    </script>
+	</c:if>
+
 	<!-- header -->
     <%@ include file="../../common/header.jsp" %>
+    
+    <div class="comm-tabs">
+	    <div class="container">
+	        <a href="${path}/community_free.co" class="tab on">자유게시판</a>
+	        <a href="${path}/community_notice.co" class="tab">공지사항</a>
+	        <a href="${path}/community_event.co" class="tab">이벤트</a>
+	    </div>
+	</div>
 
     <div class="page-body">
-        <div class="container detail-container">
+        <div class="container">
 
             <!-- breadcrumb -->
             <div class="breadcrumb-area">
                 <a href="${path}/community_free.co">커뮤니티</a>
+                <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
+                <a href="${path}/community_free.co">자유게시판</a>
                 <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
                 <span class="cur">자유게시판 상세</span>
             </div>
@@ -60,17 +89,21 @@
                         </div>
                     </div>
                 </div>
+                
+                <c:if test="${not empty dto.repImage and not empty dto.repImage.image_url}">
+				    <div class="post-cover">
+				        <img src="${dto.repImage.image_url}" alt="${dto.title}" class="post-cover-img">
+				    </div>
+				</c:if>
 
                 <div class="post-body">
                     ${dto.content}
                 </div>
 
-                <div class="like-area">
-                    <button type="button" class="btn-like">
-                        <i class="bi bi-heart"></i>
-                        좋아요 ${dto.like_count}
-                    </button>
-                </div>
+                <button type="button" class="btn-like" id="likeBtn" data-post-id="${dto.post_id}">
+				    <i class="bi bi-heart"></i>
+				    좋아요 <span id="likeCount">${dto.like_count}</span>
+				</button>
 
                 <div class="post-footer">
 				    <a href="${path}/community_free.co" class="btn-list">

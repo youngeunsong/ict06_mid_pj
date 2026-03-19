@@ -538,12 +538,14 @@ INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, l
 VALUES (SEQ_POST.NEXTVAL, 'user02', '경주 같이 가실 분!', '다음달 경주 여행 동행 구합니다. 2박3일 일정이에요.', '동행구해요', 9, 1, 'DISPLAY', SYSTIMESTAMP);
 
 INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
-VALUES (SEQ_POST.NEXTVAL, 'user03', '이 글은 숨김 처리된 글', '관리자 숨김 테스트용 게시글입니다.', '맛집수다', 5, 0, 'HIDDEN', SYSTIMESTAMP);
+VALUES (SEQ_POST.NEXTVAL, 'user03', '이 글은 숨김 처리된 글', '관리자 숨김 테스트용 게시글입니다.', '맛집수다', 5, 0, 'BANNED', SYSTIMESTAMP);
 
 INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
-VALUES (SEQ_POST.NEXTVAL, 'user01', '삭제된 게시글 테스트', '관리자 삭제 테스트용 게시글입니다.', '정보공유', 2, 0, 'DELETED', SYSTIMESTAMP);
+VALUES (SEQ_POST.NEXTVAL, 'user01', '삭제된 게시글 테스트', '관리자 삭제 테스트용 게시글입니다.', '정보공유', 2, 0, 'HIDDEN', SYSTIMESTAMP);
 
 COMMIT;
+DELETE FROM COMMUNITY;
+SELECT * FROM COMMUNITY;
 
 -- (COMMUNITY)댓글 데이터
 INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)

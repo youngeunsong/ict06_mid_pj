@@ -107,7 +107,7 @@
 		<include refid="bannedSearchWhere" />
   	</select>
   	
-	<!-- 3. 작성자 제재 -->
+	<!-- 3. 회원 제재 -->
 	<update id="banUser" parameterType="String">
 		UPDATE MEMBER
 		   SET status='BANNED',
@@ -115,7 +115,7 @@
 		 WHERE user_id=#{user_id}
 	</update>
   	
-  	<!-- 4. 작성자 제재 해제 -->
+  	<!-- 4. 회원 제재 해제 -->
 	<update id="unbanUser" parameterType="String">
 		UPDATE MEMBER
 		   SET status='ACTIVE',
@@ -123,7 +123,7 @@
 		 WHERE user_id=#{user_id}
 	</update>
   	
-  	<!-- 5. 작성자 상태 조회 -->
+  	<!-- 5. 회원 상태 조회 -->
 	<select id="getUserStatus" parameterType="String" resultMap="adMemberMap">
   		SELECT user_id, status
   		  FROM MEMBER

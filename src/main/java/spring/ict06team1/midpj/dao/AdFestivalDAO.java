@@ -51,8 +51,6 @@ public interface AdFestivalDAO {
 	public int deleteFestival(int festival_id);
 	
 	// 공공축제 데이터 넣기
-	public void insertFestivalBatch(List<FestivalDTO> list); 
-	
-	
+	public int insertFestivalBatch(List<FestivalDTO> list); 
 	
 }

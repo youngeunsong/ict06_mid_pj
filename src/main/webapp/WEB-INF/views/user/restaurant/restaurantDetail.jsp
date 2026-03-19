@@ -14,6 +14,9 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
+  <%-- [맛집 상세 페이지 전용 스타일]
+       상세 상단 정보, 이미지 갤러리, 탭, 리뷰, 우측 사이드 카드 UI를 한 페이지에서 제어하기 위해 사용
+  --%>
   <style>
     :root{
       --r-text:#111827;
@@ -170,28 +173,30 @@
 
     /* sticky 사이드 */
     @media (min-width: 992px){
-      .r-sticky{ position:sticky; top:14px; }
+      .r-sticky{ position:sticky; top:14px; } /* PC 화면에서는 우측 카드 고정 */
     }
-   #btnFavorite.is-on,
-	#btnFavoriteSide.is-on{
-	  border-color:#ef4444;
-	  color:#ef4444;
-	}
-	
-	#btnFavorite.is-on i,
-	#btnFavoriteSide.is-on i{
-	  color:#ef4444;
-	}
+
+    #btnFavorite.is-on,
+    #btnFavoriteSide.is-on{
+      border-color:#ef4444;
+      color:#ef4444;
+    }
+
+    #btnFavorite.is-on i,
+    #btnFavoriteSide.is-on i{
+      color:#ef4444; /* 즐겨찾기 활성 상태 색상 */
+    }
   </style>
 </head>
-
 
 <body>
   <%@ include file="../../common/header.jsp" %>
 
   <div class="container py-4 pb-5">
 
-    <!-- ===== 상단 헤더 ===== -->
+    <%-- [상단 헤더 영역]
+         맛집명, 주소, 평점, 저장 버튼 등 상세 페이지의 핵심 정보를 먼저 보여주기 위해 사용
+    --%>
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
       <div>
         <div class="d-flex flex-wrap align-items-center gap-2">
@@ -202,12 +207,12 @@
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-2 r-muted">
           <div class="d-flex align-items-center gap-2 r-stars">
-			  <i class="fa-solid fa-star"></i>
-			  <span class="r-score">
-			    <fmt:formatNumber value="${restaurant.avg_rating}" pattern="0.0"/>
-			  </span>
-			  <span>(${restaurant.review_count}개)</span>
-			</div>
+            <i class="fa-solid fa-star"></i>
+            <span class="r-score">
+              <fmt:formatNumber value="${restaurant.avg_rating}" pattern="0.0"/> <%-- 평균 별점을 소수점 1자리로 고정 --%>
+            </span>
+            <span>(${restaurant.review_count}개)</span>
+          </div>
           <span>·</span>
           <span>${restaurant.address}</span>
         </div>
@@ -215,22 +220,24 @@
 
       <div class="d-flex gap-2">
         <button
-		    id="btnFavorite"
-		    class="btn btn-outline-secondary rounded-pill px-3 fw-bold ${isFavorite ? 'is-on' : ''}"
-		    type="button">
-		  <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
-		</button>
+            id="btnFavorite"
+            class="btn btn-outline-secondary rounded-pill px-3 fw-bold ${isFavorite ? 'is-on' : ''}"
+            type="button"> <%-- 즐겨찾기 상태에 따라 is-on 클래스 적용 --%>
+          <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
+        </button>
       </div>
     </div>
 
-    <!-- ===== 이미지 갤러리 ===== -->
+    <%-- [이미지 갤러리 영역]
+         대표 이미지를 크게 보여주고, 우측에는 썸네일 형태로 보조 이미지를 배치하기 위해 사용
+    --%>
     <div class="row g-3 mb-3">
       <div class="col-lg-8">
         <div class="r-hero shadow-sm">
           <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_food.jpg'/>" alt="대표 이미지"/>
           <div class="r-heroCount">
             <i class="fa-regular fa-images"></i>
-            <span>0+</span>
+            <span>0+</span> <%-- 현재는 임시값, 실제 이미지 수 연동 시 교체 가능 --%>
           </div>
         </div>
       </div>
@@ -246,7 +253,7 @@
           </div>
 
           <div class="r-thumb shadow-sm">
-           <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
+            <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
             <div class="r-thumbInfo">
               <div class="r-thumbTitle">음식</div>
               <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
@@ -264,7 +271,9 @@
       </div>
     </div>
 
-    <!-- ===== Bootstrap 탭 ===== -->
+    <%-- [상세 탭 메뉴]
+         개요 / 시간 / 위치 / 메뉴 / 리뷰를 한 페이지 안에서 구분해서 보여주기 위해 Bootstrap 탭 사용
+    --%>
     <ul class="nav nav-tabs mb-3" id="detailTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active fw-bold" id="tab-overview" data-bs-toggle="tab" data-bs-target="#pane-overview" type="button" role="tab">
@@ -298,33 +307,39 @@
       <div class="col-lg-8">
         <div class="tab-content">
 
-          <!-- 개요 -->
+          <%-- [개요 탭]
+               맛집의 전반적인 소개와 분위기 정보를 간단히 보여주기 위한 영역
+          --%>
           <div class="tab-pane fade show active" id="pane-overview" role="tabpanel" aria-labelledby="tab-overview">
             <section class="r-section">
               <h2 class="r-sectionTitle">한눈에 보기</h2>
               <p class="r-lead">
-				  이곳은 따뜻한 분위기에서 식사를 즐길 수 있는 공간입니다.
-			  </p>
+                이곳은 따뜻한 분위기에서 식사를 즐길 수 있는 공간입니다.
+              </p>
 
               <div class="mt-3">
-				  <span class="r-chip"><i class="fa-solid fa-check"></i> 깔끔한 매장</span>
-				  <span class="r-chip"><i class="fa-solid fa-check"></i> 친절한 서비스</span>
-				  <span class="r-chip"><i class="fa-solid fa-check"></i> 인기 메뉴</span>
-				</div>
+                <span class="r-chip"><i class="fa-solid fa-check"></i> 깔끔한 매장</span>
+                <span class="r-chip"><i class="fa-solid fa-check"></i> 친절한 서비스</span>
+                <span class="r-chip"><i class="fa-solid fa-check"></i> 인기 메뉴</span>
+              </div>
             </section>
           </div>
 
-          <!-- 시간 -->
+          <%-- [시간 탭]
+               영업시간 정보를 따로 확인할 수 있도록 분리한 영역
+          --%>
           <div class="tab-pane fade" id="pane-time" role="tabpanel" aria-labelledby="tab-time">
             <section class="r-section">
               <h2 class="r-sectionTitle">시간</h2>
               <p class="r-lead">
-				  월~일 10:00 ~ 22:00 (라스트오더 21:00)
-				</p>
+                월~일 10:00 ~ 22:00 (라스트오더 21:00)
+              </p>
             </section>
           </div>
 
-          <!-- 위치 -->
+          <%-- [위치 탭]
+               위도/경도를 기반으로 지도와 주소 정보를 함께 보여주기 위해 사용
+          --%>
           <div class="tab-pane fade" id="pane-location" role="tabpanel" aria-labelledby="tab-location">
             <section class="r-section">
               <h2 class="r-sectionTitle">위치</h2>
@@ -338,7 +353,7 @@
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}&hl=ko&z=16&output=embed">
-                </iframe>
+                </iframe> <%-- DB에 저장된 위도/경도로 지도 위치 표시 --%>
               </div>
 
               <div class="d-flex justify-content-between align-items-start gap-3">
@@ -347,7 +362,7 @@
                     <i class="fa-solid fa-location-dot" style="color:var(--r-brand);"></i>
                     ${restaurant.address}
                   </div>
-                  <div>-</div>
+                  <div>-</div> <%-- 추후 상세 위치 설명/교통 정보 확장 가능 --%>
                 </div>
 
                 <button class="btn btn-outline-secondary fw-bold" type="button">길찾기</button>
@@ -355,7 +370,9 @@
             </section>
           </div>
 
-          <!-- 메뉴 -->
+          <%-- [메뉴 탭]
+               menuList가 있을 경우 2열로 나눠 출력하고, 없으면 안내 문구를 보여주기 위해 사용
+          --%>
           <div class="tab-pane fade" id="pane-menu" role="tabpanel" aria-labelledby="tab-menu">
             <section class="r-section">
               <h2 class="r-sectionTitle">메뉴</h2>
@@ -369,7 +386,7 @@
                         <div class="r-menuDesc">${m.description}</div>
                       </div>
                       <div class="r-menuPrice">
-                        <fmt:formatNumber value="${m.price}" type="number"/>원
+                        <fmt:formatNumber value="${m.price}" type="number"/>원 <%-- 가격 천 단위 콤마 처리 --%>
                       </div>
                     </div>
                   </c:forEach>
@@ -400,52 +417,56 @@
             </section>
           </div>
 
-          <!-- 리뷰 -->
-      <div class="tab-pane fade" id="pane-review" role="tabpanel" aria-labelledby="tab-review">
-        <section class="r-section">
-          <h2 class="r-sectionTitle">리뷰</h2>
+          <%-- [리뷰 탭]
+               첫 진입 시 일부 리뷰만 출력하고, 추가 리뷰는 더보기 버튼으로 AJAX 요청하기 위해 사용
+          --%>
+          <div class="tab-pane fade" id="pane-review" role="tabpanel" aria-labelledby="tab-review">
+            <section class="r-section">
+              <h2 class="r-sectionTitle">리뷰</h2>
 
-          <div id="reviewList">
-            <c:forEach var="rv" items="${reviews}">
-			  <div class="review-item border rounded-3 p-3 mb-2" data-initial="1">
-			    <div class="d-flex justify-content-between align-items-center">
-			      <div class="fw-bold">${rv.user_id}</div>
-			      <div style="color:#22c55e; font-weight:700;">
-			        <i class="fa-solid fa-star"></i> ${rv.rating}
-			      </div>
-			    </div>
-			    <div class="text-muted" style="font-size:12px;">
-			      <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/>
-			    </div>
-			    <div class="mt-2">${rv.content}</div>
-			  </div>
-			</c:forEach>
+              <div id="reviewList">
+                <c:forEach var="rv" items="${reviews}">
+                  <div class="review-item border rounded-3 p-3 mb-2" data-initial="1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-bold">${rv.user_id}</div>
+                      <div style="color:#22c55e; font-weight:700;">
+                        <i class="fa-solid fa-star"></i> ${rv.rating}
+                      </div>
+                    </div>
+                    <div class="text-muted" style="font-size:12px;">
+                      <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/> <%-- 리뷰 작성일 포맷 통일 --%>
+                    </div>
+                    <div class="mt-2">${rv.content}</div>
+                  </div>
+                </c:forEach>
+              </div>
+
+              <c:if test="${not empty reviews}">
+                <button id="btnMoreReviews" class="btn btn-outline-secondary w-100 mt-2"
+                        data-place-id="${place_id}"
+                        data-offset="${reviewNextOffset}"
+                        data-total="${reviewTotalCount}"> <%-- JS에서 다음 리뷰 요청 시 사용할 기준값 전달 --%>
+                  더보기
+                </button>
+              </c:if>
+
+              <c:if test="${empty reviews}">
+                <div class="r-muted">아직 등록된 리뷰가 없습니다.</div>
+              </c:if>
+
+            </section>
           </div>
 
-          <c:if test="${not empty reviews}">
-            <button id="btnMoreReviews" class="btn btn-outline-secondary w-100 mt-2"
-                    data-place-id="${place_id}"
-                    data-offset="${reviewNextOffset}"
-                    data-total="${reviewTotalCount}">
-              더보기
-            </button>
-          </c:if>
+        </div> <!-- /.tab-content -->
+      </div>   <!-- /.col-lg-8 -->
 
-          <c:if test="${empty reviews}">
-            <div class="r-muted">아직 등록된 리뷰가 없습니다.</div>
-          </c:if>
-
-        </section>
-      </div>
-
-    </div> <!-- ✅ /.tab-content -->
-  </div>   <!-- ✅ /.col-lg-8 -->
-
-	  <!-- Right -->
-	  <div class="col-lg-4">
+      <%-- [우측 사이드 영역]
+           예약, 저장, 영업시간 등 보조 정보를 별도 카드로 고정해서 보여주기 위해 사용
+      --%>
+      <div class="col-lg-4">
         <div class="r-sticky d-flex flex-column gap-3">
 
-          <!-- 예약 카드 -->
+          <%-- 예약 카드 --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -463,20 +484,22 @@
             </div>
           </div>
 
-          <!-- 저장 카드 -->
+          <%-- 저장 카드
+               상단 저장 버튼과 같은 기능을 우측 사이드에서도 사용할 수 있도록 중복 배치
+          --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="fw-bold fs-5 mb-2">이 음식점 저장하기</div>
               <button id="btnFavoriteSide"
-				        class="btn btn-outline-secondary w-100 fw-bold ${isFavorite ? 'is-on' : ''}"
-				        type="button"
-				        style="border-radius:14px;">
-				  <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
-				</button>
+                        class="btn btn-outline-secondary w-100 fw-bold ${isFavorite ? 'is-on' : ''}"
+                        type="button"
+                        style="border-radius:14px;">
+                <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
+              </button>
             </div>
           </div>
 
-          <!-- 영업시간 카드 -->
+          <%-- 영업시간 카드 --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="fw-bold fs-5 mb-2">영업시간</div>
@@ -499,11 +522,15 @@
   </div>
 
 <script>
-  // JSP에서만 가능한 값 전달
+  // [JSP → JS 값 전달]
+  // JS 파일에서 contextPath와 현재 place_id를 공통으로 사용할 수 있도록 전역 상수로 전달
   const CTX = '<c:out value="${pageContext.request.contextPath}"/>';
   const PLACE_ID = '<c:out value="${place_id}"/>';
 </script>
 
+<%-- [맛집 상세 페이지 전용 JS]
+     즐겨찾기 토글, 리뷰 더보기 등 상세 페이지의 동적 기능을 처리
+--%>
 <script src="${pageContext.request.contextPath}/resources/js/restaurant/restaurantDetail.js"></script>
 
 <%@ include file="../../common/footer.jsp" %>

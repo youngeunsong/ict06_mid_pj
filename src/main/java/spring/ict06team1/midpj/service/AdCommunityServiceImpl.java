@@ -45,7 +45,7 @@ public class AdCommunityServiceImpl implements AdCommunityService {
 		model.addAttribute("member", member);
 	}
 
-	//3. 게시글 숨김(status='HIDDEN')
+	//3. 게시글 숨김/제재(status='BANNED')
 	@Override
 	public void hidePost(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommunityServiceImpl - hidePost()]");
@@ -65,7 +65,7 @@ public class AdCommunityServiceImpl implements AdCommunityService {
 		request.setAttribute("result", result);
 	}
 
-	//5. 게시글 삭제(status='DELETED')
+	//5. 게시글 삭제(status='HIDDEN')
 	@Override
 	public void deletePost(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommunityServiceImpl - deletePost()]");

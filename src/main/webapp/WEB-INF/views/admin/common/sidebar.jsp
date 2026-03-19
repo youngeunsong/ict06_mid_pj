@@ -87,7 +87,7 @@
                   
 				<li class="nav-item">
 					<%-- <a href="#" class="nav-link" data-lte-toggle="treeview"> --%>
-					<a href="${path}/getReservationList.ad" class="nav-link" data-lte-toggle="treeview">
+					<a href="${path}/reservationList.ad" class="nav-link" data-lte-toggle="treeview">
 						<i class="nav-icon bi bi-calendar-check"></i>
 						<p>
 							예약 관리
@@ -102,7 +102,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/getReservationList.ad" class="nav-link">
+							<a href="${path}/reservationList.ad" class="nav-link">
                     			<i class="nav-icon bi bi-chevron-right"></i>
                     			<p>예약내역</p>
                     		</a>

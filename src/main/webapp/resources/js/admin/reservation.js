@@ -142,7 +142,7 @@ function filterData() {
 	if(typeList.length > 0) params.push('placeType=' + typeList.join(','));
 	if(sortType) params.push('sortType=' + sortType);
 	
-	location.href = path + '/getReservationList.ad' +
+	location.href = path + '/reservationList.ad' +
 	(params.length > 0 ? '?' + params.join('&') : '');
 }
 
@@ -192,7 +192,7 @@ function keywordSearch() {
 		alert('ID 또는 예약번호를 입력하세요.');
 		return;
 	}
-	location.href = path + '/getReservationList.ad?keyword=' + encodeURIComponent(keyword)
+	location.href = path + '/reservationList.ad?keyword=' + encodeURIComponent(keyword)
 					+ (sortType ? '&sortType=' + sortType : '');
 }
 

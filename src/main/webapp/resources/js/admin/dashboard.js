@@ -1,5 +1,6 @@
 //예약 통계 대시보드
 let placeTypeChartInstance = null;
+let statusChartInstance = null;
 
 //===예약상태별+장소분류별 비율 호출===
 function switchRatioChart(type) {
@@ -8,40 +9,85 @@ function switchRatioChart(type) {
 		document.getElementById('placeChartWrap').style.display = 'none';
 		document.getElementById('btnStatusChart').className = 'btn btn-dark btn-sm';
 		document.getElementById('btnPlaceChart').className = 'btn btn-outline-dark btn-sm';
+		
+		const statusColorMap = {
+			'RESERVED': '#01D281',
+			'PENDING': '#ffc107',
+			'CANCELLED': '#dc3545',
+			'COMPLETED': '#6c757d'
+		};
+		
+		//기존 차트 제거
+		if(statusChartInstance !== null) {
+			statusChartInstance.destroy();
+		}
+		
+		//매번 차트 새로 생성
+		//===2-1. 예약상태별 비율(doughnut chart)===
+		statusChartInstance = new Chart(
+			document.getElementById('statusChart').getContext('2d'), {
+			type: 'doughnut',
+			data: {
+				labels: dashBoardData.status.labels,
+				datasets: [{
+					data: dashBoardData.status.data,
+					backgroundColor: dashBoardData.status.labels.map(function(l) {
+						return statusColorMap[l] || '#ccc';
+					}),
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: true,
+				legend: {position: 'right'},
+				animation: {
+					animateScale: true,
+					animateRotate: true
+				}
+			}
+		});
 	}
+		
 	else {
 		document.getElementById('statusChartWrap').style.display = 'none';
 		document.getElementById('placeChartWrap').style.display = 'block';
 		document.getElementById('btnStatusChart').className = 'btn btn-outline-dark btn-sm';
 		document.getElementById('btnPlaceChart').className = 'btn btn-dark btn-sm';
+
+		const placeColorMap = {
+			'REST': '#01d281',
+			'ACC': '#4fc3f7',
+			'FEST': '#FEFBDA'
+		};
 		
-		//처음 클릭할 때만 차트 생성
-		if(placeTypeChartInstance === null) {
-			const placeColorMap = {
-				'REST': '#01d281',
-				'ACC': '#4fc3f7',
-				'FEST': '#FEFBDA'
-			};
-			
-			//===2-2. 장소분류별 비율(doughnut chart)===
-			placeTypeChartInstance = new Chart(
-				document.getElementById('placeTypeChart').getContext('2d'), {
-				type: 'doughnut',
-				data: {
-					labels: dashBoardData.placeType.labels,
-					datasets: [{
-						data: dashBoardData.placeType.data,
-						backgroundColor: dashBoardData.placeType.labels.map(function(l) {
-							return placeColorMap[l] || '#ccc';
-						})
-					}]
-				},
-				options: {
-					responsive: true,
-					legend: {position: 'right'}
-				}
-			});
+		//기존 차트 제거
+		if(placeTypeChartInstance !== null) {
+			placeTypeChartInstance.destroy();
 		}
+		
+		//매번 차트 새로 생성
+		//===2-2. 장소분류별 비율(doughnut chart)===
+		placeTypeChartInstance = new Chart(
+			document.getElementById('placeTypeChart').getContext('2d'), {
+			type: 'doughnut',
+			data: {
+				labels: dashBoardData.placeType.labels,
+				datasets: [{
+					data: dashBoardData.placeType.data,
+					backgroundColor: dashBoardData.placeType.labels.map(function(l) {
+						return placeColorMap[l] || '#ccc';
+					})
+				}]
+			},
+			options: {
+				responsive: true,
+				legend: {position: 'right'},
+				animation: {
+					animateScale: true,
+					animateRotate: true
+				}
+			}
+		});
 	}
 }
 
@@ -63,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const placeColorMap = {
 		'REST': '#01d281',
 		'ACC': '#4fc3f7',
-		'FEST': '#FEFBDA',
+		'FEST': '#FEFBDA'
 	};
 	
 	//=====월별 고정 라벨 생성(과거3+현재+미래3개월=총 7개월)
@@ -140,29 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	//===2. 예약상태별+장소분류별 비율 호출===
-	//===2-1. 예약상태별 비율(doughnut chart)===
-	new Chart(document.getElementById('statusChart').getContext('2d'), {
-		type: 'doughnut',
-		data: {
-			labels: dashBoardData.status.labels,		//['RESERVED','PENDING' ...]
-			datasets: [{
-				data: dashBoardData.status.data,		//[10, 3, 2, 5]
-				
-				//labels 배열 돌며 각 항목에 맞는 색상 배열 생성. 매핑 없으면 회색('#ccc')
-				//결과: ['#01D281', '#ffc107', '#dc3545', '#6c757d']
-				backgroundColor: dashBoardData.status.labels.map(function(l) {
-					return statusColorMap[l] || '#ccc';
-				}),
-				borderWidth: 1
-			}]
-		},
-		options: {
-			responsive: true,
-			legend: {position: 'right'}
-		}
-	});
-
 	//===3. 요일별 예약 분포(bar chart)===
 	new Chart(document.getElementById('dayOfWeekChart').getContext('2d'), {
 		type: 'bar',
@@ -197,4 +220,5 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 	});
+	switchRatioChart('status');
 });

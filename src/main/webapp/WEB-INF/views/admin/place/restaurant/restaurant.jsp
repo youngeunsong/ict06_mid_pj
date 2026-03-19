@@ -66,26 +66,29 @@ function handleCombinedSearch() {
 }
 
 function searchRestaurant() {
+
     // 1. 입력창(input)의 ID가 'keyword'인 요소에서 값을 가져옵니다.
     const keywordElement = document.getElementById("keyword");
     const keyword = keywordElement ? keywordElement.value : "";
     
     const categoryElement = document.getElementById("category");
     const category = categoryElement ? categoryElement.value : "";
+    
     // 2. 검색어가 비어있을 경우 유효성 검사 (선택 사항)
     if (!keyword.trim()) {
         alert("검색어를 입력해주세요.");
         keywordElement.focus();
         return;
     }
-
+    
     // 3. 지역 코드는 현재 '0'으로 고정하여 이동
     // [수정] 세미콜론 위치를 조정하고 category를 끝에 붙인다.
-    location.href = `${path}/restaurantSearch.ad?areaCode=0&keyword=` 
+    location.href = '${path}/restaurantSearch.ad?areaCode=0&keyword=' 
                     + encodeURIComponent(keyword) 
-                    + `&pageNum=1`
-                    + `&category=` + category; // 이제 URL에 category가 포함됩니다.
+                    + '&pageNum=1'
+                    + '&category=' + category; // 이제 URL에 category가 포함됩니다.
 }
+
 </script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">

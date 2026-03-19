@@ -15,7 +15,7 @@
 	<!-- admin계정 interceptor -->
 	<interceptors>
 		<interceptor>
-			<mapping path="/**/*.ad" />
+			<mapping path="/**/" />
 			<beans:ref bean="adminInterceptor" />
 		</interceptor>
 	</interceptors>

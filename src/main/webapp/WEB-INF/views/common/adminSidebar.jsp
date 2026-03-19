@@ -72,8 +72,8 @@
 				<!-- 회원 관리 메뉴 끝 -->
 				
 				<!-- 장소 관리 메뉴 시작 -->
-				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'menu-open' : ''}">
-					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adpl') ? 'active' : ''}"> 
+				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adpl')||fn:contains(currentURI, 'adfe') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adpl')||fn:contains(currentURI, 'adfe') ? 'active' : ''}"> 
 						<i class="fa-solid fa-location-dot"></i>
 						장소 관리
 						<i class="right fas fa-angle-left"></i>
@@ -81,7 +81,7 @@
 					
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/restaurant.ad" class="nav-link ${fn:contains(currentURI, 'restaurant') ? 'active' : ''}"> 
+							<a href="${path}/restaurantList.adre" class="nav-link ${fn:contains(currentURI, 'restaurant') ? 'active' : ''}"> 
 								맛집 관리
 							</a>
 						</li>
@@ -101,8 +101,8 @@
 				
 				<!-- 예약 관리 메뉴 시작: 하위 메뉴 있음 -->
 				<!-- <li class="nav-item menu-open"> -->
-				<li class="nav-item ${fn:contains(currentURI, 'reservation') ? 'menu-open' : ''}">
-					<a href="#" class="nav-link ${fn:contains(currentURI, 'reservation') ? 'active' : ''}"> 
+				<li class="nav-item ${fn:contains(currentURI, 'resDashboard')||fn:contains(currentURI, 'reservationList') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'resDashboard')||fn:contains(currentURI, 'reservationList') ? 'active' : ''}"> 
 						<i class="fa-solid fa-calendar"></i>
 						예약 관리
 						<i class="right fas fa-angle-left"></i>
@@ -110,12 +110,12 @@
 					<!-- 예약 관리 하위메뉴 시작 -->
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="${path}/resDashboard.ad" class="nav-link ${fn:contains(currentURI, 'dashboard') ? 'active' : ''}"> 
+							<a href="${path}/resDashboard.ad" class="nav-link ${fn:contains(currentURI, 'resDashboard') ? 'active' : ''}"> 
 								예약 통계 대시보드
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/getReservationList.ad" class="nav-link ${fn:contains(currentURI, 'reservationList') ? 'active' : ''}">
+							<a href="${path}/reservationList.ad" class="nav-link ${fn:contains(currentURI, 'reservationList') ? 'active' : ''}">
 								예약 내역
 							</a>
 						</li>

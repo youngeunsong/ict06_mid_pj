@@ -53,6 +53,7 @@
 					<a href="#" class="nav-link ${fn:contains(currentURI, '.adme') ? 'active' : ''}"> 
 						<i class="fa-solid fa-users"></i>
 						회원 관리
+
 						<i class="right fas fa-angle-left"></i>
 					</a>
 					
@@ -86,7 +87,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/accommodationList.adpl" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
+							<a href="${path}/accommodation.acc" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
 								숙소 관리
 							</a>
 						</li>
@@ -169,12 +170,27 @@
 				</li>
 				<!-- 커뮤니티 관리 메뉴 끝 -->
 				
-				<!-- 고객 지원 메뉴 시작 -->
-				<li class="nav-item">
-					<a href="${path}/supportHome.adsp" class="nav-link ${fn:contains(currentURI, 'support') ? 'active' : ''}"> 
-						<i class="fa-solid fa-headset"></i>
-						고객지원
-					</a>
+				<!-- 고객 지원 메뉴 시작 : 하위 메뉴 있음 -->
+				<li class="nav-item ${currentURI.contains('Inquiry') || currentURI.contains('Faq') ? 'menu-open' : ''}">
+				    <a href="#" class="nav-link ${currentURI.contains('Inquiry') || currentURI.contains('Faq') ? 'active' : ''}"> 
+				        <i class="fa-solid fa-comments"></i>
+				            문의/FAQ 관리
+				            <i class="right fas fa-angle-left"></i>
+				    </a>
+				    
+				    <ul class="nav nav-treeview">
+				        <li class="nav-item">
+				            <a href="${path}/adInquiryList.adsp" class="nav-link ${currentURI.contains('Inquiry') ? 'active' : ''}">
+				                1:1 문의 관리
+				            </a>
+				        </li>
+				        
+				        <li class="nav-item">
+				            <a href="${path}/adFaqList.adsp" class="nav-link ${currentURI.contains('Faq') ? 'active' : ''}">
+				                FAQ 관리
+				            </a>
+				        </li>
+				    </ul>
 				</li>
 				<!-- 고객 지원 메뉴 끝 -->
 				
@@ -201,7 +217,6 @@
 					</ul>
 				</li> -->
 				<!-- 커뮤니티 관리 메뉴 끝 -->
-				
 			</ul>
 		</nav>
 	</div>

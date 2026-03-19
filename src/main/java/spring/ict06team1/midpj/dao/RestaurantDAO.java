@@ -5,6 +5,7 @@ import java.util.Map;
 
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface RestaurantDAO {
 
@@ -30,17 +31,17 @@ public interface RestaurantDAO {
     int deleteFavorite(Map<String, Object> map);
     
     // 맛집 랭킹 목록 조회
-    List<PlaceDTO> getBestRestaurantList();
+    List<RestaurantDTO> getBestRestaurantList();
     
     // 별점 평균
     double getAvgRating(int place_id);
     
     // 맛집 총 갯수
-    int getBestRestaurantCount(String region);
+    int getBestRestaurantCount(Map<String, Object> map);
     
     // 맛집 페이지 리스트
-    List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map);
+    List<RestaurantDTO> getBestRestaurantPageList(Map<String, Object> map);
     
     // 맛집 랭킹 top5
-    List<PlaceDTO> getBestRestaurantTop5(String region);
+    List<RestaurantDTO> getBestRestaurantTop5(Map<String, Object> map);
 }

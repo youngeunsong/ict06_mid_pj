@@ -8,13 +8,16 @@ public class AccommodationDTO {
 	private int price;
 	private String status;
 	private PlaceDTO placeDTO;
+	//추가 멤버변수
+	private String areaCode;
+	private String category;
 
 	public AccommodationDTO() {
 		super();
 	}
-
+	
 	public AccommodationDTO(int accommodation_id, String description, String phone, int price, String status,
-			PlaceDTO placeDTO) {
+			PlaceDTO placeDTO, String areaCode, String category) {
 		super();
 		this.accommodation_id = accommodation_id;
 		this.description = description;
@@ -22,6 +25,8 @@ public class AccommodationDTO {
 		this.price = price;
 		this.status = status;
 		this.placeDTO = placeDTO;
+		this.areaCode = areaCode;
+		this.category = category;
 	}
 
 	public int getAccommodation_id() {
@@ -72,13 +77,26 @@ public class AccommodationDTO {
 		this.placeDTO = placeDTO;
 	}
 
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@Override
 	public String toString() {
 		return "AccommodationDTO [accommodation_id=" + accommodation_id + ", description=" + description + ", phone="
-				+ phone + ", price=" + price + ", status=" + status + ", placeDTO=" + placeDTO + "]";
+				+ phone + ", price=" + price + ", status=" + status + ", placeDTO=" + placeDTO + ", areaCode="
+				+ areaCode + ", category=" + category + "]";
 	}
-	
-	
-
-
 }

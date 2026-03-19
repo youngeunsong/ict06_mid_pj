@@ -4,6 +4,7 @@ import java.util.List;
 
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface RestaurantService {
 
@@ -23,17 +24,17 @@ public interface RestaurantService {
     boolean toggleFavorite(String userId, int place_id);
     
     // 맛집 랭킹 목록 조회
-    List<PlaceDTO> getBestRestaurantList();
+    List<RestaurantDTO> getBestRestaurantList();
     
     // 별점 평균
     double getAvgRating(int place_id);
     
     // 맛집 총 갯수
-    int getBestRestaurantCount(String region);
+    int getBestRestaurantCount(String region, String category);
     
     // 맛집 페이지 리스트
-    List<PlaceDTO> getBestRestaurantPageList(int start, int end, String region);
+    List<RestaurantDTO> getBestRestaurantPageList(int start, int end, String region, String category);
     
     // 맛집 top 5
-    List<PlaceDTO> getBestRestaurantTop5(String region);
+    List<RestaurantDTO> getBestRestaurantTop5(String region, String category);
 }

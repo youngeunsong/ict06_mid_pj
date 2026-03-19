@@ -40,6 +40,18 @@ public interface UserService {
     public int modifyUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
     
+    // 7. 즐겨찾기 목록 조회
+    public void viewBookmarksAction(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+    
+    // 나의 문의 목록 조회
+    public void viewInquiriesAction(HttpServletRequest request, HttpServletResponse response, Model model)
+    	throws ServletException, IOException;
+    
+    // 나의 문의 상세
+    public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+        throws ServletException, IOException;
+    
     //------------------------------
     //관리자 정보 조회 및 수정
     public MemberDTO getAdminDetail(String user_id);

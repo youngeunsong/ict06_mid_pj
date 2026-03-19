@@ -85,25 +85,12 @@ public class FestivalController {
     @RequestMapping("/bestFestivalsMore.rs")
     @ResponseBody
     public List<FestivalDTO> bestFestivalsMore(
-//            @RequestParam(value = "tab", defaultValue = "realtime") String tab,
-//            @RequestParam(value = "region", defaultValue = "all") String region,
-//            @RequestParam(value = "category", defaultValue = "ALL") String category,
             @RequestParam("offset") int offset,
             @RequestParam(value = "limit", defaultValue = "12") int limit) {
 
         int start = offset; // 현재까지 출력된 마지막 위치 기준 시작값
         int end = offset + limit; // limit만큼 다음 구간 조회
-
-//        if ("realtime".equals(tab)) {
-//            return service.getBestFestivalPageList(start, end, null, "ALL");
-//        } else if ("region".equals(tab)) {
-//            return service.getBestFestivalPageList(start, end, region, "ALL");
-//        } else if ("recommend".equals(tab)) {
-//            return service.getBestFestivalPageList(start, end, region, category);
-//        }
-//
-//        return new ArrayList<FestivalDTO>(); // 잘못된 탭 값이 들어와도 프론트 오류가 나지 않도록 빈 리스트 반환
-        return service.getBestFestivalPageList(start, end, null, "ALL");
+        return service.getBestFestivalPageList(start, end);
     }
 	
 	// [festival] 축제 상세 & 예약 페이지로 이동

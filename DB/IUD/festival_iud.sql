@@ -6,3 +6,8 @@ SELECT *
 SELECT * 
   FROM PLACE 
  WHERE PLACE_ID = 523;
+
+-- 축제 전체 갯수 조회
+SELECT count(*)
+  FROM FESTIVAL
+ WHERE status != 'ENDED';

@@ -96,31 +96,29 @@ public class FestivalDAOImpl implements FestivalDAO {
 	// 축제 랭킹 목록 조회
 	@Override
 	public List<FestivalDTO> getBestFestivalList() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("FestivalDAOImpl-getBestFestivalList()");
+		return session.selectList(NAMESPACE + "getBestFestivalList");
 	}
 
 	// 축제 총 갯수
 	@Override
 	public int getBestFestivalCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		System.out.println("FestivalDAOImpl-getBestFestivalCount()");
+		return session.selectOne(NAMESPACE + "getBestFestivalCount");
 	}
 
 	// 축제 페이지 리스트
 	@Override
 	public List<FestivalDTO> getBestFestivalPageList(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("FestivalDAOImpl-getBestFestivalPageList()");
+		return session.selectList(NAMESPACE + "getBestFestivalPageList", map);
 	}
 
 	// 축제 랭킹 top5
 	@Override
 	public List<FestivalDTO> getBestFestivalTop5() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("FestivalDAOImpl-getBestFestivalTop5()");
+		return session.selectList(NAMESPACE + "deleteFavorite");
 	}
-
-
 
 }

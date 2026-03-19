@@ -11,3 +11,9 @@ SELECT *
 SELECT count(*)
   FROM FESTIVAL
  WHERE status != 'ENDED';
+
+-- 상위 5개의 축제 조회
+SELECT p.*, f.*
+  FROM PLACE p 
+   AND FESTIVAL f
+  

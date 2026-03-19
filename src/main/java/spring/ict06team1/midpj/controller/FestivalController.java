@@ -39,13 +39,22 @@ public class FestivalController {
 	@Autowired
 	private FestivalServiceImpl service;
 	
-	//[festival] ----------------------------------------------------------------------------------------
+	// [festival] ----------------------------------------------------------------------------------------
 	@RequestMapping("/festival.fe")	
 	public String festival(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => festival.fe >>>");
 		
 		return "user/festival/festival";
+	}
+	
+	// [festival] 상위 10개 축제 디스플레이 
+	@RequestMapping("/festivalRanking.fe")
+	public String festivalRanking(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => festivalRanking.fe >>>");
+		
+		return "user/festival/festivalRanking";
 	}
 	
 	// [festival] 축제 상세 & 예약 페이지로 이동

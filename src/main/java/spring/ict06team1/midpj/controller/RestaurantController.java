@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.service.RestaurantServiceImpl;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Controller
 public class RestaurantController {
@@ -32,7 +33,7 @@ public class RestaurantController {
     @Autowired
     private RestaurantServiceImpl service;
 
-    // [restaurant] ¸ÀÁý ÆäÀÌÁö·Î ÀÌµ¿
+    // [restaurant] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     @RequestMapping("/restaurant.rs")
     public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
@@ -41,41 +42,23 @@ public class RestaurantController {
     }
 
     // [restaurantRanking] ----------------------------------------------------------------------
-    // [restaurantRanking] ¸ÀÁý ·©Å· ÆäÀÌÁö ÀÌµ¿
+    // [restaurantRanking] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     @RequestMapping("/bestRestaurants.rs")
     public String bestRestaurants(Model model) {
 
         int limit = 12;
 
-        List<PlaceDTO> topPlaceList = service.getBestRestaurantTop5(null);
-        List<PlaceDTO> pagePlaceList = service.getBestRestaurantPageList(5, 17, null);
+        List<RestaurantDTO> topList = service.getBestRestaurantTop5(null, "ALL");
+        List<RestaurantDTO> pageList = service.getBestRestaurantPageList(5, 17, null, "ALL");
 
-        if (topPlaceList == null) topPlaceList = new ArrayList<PlaceDTO>();
-        if (pagePlaceList == null) pagePlaceList = new ArrayList<PlaceDTO>();
+        if (topList == null) topList = new ArrayList<RestaurantDTO>();
+        if (pageList == null) pageList = new ArrayList<RestaurantDTO>();
 
-        List<Map<String, Object>> topList = wrapPlaceList(topPlaceList);
-        List<Map<String, Object>> pageList = wrapPlaceList(pagePlaceList);
-
-        Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
-        Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
-
-        for (PlaceDTO place : topPlaceList) {
-            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-        }
-
-        for (PlaceDTO place : pagePlaceList) {
-            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-        }
-
-        int totalCount = service.getBestRestaurantCount(null);
+        int totalCount = service.getBestRestaurantCount(null, "ALL");
         int remainCount = Math.max(totalCount - 5, 0);
 
         model.addAttribute("topList", topList);
         model.addAttribute("pageList", pageList);
-        model.addAttribute("avgRatingMap", avgRatingMap);
-        model.addAttribute("reviewCountMap", reviewCountMap);
         model.addAttribute("favoritePlaceIds", new ArrayList<Integer>());
 
         model.addAttribute("limit", limit);
@@ -89,10 +72,10 @@ public class RestaurantController {
     }
 
     // [restaurantRanking] ----------------------------------------------------------------------
-    // [restaurantRanking] ¸ÀÁý ·©Å· ´õº¸±â AJAX
+    // [restaurantRanking] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ AJAX
     @RequestMapping("/bestRestaurantsMore.rs")
     @ResponseBody
-    public List<PlaceDTO> bestRestaurantsMore(
+    public List<RestaurantDTO> bestRestaurantsMore(
             @RequestParam(value = "tab", defaultValue = "realtime") String tab,
             @RequestParam(value = "region", defaultValue = "all") String region,
             @RequestParam(value = "category", defaultValue = "ALL") String category,
@@ -103,17 +86,17 @@ public class RestaurantController {
         int end = offset + limit;
 
         if ("realtime".equals(tab)) {
-            return service.getBestRestaurantPageList(start, end, null);
+            return service.getBestRestaurantPageList(start, end, null, "ALL");
         } else if ("region".equals(tab)) {
-            return service.getBestRestaurantPageList(start, end, region);
+            return service.getBestRestaurantPageList(start, end, region, "ALL");
         } else if ("recommend".equals(tab)) {
-            return service.getBestRestaurantPageList(start, end, region);
+            return service.getBestRestaurantPageList(start, end, region, category);
         }
 
-        return new ArrayList<PlaceDTO>();
+        return new ArrayList<RestaurantDTO>();
     }
 
-    // [restaurant] Áö¿ªº° º£½ºÆ® ¸ÀÁý ÆäÀÌÁö·Î ÀÌµ¿
+    // [restaurant] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     @RequestMapping("/bestRestaurantsRegion.rs")
     public String bestRestaurantsRegion(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
@@ -121,7 +104,7 @@ public class RestaurantController {
         return "user/restaurant/bestRestaurantsRegion";
     }
 
-    // [restaurant] Å×¸¶º° º£½ºÆ® ¸ÀÁý ÆäÀÌÁö·Î ÀÌµ¿
+    // [restaurant] ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     @RequestMapping("/bestRestaurantsTheme.rs")
     public String bestRestaurantsTheme(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
@@ -129,7 +112,7 @@ public class RestaurantController {
         return "user/restaurant/bestRestaurantsTheme";
     }
 
-    // [restaurant] ·¹½ºÅä¶û »ó¼¼ & ¿¹¾à ÆäÀÌÁö·Î ÀÌµ¿
+    // [restaurant] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
     @RequestMapping("/restaurantDetail.rs")
     public String restaurantDetail(@RequestParam("place_id") int place_id,
                                    HttpSession session,
@@ -166,7 +149,7 @@ public class RestaurantController {
         return service.getReviewsPaged(place_id, offset, limit);
     }
 
-    // Áñ°ÜÃ£±â Åä±Û
+    // ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½
     @RequestMapping("/favoriteToggle.rs")
     @ResponseBody
     public Map<String, Object> favoriteToggle(@RequestParam("place_id") int place_id,
@@ -191,7 +174,7 @@ public class RestaurantController {
         return result;
     }
 
-    // [restaurant] Áöµµ¿¡¼­ ·¹½ºÅä¶û À§Ä¡ º¸±â
+    // [restaurant] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
     @RequestMapping("/restaurantMap.rs")
     public String restaurantMap(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
@@ -199,7 +182,7 @@ public class RestaurantController {
         return "user/restaurant/restaurantMap";
     }
 
-    // ¼¼¼Ç Å°°¡ Á¤È®È÷ ±â¾ï ¾È ³¯ ¼ö ÀÖ¾î¼­ ÈÄº¸ ¿©·¯ °³·Î Ã³¸®
+    // ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½Äºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     private String getLoginUserId(HttpSession session) {
         if (session == null) return null;
 
@@ -220,51 +203,33 @@ public class RestaurantController {
 
         int limit = 12;
 
-        List<PlaceDTO> topPlaceList = new ArrayList<PlaceDTO>();
-        List<PlaceDTO> pagePlaceList = new ArrayList<PlaceDTO>();
+        List<RestaurantDTO> topList = new ArrayList<RestaurantDTO>();
+        List<RestaurantDTO> pageList = new ArrayList<RestaurantDTO>();
         int totalCount = 0;
 
         if ("realtime".equals(tab)) {
-            topPlaceList = service.getBestRestaurantTop5(null);
-            pagePlaceList = service.getBestRestaurantPageList(5, 17, null);
-            totalCount = service.getBestRestaurantCount(null);
+            topList = service.getBestRestaurantTop5(null, "ALL");
+            pageList = service.getBestRestaurantPageList(5, 17, null, "ALL");
+            totalCount = service.getBestRestaurantCount(null, "ALL");
 
         } else if ("region".equals(tab)) {
-            topPlaceList = service.getBestRestaurantTop5(region);
-            pagePlaceList = service.getBestRestaurantPageList(5, 17, region);
-            totalCount = service.getBestRestaurantCount(region);
+            topList = service.getBestRestaurantTop5(region, "ALL");
+            pageList = service.getBestRestaurantPageList(5, 17, region, "ALL");
+            totalCount = service.getBestRestaurantCount(region, "ALL");
 
         } else if ("recommend".equals(tab)) {
-            topPlaceList = service.getBestRestaurantTop5(region);
-            pagePlaceList = service.getBestRestaurantPageList(5, 17, region);
-            totalCount = service.getBestRestaurantCount(region);
+            topList = service.getBestRestaurantTop5(region, category);
+            pageList = service.getBestRestaurantPageList(5, 17, region, category);
+            totalCount = service.getBestRestaurantCount(region, category);
         }
 
-        if (topPlaceList == null) topPlaceList = new ArrayList<PlaceDTO>();
-        if (pagePlaceList == null) pagePlaceList = new ArrayList<PlaceDTO>();
-
-        List<Map<String, Object>> topList = wrapPlaceList(topPlaceList);
-        List<Map<String, Object>> pageList = wrapPlaceList(pagePlaceList);
-
-        Map<Integer, Double> avgRatingMap = new HashMap<Integer, Double>();
-        Map<Integer, Integer> reviewCountMap = new HashMap<Integer, Integer>();
-
-        for (PlaceDTO place : topPlaceList) {
-            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-        }
-
-        for (PlaceDTO place : pagePlaceList) {
-            avgRatingMap.put(place.getPlace_id(), place.getAvg_rating());
-            reviewCountMap.put(place.getPlace_id(), place.getReview_count());
-        }
+        if (topList == null) topList = new ArrayList<RestaurantDTO>();
+        if (pageList == null) pageList = new ArrayList<RestaurantDTO>();
 
         int remainCount = Math.max(totalCount - 5, 0);
 
         model.addAttribute("topList", topList);
         model.addAttribute("pageList", pageList);
-        model.addAttribute("avgRatingMap", avgRatingMap);
-        model.addAttribute("reviewCountMap", reviewCountMap);
         model.addAttribute("favoritePlaceIds", new ArrayList<Integer>());
         model.addAttribute("limit", limit);
         model.addAttribute("nextOffset", 17);

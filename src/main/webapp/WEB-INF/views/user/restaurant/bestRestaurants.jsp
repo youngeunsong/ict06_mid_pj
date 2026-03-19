@@ -300,16 +300,16 @@
 	  <div id="recommendFilterArea" style="display:none; width:100%;">
 	    <div class="rk-chipWrap" id="recommendChipWrap">
 	      <button type="button" class="rk-chip active" data-category="ALL">전체</button>
-	      <button type="button" class="rk-chip" data-category="KOREAN">한식</button>
-	      <button type="button" class="rk-chip" data-category="CAFE">카페</button>
-	      <button type="button" class="rk-chip" data-category="BAR">술집</button>
-	      <button type="button" class="rk-chip" data-category="WESTERN">양식</button>
+	      <button type="button" class="rk-chip" data-category="한식">한식</button>
+	      <button type="button" class="rk-chip" data-category="카페/디저트">카페</button>
+	      <button type="button" class="rk-chip" data-category="일식">일식</button>
+	      <button type="button" class="rk-chip" data-category="양식">양식</button>
 	
 	      <!-- 처음엔 숨길 추가 필터 -->
-	      <button type="button" class="rk-chip extra-filter d-none" data-category="JAPANESE">일식</button>
-	      <button type="button" class="rk-chip extra-filter d-none" data-category="CHINESE">중식</button>
-	      <button type="button" class="rk-chip extra-filter d-none" data-category="DESSERT">디저트</button>
-	      <button type="button" class="rk-chip extra-filter d-none" data-category="SNACK">분식</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="중식">중식</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="술집">술집</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="카페/디저트">디저트</button>
+	      <button type="button" class="rk-chip extra-filter d-none" data-category="분식">분식</button>
 	    </div>
 	
 	    <div class="mt-2">
@@ -325,10 +325,10 @@
 	  <!-- 지역 탭 전용 셀렉트 -->
 	  <select id="regionSelect" class="form-select" style="width:160px; display:none;">
 	    <option value="all">전체 지역</option>
-	    <option value="강남">강남</option>
-	    <option value="신촌">신촌</option>
-	    <option value="홍대">홍대</option>
-	    <option value="이태원">이태원</option>
+	    <option value="서울">서울</option>
+	    <option value="인천">인천</option>
+	    <option value="부산">부산</option>
+	    <option value="대전">대전</option>
 	  </select>
 
       </div>

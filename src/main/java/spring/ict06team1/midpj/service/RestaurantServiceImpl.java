@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import spring.ict06team1.midpj.dao.RestaurantDAO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -73,7 +74,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
     
     @Override
-    public List<PlaceDTO> getBestRestaurantList() {
+    public List<RestaurantDTO> getBestRestaurantList() {
         return dao.getBestRestaurantList();
     }
 
@@ -83,21 +84,28 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
     
     @Override
-    public int getBestRestaurantCount(String region) {
-    	return dao.getBestRestaurantCount(region);
+    public int getBestRestaurantCount(String region, String category) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("region", region);
+        map.put("category", category);
+    	return dao.getBestRestaurantCount(map);
     }
 
     @Override
-    public List<PlaceDTO> getBestRestaurantPageList(int start, int end, String region) {
+    public List<RestaurantDTO> getBestRestaurantPageList(int start, int end, String region, String category) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("start", start);
         map.put("end", end);
         map.put("region", region);
+        map.put("category", category);
         return dao.getBestRestaurantPageList(map);
     }
     
     @Override
-    public List<PlaceDTO> getBestRestaurantTop5(String region) {
-    	return dao.getBestRestaurantTop5(region);
+    public List<RestaurantDTO> getBestRestaurantTop5(String region, String category) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("region", region);
+        map.put("category", category);
+    	return dao.getBestRestaurantTop5(map);
     }
 }

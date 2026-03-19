@@ -121,13 +121,42 @@
     WHERE user_id = #{userId}
       AND place_id = #{placeId}
   </delete>
-  
+
+  <!-- ========================= -->
+  <!-- 맛집 랭킹용 resultMap -->
+  <!-- PLACE + RESTAURANT 조인 결과를 RestaurantDTO로 매핑 -->
+  <!-- ========================= -->
+  <resultMap id="restaurantRankResultMap" type="spring.ict06team1.midpj.dto.RestaurantDTO">
+    <id property="restaurant_id" column="restaurant_id" />
+    <result property="description" column="description" />
+    <result property="phone" column="phone" />
+    <result property="category" column="category" />
+    <result property="status" column="restaurant_status" />
+    <result property="restdate" column="restdate" />
+    <result property="areaCode" column="areacode" />
+
+    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+      <id property="place_id" column="place_id" />
+      <result property="place_type" column="place_type" />
+      <result property="name" column="name" />
+      <result property="address" column="address" />
+      <result property="view_count" column="view_count" />
+      <result property="latitude" column="latitude" />
+      <result property="longitude" column="longitude" />
+      <result property="image_url" column="image_url" />
+      <result property="placeRegDate" column="placeRegDate" />
+      <result property="review_count" column="review_count" />
+      <result property="avg_rating" column="avg_rating" />
+    </association>
+  </resultMap>
+
   <!-- ========================= -->
   <!-- 맛집 랭킹 목록 조회 -->
+  <!-- PLACE + RESTAURANT 조인 -->
   <!-- ========================= -->
   <select id="getBestRestaurantPageList"
           parameterType="map"
-          resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+          resultMap="restaurantRankResultMap">
     SELECT *
     FROM (
         SELECT
@@ -140,8 +169,18 @@
           p.longitude,
           p.image_url,
           p.created_at AS placeRegDate,
+
+          rt.restaurant_id,
+          DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
+          rt.phone,
+          rt.category,
+          rt.status AS restaurant_status,
+          rt.restdate,
+          rt.areacode,
+
           COUNT(r.review_id) AS review_count,
           NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+
           ROW_NUMBER() OVER (
             ORDER BY
               CASE
@@ -149,12 +188,18 @@
                      CASE
                        WHEN (
                          SELECT COUNT(*)
-                         FROM place
-                         WHERE place_type = 'REST'
+                         FROM place p2
+                         JOIN restaurant rt2
+                           ON p2.place_id = rt2.restaurant_id
+                         WHERE p2.place_type = 'REST'
+                           AND rt2.status = 'OPEN'
                            <if test="region != null and region != '' and region != 'all'">
-                             AND address LIKE '%' || #{region} || '%'
+                             AND p2.address LIKE '%' || #{region} || '%'
                            </if>
-                           AND created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+                           <if test="category != null and category != '' and category != 'ALL'">
+                             AND rt2.category = #{category}
+                           </if>
+                           AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
                        ) &lt; 10
                        THEN INTERVAL '60' DAY
                        ELSE INTERVAL '30' DAY
@@ -165,13 +210,20 @@
               NVL(p.view_count, 0) DESC,
               p.place_id DESC
           ) AS rn
+
         FROM place p
+        JOIN restaurant rt
+          ON p.place_id = rt.restaurant_id
         LEFT JOIN review r
           ON p.place_id = r.place_id
          AND r.status = 'DISPLAY'
         WHERE p.place_type = 'REST'
+          AND rt.status = 'OPEN'
         <if test="region != null and region != '' and region != 'all'">
           AND p.address LIKE '%' || #{region} || '%'
+        </if>
+        <if test="category != null and category != '' and category != 'ALL'">
+          AND rt.category = #{category}
         </if>
         GROUP BY
           p.place_id,
@@ -182,12 +234,19 @@
           p.latitude,
           p.longitude,
           p.image_url,
-          p.created_at
+          p.created_at,
+          rt.restaurant_id,
+          DBMS_LOB.SUBSTR(rt.description, 4000, 1),
+          rt.phone,
+          rt.category,
+          rt.status,
+          rt.restdate,
+          rt.areacode
     )
     WHERE rn &gt; #{start}
       AND rn &lt;= #{end}
   </select>
-	
+
   <!-- 평균 별점 -->
   <select id="getAvgRating"
           parameterType="int"
@@ -197,22 +256,29 @@
     WHERE r.place_id = #{value}
       AND r.status = 'DISPLAY'
   </select>
-	
+
   <!-- 전체 맛집 갯수 -->
   <select id="getBestRestaurantCount"
-          parameterType="string"
+          parameterType="map"
           resultType="int">
     SELECT COUNT(*)
-    FROM place
-    WHERE place_type = 'REST'
-    <if test="_parameter != null and _parameter != '' and _parameter != 'all'">
-      AND address LIKE '%' || #{_parameter} || '%'
+    FROM place p
+    JOIN restaurant rt
+      ON p.place_id = rt.restaurant_id
+    WHERE p.place_type = 'REST'
+      AND rt.status = 'OPEN'
+    <if test="region != null and region != '' and region != 'all'">
+      AND p.address LIKE '%' || #{region} || '%'
+    </if>
+    <if test="category != null and category != '' and category != 'ALL'">
+      AND rt.category = #{category}
     </if>
   </select>
-	
+
+  <!-- 맛집 랭킹 top5 -->
   <select id="getBestRestaurantTop5"
-          parameterType="string"
-          resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+          parameterType="map"
+          resultMap="restaurantRankResultMap">
     SELECT *
     FROM (
         SELECT
@@ -225,8 +291,18 @@
           p.longitude,
           p.image_url,
           p.created_at AS placeRegDate,
+
+          rt.restaurant_id,
+          DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
+          rt.phone,
+          rt.category,
+          rt.status AS restaurant_status,
+          rt.restdate,
+          rt.areacode,
+
           COUNT(r.review_id) AS review_count,
           NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+
           ROW_NUMBER() OVER (
             ORDER BY
               CASE
@@ -234,12 +310,18 @@
                      CASE
                        WHEN (
                          SELECT COUNT(*)
-                         FROM place
-                         WHERE place_type = 'REST'
-                           <if test="_parameter != null and _parameter != '' and _parameter != 'all'">
-                             AND address LIKE '%' || #{_parameter} || '%'
+                         FROM place p2
+                         JOIN restaurant rt2
+                           ON p2.place_id = rt2.restaurant_id
+                         WHERE p2.place_type = 'REST'
+                           AND rt2.status = 'OPEN'
+                           <if test="region != null and region != '' and region != 'all'">
+                             AND p2.address LIKE '%' || #{region} || '%'
                            </if>
-                           AND created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+                           <if test="category != null and category != '' and category != 'ALL'">
+                             AND rt2.category = #{category}
+                           </if>
+                           AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
                        ) &lt; 10
                        THEN INTERVAL '60' DAY
                        ELSE INTERVAL '30' DAY
@@ -250,13 +332,20 @@
               NVL(p.view_count, 0) DESC,
               p.place_id DESC
           ) AS rn
+
         FROM place p
+        JOIN restaurant rt
+          ON p.place_id = rt.restaurant_id
         LEFT JOIN review r
           ON p.place_id = r.place_id
          AND r.status = 'DISPLAY'
         WHERE p.place_type = 'REST'
-        <if test="_parameter != null and _parameter != '' and _parameter != 'all'">
-          AND p.address LIKE '%' || #{_parameter} || '%'
+          AND rt.status = 'OPEN'
+        <if test="region != null and region != '' and region != 'all'">
+          AND p.address LIKE '%' || #{region} || '%'
+        </if>
+        <if test="category != null and category != '' and category != 'ALL'">
+          AND rt.category = #{category}
         </if>
         GROUP BY
           p.place_id,
@@ -267,7 +356,14 @@
           p.latitude,
           p.longitude,
           p.image_url,
-          p.created_at
+          p.created_at,
+          rt.restaurant_id,
+          DBMS_LOB.SUBSTR(rt.description, 4000, 1),
+          rt.phone,
+          rt.category,
+          rt.status,
+          rt.restdate,
+          rt.areacode
     )
     WHERE rn &lt;= 5
   </select>

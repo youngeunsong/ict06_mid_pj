@@ -40,7 +40,7 @@
         <c:set var="rankCls" value="rank-1" scope="request"/>
         <c:set var="cardWrapClass" value="" scope="request"/>
 
-        <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
+        <jsp:include page="/WEB-INF/views/common/card/BigRestCard.jsp"/>
       </div>
     </c:forEach>
 
@@ -65,7 +65,7 @@
             </c:otherwise>
           </c:choose>
 
-          <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
+          <jsp:include page="/WEB-INF/views/common/card/BigRestCard.jsp"/>
         </div>
       </c:forEach>
     </div>
@@ -77,12 +77,14 @@
 <h2 class="rk-moreTitle">더보기+</h2>
 
 <div class="row g-4 rk-moreGrid" id="moreListWrap">
-  <c:forEach var="item" items="${pageList}">
+  <c:forEach var="item" items="${pageList}" varStatus="st">
     <div class="col-6 col-md-4 col-lg-3">
       <c:set var="rest" value="${item}" scope="request"/>
       <c:set var="mode" value="default" scope="request"/>
+      <c:set var="rank" value="${st.index + 6}" scope="request"/>
+      <c:set var="rankCls" value="rank-default" scope="request"/>
       <c:set var="cardWrapClass" value="" scope="request"/>
-      <jsp:include page="/WEB-INF/views/common/card/restCard.jsp"/>
+      <jsp:include page="/WEB-INF/views/common/card/BigRestCard.jsp"/>
     </div>
   </c:forEach>
 </div>

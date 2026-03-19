@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
@@ -54,7 +55,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     }
     
     @Override
-    public List<PlaceDTO> getBestRestaurantList() {
+    public List<RestaurantDTO> getBestRestaurantList() {
         return session.selectList(NAMESPACE + "getBestRestaurantList");
     }
 
@@ -65,17 +66,17 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     }
     
     @Override
-    public int getBestRestaurantCount(String region) {
-    	return session.selectOne(NAMESPACE + "getBestRestaurantCount", region);
+    public int getBestRestaurantCount(Map<String, Object> map) {
+    	return session.selectOne(NAMESPACE + "getBestRestaurantCount", map);
     }
     
     @Override
-    public List<PlaceDTO> getBestRestaurantPageList(Map<String, Object> map) {
+    public List<RestaurantDTO> getBestRestaurantPageList(Map<String, Object> map) {
         return session.selectList(NAMESPACE + "getBestRestaurantPageList", map);
     }
 
     @Override
-    public List<PlaceDTO> getBestRestaurantTop5(String region) {
-    	return session.selectList(NAMESPACE + "getBestRestaurantTop5", region);
+    public List<RestaurantDTO> getBestRestaurantTop5(Map<String, Object> map) {
+    	return session.selectList(NAMESPACE + "getBestRestaurantTop5", map);
     }
 }

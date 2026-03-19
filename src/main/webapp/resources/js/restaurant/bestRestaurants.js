@@ -22,56 +22,81 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateFilterVisibility() {
-	    if (regionSelect) {
-	        regionSelect.style.display =
-	            (state.tab === "region" || state.tab === "recommend") ? "block" : "none";
-	    }
-	
-	    if (recommendFilterArea) {
-	        recommendFilterArea.style.display = (state.tab === "recommend") ? "block" : "none";
-	    }
-	}
+        if (regionSelect) {
+            regionSelect.style.display =
+                (state.tab === "region" || state.tab === "recommend") ? "block" : "none";
+        }
 
-    function renderMoreCards(list) {
-        let html = "";
+        if (recommendFilterArea) {
+            recommendFilterArea.style.display = (state.tab === "recommend") ? "block" : "none";
+        }
+    }
 
-        list.forEach(function (place) {
-            const placeId = place.place_id ?? "";
-            const imageUrl = escapeHtml(place.image_url || "");
-            const name = escapeHtml(place.name || "");
-            const address = escapeHtml(place.address || "");
-            const viewCount = place.view_count ?? 0;
-            const avgRating = place.avg_rating ?? 0;
-            const reviewCount = place.review_count ?? 0;
+    function renderMoreCards(list, startRank) {
+    let html = "";
 
-            html += `
-                <div class="col-6 col-md-4 col-lg-3 ranking-added-item">
-                    <a href="${path}/restaurantDetail.rs?place_id=${placeId}" class="place-card text-decoration-none text-dark">
+    list.forEach(function (place, index) {
+        const placeDTO = place.placeDTO || {};
+
+        const placeId = placeDTO.place_id || "";
+        const imageUrl = escapeHtml(placeDTO.image_url || "");
+        const name = escapeHtml(placeDTO.name || "");
+        const address = escapeHtml(placeDTO.address || "");
+        const viewCount = placeDTO.view_count || 0;
+        const avgRating = placeDTO.avg_rating || 0;
+        const reviewCount = placeDTO.review_count || 0;
+
+        const category = escapeHtml(place.category || "");
+        const description = escapeHtml(place.description || "");
+        const phone = escapeHtml(place.phone || "");
+        const status = escapeHtml(place.status || "");
+        const rank = startRank + index;
+
+        html += `
+            <div class="col-6 col-md-4 col-lg-3 ranking-added-item">
+                <div class="place-card-wrap position-relative big-rest-card-wrap">
+                    <a href="${path}/restaurantDetail.rs?place_id=${placeId}"
+                       class="place-card big-rest-card text-decoration-none text-dark d-block">
+
                         <div class="place-card__thumb-wrap position-relative">
-                            <img src="${imageUrl}" alt="${name}" loading="lazy" class="thumb-img" />
+                            <img src="${imageUrl}"
+                                 alt="${name}"
+                                 loading="lazy"
+                                 class="thumb-img"
+                                 onerror="this.src='${path}/resources/images/common/no-image.png';" />
+
+                            <span class="rank-badge rank-default">${rank}위</span>
                         </div>
 
                         <div class="place-card__body">
                             <div class="place-card__title">${name}</div>
+
+                            ${category ? `<div class="big-rest-card__category">${category}</div>` : ""}
 
                             <div class="place-card__address">
                                 <i class="bi bi-geo-alt-fill text-danger"></i>
                                 ${address}
                             </div>
 
-                            <div class="d-flex gap-3 text-muted small mt-2">
+                            ${description ? `<div class="big-rest-card__desc">${description}</div>` : ""}
+
+                            <div class="place-card__meta">
                                 <span><i class="fa-regular fa-eye"></i> ${viewCount}</span>
                                 <span><i class="fa-regular fa-heart"></i> ${avgRating}</span>
                                 <span><i class="fa-regular fa-comment"></i> ${reviewCount}</span>
                             </div>
+
+                            ${phone ? `<div class="big-rest-card__phone"><i class="fa-solid fa-phone"></i> ${phone}</div>` : ""}
+                            ${status ? `<div class="big-rest-card__status">${status}</div>` : ""}
                         </div>
                     </a>
                 </div>
-            `;
-        });
+            </div>
+        `;
+    });
 
-        return html;
-    }
+    return html;
+}
 
     function loadTabContent(tabType) {
         const url =
@@ -95,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // 탭 클릭
     document.querySelectorAll(".rk-tab").forEach(function (tab) {
         tab.addEventListener("click", function () {
             document.querySelectorAll(".rk-tab").forEach(function (t) {
@@ -112,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 지역 변경
     if (regionSelect) {
         regionSelect.addEventListener("change", function () {
             state.region = this.value || "all";
@@ -123,7 +146,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 문서 전체 클릭 이벤트 위임
     document.addEventListener("click", function (e) {
         const moreBtn = e.target.closest("#moreBtn");
         const collapseBtn = e.target.closest("#collapseBtn");
@@ -131,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const filterCollapseBtn = e.target.closest("#filterCollapseBtn");
         const chip = e.target.closest("#recommendChipWrap .rk-chip");
 
-        // 추천 필터 칩 클릭
         if (chip) {
             document.querySelectorAll("#recommendChipWrap .rk-chip").forEach(function (btn) {
                 btn.classList.remove("active");
@@ -146,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 추천 필터 더보기
         if (filterMoreBtn) {
             document.querySelectorAll(".extra-filter").forEach(function (item) {
                 item.classList.remove("d-none");
@@ -161,7 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 추천 필터 접기
         if (filterCollapseBtn) {
             document.querySelectorAll(".extra-filter").forEach(function (item) {
                 item.classList.add("d-none");
@@ -176,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 랭킹 더보기
         if (moreBtn) {
             const moreListWrap = document.getElementById("moreListWrap");
             if (!moreListWrap) return;
@@ -215,7 +233,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-                    moreListWrap.insertAdjacentHTML("beforeend", renderMoreCards(list));
+                    const startRank = offset + 1;
+					moreListWrap.insertAdjacentHTML("beforeend", renderMoreCards(list, startRank));
 
                     if (collapseBtnNow) {
                         collapseBtnNow.style.display = "inline-block";
@@ -234,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 랭킹 접기
         if (collapseBtn) {
             document.querySelectorAll(".ranking-added-item").forEach(function (item) {
                 item.remove();

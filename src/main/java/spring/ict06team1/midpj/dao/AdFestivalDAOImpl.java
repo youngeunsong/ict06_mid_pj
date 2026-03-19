@@ -76,6 +76,7 @@ public class AdFestivalDAOImpl implements AdFestivalDAO{
 		return sqlSession.getMapper(AdFestivalDAO.class).checkDuplication(dto);
 	}
 	
+	// 신규 축제 등록: 3단계
 	// (1) 신규 장소 등록 
 	@Override
 	public int insertPlace(PlaceDTO dto) {

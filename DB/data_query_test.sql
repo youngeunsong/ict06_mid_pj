@@ -84,6 +84,7 @@ ORDER BY P.PLACE_ID;
 --------------------------------------------------
 --데이터 생성
 --------------------------------------------------
+
 --=====테스트 사용자 생성=====
 INSERT INTO MEMBER(user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
 VALUES ('user01', '1234', 'dskim@naver.com', '김다솜', '1994-03-02', 'F', '010-1111-2222', '서울시 서대문구', 1500, 'USER');
@@ -518,6 +519,7 @@ SELECT * FROM POINT;
 SELECT * FROM INQUIRY;
 SELECT * FROM FAVORITE;
 
+
 --=====고객문의 및 즐겨찾기 데이터=====
 -- (COMMUNITY)게시글 데이터
 INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
@@ -563,6 +565,7 @@ COMMIT;
 
 SELECT * FROM COMMUNITY;
 SELECT * FROM COMMUNITY_COMMENT;
+
 
 --------------------------------------------------
 --실행 테스트

@@ -1,13 +1,20 @@
+--Ver.260319
+--변경사항
+--1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
+--2) COMMUNITY_LIKE 테이블 신규 생성(커뮤니티 게시글 좋아요 관리용)
+--------------------------------------------------
 --Ver.260316
 --변경사항
 --1) ACCOMMODATION 테이블: areaCode, category 필드 추가
---2) COMMUNITY, COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약조건에 'DELETED' 추가
+--2) COMMUNITY, COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약조건에 'BANNED' 추가
+-- DISPLAY: 노출됨(일반적인 상태), HIDDEN: 삭제, BANNED: 제재(관리자만 처리 가능)
 --제약조건 추가에 따른 테이블 속성 변경 쿼리는 각 테이블 생성 쿼리 하단에 추가해두었습니다. (ALTER TABLE...)
 --------------------------------------------------
 --Ver.260314
 --변경사항
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
+--------------------------------------------------
 --------------------------------------------------
 --DB 테이블 생성
 
@@ -178,13 +185,13 @@ CREATE TABLE COMMUNITY(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postUpdateDate
-	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','DELETED'))
+	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY;
---제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
 ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS
-CHECK(status IN('DISPLAY','HIDDEN','DELETED'));
+CHECK (status IN ('DISPLAY','HIDDEN','BANNED'));
 
 -- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
 CREATE TABLE COMMUNITY_COMMENT(
@@ -195,19 +202,19 @@ CREATE TABLE COMMUNITY_COMMENT(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentUpdateDate
-	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','DELETED'))
+	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY_COMMENT;
---제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
 ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
-CHECK(status IN('DISPLAY','HIDDEN','DELETED'));
+CHECK(status IN('DISPLAY','HIDDEN','BANNED'));
 
 -- 12. IMAGE_STORE (다중 이미지 관리)
 CREATE TABLE IMAGE_STORE (
     image_id           NUMBER PRIMARY KEY,
     target_id          NUMBER NOT NULL,
-    target_type        VARCHAR2(20) NOT NULL, -- 'PLACE', 'REVIEW'
+    target_type        VARCHAR2(20) NOT NULL, -- 'PLACE', 'REVIEW', 'COMMUNITY'
     image_url          VARCHAR2(500) NOT NULL,
     is_representative  CHAR(1) DEFAULT 'N', 
     sort_order         NUMBER DEFAULT 0,
@@ -216,6 +223,10 @@ CREATE TABLE IMAGE_STORE (
     CONSTRAINT CHK_IMG_ISREPRESENTATIVE CHECK(IS_REPRESENTATIVE IN('Y','N'))
 );
 SELECT * FROM IMAGE_STORE;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('COMMUNITY' 추가)
+ALTER TABLE IMAGE_STORE DROP CONSTRAINT CHK_IMG_TARGETTYPE;
+ALTER TABLE IMAGE_STORE ADD CONSTRAINT CHK_IMG_TARGETTYPE
+CHECK(target_type IN('PLACE','REVIEW','COMMUNITY'));
 
 -- 13. FAQ (자주 묻는 질문)
 CREATE TABLE FAQ (
@@ -320,6 +331,16 @@ CREATE TABLE SEARCH_HISTORY (
 );
 SELECT * FROM SEARCH_HISTORY;
 
+-- 21. COMMUNITY_LIKE(커뮤니티 게시글 좋아요 관리)
+CREATE TABLE COMMUNITY_LIKE (
+    like_id		NUMBER PRIMARY KEY,
+    user_id		VARCHAR2(50) NOT NULL REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+    post_id		NUMBER NOT NULL REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
+    created_at	TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 likeDate
+    updated_at	TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 likeUpdateDate
+    CONSTRAINT CLIKE_USER_POST UNIQUE(user_id, post_id)
+);
+
 --------------------------------------------------
 -- 시퀀스/트리거 생성
 --------------------------------------------------
@@ -339,7 +360,7 @@ CREATE SEQUENCE SEQ_FAVORITE START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_SEARCH START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_PAY START WITH 1 INCREMENT BY 1;
-
+CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
 
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함

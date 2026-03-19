@@ -11,14 +11,14 @@ public class CommunityCommentDTO {
 	private String status;
 	private Timestamp commentDate;
 	private Timestamp commentUpdateDate;
+	private CommunityDTO communityDTO;
 	
 	public CommunityCommentDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public CommunityCommentDTO(int comment_id, int post_id, String user_id, String content, String status,
-			Timestamp commentDate, Timestamp commentUpdateDate) {
+			Timestamp commentDate, Timestamp commentUpdateDate, CommunityDTO communityDTO) {
 		super();
 		this.comment_id = comment_id;
 		this.post_id = post_id;
@@ -27,6 +27,7 @@ public class CommunityCommentDTO {
 		this.status = status;
 		this.commentDate = commentDate;
 		this.commentUpdateDate = commentUpdateDate;
+		this.communityDTO = communityDTO;
 	}
 
 	public int getComment_id() {
@@ -85,11 +86,19 @@ public class CommunityCommentDTO {
 		this.commentUpdateDate = commentUpdateDate;
 	}
 
+	public CommunityDTO getCommunityDTO() {
+		return communityDTO;
+	}
+
+	public void setCommunityDTO(CommunityDTO communityDTO) {
+		this.communityDTO = communityDTO;
+	}
+
 	@Override
 	public String toString() {
 		return "CommunityCommentDTO [comment_id=" + comment_id + ", post_id=" + post_id + ", user_id=" + user_id
 				+ ", content=" + content + ", status=" + status + ", commentDate=" + commentDate
-				+ ", commentUpdateDate=" + commentUpdateDate + "]";
+				+ ", commentUpdateDate=" + commentUpdateDate + ", communityDTO=" + communityDTO + "]";
 	}
-	
+
 }

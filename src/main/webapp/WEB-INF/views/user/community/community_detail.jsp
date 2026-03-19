@@ -50,6 +50,32 @@
 	    </div>
 	</div>
 
+	<!-- 숨김/삭제된 게시글 접근 차단:시작 -->
+	<c:if test="${not empty errorMsg}">
+		<!-- 경고창 모달:시작 -->
+		<div class="modal fade" id="errorModal" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body text-center py-4">
+						<i class="bi bi-exclamation-circle text-danger" style="font-size:2rem;"></i>
+						<p class="mt-3 mb-0">${errorMsg}</p>
+					</div>
+					<div class="modal-footer justify-content-center">
+						<button type="button" class="btn btn-secondary" onclick="history.back()">확인</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				var modal = new bootstrap.Modal(document.getElementById('errorModal'));
+				modal.show();
+			});
+		</script>
+		<!-- 경고창 모달:끝 -->
+	</c:if>
+	<!-- 숨김/삭제된 게시글 접근 차단:끝 -->
+	
     <div class="page-body">
         <div class="container">
 

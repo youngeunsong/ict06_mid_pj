@@ -29,7 +29,7 @@ public class AdRestaurantController {
 	private static final Logger logger = LoggerFactory.getLogger(AdRestaurantController.class);
 	
 	//관리자 맛집 목록 
-	@GetMapping("/restaurant.ad")
+	@GetMapping("/restaurantList.adre")
 	public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => /restaurant.ad>>>");
@@ -37,7 +37,7 @@ public class AdRestaurantController {
 		return "admin/place/restaurant/restaurant";
 	}
 	
-	//관리자 맛집 또는 place_id 검색
+	//관리자 맛집명 또는 place_id 검색
 	@GetMapping("/restaurantSearch.ad") 
 	public String restaurantSearch(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {

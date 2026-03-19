@@ -2,13 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+<fmt:setTimeZone value="Asia/Seoul" />
+<!-- ad_reservation.css -->
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_reservation.css" />
+
+<meta charset="UTF-8">
 <title>커뮤니티 관리</title>
 </head>
-<!--end::Head-->
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
@@ -28,11 +32,97 @@
 		<!-- ================= CONTENT ================= -->
 		<div class="content-wrapper">
 			<!-- 컨텐츠 시작 -->
-			<div align="center">
-				<a href="#">공지, 이벤트 목록</a>	
-				<img src="${path}/resources/images/admin/adminCommunityHome.png" width="100%"
-					alt="main">
-			</div>
+			<section class="content-header">
+				<div class="container-fluid">
+					<h1>커뮤니티 게시글 관리</h1>
+				</div>
+			</section>
+			
+			<section class="content">
+				<div class="container-fluid">
+					<div class="card">
+						<div class="card-header">
+							<!-- 일괄처리 버튼 -->
+							<button type="button" class="tag tag-warning active" onclick="bulkAction('hide')">숨김</button>
+							<button type="button" class="tag tag-success active" onclick="bulkAction('show')">숨김해제</button>
+							<button type="button" class="tag tag-danger active" onclick="bulkAction('delete')">삭제</button>
+						</div>
+						
+						<div class="card-body table-responsive p-0">
+							<table class="table table-hover text-nowrap text-center">
+								<thead>
+									<tr>
+										<th><input type="checkbox" id="checkAll"></th>
+										<th>번호</th>
+										<th>카테고리</th>
+										<th>제목</th>
+										<th>작성자</th>
+										<th>조회</th>
+										<th>추천</th>
+										<th>상태</th>
+										<th>작성일</th>
+										<th>관리</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:choose>
+										<c:when test="${empty postList}">
+											<tr>
+												<td colspan="10">게시글이 없습니다.</td>
+											</tr>
+										</c:when>
+										<c:otherwise>
+											<c:forEach var="post" items="${postList}">
+												<tr>
+													<td><input type="checkbox" class="post-check" value="${post.post_id}"></td>
+													<td>${post.post_id}</td>
+													<td>${post.category}</td>
+													<td>
+														<a href="${path}/communityDetail.adco?post_id=${post.post_id}">
+															${post.title}
+														</a>
+													</td>
+													<td>${post.user_id}</td>
+													<td>${post.view_count}</td>
+													<td>${post.like_count}</td>
+													<td>
+														<c:choose>
+															<c:when test="${post.status eq 'DISPLAY'}">
+																<span class="badge badge-success">정상</span>
+															</c:when>
+															<c:when test="${post.status eq 'HIDDEN'}">
+																<span class="badge badge-warning">삭제</span>
+															</c:when>
+															<c:when test="${post.status eq 'BANNED'}">
+																<span class="badge badge-danger">숨김</span>
+															</c:when>
+														</c:choose>
+													</td>
+													<td><fmt:formatDate value="${post.postDate}" pattern="yyyy.MM.dd" /></td>
+													<td>
+														<c:choose>
+															<c:when test="${post.status eq 'DISPLAY'}">
+																<button type="button" class="tag tag-warning" onclick="hidePost(${post.post_id})">숨김</button>
+															</c:when>
+															<c:when test="${post.status eq 'BANNED'}">
+																<button type="button" class="tag tag-success" onclick="showPost(${post.post_id})">숨김해제</button>
+															</c:when>
+														</c:choose>
+														<c:if test="${post.status ne 'HIDDEN'}">
+															<button type="button" class="tag tag-danger" onclick="deletePost(${post.post_id})">삭제</button>
+														</c:if>
+														<button type="button" class="tag tag-info" onclick="location.href='${path}/communityDetail.adco?post_id=${post.post_id}'">상세보기</button>
+													</td>
+												</tr>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
 		<!-- 컨텐츠 끝 -->
 
@@ -43,21 +133,12 @@
 		</footer>
 		<!--end::Footer-->
 	
-		<!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : 커뮤니티 게시글, 공지, 이벤트 목록 조회</div>
-		
-		<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-		<!-- #${'{'} : #과 { 표시 -->
-		<!-- &lt; : < 표시 -->
-		<!-- &gt; : > 표시 -->
-		<div>
-			<pre><code>
-			</code></pre>
-		</div>
-		<!-- 관련 SQL 끝 -->
-	
 	</div>
 	<!--end::div Wrapper-->
+
+<script>const path = "${path}";</script>
+<script src="${path}/resources/js/admin/community.js"></script>
+
 </body>
 <!--end::Body-->
 </html>

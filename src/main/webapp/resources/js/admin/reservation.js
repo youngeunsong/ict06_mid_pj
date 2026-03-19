@@ -142,7 +142,7 @@ function filterData() {
 	if(typeList.length > 0) params.push('placeType=' + typeList.join(','));
 	if(sortType) params.push('sortType=' + sortType);
 	
-	location.href = path + '/getReservationList.ad' +
+	location.href = path + '/reservationList.ad' +
 	(params.length > 0 ? '?' + params.join('&') : '');
 }
 
@@ -192,7 +192,7 @@ function keywordSearch() {
 		alert('ID 또는 예약번호를 입력하세요.');
 		return;
 	}
-	location.href = path + '/getReservationList.ad?keyword=' + encodeURIComponent(keyword)
+	location.href = path + '/reservationList.ad?keyword=' + encodeURIComponent(keyword)
 					+ (sortType ? '&sortType=' + sortType : '');
 }
 
@@ -211,7 +211,8 @@ function viewDetail(resId) {
 			$('#modal_name').text(data.placeDTO.name);
 			$('#modal_check_in').text(data.check_in);
 			$('#modal_check_out').text(data.check_out);
-			$('#modal_visit_time').text(data.visit_time);
+			$('#modal_visit_time').text(data.visit_time || '-');
+			$('#modal_request_note').text(data.request_note || '-');
 			$('#modal_guest_count').text(data.guest_count + "명");
 			$('#modal_status').html(statusMap[data.status] || data.status);
 			$('#resDetailModal').modal('show');
@@ -234,11 +235,17 @@ function editReservation(resId) {
 			//날짜 형식 변환(2026.01.01 -> 2026-01-01)
 			function formatDate(dateStr) {
 				if(!dateStr) return '';
-				return dateStr.replaceAll('.', '-');
+				return dateStr.toString().substring(0,10).replaceAll('.', '-');
+			}
+			
+			function formatTime(timeStr) {
+				if(!timeStr) return '';
+				return timeStr.toString().substring(0,5);
 			}
 			
 			//readonly 필드
 			$('#update_res_id').text(data.reservation_id);
+			$('#update_reservation_id').val(data.reservation_id);
 			$('#update_user_id').text(data.user_id);
 			$('#update_name').text(data.placeDTO && data.placeDTO.name ? data.placeDTO.name : '');
 			
@@ -246,7 +253,7 @@ function editReservation(resId) {
 			$('#update_status').val(data.status);
 			$('#update_check_in').val(formatDate(data.check_in));
 			$('#update_check_out').val(formatDate(data.check_out));
-			$('#update_visit_time').val(data.visit_time || '');
+			$('#update_visit_time').val(formatTime(data.visit_time));
 			$('#update_guest_count').val(data.guest_count);
 			$('#update_request_note').val(data.request_note || '');
 			$('#resUpdateModal').modal('show');
@@ -259,12 +266,31 @@ function editReservation(resId) {
 
 //예약 수정 처리
 function updateReservation() {
+	const reservationId = $('#update_reservation_id').val().trim();
 	const checkIn = $('#update_check_in').val();
 	const checkOut = $('#update_check_out').val();
+	const visitTime = $('#update_visit_time').val();
+	const guestCount = $('#update_guest_count').val();
+	
+	//필수값 체크
+	if(!reservationId) {
+		alert('예약번호가 없습니다.');
+		return;
+	}
+	if(!checkIn) {
+		alert('방문일을 입력하세요.');
+		$('#update_check_in').focus();
+		return;
+	}
+	if(!guestCount || Number(guestCount) < 1) {
+		alert('인원수를 1명 이상 입력하세요.');
+		$('#update_guest_count').focus();
+		return;
+	}
 	
 	//날짜 유효성 체크
 	if(checkIn && checkOut && checkIn > checkOut) {
-		alert('퇴실일은 방문일 이후로만 설정할 수 있음');
+		alert('퇴실일은 방문일 이후로만 설정할 수 있습니다.');
 		return;
 	}
 	if(!confirm("예약 정보를 수정하시겠습니까?"))
@@ -274,12 +300,12 @@ function updateReservation() {
 		url: path + '/updateReservation.ad',
 		type: 'post',
 		data: {
-			resId: $('#update_res_id').text(),
+			reservation_id: reservationId,
 			status: $('#update_status').val(),
 			check_in: checkIn,
 			check_out: checkOut,
-			visit_time: $('#update_visit_time').val(),
-			guest_count: $('#update_guest_count').val().replace('명',''),
+			visit_time: visitTime,
+			guest_count: guestCount,
 			request_note: $('#update_request_note').val(),
 		},
 		success: function(result) {

@@ -28,8 +28,6 @@ import spring.ict06team1.midpj.dao.AdRestaurantDAO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
-
-
 @Service
 public class AdRestaurantServiceImpl implements AdRestaurantService {
 	
@@ -110,7 +108,6 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		    model.addAttribute("areaCode",areaCode);
 		    model.addAttribute("totalCount", total);
 		    model.addAttribute("pageNum", pageNum);
-		    model.addAttribute("keyword", keyword);
 		} else {
 		    // 문자가 포함되어 있거나 null인 경우
 			String keyword = request.getParameter("keyword");
@@ -138,7 +135,6 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		    model.addAttribute("areaCode",areaCode);
 		    model.addAttribute("totalCount", total);
 		    model.addAttribute("pageNum", pageNum);
-		    model.addAttribute("keyword", keyword);
 		}
 	}
 	//맛집 정보 등록		
@@ -152,11 +148,11 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		System.out.println("file : "+ file);
 	
 		// input 경로- 폴더먼저 생성 후
-		String saveDir = request.getSession().getServletContext().getRealPath("/resources/upload/");//이거는 이 url을 읽는거다
+		String saveDir = request.getSession().getServletContext().getRealPath("/resources/images/admin/restaurant/");//이거는 이 url을 읽는거다
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\upload\\";
+		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)
@@ -194,7 +190,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		        // ict06_team1_midpj 
 		        String contextPath = request.getContextPath(); 
 		        // DB에 저장할 최종 이미지 접근 경로(URL)를 조립
-		        p_img1 = contextPath + "/resources/upload/" + saveFileName;
+		        p_img1 = contextPath + "/resources/images/admin/restaurant/" + saveFileName;
 		        System.out.println("새로운 이미지 경로 할당 완료: " + p_img1);
 			
 			}catch(IOException e) {
@@ -319,11 +315,11 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		System.out.println("file : "+file);
 		
 		// input 경로- 폴더먼저 생성 후
-		String saveDir = request.getSession().getServletContext().getRealPath("/resources/upload/");//이거는 이 url을 읽는거다
+		String saveDir = request.getSession().getServletContext().getRealPath("/resources/images/admin/restaurant/");//이거는 이 url을 읽는거다
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\upload";
+		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)
@@ -352,7 +348,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		            fos.write(buffer, 0, len);
 		        }
 		        String contextPath = request.getContextPath(); // /ict06_team1_midpj 
-		        p_img1 = contextPath + "/resources/upload/" + saveFileName;
+		        p_img1 = contextPath + "/resources/images/admin/restaurant/" + saveFileName;
 		        System.out.println("새로운 이미지 경로 할당 완료: " + p_img1);
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -414,7 +410,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		System.out.println("전달된 상세 설명: " + rDto.getDescription());
 		System.out.println("전달된 장소 ID: " + pDto.getPlace_id());
 	}
-			
+	
+	//맛집 정보 삭제
 	@Override
 	public void getRestaurantDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 	        throws ServletException, IOException {
@@ -445,7 +442,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    model.addAttribute("category", category);
 	    model.addAttribute("keyword",keyword);
 	}
-
+	
+	//공공데이터 활용 맛집 정보 내려받기(place 테이블쪽)
 	@Override
 	public void testRegister(HttpServletRequest request, HttpServletResponse response, Model model) 
 	        throws ServletException, IOException {

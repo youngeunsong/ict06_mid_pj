@@ -35,7 +35,7 @@
 		<c:if test="${insertCnt != 1}">
 			<script type="text/javascript">
 				alert("신규 축제 등록 실패!!"); 
-				window.location="${path}/createFestivalAction.adfe"
+				window.location="${path}/createFestival.adfe"
 			</script>
 		</c:if>
 

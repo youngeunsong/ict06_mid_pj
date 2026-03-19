@@ -84,6 +84,7 @@ ORDER BY P.PLACE_ID;
 --------------------------------------------------
 --데이터 생성
 --------------------------------------------------
+
 --=====테스트 사용자 생성=====
 INSERT INTO MEMBER(user_id, password, email, name, birth_date, gender, phone, address, point_balance, role) 
 VALUES ('user01', '1234', 'dskim@naver.com', '김다솜', '1994-03-02', 'F', '010-1111-2222', '서울시 서대문구', 1500, 'USER');
@@ -518,6 +519,56 @@ SELECT * FROM POINT;
 SELECT * FROM INQUIRY;
 SELECT * FROM FAVORITE;
 
+
+--=====고객문의 및 즐겨찾기 데이터=====
+-- (COMMUNITY)게시글 데이터
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user01', '강남 맛집 추천해요!', '강남역 근처 맛집 공유합니다. 파스타가 정말 맛있어요.', '맛집수다', 15, 3, 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user02', '제주도 숙소 후기', '제주도 여행 중 묵었던 펜션 후기입니다. 뷰가 정말 좋아요!', '숙소수다', 32, 7, 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user01', '벚꽃 축제 다녀왔어요', '여의도 벚꽃 축제 다녀온 후기입니다. 인파가 장난 아니었어요.', '축제수다', 48, 12, 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user03', '부산 여행 꿀팁 공유', '부산 여행 3박4일 일정과 꿀팁 공유합니다!', '정보공유', 21, 5, 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user02', '경주 같이 가실 분!', '다음달 경주 여행 동행 구합니다. 2박3일 일정이에요.', '동행구해요', 9, 1, 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user03', '이 글은 숨김 처리된 글', '관리자 숨김 테스트용 게시글입니다.', '맛집수다', 5, 0, 'BANNED', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY (post_id, user_id, title, content, category, view_count, like_count, status, created_at)
+VALUES (SEQ_POST.NEXTVAL, 'user01', '삭제된 게시글 테스트', '관리자 삭제 테스트용 게시글입니다.', '정보공유', 2, 0, 'HIDDEN', SYSTIMESTAMP);
+
+COMMIT;
+DELETE FROM COMMUNITY;
+SELECT * FROM COMMUNITY;
+
+-- (COMMUNITY)댓글 데이터
+INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)
+VALUES (SEQ_COMMENT.NEXTVAL, SEQ_POST.CURRVAL - 6, 'user02', '저도 강남 맛집 알고 싶어요!', 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)
+VALUES (SEQ_COMMENT.NEXTVAL, SEQ_POST.CURRVAL - 6, 'user03', '어느 식당인지 알려주세요~', 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)
+VALUES (SEQ_COMMENT.NEXTVAL, SEQ_POST.CURRVAL - 5, 'user01', '저도 제주도 가고 싶다!', 'DISPLAY', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)
+VALUES (SEQ_COMMENT.NEXTVAL, SEQ_POST.CURRVAL - 5, 'user03', '숨김 처리 테스트 댓글', 'HIDDEN', SYSTIMESTAMP);
+
+INSERT INTO COMMUNITY_COMMENT (comment_id, post_id, user_id, content, status, created_at)
+VALUES (SEQ_COMMENT.NEXTVAL, SEQ_POST.CURRVAL - 4, 'user02', '벚꽃 축제 저도 다녀왔어요!', 'DISPLAY', SYSTIMESTAMP);
+
+COMMIT;
+
+SELECT * FROM COMMUNITY;
+SELECT * FROM COMMUNITY_COMMENT;
+
+
 --------------------------------------------------
 --실행 테스트
 --------------------------------------------------
@@ -793,6 +844,9 @@ VALUES (SEQ_REVIEW.NEXTVAL, 'user02', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLA
     
 INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS) 
 VALUES (SEQ_REVIEW.NEXTVAL, 'user03', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLACE_TYPE='REST'), 4, '음식이 깔끔하고 맛있습니다.', 'DISPLAY');
+
+INSERT INTO REVIEW (REVIEW_ID, USER_ID, PLACE_ID, RATING, CONTENT, STATUS) 
+VALUES (SEQ_REVIEW.NEXTVAL, 'user04', (SELECT MIN(PLACE_ID) FROM PLACE WHERE PLACE_TYPE='REST'), 5, '사장님이 친절합니다.', 'DISPLAY');
 
 SELECT * FROM REVIEW;
 

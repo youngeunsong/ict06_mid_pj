@@ -38,7 +38,7 @@
 		<c:if test="${updateCnt != 1}">
 			<script type="text/javascript">
 				alert("정보 수정 실패!!");
-				window.location= "${path}/modifyDetailAction.do";
+				window.location= "${path}/modifyUser.do";
 			</script>
 		</c:if>
 	

@@ -92,4 +92,23 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 		logger.info("[url => /deleteActionFestival.adfe]");
 	    return adFestService.deleteFestival(request, response, model);
 	}
+	
+	// [관리자 - 장소 관리] 오픈API로 축제 정보 가져오는 화면으로 이동
+	@RequestMapping("/festivalImport.adfe")
+	public String festivalImport(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /festivalImport.adfe]");
+		return "admin/place/festival/festivalImport";
+	}
+	
+	// [관리자 - 장소 관리] 오픈API로 축제 정보 가져오기
+	@RequestMapping("/festivalImportAction.adfe")
+	@ResponseBody
+	public String festivalImportAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws Exception {
+		logger.info("[url => /festivalImportAction.adfe]");
+		String json = adFestService.bringFestivalFromAPI(request, response, model); 
+		adFestService.insertFestivalsFromApi(json);
+	    return "success";
+	}
 }

@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+.content-wrapper {
+	background-color: #F6F6F6 !important;
+	min-height: calc(100vh - 120px) !important;
+	padding-bottom: 20px !important;
+}
+
+.card {
+	border: none;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	border-radius: 12px;
+}
+
+.form-label {
+	font-weight: 600;
+	color: #444;
+	font-size: 0.9rem;
+}
+
+.btn-submit {
+	background-color: #01D281 !important;
+	color: white;
+	border-radius: 8px;
+	padding: 12px 40px;
+	border: none;
+	font-weight: 600;
+	transition: 0.3s;
+}
+
+.btn-cancel {
+	background-color: #6c757d !important;
+	color: white;
+	border-radius: 8px;
+	padding: 12px 40px;
+	border: none;
+	transition: 0.3s;
+}

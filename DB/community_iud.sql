@@ -313,6 +313,9 @@ SELECT notice_id,
    AND is_top = 'Y'
  ORDER BY notice_id DESC;
 
+SELECT *
+FROM NOTICE
+
  -- 공지사항 일반 목록
 -- 검색 조건 변수 (테스트 시 직접 값 입력)
 -- searchKeyword : '공지'

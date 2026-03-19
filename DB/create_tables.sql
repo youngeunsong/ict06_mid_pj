@@ -1,7 +1,20 @@
+--Ver.260319
+--변경사항
+--1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
+--2) COMMUNITY_LIKE 테이블 신규 생성(커뮤니티 게시글 좋아요 관리용)
+--------------------------------------------------
+--Ver.260316
+--변경사항
+--1) ACCOMMODATION 테이블: areaCode, category 필드 추가
+--2) COMMUNITY, COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약조건에 'BANNED' 추가
+-- DISPLAY: 노출됨(일반적인 상태), HIDDEN: 삭제, BANNED: 제재(관리자만 처리 가능)
+--제약조건 추가에 따른 테이블 속성 변경 쿼리는 각 테이블 생성 쿼리 하단에 추가해두었습니다. (ALTER TABLE...)
+--------------------------------------------------
 --Ver.260314
 --변경사항
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
+
 -- [변경사항 적용 임시 쿼리]--------------------------------------------------
 -- 1) RESTAURANT 테이블: restDate, areaCode 필드 추가
 ALTER TABLE RESTAURANT ADD (
@@ -56,8 +69,6 @@ CHECK (TARGET_TYPE IN ('PLACE', 'REVIEW', 'COMMUNITY'));
 -------------------------------------------------------------------
 
 
-
-
 --DB 테이블 생성
 
 -- 1. 회원
@@ -72,7 +83,7 @@ CREATE TABLE MEMBER (
     address			VARCHAR2(255),
     point_balance	NUMBER DEFAULT 0,
     role			VARCHAR2(20) DEFAULT 'USER',		--권한(일반사용자:'USER', 관리자:'ADMIN')
-    status			VARCHAR2(20) DEFAULT 'ACTIVE',		--상태(active, quit 등) -> 불요시 삭제
+    status			VARCHAR2(20) DEFAULT 'ACTIVE',		--상태(active, quit, BANNED 등) -> 불요시 삭제
     created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 joinDate
     updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 updateDate
     CONSTRAINT CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
@@ -113,6 +124,10 @@ CREATE TABLE RESTAURANT (
     CONSTRAINT CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM RESTAURANT;
+ALTER TABLE RESTAURANT ADD(
+	restdate	VARCHAR2(30),
+	areaCode	VARCHAR2(30)
+);
 
 -- 4. 숙소 (PLACE 참조)
 CREATE TABLE ACCOMMODATION (
@@ -121,9 +136,15 @@ CREATE TABLE ACCOMMODATION (
     phone            VARCHAR2(20),
     price            NUMBER,
     status			VARCHAR2(20) DEFAULT 'OPEN',
+    areaCode		VARCHAR2(30),
+    category		VARCHAR2(50),
     CONSTRAINT CHK_ACCOMMODATION_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM ACCOMMODATION;
+ALTER TABLE ACCOMMODATION ADD(
+	areaCode	VARCHAR2(30),
+	category	VARCHAR2(50)
+);
 
 SELECT r.*, p.name, p.address
 FROM RESERVATION r
@@ -217,8 +238,13 @@ CREATE TABLE COMMUNITY(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postUpdateDate
-	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
+SELECT * FROM COMMUNITY;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
+ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
+ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS
+CHECK (status IN ('DISPLAY','HIDDEN','BANNED'));
 
 -- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
 CREATE TABLE COMMUNITY_COMMENT(
@@ -229,8 +255,13 @@ CREATE TABLE COMMUNITY_COMMENT(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentUpdateDate
-	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
+SELECT * FROM COMMUNITY_COMMENT;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
+ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
+ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
+CHECK(status IN('DISPLAY','HIDDEN','BANNED'));
 
 -- 12. IMAGE_STORE (다중 이미지 관리)
 CREATE TABLE IMAGE_STORE (
@@ -245,6 +276,10 @@ CREATE TABLE IMAGE_STORE (
     CONSTRAINT CHK_IMG_ISREPRESENTATIVE CHECK(IS_REPRESENTATIVE IN('Y','N'))
 );
 SELECT * FROM IMAGE_STORE;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('COMMUNITY' 추가)
+ALTER TABLE IMAGE_STORE DROP CONSTRAINT CHK_IMG_TARGETTYPE;
+ALTER TABLE IMAGE_STORE ADD CONSTRAINT CHK_IMG_TARGETTYPE
+CHECK(target_type IN('PLACE','REVIEW','COMMUNITY'));
 
 -- 13. FAQ (자주 묻는 질문)
 CREATE TABLE FAQ (
@@ -437,13 +472,22 @@ CREATE OR REPLACE PROCEDURE PROC_CHECK_ADMIN_AUTH (
 ) IS
     v_role VARCHAR2(20);
 BEGIN
-    -- 1. 아이디 형식 체크 (admin+숫자)
+    --0. NULL 체크
+	IF p_admin_id IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 ID가 없습니다.');
+	END IF;
+
+	-- 1. 아이디 형식 체크 (admin+숫자)
     IF NOT REGEXP_LIKE(p_admin_id, '^admin[0-9]+$') THEN
-        RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 아이디 형식이 올바르지 않습니다. (예: admin01)');
+        RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 ID 형식이 올바르지 않습니다.');
     END IF;
 
     -- 2. 역할(role) 체크
-    SELECT role INTO v_role FROM MEMBER WHERE user_id = p_admin_id;
+    SELECT ROLE
+      INTO v_role
+      FROM MEMBER
+     WHERE user_id = p_admin_id;
+    
     IF v_role != 'ADMIN' THEN
         RAISE_APPLICATION_ERROR(-20002, '오류: 관리자 권한이 없는 사용자입니다.');
     END IF;
@@ -467,18 +511,11 @@ CREATE OR REPLACE TRIGGER TRG_NOTICE_ADMIN_CHECK
 BEFORE INSERT OR UPDATE ON NOTICE
 FOR EACH ROW
 BEGIN
-	--1. admin_id가 NULL인 경우(세션 없는 경우)
-	IF :NEW.admin_id IS NULL THEN
-		RAISE_APPLICATION_ERROR(-20004, '관리자 인증 정보가 없습니다. 로그인 상태를 확인해주세요.');
+	IF INSERTING THEN
+		PROC_CHECK_ADMIN_AUTH(:NEW.ADMIN_ID);
+	ELSIF UPDATING('ADMIN_ID') THEN
+		PROC_CHECK_ADMIN_AUTH(:NEW.ADMIN_ID);
 	END IF;
-
-	--2. 관리자 인증 프로시저 호출
-    PROC_CHECK_ADMIN_AUTH(:NEW.admin_id);
-	
-	EXCEPTION
-		WHEN OTHERS THEN
-			--다른 오류 발생 시에도 해당 예외를 상위로 던져 INSERT/UPDATE 차단
-			RAISE;
 END;
 /
 

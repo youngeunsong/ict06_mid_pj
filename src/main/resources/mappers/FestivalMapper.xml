@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FestivalMapper">
+	<!-- ========================= -->
+	<!-- 축제 상세 조회 -->
+   	<!-- 
+   	 * @author 송영은
+	 * 최초작성일: 2026-03-17
+	 * 최종수정일: 2026-03-17
+	 * 참고 코드: PlaceMapper.xml, AdFestivalMapper.xml -->
+  	<!-- ========================= -->
+  	<!-- 축제에 필요한 변수 매핑 -->
+	<resultMap id="festivalMap" type="spring.ict06team1.midpj.dto.FestivalDTO">
+	 	<id property="festival_id" column="festival_id"/>
+	 	<result property="description" column="description"/>
+	 	<result property="start_date" column="start_date"/>
+	 	<result property="end_date" column="end_date"/>
+	 	<result property="status" column="status"/>
+	 	
+	 	<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	 		<id property="place_id" column="place_id"></id>
+	 		<result property="place_type" column="place_type"></result>
+	 		<result property="name" column="name"></result>
+	 		<result property="address" column="address"></result>
+	 		<result property="view_count" column="view_count"></result>
+	 		<result property="latitude" column="latitude"></result>
+	 		<result property="longitude" column="longitude"></result>
+	 		<result property="image_url" column="image_url"></result>
+	 		<result property="placeRegDate" column="created_at"></result>
+	 		<!-- <result property="placeUpdateDate" column="updated_at"></result> --> <!-- TODO: DB 데이터 수정 후 적용 -->
+	 	</association>
+	</resultMap>
+  
+  <!-- 축제 상세 정보 조회 -->
+  <!-- 1단계: Place, Review 함께 조회 -->
+  <select id="selectPlaceDetail"
+        parameterType="int"
+        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+  SELECT
+    p.place_id,
+    p.place_type,
+    p.name,
+    p.address,
+    p.view_count,
+    p.latitude,
+    p.longitude,
+    p.image_url,
+    p.created_at AS placeRegDate,
+    COUNT(r.review_id) AS review_count,
+    NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
+  FROM place p
+  LEFT JOIN review r
+    ON p.place_id = r.place_id
+   AND r.status = 'DISPLAY'
+  WHERE p.place_id = #{value}
+    AND p.place_type = 'FEST'
+  GROUP BY
+    p.place_id,
+    p.place_type,
+    p.name,
+    p.address,
+    p.view_count,
+    p.latitude,
+    p.longitude,
+    p.image_url,
+    p.created_at
+</select>
+
+  <!-- 2단계: FestivalDTO 조회 -->
+  <select id="getFestivalDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalDTO">
+		SELECT
+				festival_id,
+				description,
+				start_date,
+				end_date,
+				status
+		FROM 	FESTIVAL 
+		WHERE festival_id = #{festival_id}
+	</select>
+	
+  <!-- 3단계: FestivalTicketDTO 조회 -->
+  <select id="getFestivalTickets" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+		SELECT
+			    ticket_id,
+			    festival_id,
+			    ticket_type,
+			    price,
+			    stock,
+			    description
+		  FROM  FESTIVAL_TICKET
+		 WHERE  festival_id = #{festival_id}
+  </select>
+  
+  <!-- 조회수 증가 -->
+  <update id="increaseViewCount" parameterType="int">
+    UPDATE place
+    SET view_count = NVL(view_count, 0) + 1
+    WHERE place_id = #{value}
+      AND place_type = 'FEST'
+  </update>
+
+  <!-- ========================= -->
+  <!-- 리뷰 페이징 조회 -->
+  <!-- ========================= -->
+  <select id="selectReviewsPaged"
+          parameterType="map"
+          resultType="spring.ict06team1.midpj.dto.ReviewDTO">
+    <![CDATA[
+    SELECT *
+    FROM (
+      SELECT
+        r.review_id,
+        r.user_id,
+        r.place_id,
+        r.rating,
+        r.content,
+        r.status,
+        r.created_at AS reviewDate,
+        ROW_NUMBER() OVER (ORDER BY r.created_at DESC) AS rn
+      FROM review r
+      WHERE r.place_id = #{placeId}
+        AND r.status = 'DISPLAY'
+    )
+    WHERE rn > #{offset}
+      AND rn <= (#{offset} + #{limit})
+    ]]>
+  </select>
+
+  <!-- 리뷰 총 개수 -->
+  <select id="getReviewCount"
+          parameterType="int"
+          resultType="int">
+    SELECT COUNT(*)
+    FROM review
+    WHERE place_id = #{value}
+      AND status = 'DISPLAY'
+  </select>
+
+  <!-- ========================= -->
+  <!-- 즐겨찾기(FAVORITE) -->
+  <!-- ========================= -->
+
+  <!-- 로그인한 사용자가 해당 place를 즐겨찾기 했는지 -->
+  <select id="isFavorite"
+          parameterType="map"
+          resultType="int">
+    SELECT COUNT(*)
+    FROM favorite
+    WHERE user_id = #{userId}
+      AND place_id = #{placeId}
+  </select>
+
+  <!-- 즐겨찾기 추가 -->
+  <insert id="insertFavorite" parameterType="map">
+    INSERT INTO favorite (
+      favorite_id,
+      user_id,
+      place_id,
+      created_at
+    )
+    VALUES (
+      SEQ_FAVORITE.NEXTVAL,
+      #{userId},
+      #{placeId},
+      SYSTIMESTAMP
+    )
+  </insert>
+
+  <!-- 즐겨찾기 삭제 -->
+  <delete id="deleteFavorite" parameterType="map">
+    DELETE FROM favorite
+    WHERE user_id = #{userId}
+      AND place_id = #{placeId}
+  </delete>
+
+</mapper>

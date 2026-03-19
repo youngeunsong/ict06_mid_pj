@@ -6,87 +6,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>맛집 관리</title>
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
-
-<style type="text/css">
-    /* 필터 영역 스타일 */
-    .filter-box { background: #fff !important; border: 1px solid #dee2e6; padding: 25px; margin-bottom: 20px; border-radius: 4px; }
-    .filter-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-left: 20px; border-left: 1px solid #eee; }
-    .filter-row { display: flex; align-items: center; }
-    .filter-row-type { margin-left: 10px; } 
-    .filter-row-label { font-size: 0.85rem; font-weight: bold; color: #555; width: 80px; }
-    .filter-select { width: 160px; font-size: 0.85rem; height: 31px; border: 1px solid #ced4da; border-radius: 4px; }
-    
-    /* 버튼 스타일 */
-    .btn-search-dark { background-color: #343a40 !important; color: #fff !important; font-size: 0.85rem; padding: 6px 20px; border-radius: 4px; border: none; }
-    .btn-res-primary { background-color: #01D281 !important; color: white !important; border: none; font-weight: bold; }
-    
-    /* 테이블 열 간격 최적화 */
-    .col-num { width: 90px !important; text-align: center !important; }
-    
-    /* 카테고리 열: 번호로부터 오른쪽으로 간격 유지 */
-    .col-cat { 
-        width: 130px !important; 
-        padding-left: 35px !important; 
-        text-align: left !important; 
-    }
-
-    /* 맛집명 열: 카테고리로부터 오른쪽으로 간격 유지 */
-    .col-name { 
-        width: 250px !important; 
-        padding-left: 30px !important; 
-        text-align: left !important; 
-    }
-
-    .col-addr { width: 350px !important; text-align: left !important; }
-
-    .pagination-right-wrapper { display: flex; justify-content: flex-end; padding: 15px 20px; }
-    .add-btn-area { padding: 15px 20px; border-top: none !important; }
-</style>
-
-<script>
-function handleCombinedSearch() {
-    // 1. 엘리먼트가 있는지 확인하며 값을 가져옵니다.
-    const areaCodeEl = document.getElementById("areaCode");
-    const categoryEl = document.getElementById("category");
-    const keywordEl = document.getElementById("keyword");
-    
-    // 2. 값이 있으면 가져오고, 없으면 빈 문자열 처리
-    const areaCode = areaCodeEl ? areaCodeEl.value : "";
-    const category = categoryEl ? categoryEl.value : ""
-    const keyword = keywordEl ? keywordEl.value : "";
-    
-    // 3. 카테고리는 화면에서 뺐으므로 파라미터에서 제외하거나 빈 값 처리
-    location.href = "${path}/restaurant.ad?areaCode=" + areaCode + 
-    				"&category=" + category +
-                    "&keyword=" + encodeURIComponent(keyword) + 
-                    "&pageNum=1";
-}
-
-function searchRestaurant() {
-    // 1. 입력창(input)의 ID가 'keyword'인 요소에서 값을 가져옵니다.
-    const keywordElement = document.getElementById("keyword");
-    const keyword = keywordElement ? keywordElement.value : "";
-    
-    const categoryElement = document.getElementById("category");
-    const category = categoryElement ? categoryElement.value : "";
-    // 2. 검색어가 비어있을 경우 유효성 검사 (선택 사항)
-    if (!keyword.trim()) {
-        alert("검색어를 입력해주세요.");
-        keywordElement.focus();
-        return;
-    }
-
-    // 3. 지역 코드는 현재 '0'으로 고정하여 이동
-    // [수정] 세미콜론 위치를 조정하고 category를 끝에 붙인다.
-    location.href = `${path}/restaurantSearch.ad?areaCode=0&keyword=` 
-                    + encodeURIComponent(keyword) 
-                    + `&pageNum=1`
-                    + `&category=` + category; // 이제 URL에 category가 포함됩니다.
-}
-</script>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_restaurant.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -107,7 +30,7 @@ function searchRestaurant() {
                         <div class="filter-left">
                             <div class="input-group input-group-sm" style="width:220px;">
                                 <input type="text" id="keyword" name="keyword" class="form-control"
-                                    placeholder="맛집명 또는 번호 입력">
+                                    placeholder="맛집명 또는 번호 입력"value="${keyword}">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="searchRestaurant()">
                                      <i>검색</i>
@@ -138,7 +61,7 @@ function searchRestaurant() {
 							    </select>
                             </div>
                             <div class="filter-row mt-1">
-						        <span class="filter-row-label">유형</span>
+						        <span class="filter-row-label">맛집 유형</span>
 						        <select id="category" name="category" class="filter-select">
 						            
 						            <c:if test="${not empty keyword}">
@@ -171,7 +94,7 @@ function searchRestaurant() {
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="col-num">번호</th>
-                                        <th class="col-cat">유형</th>
+                                        <th class="col-cat">맛집 유형</th>
                                         <th class="col-name">맛집명</th>
                                         <th class="col-addr">주소</th>
                                         <th style="width:70px;" class="text-center">조회수</th>
@@ -193,10 +116,10 @@ function searchRestaurant() {
 							                            <c:when test="${dto.category == 'A05020200'}"><span class="badge border text-danger">양식</span></c:when>
 							                            <c:when test="${dto.category == 'A05020300'}"><span class="badge border text-primary">일식</span></c:when>
 							                            <c:when test="${dto.category == 'A05020400'}"><span class="badge border text-warning">중식</span></c:when>
-							                            <c:when test="${dto.category == 'A05020500'}"><span class="badge border text-warning">기타</span></c:when>
-							                            <c:when test="${dto.category == 'A05020600'}"><span class="badge border text-warning">카페</span></c:when>
-							                            <c:when test="${dto.category == 'A05020700'}"><span class="badge border text-warning">이색음식</span></c:when>
-							                            <c:when test="${dto.category == 'A05020900'}"><span class="badge border text-warning">식음료</span></c:when>
+							                            <c:when test="${dto.category == 'A05020500'}"><span class="badge border text-info">기타</span></c:when>
+							                            <c:when test="${dto.category == 'A05020600'}"><span class="badge border text-dark">카페</span></c:when>
+							                            <c:when test="${dto.category == 'A05020700'}"><span class="badge border text-secondary">이색음식</span></c:when>
+							                            <c:when test="${dto.category == 'A05020900'}"><span class="badge border" style="color: #0077b6;">식음료</span></c:when>
 							                        </c:choose>
 							                    </td>
 							                    <td class="fw-bold col-name">${dto.name}</td>
@@ -205,10 +128,10 @@ function searchRestaurant() {
 							                    <td class="text-center">
 							                        <img src="${dto.image_url}" style="width:80px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='${path}/resources/images/no-image.png'">
 							                    </td>
-							                    <td class="text-muted small text-center">${fn:substring(dto.placeRegDate, 0, 10)}</td>
+							                    <td class="text-muted small text-center">${fn:substring(dto.placeUpdateDate, 0, 10)}</td>
 							                    <td class="text-center">
 							                        <button class="btn btn-xs btn-outline-secondary" onclick="location.href='${path}/restaurantModify.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}'">수정</button>
-							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) { location.href='${path}/restaurantDeleteAction.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}&category=${dto.category}&keyword=${keyword}';}">삭제</button>
+							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) { location.href='${path}/restaurantDeleteAction.ad?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}&category=${param.category}&keyword=${keyword}';}">삭제</button>
 							                    </td>
 							                </tr>
 							            </c:forEach>
@@ -247,5 +170,46 @@ function searchRestaurant() {
             <strong>Copyright &copy; 2026</strong>
         </footer>
     </div>
+<script>
+function handleCombinedSearch() {
+    // 1. 엘리먼트가 있는지 확인하며 값을 가져옵니다.
+    const areaCodeEl = document.getElementById("areaCode");
+    const categoryEl = document.getElementById("category");
+    const keywordEl = document.getElementById("keyword");
+    
+    // 2. 값이 있으면 가져오고, 없으면 빈 문자열 처리
+    const areaCode = areaCodeEl ? areaCodeEl.value : "";
+    const category = categoryEl ? categoryEl.value : "";
+    const keyword = keywordEl ? keywordEl.value : "";
+    
+    // 3. 카테고리는 화면에서 뺐으므로 파라미터에서 제외하거나 빈 값 처리
+    location.href = "${path}/restaurant.ad?areaCode=" + areaCode + 
+    				"&category=" + category +
+                    "&keyword=" + encodeURIComponent(keyword) + 
+                    "&pageNum=1";
+}
+
+function searchRestaurant() {
+    // 1. 입력창(input)의 ID가 'keyword'인 요소에서 값을 가져옵니다.
+    const keywordElement = document.getElementById("keyword");
+    const keyword = keywordElement ? keywordElement.value : "";
+    
+    const categoryElement = document.getElementById("category");
+    const category = categoryElement ? categoryElement.value : "";
+    // 2. 검색어가 비어있을 경우 유효성 검사 (선택 사항)
+    if (!keyword.trim()) {
+        alert("검색어를 입력해주세요.");
+        keywordElement.focus();
+        return;
+    }
+
+    // 3. 지역 코드는 현재 '0'으로 고정하여 이동
+    // [수정] 세미콜론 위치를 조정하고 category를 끝에 붙인다.
+    location.href = `${path}/restaurantSearch.ad?areaCode=0&keyword=` 
+                    + encodeURIComponent(keyword) 
+                    + `&pageNum=1`
+                    + `&category=` + category; // 이제 URL에 category가 포함됩니다.
+}
+</script>
 </body>
 </html>

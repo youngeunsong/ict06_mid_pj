@@ -1,9 +1,16 @@
+--Ver.260316
+--변경사항
+--1) ACCOMMODATION 테이블: areaCode, category 필드 추가
+--2) COMMUNITY, COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약조건에 'DELETED' 추가
+--제약조건 추가에 따른 테이블 속성 변경 쿼리는 각 테이블 생성 쿼리 하단에 추가해두었습니다. (ALTER TABLE...)
+--------------------------------------------------
 --Ver.260314
 --변경사항
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
 --------------------------------------------------
 --DB 테이블 생성
+
 -- 1. 회원
 CREATE TABLE MEMBER (
     user_id			VARCHAR2(50) PRIMARY KEY,
@@ -16,7 +23,7 @@ CREATE TABLE MEMBER (
     address			VARCHAR2(255),
     point_balance	NUMBER DEFAULT 0,
     role			VARCHAR2(20) DEFAULT 'USER',		--권한(일반사용자:'USER', 관리자:'ADMIN')
-    status			VARCHAR2(20) DEFAULT 'ACTIVE',		--상태(active, quit 등) -> 불요시 삭제
+    status			VARCHAR2(20) DEFAULT 'ACTIVE',		--상태(active, quit, BANNED 등) -> 불요시 삭제
     created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 joinDate
     updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 updateDate
     CONSTRAINT CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
@@ -57,6 +64,10 @@ CREATE TABLE RESTAURANT (
     CONSTRAINT CHK_RESTAURANT_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM RESTAURANT;
+ALTER TABLE RESTAURANT ADD(
+	restdate	VARCHAR2(30),
+	areaCode	VARCHAR2(30)
+);
 
 -- 4. 숙소 (PLACE 참조)
 CREATE TABLE ACCOMMODATION (
@@ -65,9 +76,15 @@ CREATE TABLE ACCOMMODATION (
     phone            VARCHAR2(20),
     price            NUMBER,
     status			VARCHAR2(20) DEFAULT 'OPEN',
+    areaCode		VARCHAR2(30),
+    category		VARCHAR2(50),
     CONSTRAINT CHK_ACCOMMODATION_STATUS CHECK(status IN('OPEN','CLOSED'))
 );
 SELECT * FROM ACCOMMODATION;
+ALTER TABLE ACCOMMODATION ADD(
+	areaCode	VARCHAR2(30),
+	category	VARCHAR2(50)
+);
 
 SELECT r.*, p.name, p.address
 FROM RESERVATION r
@@ -161,8 +178,13 @@ CREATE TABLE COMMUNITY(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postUpdateDate
-	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','DELETED'))
 );
+SELECT * FROM COMMUNITY;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
+ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS
+CHECK(status IN('DISPLAY','HIDDEN','DELETED'));
 
 -- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
 CREATE TABLE COMMUNITY_COMMENT(
@@ -173,8 +195,13 @@ CREATE TABLE COMMUNITY_COMMENT(
 	status			VARCHAR2(20) DEFAULT 'DISPLAY',
 	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentDate
 	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentUpdateDate
-	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN'))
+	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','DELETED'))
 );
+SELECT * FROM COMMUNITY_COMMENT;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
+ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
+CHECK(status IN('DISPLAY','HIDDEN','DELETED'));
 
 -- 12. IMAGE_STORE (다중 이미지 관리)
 CREATE TABLE IMAGE_STORE (

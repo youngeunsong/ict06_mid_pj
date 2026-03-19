@@ -8,9 +8,6 @@ FROM PLACE GROUP BY place_type;
 SELECT COUNT(*) FROM REVIEW;
 
 
-SELECT *
-FROM "MEMBER" m 
-
 -- 기존 1,093건 데이터에 리뷰 4,000개를 뿌리는 스크립트
 -- 1. REVIEW 테이블 시퀀스 재설정 (PK 충돌 방지)
 DECLARE

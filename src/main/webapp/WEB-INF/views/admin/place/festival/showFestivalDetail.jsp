@@ -85,8 +85,16 @@
 	                	<tr>
                 			<th><label for="inputImgAddress">축제 이미지 웹주소</label></th>
                 			<td>
-                				<%-- ${festivalDTO.placeDTO.image_url}<br> --%>
-                				<img src="${festivalDTO.placeDTO.image_url}" style="width: 25%; height: auto;">
+                				<%-- <img src="${festivalDTO.placeDTO.image_url}" style="width: 25%; height: auto;"> --%>
+                				<c:choose>
+								    <c:when test="${not empty festivalDTO.placeDTO.image_url}">
+								        <img src="${festivalDTO.placeDTO.image_url}" style="width: 25%; height: auto;">
+								    </c:when>
+								    <c:otherwise>
+								        <img src="${path}/resources/images/common/no-image.png" 
+								             style="width: 25%; height: auto;">
+								    </c:otherwise>
+								</c:choose>
                 			</td>
                 		</tr>
 	                	<!-- 축제 이미지 URL 끝 -->

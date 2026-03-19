@@ -131,7 +131,18 @@
 												<td>${dto.placeDTO.view_count}</td>
 												<td>${dto.placeDTO.latitude}</td>
 												<td>${dto.placeDTO.longitude}</td>
-												<td><img src='${dto.placeDTO.image_url}' style="width: 80%; height: auto;"></td>
+												<td>
+													<!-- 이미지 url 없을 경우 no-image.png로 대체하여 보여주기 -->
+													<c:choose>
+													    <c:when test="${not empty dto.placeDTO.image_url}">
+													        <img src="${dto.placeDTO.image_url}" style="width: 80%; height: auto;">
+													    </c:when>
+													    <c:otherwise>
+													        <img src="${path}/resources/images/common/no-image.png" 
+													             style="width: 80%; height: auto;">
+													    </c:otherwise>
+													</c:choose>
+												</td>
 												<td><fmt:formatDate value="${dto.start_date}" pattern="yyyy-MM-dd" /></td>
 												<td><fmt:formatDate value="${dto.end_date}" pattern="yyyy-MM-dd" /></td>
 												<td> <%-- ${dto.status} 에 따라 다른 스타일링. 필터와 동일한 컬러 및 이름 적용 --%>
@@ -177,7 +188,14 @@
 								</div>
 								
 								<div align="left">
-									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">새 축제 추가</button>
+									<!-- 새 축제 추가 버튼 -->
+									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">
+										새 축제 추가
+									</button>
+									<!-- 오픈 API에서 데이터 가져오기 -->										
+									<button onclick="location.href='${path}/festivalImport.adfe'" class="btn btn-block btn-warning" style="width:30%;">
+										오픈 API로 축제 데이터 가져오기(주의)
+									</button>
 								</div>
 							</div>
 						</div>

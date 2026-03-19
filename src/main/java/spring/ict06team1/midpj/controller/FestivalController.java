@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.service.FestivalServiceImpl;
 
@@ -43,19 +45,66 @@ public class FestivalController {
 	@RequestMapping("/festival.fe")	
 	public String festival(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => festival.fe >>>");
+		logger.info("<<< url => /festival.fe >>>");
 		
 		return "user/festival/festival";
 	}
 	
-	// [festival] 상위 10개 축제 디스플레이 
-	@RequestMapping("/festivalRanking.fe")
-	public String festivalRanking(HttpServletRequest request, HttpServletResponse response, Model model) 
-			throws ServletException, IOException {
-		logger.info("<<< url => festivalRanking.fe >>>");
-		
-		return "user/festival/festivalRanking";
-	}
+	// [festival] 상위 5개 축제 강조 
+	@RequestMapping("/bestFestivals.fe")
+	public String bestFestivals(Model model) {
+
+		logger.info("<<< url => /bestFestivals.fe >>>");
+        int limit = 12; // 더보기 1회 요청 시 불러올 카드 수
+
+        List<FestivalDTO> topList = service.getBestFestivalTop5(); // TOP5
+        List<FestivalDTO> pageList = service.getBestFestivalPageList(5, 17); // TOP5 다음 구간(6위~17위)
+
+        if (topList == null) topList = new ArrayList<FestivalDTO>(); // JSP 반복문 오류 방지용 빈 리스트 처리
+        if (pageList == null) pageList = new ArrayList<FestivalDTO>();
+
+        int totalCount = service.getBestFestivalCount();
+        int remainCount = Math.max(totalCount - 5, 0); // TOP5 제외 후 남은 데이터 수 계산
+
+        model.addAttribute("topList", topList);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("favoritePlaceIds", new ArrayList<Integer>()); // 현재 구조에서는 즐겨찾기 목록 비워서 전달
+
+        model.addAttribute("limit", limit);
+        model.addAttribute("nextOffset", 17); // 첫 더보기 클릭 시 18위부터 이어서 조회할 수 있도록 기준값 전달
+        model.addAttribute("remainCount", remainCount);
+        model.addAttribute("currentTab", "realtime");
+        model.addAttribute("currentRegion", "all");
+        model.addAttribute("currentCategory", "ALL");
+
+        return "user/festival/bestFestivals";
+    }
+	
+	// [랭킹 페이지 더보기 AJAX]
+    // 현재 선택된 탭/지역/카테고리 상태를 유지한 채 추가 랭킹 데이터를 JSON으로 반환하기 위해 사용
+    @RequestMapping("/bestFestivalsMore.rs")
+    @ResponseBody
+    public List<FestivalDTO> bestFestivalsMore(
+//            @RequestParam(value = "tab", defaultValue = "realtime") String tab,
+//            @RequestParam(value = "region", defaultValue = "all") String region,
+//            @RequestParam(value = "category", defaultValue = "ALL") String category,
+            @RequestParam("offset") int offset,
+            @RequestParam(value = "limit", defaultValue = "12") int limit) {
+
+        int start = offset; // 현재까지 출력된 마지막 위치 기준 시작값
+        int end = offset + limit; // limit만큼 다음 구간 조회
+
+//        if ("realtime".equals(tab)) {
+//            return service.getBestFestivalPageList(start, end, null, "ALL");
+//        } else if ("region".equals(tab)) {
+//            return service.getBestFestivalPageList(start, end, region, "ALL");
+//        } else if ("recommend".equals(tab)) {
+//            return service.getBestFestivalPageList(start, end, region, category);
+//        }
+//
+//        return new ArrayList<FestivalDTO>(); // 잘못된 탭 값이 들어와도 프론트 오류가 나지 않도록 빈 리스트 반환
+        return service.getBestFestivalPageList(start, end, null, "ALL");
+    }
 	
 	// [festival] 축제 상세 & 예약 페이지로 이동
 	@RequestMapping("/festivalDetail.fe")	

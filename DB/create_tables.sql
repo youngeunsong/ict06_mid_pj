@@ -115,8 +115,6 @@ CREATE TABLE FESTIVAL_TICKET (
     description  VARCHAR2(500)           -- 티켓 상세 설명
 );
 
-SELECT * FROM FESTIVAL_TICKET;
-
 -- 7. 예약 테이블
 CREATE TABLE RESERVATION (
     reservation_id	VARCHAR2(50) PRIMARY KEY,
@@ -234,10 +232,6 @@ CREATE TABLE FAQ (
 );
 SELECT * FROM FAQ;
 
-UPDATE FAQ 
-SET ORDER_NO = 7;
-
-
 -- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (
     survey_id       NUMBER PRIMARY KEY,
@@ -281,20 +275,11 @@ CREATE TABLE INQUIRY (
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
     status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
-    category	 VARCHAR2(50),
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
     CONSTRAINT CHK_INQUIRY_STATUS CHECK(status IN('PENDING', 'PROGRESS', 'ANSWERED'))
 );
-
-
-ALTER TABLE INQUIRY DROP CONSTRAINT CHK_INQUIRY_STATUS;
-
-
-ALTER TABLE INQUIRY ADD CONSTRAINT CHK_INQUIRY_STATUS 
-    CHECK(status IN('PENDING', 'PROGRESS', 'ANSWERED'));
-
 SELECT * FROM INQUIRY;
 
 
@@ -488,7 +473,6 @@ BEGIN
 END;
 /
 
-
 --------------------------------------------------
 -- 테이블 삭제 (참조 관계 역순)
 --------------------------------------------------
@@ -533,5 +517,3 @@ DROP SEQUENCE SEQ_PLACE;
 -- (참고) 만약 순서 상관없이 강제로 다 지우고 싶을 때만 아래 방식 사용
 -- DROP TABLE MEMBER CASCADE CONSTRAINTS;
 -- DROP TABLE PLACE CASCADE CONSTRAINTS;
-
-SELECT DISTINCT CATEGORY FROM FAQ;

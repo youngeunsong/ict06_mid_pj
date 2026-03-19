@@ -97,25 +97,33 @@
                                         <textarea id="admin_reply" name="admin_reply" class="reply-box" 
                                                   placeholder="사용자에게 전달할 답변 내용을 상세히 입력하세요.">${dto.admin_reply}</textarea>
                                     </div>
-
-                                    <div class="text-center mt-4 mb-5">
-                                    
-                                    <%-- [임시저장 버튼] JS 파일의 saveReply 함수를 실행, 이때 상태값을 PROGRESS(답변중) --%>
-                                        <button type="button" class="btn btn-info btn-lg" style="min-width: 150px;" 
-                                                onclick="saveReply('${path}', 'PROGRESS')">
-                                            <i class="fas fa-save"></i> 임시저장
-                                        </button>
-                                        <%-- [답변 등록 버튼] 상태값을 ANSWERED(답변완료) --%>
-                                        <button type="button" class="btn btn-primary btn-lg" style="min-width: 180px; margin-left: 10px;" 
-                                                onclick="saveReply('${path}', 'ANSWERED')">
-                                            <i class="fas fa-check-circle"></i> 답변 등록/수정
-                                        </button>
-                                        <%-- 리스트 페이지로 돌아가는 버튼 --%>
-                                        <button type="button" class="btn btn-secondary btn-lg" style="min-width: 150px; margin-left: 10px;"
-                                                onclick="location.href='${path}/adInquiryList.adsp'">
-                                            목록으로
-                                        </button>
-                                    </div>
+									<%-- 하단 컨트롤 버튼: FAQ의 색상과 라운드 스타일을 그대로 적용 --%>
+									<div class="d-flex justify-content-center mt-4 mb-5" style="gap: 15px;">
+									    
+									    <%-- 1. 취소/목록 버튼 --%>
+									    <button type="button" 
+									            class="btn btn-pill btn-light border" 
+									            style="border-radius: 50px; min-width: 120px; padding: 10px 20px; font-weight: 500;"
+									            onclick="location.href='${path}/adInquiryList.adsp'">
+									        취소하기
+									    </button>
+									    
+									    <%-- 2. 임시저장 버튼 (진행중) --%>
+									    <button type="button" 
+									            class="btn btn-pill btn-info text-white" 
+									            style="border-radius: 50px; min-width: 120px; padding: 10px 20px; font-weight: 500; background-color: #17a2b8; border: none;"
+									            onclick="saveReply('${path}', 'PROGRESS')">
+									        임시저장
+									    </button>
+									    
+									    <%-- 3. 답변 등록 버튼 (완료) --%>
+									    <button type="button" 
+									            class="btn btn-pill" 
+									            style="border-radius: 50px; min-width: 150px; padding: 10px 20px; font-weight: 500; background-color: #00c9a7; color: white; border: none;"
+									            onclick="saveReply('${path}', 'ANSWERED')">
+									        답변 등록하기
+									    </button>
+									</div>
                                 </form>
                             </div>
                         </div>

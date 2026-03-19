@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const rankingContent = document.getElementById("rankingContent");
-    const regionSelect = document.getElementById("regionSelect");
-    const recommendFilterArea = document.getElementById("recommendFilterArea");
+    var rankingContent = document.getElementById("rankingContent");
+    var regionSelect = document.getElementById("regionSelect");
+    var recommendFilterArea = document.getElementById("recommendFilterArea");
 
     if (!rankingContent) return;
 
-    const state = {
+    var state = {
         tab: "realtime",
         region: "all",
         category: "ALL"
@@ -22,59 +22,56 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateFilterVisibility() {
-	    if (regionSelect) {
-	        regionSelect.style.display =
-	            (state.tab === "region" || state.tab === "recommend") ? "block" : "none";
-	    }
-	
-	    if (recommendFilterArea) {
-	        recommendFilterArea.style.display = (state.tab === "recommend") ? "block" : "none";
-	    }
-	}
+        if (regionSelect) {
+            regionSelect.style.display =
+                (state.tab === "region" || state.tab === "recommend") ? "block" : "none";
+        }
+
+        if (recommendFilterArea) {
+            recommendFilterArea.style.display =
+                (state.tab === "recommend") ? "block" : "none";
+        }
+    }
 
     function renderMoreCards(list) {
-        let html = "";
+        var html = "";
 
         list.forEach(function (place) {
-            const placeId = place.place_id ?? "";
-            const imageUrl = escapeHtml(place.image_url || "");
-            const name = escapeHtml(place.name || "");
-            const address = escapeHtml(place.address || "");
-            const viewCount = place.view_count ?? 0;
-            const avgRating = place.avg_rating ?? 0;
-            const reviewCount = place.review_count ?? 0;
+            var placeId = (place.place_id !== null && place.place_id !== undefined) ? place.place_id : "";
+            var imageUrl = escapeHtml(place.image_url || "");
+            var name = escapeHtml(place.name || "");
+            var address = escapeHtml(place.address || "");
+            var viewCount = (place.view_count !== null && place.view_count !== undefined) ? place.view_count : 0;
+            var avgRating = (place.avg_rating !== null && place.avg_rating !== undefined) ? place.avg_rating : 0;
+            var reviewCount = (place.review_count !== null && place.review_count !== undefined) ? place.review_count : 0;
 
-            html += `
-                <div class="col-6 col-md-4 col-lg-3 ranking-added-item">
-                    <a href="${path}/restaurantDetail.rs?place_id=${placeId}" class="place-card text-decoration-none text-dark">
-                        <div class="place-card__thumb-wrap position-relative">
-                            <img src="${imageUrl}" alt="${name}" loading="lazy" class="thumb-img" />
-                        </div>
-
-                        <div class="place-card__body">
-                            <div class="place-card__title">${name}</div>
-
-                            <div class="place-card__address">
-                                <i class="bi bi-geo-alt-fill text-danger"></i>
-                                ${address}
-                            </div>
-
-                            <div class="d-flex gap-3 text-muted small mt-2">
-                                <span><i class="fa-regular fa-eye"></i> ${viewCount}</span>
-                                <span><i class="fa-regular fa-heart"></i> ${avgRating}</span>
-                                <span><i class="fa-regular fa-comment"></i> ${reviewCount}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            `;
+            html += ''
+                + '<div class="col-6 col-md-4 col-lg-3 ranking-added-item">'
+                + '    <a href="' + path + '/restaurantDetail.rs?place_id=' + placeId + '" class="place-card text-decoration-none text-dark">'
+                + '        <div class="place-card__thumb-wrap position-relative">'
+                + '            <img src="' + imageUrl + '" alt="' + name + '" loading="lazy" class="thumb-img" />'
+                + '        </div>'
+                + '        <div class="place-card__body">'
+                + '            <div class="place-card__title">' + name + '</div>'
+                + '            <div class="place-card__address">'
+                + '                <i class="bi bi-geo-alt-fill text-danger"></i> '
+                +                  address
+                + '            </div>'
+                + '            <div class="d-flex gap-3 text-muted small mt-2">'
+                + '                <span><i class="fa-regular fa-eye"></i> ' + viewCount + '</span>'
+                + '                <span><i class="fa-regular fa-heart"></i> ' + avgRating + '</span>'
+                + '                <span><i class="fa-regular fa-comment"></i> ' + reviewCount + '</span>'
+                + '            </div>'
+                + '        </div>'
+                + '    </a>'
+                + '</div>';
         });
 
         return html;
     }
 
     function loadTabContent(tabType) {
-        const url =
+        var url =
             path +
             "/bestRestaurantsTabAjax.rs?tab=" + encodeURIComponent(tabType) +
             "&region=" + encodeURIComponent(state.region) +
@@ -104,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             this.classList.add("active");
 
-            const tabType = this.dataset.tab || "realtime";
+            var tabType = this.dataset.tab || "realtime";
             state.tab = tabType;
 
             updateFilterVisibility();
@@ -125,11 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 문서 전체 클릭 이벤트 위임
     document.addEventListener("click", function (e) {
-        const moreBtn = e.target.closest("#moreBtn");
-        const collapseBtn = e.target.closest("#collapseBtn");
-        const filterMoreBtn = e.target.closest("#filterMoreBtn");
-        const filterCollapseBtn = e.target.closest("#filterCollapseBtn");
-        const chip = e.target.closest("#recommendChipWrap .rk-chip");
+        var moreBtn = e.target.closest("#moreBtn");
+        var collapseBtn = e.target.closest("#collapseBtn");
+        var filterMoreBtn = e.target.closest("#filterMoreBtn");
+        var filterCollapseBtn = e.target.closest("#filterCollapseBtn");
+        var chip = e.target.closest("#recommendChipWrap .rk-chip");
 
         // 추천 필터 칩 클릭
         if (chip) {
@@ -154,9 +151,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             filterMoreBtn.classList.add("d-none");
 
-            const btn = document.getElementById("filterCollapseBtn");
-            if (btn) {
-                btn.classList.remove("d-none");
+            var collapseFilterBtn = document.getElementById("filterCollapseBtn");
+            if (collapseFilterBtn) {
+                collapseFilterBtn.classList.remove("d-none");
             }
             return;
         }
@@ -169,22 +166,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             filterCollapseBtn.classList.add("d-none");
 
-            const btn = document.getElementById("filterMoreBtn");
-            if (btn) {
-                btn.classList.remove("d-none");
+            var moreFilterBtn = document.getElementById("filterMoreBtn");
+            if (moreFilterBtn) {
+                moreFilterBtn.classList.remove("d-none");
             }
             return;
         }
 
         // 랭킹 더보기
         if (moreBtn) {
-            const moreListWrap = document.getElementById("moreListWrap");
+            var moreListWrap = document.getElementById("moreListWrap");
             if (!moreListWrap) return;
 
-            const offset = parseInt(moreBtn.dataset.offset || "17", 10);
-            const limit = parseInt(moreBtn.dataset.limit || "12", 10);
+            var offset = parseInt(moreBtn.dataset.offset || "17", 10);
+            var limit = parseInt(moreBtn.dataset.limit || "12", 10);
 
-            const url =
+            var url =
                 path +
                 "/bestRestaurantsMore.rs?tab=" +
                 encodeURIComponent(state.tab) +
@@ -205,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return response.json();
                 })
                 .then(function (list) {
-                    const collapseBtnNow = document.getElementById("collapseBtn");
+                    var collapseBtnNow = document.getElementById("collapseBtn");
 
                     if (!list || list.length === 0) {
                         moreBtn.style.display = "none";
@@ -240,9 +237,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 item.remove();
             });
 
-            const moreBtnNow = document.getElementById("moreBtn");
+            var moreBtnNow = document.getElementById("moreBtn");
             if (moreBtnNow) {
-                const initialOffset = parseInt(moreBtnNow.dataset.initialOffset || "17", 10);
+                var initialOffset = parseInt(moreBtnNow.dataset.initialOffset || "17", 10);
                 moreBtnNow.dataset.offset = String(initialOffset);
                 moreBtnNow.style.display = "inline-block";
             }

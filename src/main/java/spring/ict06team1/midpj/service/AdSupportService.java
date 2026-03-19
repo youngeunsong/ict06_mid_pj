@@ -26,9 +26,12 @@ public interface AdSupportService {
     // 5. 신규 FAQ 등록 처리 
     public void insertFaqAction(HttpServletRequest request, HttpServletResponse response, Model model);
 
-    // 6. 기존 FAQ 수정 처리 
+    // 6. FAQ 수정 페이지로 이동 (기존 데이터 조회)
+    public void getFaqDetail(HttpServletRequest request, HttpServletResponse response, Model model);
+    
+    // 7. 기존 FAQ 수정 처리 
     public void updateFaqAction(HttpServletRequest request, HttpServletResponse response, Model model);
 
-    // 7. FAQ 삭제 처리 
+    // 8. FAQ 삭제 처리 
     public void deleteFaqAction(HttpServletRequest request, HttpServletResponse response, Model model);
 }

@@ -37,7 +37,7 @@ public class AdRestaurantController {
 		return "admin/place/restaurant/restaurant";
 	}
 	
-	//관리자 맛집 또는 place_id 검색
+	//관리자 맛집명 또는 place_id 검색
 	@GetMapping("/restaurantSearch.ad") 
 	public String restaurantSearch(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {

@@ -6,8 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <title>맛집 정보 수정</title>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_restaurantModify.css">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
+<<<<<<< HEAD
 <style>
     /* AdminLTE 3 표준 배경색 및 레이아웃 유지 */
     .content-wrapper { 
@@ -80,6 +83,12 @@
     <script type="text/javascript">
         setTimeout(function(){
             alert("맛집수정 성공!!");
+=======
+<c:if test="${updateCnt == 1}">
+    <script type="text/javascript">
+        setTimeout(function(){
+            alert("맛집 수정 성공!!");
+>>>>>>> dev
             
             <%-- 키워드가 있을 때는 restaurantSearch.ad로, 없을 때는 restaurant.ad로 분기 --%>
             <c:choose>
@@ -92,6 +101,7 @@
             </c:choose>
         }, 1000);
     </script>
+<<<<<<< HEAD
 </c:if>
 
 <c:if test="${updateCnt != 1}">
@@ -103,8 +113,20 @@
         }, 1000);
     </script>
 </c:if>
-</head>
+=======
+</c:if>
 
+<c:if test="${updateCnt != 1}">
+    <script type="text/javascript">
+        setTimeout(function(){
+            alert("맛집 수정 실패!!");
+            <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
+            window.location="${path}/restaurantModify.ad?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+        }, 1000);
+    </script>
+</c:if>
+>>>>>>> dev
+</head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
@@ -156,7 +178,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">장소 유형</label>
+                                        <label class="form-label">맛집 유형</label>
                                         <input type="text" class="form-control" value="맛집" readonly>
                                         <input type="hidden" name="place_type" value="REST">
                                     </div>

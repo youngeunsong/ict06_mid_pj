@@ -14,10 +14,74 @@ SELECT *
     OR p.ADDRESS LIKE '%서울%'
     OR f.DESCRIPTION LIKE '%신나는%';
 
+-- 축제 등록
+-- 0단계: 중복 검색 -  축제 이름, 주소, 시작일이 일치할 때에만 찾기
+SELECT p.place_id
+  FROM PLACE p
+  JOIN FESTIVAL f
+    ON f.FESTIVAL_ID = p.PLACE_ID
+ WHERE name = '그랜드 민트 페스티벌 2025'
+   AND address = '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원'
+   AND f.START_DATE = '2025-10-18'; 
+
+-- 1단계: 장소 등록
+INSERT INTO PLACE (
+		    place_id,
+		    place_type,
+		    name,
+		    address,
+		    latitude,
+		    longitude,
+		    image_url
+		) 
+VALUES (
+    SEQ_PLACE.NEXTVAL,
+    'FEST',
+    '그랜드 민트 페스티벌 2025', 							-- #{name, jdbcType=VARCHAR},
+    '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원', 	-- #{address, jdbcType=VARCHAR},
+    37.5206868, 									-- #{latitude, jdbcType=NUMERIC},
+	127.1171114, 									-- #{longitude, jdbcType=NUMERIC},
+    'https://mintpaper.s3.ap-northeast-2.amazonaws.com/2xlarge_GMF_2025_2616bf2a41.jpg' 
+													-- #{image_url, jdbcType=VARCHAR}
+);
+
+-- 2단계: 축제 등록
+INSERT INTO FESTIVAL (
+    festival_id,
+    description,
+    start_date,
+    end_date
+) VALUES (
+    SEQ_PLACE.CURRVAL,
+	'가장 다채로운 아티스트와의 조우', 	--    #{description, jdbcType=CLOB},
+	'2025-10-18', 				--    #{start_date, jdbcType=DATE},
+	'2025-10-19'				--    #{end_date, jdbcType=DATE}
+); 
+
+-- 3단계: 티켓 등록
+INSERT INTO FESTIVAL_TICKET (
+    ticket_id,
+    festival_id,
+    ticket_type,
+    price,
+    stock,
+    description
+) 
+VALUES (
+    SEQ_TICKET.NEXTVAL,
+	SEQ_PLACE.CURRVAL, 				--    #{festival_id},
+	'1일권', 							--    #{ticket_type},
+	135000, 						--    #{price}, 
+	1000, 							--    #{stock},
+	'축제 기간 중 어느 날이든 적용 가능합니다'	--    #{description, jdbcType=CLOB}
+)
+
+
 -- 축제 상세 조회
-SELECT * 
-  FROM FESTIVAL
- WHERE FESTIVAL_ID = 417;
+SELECT f.*, p.name, p.address
+FROM FESTIVAL f
+JOIN place p ON f.festival_id = p.PLACE_ID
+WHERE f.festival_id = 1051;
 
 -- 축제 티켓 조회
 SELECT
@@ -50,7 +114,7 @@ SELECT SEQ_PLACE.NEXTVAL FROM DUAL;
 -- SEQ_PLACE.NEXTVAL이 현재 PLACE 테이블이의 최대 place_id가 동일한 크기가 아닐 때 적용
 DROP SEQUENCE SEQ_PLACE;
 CREATE SEQUENCE SEQ_PLACE
-START WITH 1004 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
+START WITH 3551927 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
 INCREMENT BY 1;
 
 -- SEQ_TICKET의 최댓값 확인
@@ -121,3 +185,45 @@ INTO MEMBER VALUES ('user07','1234','user07@test.com','윤태호',TO_DATE('1994-
 INTO MEMBER VALUES ('user08','1234','user08@test.com','송다은',TO_DATE('2000-12-12','YYYY-MM-DD'),'F','010-8888-8888','광주 북구',2400,'USER','ACTIVE',SYSTIMESTAMP, SYSTIMESTAMP)
 INTO MEMBER VALUES ('user09','1234','user09@test.com','강도윤',TO_DATE('1996-09-17','YYYY-MM-DD'),'M','010-9999-9999','울산 남구',500,'USER','ACTIVE',SYSTIMESTAMP, SYSTIMESTAMP)
 SELECT * FROM DUAL;
+
+--
+-- 임시 : 커뮤니티 테이블 업데이트
+DROP TABLE COMMUNITY_COMMENT; 
+DROP TABLE COMMUNITY; 
+
+-- 10. COMMUNITY(커뮤니티/사용자 게시판)
+CREATE TABLE COMMUNITY(
+	post_id			NUMBER PRIMARY KEY,
+	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+	title			VARCHAR2(200) NOT NULL,
+	content			CLOB NOT NULL,
+	category		VARCHAR2(50),
+	view_count		NUMBER DEFAULT 0,
+	like_count		NUMBER DEFAULT 0,
+	status			VARCHAR2(20) DEFAULT 'DISPLAY',
+	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postDate
+	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postUpdateDate
+	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
+);
+SELECT * FROM COMMUNITY;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
+ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS
+CHECK(status IN('DISPLAY','HIDDEN','BANNED'));
+
+-- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
+CREATE TABLE COMMUNITY_COMMENT(
+	comment_id		NUMBER PRIMARY KEY,
+	post_id			NUMBER REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
+	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
+	content			CLOB NOT NULL,
+	status			VARCHAR2(20) DEFAULT 'DISPLAY',
+	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentDate
+	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentUpdateDate
+	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
+);
+SELECT * FROM COMMUNITY_COMMENT;
+--제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
+ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
+ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
+CHECK(status IN('DISPLAY','HIDDEN','BANNED'));

@@ -6,15 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>맛집 정보 등록</title>
+<link rel="stylesheet"
+	href="${path}/resources/css/admin/ad_restaurantInsert.css">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
-<style>
-    .content-wrapper { background-color: #F6F6F6 !important; min-height: calc(100vh - 120px) !important; padding-bottom: 20px !important; }
-    .card { border: none; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); border-radius: 12px; }
-    .form-label { font-weight: 600; color: #444; font-size: 0.9rem; }
-    .btn-submit { background-color: #01D281 !important; color: white; border-radius: 8px; padding: 12px 40px; border: none; font-weight: 600; transition: 0.3s; }
-    .btn-cancel { background-color: #6c757d !important; color: white; border-radius: 8px; padding: 12px 40px; border: none; transition: 0.3s; }
-</style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -41,7 +36,7 @@
                                 <div class="row g-4">
                                     <div class="col-md-6">
                                         <label class="form-label">맛집 이름 *</label>
-                                        <input type="text" name="pdName" class="form-control" placeholder="가게명을 입력하세요" required>
+                                        <input type="text" name="pdName" class="form-control" placeholder="맛집명을 입력하세요" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">지역 선택 *</label>
@@ -65,7 +60,7 @@
                                             <input type="text" id="address" name="address" class="form-control bg-light" placeholder="주소 검색을 이용해주세요" readonly required>
                                             <button type="button" class="btn btn-dark px-4" onclick="execPostcode()">주소 검색</button>
                                         </div>
-                                        <input type="text" id="address_detail" name="address_detail" class="form-control" placeholder="상세 주소를 입력하세요 (동, 호수, 층 등)" required>
+                                        <input type="text" id="address_detail" name="address_detail" class="form-control" placeholder="상세 주소를 입력하세요~~~" required>
                                     </div>
                                     
                                     <input type="hidden" id="latitude" name="latitude" required>
@@ -73,12 +68,12 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label">전화번호</label>
-                                        <input type="text" name="phone" class="form-control" placeholder="02-1234-5678">
+                                        <input type="text" name="phone" class="form-control" placeholder="ex) 02-1234-5678">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">카테고리 *</label>
+                                        <label class="form-label">맛집 유형 *</label>
                                         <select name="category" class="form-select" required>
-                                            <option value="">-- 카테고리 선택 --</option>
+                                            <option value="">-- 맛집 유형 선택 --</option>
                                             <option value="A05020100">한식</option>
                                             <option value="A05020200">양식</option>
                                             <option value="A05020300">일식</option>
@@ -90,9 +85,14 @@
                                         </select>
                                     </div>
                                     
+                                    <div class="col-md-12">
+                                        <label class="form-label">상세 소개</label>
+                                        <textarea name="pdContent" class="form-control" rows="4"placeholder="맛집을 상세히 소개해주세요"></textarea>
+                                    </div>
+                                    
                                     <div class="col-md-6">
 									    <label class="form-label">휴무일</label>
-									    <input type="text" name="off_day" class="form-control" placeholder="예: 매주 월요일, 연중무휴">
+									    <input type="text" name="restdate" class="form-control" placeholder="예: 매주 월요일, 연중무휴">
 									</div>
 
                                     <div class="col-md-12">

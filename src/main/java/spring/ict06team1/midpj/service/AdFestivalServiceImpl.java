@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.service;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.SearchCriteria.Paging;
@@ -82,7 +84,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		List<FestivalTicketDTO> ticketList = dao.getFestivalTickets(festival_id); 
 		System.out.println(ticketList);
 		
-		Map<String, FestivalTicketDTO> ticketMap = new HashMap<>();
+		Map<String, FestivalTicketDTO> ticketMap = new HashMap();
 
 		for(FestivalTicketDTO ticket : ticketList){
 		    ticketMap.put(ticket.getTicket_type(), ticket);
@@ -98,11 +100,91 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		model.addAttribute("twoDayTicket", ticketMap.get("TwoDay"));
 		model.addAttribute("allDayTicket", ticketMap.get("AllDay"));
 	}
+	
+	// 축제 상세 정보 조회 - Ajax용
+	public FestivalDTO getFestivalDetailAjax(int festival_id){
+
+	    FestivalDTO festivalDTO = dao.getFestivalDetail(festival_id);
+
+	    List<FestivalTicketDTO> ticketList = dao.getFestivalTickets(festival_id);
+
+	    festivalDTO.setTicketList(ticketList);
+	    
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    festivalDTO.setStart_date_str(sdf.format(festivalDTO.getStart_date()));
+	    festivalDTO.setEnd_date_str(sdf.format(festivalDTO.getEnd_date()));
+
+	    return festivalDTO;
+	}
 
 	// 축제 정보 수정
 	@Override
-	public void modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("[AdFestivalServiceImpl - modifyFestival()]");
+	public int modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+	    System.out.println("[AdFestivalServiceImpl - modifyFestival()]");
+
+	    int festival_id = Integer.parseInt(request.getParameter("festival_id"));
+
+	    String name = request.getParameter("name");
+	    String address = request.getParameter("address");
+	    double latitude = parseDouble(request.getParameter("latitude"));
+	    double longitude = parseDouble(request.getParameter("longitude"));
+	    String image_url = request.getParameter("image_url");
+
+	    String description = request.getParameter("description");
+	    Date start_date = Date.valueOf(request.getParameter("start_date"));
+	    Date end_date = Date.valueOf(request.getParameter("end_date"));
+
+	    // Place DTO
+	    PlaceDTO placeDTO = new PlaceDTO();
+	    placeDTO.setPlace_id(festival_id);
+	    placeDTO.setName(name);
+	    placeDTO.setAddress(address);
+	    placeDTO.setLatitude(latitude);
+	    placeDTO.setLongitude(longitude);
+	    placeDTO.setImage_url(image_url);
+
+	    // Festival DTO
+	    FestivalDTO festivalDTO = new FestivalDTO();
+	    festivalDTO.setFestival_id(festival_id);
+	    festivalDTO.setDescription(description);
+	    festivalDTO.setStart_date(start_date);
+	    festivalDTO.setEnd_date(end_date);
+
+	    // 1️) 장소 수정
+	    int placeUpdateCnt = dao.updatePlace(placeDTO);
+
+	    // 2️) 축제 수정
+	    int festivalUpdateCnt = dao.modifyFestival(festivalDTO);
+
+	    // 3️) 티켓 수정
+	    String[] ticket_types = {"Free", "OneDay", "TwoDay", "AllDay"};
+
+	    int ticketUpdateCnt = 1;
+
+	    for(String type : ticket_types){
+
+	        FestivalTicketDTO ticketDTO = new FestivalTicketDTO();
+
+	        ticketDTO.setFestival_id(festival_id);
+	        ticketDTO.setTicket_type(type);
+	        ticketDTO.setPrice(parseInteger(request.getParameter("price"+type)));
+	        ticketDTO.setStock(parseInteger(request.getParameter("stock"+type)));
+	        ticketDTO.setDescription(request.getParameter("ticketDesc"+type));
+
+	        int result = dao.updateTicket(ticketDTO);
+
+	        if(result == 0){
+	            ticketUpdateCnt = 0;
+	            break;
+	        }
+	    }
+
+	    if(placeUpdateCnt>0 && festivalUpdateCnt>0 && ticketUpdateCnt>0){
+	    	return 1; 
+	    }else{
+	    	return 0; 
+	    }
 	}
 
 	// 신규 축제 등록
@@ -183,11 +265,23 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	
 	// 축제 정보 삭제 
 	@Override
-	public void deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
+	@Transactional
+	public int deleteFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - deleteFestival()]");
+		// 1) parameter값 수집(place_id, pageNum) 
+		int festival_id = Integer.parseInt(request.getParameter("festival_id")); 
+		System.out.println("festival_id : " + festival_id);
+		// DAO 호출하여 DB에 데이터 삭제 시도
+		// 1) FestivalTicket 테이블에서 먼저 삭제
+		dao.deleteFestivalTickets(festival_id);
+		
+		// 2) Festival 테이블에서 삭제 (Place 테이블에서는 삭제 안 함. 다른 테이블과 연관이 크기 때문) 
+		int deleteCnt = dao.deleteFestival(festival_id);
+		
+		return deleteCnt; 
 	}
 	
-	// Null 값 처리
+	// int, Double 형 데이터의 Null 값 처리
 	// int의 null 처리 
 	private int parseInteger(String value){
 	    if(value == null || value.trim().isEmpty()){
@@ -203,4 +297,6 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	    }
 	    return Double.parseDouble(value);
 	}
+
+	
 }

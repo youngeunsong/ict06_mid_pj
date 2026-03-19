@@ -154,5 +154,16 @@
                updated_at = SYSTIMESTAMP
          WHERE post_id = #{post_id}
     </update>
+    
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
+	    UPDATE COMMUNITY
+	       SET title = #{title},
+	           content = #{content},
+	           category = #{category},
+	           updated_at = SYSTIMESTAMP
+	     WHERE post_id = #{post_id}
+	</update>
+    
 
 </mapper>

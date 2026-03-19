@@ -100,9 +100,26 @@ public class UserController {
 		
 		request.getSession().invalidate();
 		
-		return "common/main";
+		return "redirect:/main.do";
 	}
 	
+	//비밀번호 찾기 폼
+	@RequestMapping("/findPassword.do")
+	public String findPassword(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("<<< url => findPassword.do>>>");
+		
+		return "user/login/findPassword";
+	}
+	
+	//비밀번호 찾기 처리
+	@RequestMapping("/findPasswordAction.do")
+	public String findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("<<< url => findPasswordAction.do>>>");
+		service.findPasswordAction(request, response, model);
+		return "user/login/findPasswordResult";
+	}
 	
 	// 4. 회원 탈퇴 
 	// [회원탈퇴]-----------------------------

@@ -145,6 +145,29 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 	public void updateNotice(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdminNoticeImpl - updateNotice()]");
 		
+		MultipartHttpServletRequest mpr = (MultipartHttpServletRequest) request;
+		NoticeDTO dto = new NoticeDTO();
+		String userId = (String)request.getSession().getAttribute("sessionID");
+		
+		System.out.println("디버깅-관리자 세션ID: " + userId);
+		dto.setAdmin_id(userId);
+		dto.setNotice_id(Integer.parseInt(mpr.getParameter("noticeId")));
+		dto.setCategory(mpr.getParameter("category"));
+		dto.setTitle(mpr.getParameter("title"));
+		dto.setContent(mpr.getParameter("content"));
+		dto.setIs_top(mpr.getParameter("isTop") != null ? "Y" : "N");
+		
+		//이미지 수정
+		MultipartFile file = mpr.getFile("uploadFile");
+		if(file != null && !file.isEmpty()) {
+			String savedPath = fileSaveService(file, request);
+			dto.setImage_url(savedPath);
+		}
+		int result = adNoDao.updateNotice(dto);
+		
+		if(result > 0) {
+			model.addAttribute("msg", "수정 성공");
+		}
 	}
 
 	// 5. 삭제 처리
@@ -152,6 +175,9 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 	public void deleteNotice(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdminNoticeImpl - deleteNotice()]");
 		
+		int noticeId = Integer.parseInt(request.getParameter("noticeId"));
+		int result = adNoDao.deleteNotice(noticeId);
+		request.setAttribute("result", result);
 	}
 
 	// 6. 이미지 업로드
@@ -181,5 +207,6 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 			}
 		}
 	}
+	
 
 }

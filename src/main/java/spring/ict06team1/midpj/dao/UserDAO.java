@@ -18,6 +18,10 @@ public interface UserDAO {
     // 3. 로그인 처리 (아이디와 비밀번호 대조)
     // 회원정보 인증(수정, 탈퇴시)
     public int loginCheck(Map<String, Object> map);
+    
+    //비밀번호 찾기 본인확인, 임시비밀번호 발급
+    public int findPasswordCheck(Map<String, Object> map);
+    public int updatePassword(Map<String, Object> map);
 
     // 4. 회원정보 인증 및 회원 삭제 (탈퇴)
     public int deleteUser(String user_id);
@@ -39,5 +43,8 @@ public interface UserDAO {
     
     // 나의 문의 상세
     public InquiryDTO selectMyInquiryDetail(Map<String, Object> map);
+    //------------------------------
+    //관리자 정보 수정
+    public int updateAdmin(MemberDTO dto);
 
 }    

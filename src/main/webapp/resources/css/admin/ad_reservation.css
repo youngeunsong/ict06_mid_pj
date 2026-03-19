@@ -7,6 +7,21 @@ body {
 	background-color: #F6F6F6 !important;
 }
 
+body.dark-mode .card-header,
+body.dark-mode .card-primary .card-header {
+	background-color: #3d4f63 !important;
+	color: #757575 !important;
+}
+
+body.dark-mode .card-title {
+	color: #e0e0e0 !important;
+}
+
+body.dark-mode .table-light th {
+	background-color: #3d4f63 !important;
+	color: #757575 !important;
+}
+
 .container-fluid {
 	max-width: 1400px;
 }

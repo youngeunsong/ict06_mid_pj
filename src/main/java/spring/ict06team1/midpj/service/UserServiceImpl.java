@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDAO dao;
+	
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	// 1. 아이디 중복 확인 (AJAX 사용, 중복이면 1 아니면 0 반환)
 	@Override
@@ -96,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	    // 3. DTO 객체 생성 및 데이터 세팅
 	    MemberDTO dto = new MemberDTO();
 	    dto.setUser_id(user_id);
-	    dto.setPassword(password);
+	    dto.setPassword(bcryptPasswordEncoder.encode(password));
 	    dto.setName(name);
 	    dto.setGender(gender);
 	    
@@ -146,28 +151,97 @@ public class UserServiceImpl implements UserService {
 		String user_id = request.getParameter("user_id");
 		String password = request.getParameter("password");
 		
+		int selectCnt = 0;
+		
+		/*
+		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("user_id",
+		 * user_id); map.put("password", password); int idExist = dao.loginCheck(map);
+		 */
+		
+		//ID 존재 여부 확인
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
-		map.put("password", password);
+		int idExist = dao.loginCheck(map);
 		
-		int selectCnt = dao.loginCheck(map);
-		
-		// 세션ID 설정(중요)
-		if(selectCnt == 1) {
-			request.getSession().setAttribute("sessionID", user_id);
-			//브라우저 종료 시 세션 무효화(자동 로그아웃 처리. 30분=1800초 기준)
-			request.getSession().setMaxInactiveInterval(1800);	
-			
-			// 권한 정보 가져오기
-	        MemberDTO dto = dao.getUserDetail(user_id); 
-	        if(dto != null) {
-	            // 세션에 role(ADMIN 또는 USER)
-	            request.getSession().setAttribute("userRole", dto.getRole());
-	        }
+		if(idExist == 1) {
+			MemberDTO dto = dao.getUserDetail(user_id);
+			//BCrypt로 비밀번호 검증
+			if(bcryptPasswordEncoder.matches(password, dto.getPassword())) {
+				selectCnt = 1;
+				request.getSession().setAttribute("sessionID", user_id);
+				//세션 무효화 설정(30분=1800초 기준)
+				//30분 지나거나 브라우저 종료 시 세션 무효화 됨
+				request.getSession().setMaxInactiveInterval(1800);
+				request.getSession().setAttribute("userRole", dto.getRole());
+			}
 		}
+		
+		/*
+		 * // 권한 정보 가져오기 MemberDTO dto = dao.getUserDetail(user_id); if(dto != null) {
+		 * // 세션에 role(ADMIN 또는 USER) request.getSession().setAttribute("userRole",
+		 * dto.getRole()); } }
+		 */
+		
 		model.addAttribute("selectCnt", selectCnt);
 		request.setAttribute("user_id", user_id);
 		request.setAttribute("selectCnt", selectCnt);
+	}
+	
+	// 3-1. 비밀번호 찾기
+	@Override
+	public void findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - findPasswordAction()");
+		
+		//ID, 이름, 이메일로 정보 확인
+		String user_id = request.getParameter("user_id");
+		String name = request.getParameter("name");
+		
+		String email1 = request.getParameter("email1");
+		String email2 = request.getParameter("email2");
+		String email = email1 + "@" + email2;
+		
+		System.out.println("user_id:" + user_id);
+		System.out.println("name:" + name);
+		System.out.println("email:" + email);
+		
+		//정보 일치하는 회원 확인
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		map.put("name", name);
+		map.put("email", email);
+		
+		int cnt = dao.findPasswordCheck(map);
+		
+		if(cnt == 1) {
+			//임시 비밀번호 생성(영문+숫자 8자리)
+			String tempPassword = generateTempPassword();
+			
+			//BCrypt 암호화 후 DB 업데이트
+			String encodedPassword = bcryptPasswordEncoder.encode(tempPassword);
+			Map<String, Object> updateMap = new HashMap<String, Object>();
+			updateMap.put("user_id", user_id);
+			updateMap.put("password", encodedPassword);
+			
+			dao.updatePassword(updateMap);
+			
+			model.addAttribute("result", "success");
+			model.addAttribute("tempPassword", tempPassword); //임시 발급된 비밀번호가 화면에 표시됨
+		} else {
+			model.addAttribute("result", "fail");
+		}
+	}
+	
+	//임시 비밀번호 생성
+	private String generateTempPassword() {
+		String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		
+		for(int i=0; i<8; i++) {
+			sb.append(chars.charAt(random.nextInt(chars.length())));
+		}
+		return sb.toString();
 	}
 
     // 4. 회원정보 인증처리 및 탈퇴(논리삭제 방식)
@@ -179,23 +253,33 @@ public class UserServiceImpl implements UserService {
 		String sessionID =(String)request.getSession().getAttribute("sessionID");
 		String password = request.getParameter("password");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("user_id", sessionID);
-		map.put("password", password);
-		
-		// 회원정보 인증처리
-		int selectCnt = dao.loginCheck(map);
+		MemberDTO memberDto = dao.getUserDetail(sessionID);
+		int selectCnt = 0;
 		int deleteCnt = 0;
-		if(selectCnt == 1) {
-			
+		
+		if(memberDto != null && bcryptPasswordEncoder.matches(password, memberDto.getPassword())) {
+			selectCnt = 1;
 			deleteCnt = dao.deleteUser(sessionID);
-			
 			if(deleteCnt == 1) {
-	            request.getSession().invalidate();
-	        }
+				request.getSession().invalidate();
+			}
 		}
 		model.addAttribute("selectCnt", selectCnt);
 		model.addAttribute("deleteCnt", deleteCnt);
+		
+		/*
+		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("user_id",
+		 * sessionID); map.put("password", password);
+		 * 
+		 * // 회원정보 인증처리 int selectCnt = dao.loginCheck(map); int deleteCnt = 0;
+		 * if(selectCnt == 1) {
+		 * 
+		 * deleteCnt = dao.deleteUser(sessionID);
+		 * 
+		 * if(deleteCnt == 1) { request.getSession().invalidate(); } }
+		 * model.addAttribute("selectCnt", selectCnt); model.addAttribute("deleteCnt",
+		 * deleteCnt);
+		 */
 	}
 
 	// 5. 회원정보 인증처리 및 상세페이지 조회(마이페이지에서 사용)
@@ -207,19 +291,22 @@ public class UserServiceImpl implements UserService {
 		String sessionID =(String)request.getSession().getAttribute("sessionID");
 		String password = request.getParameter("password");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("user_id", sessionID);
-		map.put("password", password);
+		MemberDTO memberDto = dao.getUserDetail(sessionID);
+		int selectCnt = 0;
 		
-		int selectCnt = dao.loginCheck(map);
-		
-		MemberDTO dto = null;
-		// 회원정보 인증 성공시
-		if(selectCnt == 1) {
-			// 회원 상세 페이지	
-		 dto = dao.getUserDetail(sessionID);
+		if(memberDto != null && bcryptPasswordEncoder.matches(password, memberDto.getPassword())) {
+			selectCnt = 1;
+		/*
+		 * HashMap<String, Object>(); map.put("user_id", sessionID); map.put("password",
+		 * password);
+		 * 
+		 * int selectCnt = dao.loginCheck(map);
+		 * 
+		 * MemberDTO dto = null; // 회원정보 인증 성공시 if(selectCnt == 1) { // 회원 상세 페이지 dto =
+		 * dao.getUserDetail(sessionID);
+		 */
 		 
-		 model.addAttribute("dto", dto);
+		 model.addAttribute("dto", memberDto);
 		}
 		model.addAttribute("selectCnt", selectCnt);
 	}
@@ -244,9 +331,8 @@ public class UserServiceImpl implements UserService {
 		String strBirth = request.getParameter("birth_date");
 		
 		// 2. dto 객체 생성 및 데이터 세팅
-		
 		dto.setUser_id(user_id);
-		dto.setPassword(password);
+		dto.setPassword(bcryptPasswordEncoder.encode(password));
 		dto.setName(name);
 		dto.setEmail(email);
 		dto.setPhone(phone);
@@ -355,5 +441,52 @@ public class UserServiceImpl implements UserService {
 		System.out.println("sessionID => [" + sessionID + "]");
 		
 		model.addAttribute("dto", dto);
+	}
+	//------------------------------
+	//관리자 상세 정보 조회
+	@Override
+	public MemberDTO getAdminDetail(String user_id) {
+		System.out.println("UserServiceImpl - getAdminDetail()");
+			
+		return dao.getUserDetail(user_id);
+	}
+	
+	//관리자 정보 수정
+	@Override
+	public int modifyAdminAction(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException {
+		System.out.println("UserServiceImpl - modifyAdminAction()");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		String currentPassword = request.getParameter("currentPassword");
+		
+		//현재 비밀번호 검증
+		MemberDTO memberDto = dao.getUserDetail(sessionID);
+		//비밀번호 불일치 시
+		if(memberDto == null || !bcryptPasswordEncoder.matches(currentPassword, memberDto.getPassword())) {
+			return -1;
+		}
+		
+		MemberDTO dto = new MemberDTO();
+		dto.setUser_id(sessionID);
+		dto.setName(request.getParameter("name"));
+		dto.setEmail(request.getParameter("email"));
+		dto.setPhone(request.getParameter("phone"));
+		
+		//새 비밀번호 검증
+		String newPassword = request.getParameter("newPassword");
+		String newPasswordConfirm = request.getParameter("newPasswordConfirm");
+		
+		if(newPassword != null && !newPassword.isEmpty()) {
+			//새 비밀번호 불일치
+			if(!newPassword.equals(newPasswordConfirm)) {
+				return -2;
+			}
+			dto.setPassword(bcryptPasswordEncoder.encode(newPassword));
+		} else {
+			//기존 비밀번호 유지
+			dto.setPassword(memberDto.getPassword());
+		}
+		return dao.updateAdmin(dto);
 	}
 }

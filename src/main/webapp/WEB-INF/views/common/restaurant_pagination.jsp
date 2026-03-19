@@ -2,6 +2,10 @@
 
 <div class="card-footer bg-white border-0 py-3">
     <div class="d-flex justify-content-between align-items-center">
+    	<!-- 총 건수 -->
+		<small class="text-muted">
+			총 <b>${totalCount}</b>건
+		</small>
         <nav>
             <ul class="pagination pagination-sm m-0">
 
@@ -9,7 +13,7 @@
                     <c:when test="${paging.startPage > paging.pageBlock}">
                         <li class="page-item">
                             <a class="page-link border-0 mx-1"
-                               href="?pageNum=${paging.prev}&keyword=${keyword}&areaCode=${areaCode}&category=${param.category}">
+                               href="?pageNum=${paging.prev}&keyword=${keyword}&areaCode=${areaCode}&category=${category}">
                                 <i class="bi bi-chevron-left"></i>
                             </a>
                         </li>
@@ -26,7 +30,7 @@
                 <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
                     <li class="page-item ${i == paging.currentPage ? 'active' : ''}">
                         <a class="page-link border-0 mx-1"
-                           href="?pageNum=${i}&keyword=${keyword}&areaCode=${areaCode}&category=${param.category}"
+                           href="?pageNum=${i}&keyword=${keyword}&areaCode=${areaCode}&category=${category}"
                            style="${i == paging.currentPage ? 'background-color:#01D281; border-color:#01D281; color:#fff;' : ''}">
                             ${i}
                         </a>
@@ -37,7 +41,7 @@
                     <c:when test="${paging.endPage < paging.pageCount}">
                         <li class="page-item">
                             <a class="page-link border-0 mx-1"
-                               href="?pageNum=${paging.next}&keyword=${keyword}&areaCode=${areaCode}&category=${param.category}">
+                               href="?pageNum=${paging.next}&keyword=${keyword}&areaCode=${areaCode}&category=${category}">
                                 <i class="bi bi-chevron-right"></i>
                             </a>
                         </li>

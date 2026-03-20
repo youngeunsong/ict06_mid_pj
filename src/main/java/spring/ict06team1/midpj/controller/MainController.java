@@ -31,21 +31,19 @@ public class MainController {
 
 	@Autowired
 	private MainServiceImpl mainService;
-
-	// [유저 메인화면]
+	
+	/* ================================================== 
+	   user 메인화면
+	   TOP10 + BEST 추천 초기 세팅 + 이달의 추천 국내 축제 + 즐겨찾기 + 최하단 공지 & 이벤트
+	================================================== */
 	@RequestMapping("/main.do")
 	public String main(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-
 		logger.info("<<< url => /main.do >>>");
 
-		// TOP10
+		/* [ TOP10 ] ------------------------------------------------------------------ */
 		List<RestaurantDTO> RESTtop10 = mainService.getTop10ByREST();
 		List<AccommodationDTO> ACCtop10 = mainService.getTop10ByACC();
-
-
-		// 메인 축제
-		List<FestivalDTO> festivalList = mainService.getTop8ThisMonthFestival();
 
 		// TOP10 리뷰/평점 map 생성용 place_id 수집
 		List<Integer> placeIds = new ArrayList<Integer>();
@@ -63,29 +61,35 @@ public class MainController {
 		}
 		
 		logger.info("placeIds => " + placeIds);
-
-		// 즐겨찾기
-		List<Integer> favoritePlaceIds = mainService.getFavoritePlaceIds(request);
-
-		// BEST 초기 렌더링용 (ALL)
+		
+		/* [ BEST 추천 ] 초기 렌더링용 (ALL) --------------------------------------------------------- */
 		List<Map<String, Object>> bestAllList = mainService.getBestAllTop4();
+		
+		/* [ 이달의 추천 국내 축제 ] ------------------------------------------------------------------ */
+		// 이달의 추천 국내 축제
+		List<FestivalDTO> festivalList = mainService.getTop8ThisMonthFestival();
+		
+		/* [ 즐겨찾기 ] ------------------------------------------------------------------ */
+		List<Integer> favoritePlaceIds = mainService.getFavoritePlaceIds(request);
+		
 
-		// TOP10 / 축제
+		/* [ 결과 전달 ] ------------------------------------------------------------------ */
+		// TOP10
 		model.addAttribute("RESTtop10", RESTtop10);
 		model.addAttribute("ACCtop10", ACCtop10);
-		model.addAttribute("festivalList", festivalList);
-
+		
 		logger.info("RESTtop10 => {}", RESTtop10);
 		logger.info("ACCtop10 => {}", ACCtop10);
-
-		// 리뷰/평점/즐겨찾기
-		//model.addAttribute("reviewCountMap", mainService.getReviewCountMap(placeIds));
-		//model.addAttribute("avgRatingMap", mainService.getAvgRatingMap(placeIds));
-		model.addAttribute("favoritePlaceIds", favoritePlaceIds);
-
-		// BEST 초기값
+		
+		// BEST 추천 - 초기 렌더링용 (ALL)
 		model.addAttribute("bestType", "ALL");
 		model.addAttribute("bestAllList", bestAllList);
+		
+		// 이달의 추천 국내 축제
+		model.addAttribute("festivalList", festivalList);
+		
+		// 즐겨찾기
+		model.addAttribute("favoritePlaceIds", favoritePlaceIds);
 		
 		//최하단 공지 & 이벤트
 		model.addAttribute("mainNoticeList", mainService.getMainNoticeList());
@@ -94,31 +98,27 @@ public class MainController {
 		return "common/main";
 	}
 
-	// =========================
-	// [BEST 추천] AJAX
-	// type: ALL / REST / ACC / FEST
-	// =========================
+	/* ================================================== 
+	   BEST 추천 AJAX
+	   type: ALL / REST / ACC / FEST
+	================================================== */
 	@GetMapping("/main/best/ajax")
-	public String bestAjax(@RequestParam(defaultValue = "ALL") String type,
-						   HttpServletRequest request,
-						   Model model) {
-
+	public String bestAjax(@RequestParam(defaultValue = "ALL") String type, HttpServletRequest request, Model model) {
 		logger.info("[MainController - bestAjax()] type: {}", type);
-
+		
+		/* [ AJAX에서 보여줄 type 구분하기 ] ------------------------------------------------------------------ */
+		// 구분할 type 수집
 		model.addAttribute("bestType", type);
-
-		// 즐겨찾기
-		List<Integer> favoritePlaceIds = mainService.getFavoritePlaceIds(request);
-		model.addAttribute("favoritePlaceIds", favoritePlaceIds);
 
 		// 리뷰/평점 map 생성용 place_id 수집
 		List<Integer> placeIds = new ArrayList<Integer>();
-
-		if ("ALL".equals(type)) {
+		
+		// 카드 전체 정보 : type 별 정보 + 리뷰/평점
+		if ("ALL".equals(type)) {         // type: ALL
 			List<Map<String, Object>> bestAllList = mainService.getBestAllTop4();
 			model.addAttribute("bestAllList", bestAllList);
 
-		} else if ("REST".equals(type)) {
+		} else if ("REST".equals(type)) { // type: REST
 			List<RestaurantDTO> bestRestList = mainService.getBestRestTop5();
 			model.addAttribute("bestRestList", bestRestList);
 
@@ -128,7 +128,7 @@ public class MainController {
 				}
 			}
 
-		} else if ("ACC".equals(type)) {
+		} else if ("ACC".equals(type)) { // type: ACC
 			List<AccommodationDTO> bestAccList = mainService.getBestAccTop5();
 			model.addAttribute("bestAccList", bestAccList);
 
@@ -138,7 +138,7 @@ public class MainController {
 				}
 			}
 
-		} else if ("FEST".equals(type)) {
+		} else if ("FEST".equals(type)) { // type: FEST
 			List<FestivalDTO> bestFestList = mainService.getBestFestTop5();
 			model.addAttribute("bestFestList", bestFestList);
 
@@ -149,7 +149,7 @@ public class MainController {
 			}
 		}
 
-		// REST / ACC / FEST 카드에서만 사용
+		// REST / ACC / FEST 카드에서만 사용 (주의!!! 다른 jsp 파일에서는 사용하지 않음)
 		if (!placeIds.isEmpty()) {
 			model.addAttribute("reviewCountMap", mainService.getReviewCountMap(placeIds));
 			model.addAttribute("avgRatingMap", mainService.getAvgRatingMap(placeIds));
@@ -157,6 +157,10 @@ public class MainController {
 			model.addAttribute("reviewCountMap", new HashMap<Integer, Integer>());
 			model.addAttribute("avgRatingMap", new HashMap<Integer, Double>());
 		}
+		
+		/* [ 즐겨찾기 ] ------------------------------------------------------------------ */
+		List<Integer> favoritePlaceIds = mainService.getFavoritePlaceIds(request);
+		model.addAttribute("favoritePlaceIds", favoritePlaceIds);
 
 		return "common/card/best_fragment";
 	}

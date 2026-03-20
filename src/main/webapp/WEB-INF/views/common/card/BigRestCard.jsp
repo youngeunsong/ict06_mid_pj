@@ -1,10 +1,6 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<%-- [랭킹 페이지 공통 카드 컴포넌트]
-     TOP5, 더보기 초기 리스트, 더보기 AJAX 카드에서 공통으로 재사용하기 위해 사용
-     RestaurantDTO 내부의 placeDTO 기준으로 카드 정보를 출력
---%>
 
 <c:set var="placeId" value="${rest.placeDTO.place_id}" /> <%-- 상세 페이지 이동 링크에 사용할 place_id 추출 --%>
 

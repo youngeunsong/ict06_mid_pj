@@ -1,29 +1,31 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-18
+ * 최종수정일: 2026-03-20
+ 
+진행 중 이벤트 : 별도 조회/ 항상 최상단 고정/ 카드형
+(메인 carousel처럼 강조)
+CATEGORY='EVENT' AND IS_TOP='Y'
+
+종료 이벤트 : 검색 + 페이징/ 카드형 리스트
+CATEGORY='EVENT' AND IS_TOP='N'
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>커뮤니티 - 이벤트</title>
-
-<!-- ===============================================
-	[ 이벤트 ] => 진행 중 이벤트는 “지금 참여할 수 있는 것”
-	진행 중 이벤트 : 별도 조회/ 항상 최상단 고정/ 카드형
-	(메인 carousel처럼 강조)
-	CATEGORY='EVENT' AND IS_TOP='Y'
-	
-	종료 이벤트 : 검색 + 페이징/ 카드형 리스트
-	CATEGORY='EVENT' AND IS_TOP='N'
-
-=============================================== -->
+<title>커뮤니티 > 이벤트</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/event.css">
+
 </head>
 <body>
 <div class="wrap">

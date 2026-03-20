@@ -1,3 +1,13 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-16
+ * 최종수정일: 2026-03-20
+ * 적용 외부 API : Kakao 공유 API
+ (PC : 정상 작동/ 모바일 : URL 올바르게 들어가나 페이지 못 불러옴 <= 정상)
+  ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가
+  
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
@@ -8,7 +18,7 @@
 
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>자유게시판 게시글 상세</title>
+<title>커뮤니티 > 자유게시판 > 게시글</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
@@ -16,6 +26,26 @@
 <link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 
 <script src="${path}/resources/js/community/community_detail.js" defer></script>
+
+<!-- 카카오 공유 API -->
+<c:set var="shareUrl"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}${path}/community_detail.co?post_id=${dto.post_id}" />
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+        crossorigin="anonymous"></script>
+
+<script>
+	window.kakaoShareData = {
+	    title: '${dto.title}',
+	    description: '맛침내 커뮤니티 자유 게시판',
+	    imageUrl: '${not empty dto.repImage and not empty dto.repImage.image_url ? dto.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
+	    webUrl: '${shareUrl}',
+	    mobileWebUrl: '${shareUrl}'
+	};
+</script>
+
+<script src="${path}/resources/js/common/kakaoShare.js"></script>
+<!-- 카카오 공유 API -->
 
 </head>
 <body>
@@ -95,7 +125,7 @@
                     <span class="post-cat">${dto.category}</span>
 
                     <h3 class="post-title">${dto.title}</h3>
-
+                    
                     <div class="post-meta">
                         <div class="post-author">
                             <div class="avatar">
@@ -135,6 +165,10 @@
 				    <a href="${path}/community_free.co" class="btn-list">
 				        <i class="bi bi-list-ul"></i> 목록
 				    </a>
+				    
+				    <button type="button" id="kakaoShareBtn" class="btn btn-warning btn-sm">
+				        카카오톡 공유
+				    </button>
 				
 				    <c:if test="${sessionScope.sessionID == dto.user_id}">
 				        <div class="post-footer-right">

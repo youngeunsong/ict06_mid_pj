@@ -121,6 +121,7 @@ SELECT *
   FROM COMMUNITY
 WHERE title = '맛집 리뷰 제목';
 
+
 -- 게시글 작성 (이미지 추가)
 INSERT INTO IMAGE_STORE (
 	        image_id,
@@ -139,7 +140,9 @@ INSERT INTO IMAGE_STORE (
 	        #{sort_order},
 	        SYSTIMESTAMP
 	    )
-	    
+
+-- 게시글 1건 확인 쿼리	   
+SELECT * FROM COMMUNITY WHERE post_id = 57;
 -- 대표 이미지 확인 쿼리
 SELECT * FROM IMAGE_STORE WHERE TARGET_ID = 57;
 -- 본문 이미지 확인 쿼리
@@ -148,8 +151,8 @@ SELECT content FROM COMMUNITY WHERE post_id = 167;
 
 -- 대표 이미지 테스트를 위한 업데이트 쿼리
 UPDATE IMAGE_STORE
-SET image_url = 'https://cdn.lawtimes.co.kr/news/photo/202104/169043_54879_4928.jpg'
-WHERE TARGET_ID = 140
+SET image_url = 'https://contents.creators.mypetlife.co.kr/content/uploads/2021/10/09095442/img-751.jpg'
+WHERE TARGET_ID = 150
 
 
 -- 게시글 삭제
@@ -380,6 +383,10 @@ SELECT COUNT(*)
 --    OR content LIKE '%' || '공지' || '%'
 --     )       
        
+   
+SELECT *
+FROM NOTICE n 
+WHERE category = 'EVENT'
 
  -- 이벤트 상단 고정
  SELECT notice_id,
@@ -404,7 +411,7 @@ ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK DISABLE;
 -- UPDATE 실행
 UPDATE NOTICE
    SET is_top = 'Y'
- WHERE notice_id = 36;
+ WHERE notice_id = 30;
 
 COMMIT;
 

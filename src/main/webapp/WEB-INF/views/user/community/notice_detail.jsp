@@ -1,3 +1,10 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-18
+ * 최종수정일: 2026-03-20
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 

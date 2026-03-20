@@ -1,11 +1,12 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-02-26
+ * 최종수정일: 2026-03-02
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
-<!-- 
-꼭 common/headerSearch.js 와 함께 사용해주세요!!
-- 자동검색 기능
-
- -->
 
 <script src="${path}/resources/js/common/header.js" defer></script>
 

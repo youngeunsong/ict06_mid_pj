@@ -155,6 +155,13 @@ ORDER BY AVG_RATING DESC, VIEW_COUNT DESC
 -- 최근 1주일 리뷰 기준 / 리뷰 1개 이상 / 통합 정렬
 --(전체 탭은 맛집/숙소/축제 통합하여 리뷰평균이 가장 높은 4개)
 
+-- 리뷰를 최근 7일 이내로 업데이트 하는 임시 쿼리
+UPDATE REVIEW
+SET CREATED_AT = SYSTIMESTAMP - (MOD(REVIEW_ID, 7) * INTERVAL '1' DAY)
+WHERE STATUS = 'DISPLAY';
+
+COMMIT;
+
 -- BEST 추천 - 전체 탭 우측 4개 
 SELECT *
 FROM (

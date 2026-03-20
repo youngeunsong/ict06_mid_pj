@@ -1,5 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-14
+ * 최종수정일: 2026-03-16
+ 
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
 
 <!DOCTYPE html>
@@ -8,7 +14,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>커뮤니티 메인화면 + 자유게시판</title>
+<title>커뮤니티/ 커뮤니티 > 자유게시판</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">

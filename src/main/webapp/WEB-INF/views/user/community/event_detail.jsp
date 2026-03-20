@@ -1,3 +1,16 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-14
+ * 최종수정일: 2026-03-16
+ * 참고 코드: community_detail.jsp
+ 자유게시판 게시글에서 댓글 기능 삭제
+ 
+ * 적용 외부 API : Kakao 공유 API
+ (PC : 정상 작동/ 모바일 : URL 올바르게 들어가나 페이지 못 불러옴 <= 정상)
+  ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가
+  
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
@@ -6,11 +19,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${noticeDTO.title} - 이벤트</title>
+<title>커뮤니티 > 이벤트 > 게시글</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/event.css">
+
+<!-- 카카오 공유 API -->
+<c:set var="shareUrl"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}${path}/community_event_detail.co?notice_id=${noticeDTO.notice_id}" />
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+        crossorigin="anonymous"></script>
+
+<script>
+	window.kakaoShareData = {
+	    title: '${noticeDTO.title}',
+	    description: '맛침내 커뮤니티 이벤트 게시판',
+	    imageUrl: '${not empty noticeDTO.image_url ? noticeDTO.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
+	    webUrl: '${shareUrl}',
+	    mobileWebUrl: '${shareUrl}'
+	};
+</script>
+
+<script src="${path}/resources/js/common/kakaoShare.js"></script>
+<!-- 카카오 공유 API -->
+
 </head>
 <body>
 <div class="wrap">
@@ -97,6 +131,10 @@
                     <a href="${path}/community_event.co" class="btn-list">
                         <i class="bi bi-list"></i> 목록
                     </a>
+                    
+                    <button type="button" id="kakaoShareBtn" class="btn btn-warning btn-sm">
+				        카카오톡 공유
+				    </button>
                 </div>
             </div>
 

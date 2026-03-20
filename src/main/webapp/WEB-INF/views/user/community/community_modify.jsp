@@ -1,3 +1,13 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-18
+ * 최종수정일: 2026-03-20
+ * 적용 라이브러리 : summernote
+ * 참고 코드: community_insert.jsp
+ 게시글 작성 페이지에서 기존 정보 끌고와 뿌림. 
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -7,7 +17,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>자유게시판 게시글 수정</title>
+<title>커뮤니티 > 자유게시판 > 게시글 > 수정</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">

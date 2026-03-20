@@ -1,5 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-05
+ * 최종수정일: 2026-03-10
+ 
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="setting.jsp"%>
 
 <!DOCTYPE html>
@@ -16,9 +22,8 @@
 <link rel="stylesheet" href="${path}/resources/css/common/main.css">
 <link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
 
-<script src="https://kit.fontawesome.com/648e5e962b.js"
-	crossorigin="anonymous"></script>
-<!-- 아이콘 -->
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
+
 
 <script src="${path}/resources/js/user/main.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
@@ -65,7 +70,6 @@
 		<%@ include file="header.jsp"%>
 
 		<!-- 컨텐츠 시작 -->
-
 		<!-- 메인 배너S -->
 		<section class="position-relative">
 			<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel"

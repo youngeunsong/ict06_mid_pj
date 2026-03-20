@@ -32,29 +32,34 @@ public class CommunityServiceImpl implements CommunityService {
 	@Autowired
 	private CommunityCommentDAO commentDao;
 
-	// 자유게시판 목록
+    /* ==========================================
+    	자유게시판 목록(자유게시판 목록 or 자유게시판 검색 목록)
+    ========================================== */
 	@Override
 	public void getFreeBoardList(HttpServletRequest request, Model model) {
 	    System.out.println("[CommunityServiceImpl - getFreeBoardList()]");
 
-	    String category = request.getParameter("category");
-	    String pageNum = request.getParameter("pageNum");
-	    String searchType = request.getParameter("searchType");
-	    String searchKeyword = request.getParameter("searchKeyword");
+	    String category = request.getParameter("category");           // 맛집수다 | 숙소수다 | 축제수다 | 정보공유 | 동행구해요
+	    String searchType = request.getParameter("searchType");       // 제목 | 내용 | 제목+내용 | 작성자
+	    String searchKeyword = request.getParameter("searchKeyword"); // 검색 키워드
+	    String pageNum = request.getParameter("pageNum");             // 페이징
 	    
-	    
-	    Paging paging = new Paging(pageNum);
-
+	    // 목록 카테고리 + 검색 타입 + 검색 키워드
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("category", category);
 	    map.put("searchType", searchType);
 	    map.put("searchKeyword", searchKeyword);
 
+	    // 페이징
 	    int count;
-	    List<CommunityDTO> freeBoardList;
+	    Paging paging = new Paging(pageNum);
 
-	    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-	        count = dao.searchFreeBoardCount(map);
+	    // 자유게시판 목록을 담기 위한 list 선언
+	    List<CommunityDTO> freeBoardList; 
+
+	    if (searchKeyword != null && !searchKeyword.trim().isEmpty()) { 
+	    	// 검색 키워드가 있을 시, 자유게시판 검색 목록(카테고리 필터 + 페이징)
+	    	count = dao.searchFreeBoardCount(map);
 	        paging.setTotalCount(count);
 
 	        map.put("startRow", paging.getStartRow());
@@ -62,6 +67,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	        freeBoardList = count > 0 ? dao.searchFreeBoardPage(map) : new ArrayList<>();
 	    } else {
+	    	// 검색 키워드가 없을 시, 자유게시판 목록(카테고리 필터 + 페이징)
 	        count = dao.freeBoardCount(category);
 	        paging.setTotalCount(count);
 
@@ -71,17 +77,20 @@ public class CommunityServiceImpl implements CommunityService {
 	        freeBoardList = count > 0 ? dao.freeBoardPage(map) : new ArrayList<>();
 	    }
 
+	    // 인기글 TOP3
 	    List<CommunityDTO> popularList = dao.popularList();
 
-	    model.addAttribute("freeBoardList", freeBoardList);
-	    model.addAttribute("popularList", popularList);
+	    model.addAttribute("freeBoardList", freeBoardList); // 자유게시판 목록
+	    model.addAttribute("popularList", popularList); // 인기글 TOP3
 	    model.addAttribute("paging", paging);
 	    model.addAttribute("category", category);
 	    model.addAttribute("searchType", searchType);
 	    model.addAttribute("searchKeyword", searchKeyword);
 	}
 
-	// 자유게시판 게시글 정보 1건 + 조회수 증가 + 댓글 정보
+    /* ==========================================
+    	게시글 1건 조회(조회 + 조회수 증가 + 댓글 정보)
+    ========================================== */
 	@Override
 	public void getBoardDetail(HttpServletRequest request, Model model) {
 	    System.out.println("[CommunityServiceImpl - getBoardDetail()]");
@@ -107,11 +116,13 @@ public class CommunityServiceImpl implements CommunityService {
 	    // 댓글 목록 조회
 	    List<CommunityCommentDTO> commentList = commentDao.getCommentList(post_id);
 
-	    model.addAttribute("dto", dto);
-	    model.addAttribute("commentList", commentList);
+	    model.addAttribute("dto", dto); //게시글 1건
+	    model.addAttribute("commentList", commentList); //댓글 목록
 	}
 
-	// 댓글 등록
+    /* ==========================================
+    	댓글 등록
+    ========================================== */
 	@Override
 	public void insertComment(HttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - insertComment()]");
@@ -131,7 +142,9 @@ public class CommunityServiceImpl implements CommunityService {
 	    commentDao.insertComment(dto);
 	}
 	
-	// 댓글 삭제
+    /* ==========================================
+    	댓글 삭제
+    ========================================== */
 	@Override
 	public void deleteComment(HttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - deleteComment()]");
@@ -146,13 +159,50 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 	
-	// 자유게시판 게시글 작성
+	/* ==========================================
+		좋아요(좋아요 여부 체크 + 게시글 좋아요/COMMUNITY_LIKE 테이블 +1 or -1)
+	========================================== */
+	@Override
+	public String toggleLike(HttpServletRequest request) {
+	    System.out.println("[CommunityServiceImpl - toggleLike()]");
+
+	    // 로그인 체크 : 비로그인 시 로그인 페이지로 이동
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+	    if (sessionID == null) {
+	        return "logout";
+	    }
+
+	    int post_id = Integer.parseInt(request.getParameter("post_id"));
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", sessionID);
+	    map.put("post_id", post_id);
+	    
+	    // 좋아요 여부 체크 (0 좋아요 클릭 상태/ 1 좋아요 미클릭 상태)
+	    int checkCnt = dao.checkCommunityLike(map);
+
+	    // 좋아요 여부에 따라, 게시글 좋아요/COMMUNITY_LIKE 테이블 +1 or -1
+	    if (checkCnt > 0) {
+	        dao.deleteCommunityLike(map);
+	        dao.decreaseLikeCount(post_id);
+	        return "delete";
+	    } else {
+	        dao.insertCommunityLike(map);
+	        dao.increaseLikeCount(post_id);
+	        return "insert";
+	    }
+	}
+	
+    /* ==========================================
+		게시글 작성(등록)(게시글 내 내용 + 대표 이미지 등록)
+	========================================== */
 	@Override
 	public void insertBoard(MultipartHttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - insertBoard()]");
 
 	    String sessionID = (String) request.getSession().getAttribute("sessionID");
 
+	    /* [ 게시글 내 내용 등록 ] ------------------------------------------------------------------ */
 	    String title = request.getParameter("title");
 	    String content = request.getParameter("content");
 	    String category = request.getParameter("category");
@@ -163,10 +213,9 @@ public class CommunityServiceImpl implements CommunityService {
 	    dto.setContent(content);
 	    dto.setCategory(category);
 
-	    // 1. 게시글 저장
 	    dao.insertBoard(dto);
 
-	    // 2. 대표 이미지 저장
+	    /* [ 대표 이미지 등록 ] ------------------------------------------------------------------ */
 	    List<MultipartFile> files = request.getFiles("files");
 
 	    if (files != null && !files.isEmpty()) {
@@ -248,7 +297,7 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 	
-	// 자유게시판 게시글 삭제
+	// 게시글 삭제
 	@Override
 	public void deleteBoard(HttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - deleteBoard()]");
@@ -263,7 +312,7 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 
-	// 게시글 수정 화면 정보
+	// 게시글 수정(등록)
 	@Override
 	public void updateBoard(MultipartHttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - updateBoard()]");
@@ -365,33 +414,6 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 	
-	// 게시글 좋아요
-	@Override
-	public String toggleLike(HttpServletRequest request) {
-	    System.out.println("[CommunityServiceImpl - toggleLike()]");
 
-	    String sessionID = (String) request.getSession().getAttribute("sessionID");
-	    if (sessionID == null) {
-	        return "logout";
-	    }
-
-	    int post_id = Integer.parseInt(request.getParameter("post_id"));
-
-	    Map<String, Object> map = new HashMap<>();
-	    map.put("user_id", sessionID);
-	    map.put("post_id", post_id);
-
-	    int checkCnt = dao.checkCommunityLike(map);
-
-	    if (checkCnt > 0) {
-	        dao.deleteCommunityLike(map);
-	        dao.decreaseLikeCount(post_id);
-	        return "delete";
-	    } else {
-	        dao.insertCommunityLike(map);
-	        dao.increaseLikeCount(post_id);
-	        return "insert";
-	    }
-	}
 	
 }

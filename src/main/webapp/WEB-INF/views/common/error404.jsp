@@ -22,7 +22,7 @@
       --e-shadow:0 20px 45px rgba(71, 132, 91, .12);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     body{
       margin:0;
@@ -150,6 +150,68 @@
       50%{ transform:translateY(5px) rotate(-4deg); }
     }
 
+    /* 심볼 부분 전용 클릭 영역 */
+    .egg-hitbox{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      width:220px;
+      height:240px;
+      margin-left:-205px;
+      margin-top:88px;
+      z-index:4;
+      background:transparent;
+      cursor:pointer;
+      border-radius:28px;
+    }
+
+    /* 심볼 위 말풍선 */
+    .egg-bubble{
+	  position:absolute;
+	  left:50%;
+	  top:50%;
+	  transform:translateX(-50%) translateY(8px);
+	  min-width:300px;
+	  max-width:480px;
+	  padding:14px 20px;
+	  border-radius:24px;
+	  background:#ffffff;
+	  border:3px solid #11a4cf;
+	  color:var(--e-main-dark);
+	  font-size:20px;
+	  font-weight:800;
+	  line-height:1.45;
+	  text-align:center;
+	  box-shadow:0 14px 24px rgba(78, 139, 95, .16);
+	  z-index:6;
+	  opacity:0;
+	  pointer-events:none;
+	
+	  margin-left:-170px;
+	  margin-top:-128px;
+	
+	  transition:opacity .25s ease, transform .25s ease;
+	}
+
+    .egg-bubble.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .egg-bubble::after{
+	  content:"";
+	  position:absolute;
+	  left:95px;
+	  bottom:-14px;
+	  width:24px;
+	  height:24px;
+	  background:#ffffff;
+	  border-right:3px solid #11a4cf;
+	  border-bottom:3px solid #11a4cf;
+	  transform:rotate(45deg);
+	}
+
     .action-row{
       position:relative;
       z-index:2;
@@ -263,6 +325,25 @@
       .s3{ top:232px; margin-left:286px; }
       .s4{ top:378px; margin-left:306px; }
 
+      .egg-hitbox{
+        width:170px;
+        height:180px;
+        margin-left:-142px;
+        margin-top:62px;
+      }
+
+      .egg-bubble{
+        min-width:240px;
+        max-width:360px;
+        font-size:18px;
+        margin-left:-66px;
+        margin-top:-98px;
+      }
+
+      .egg-bubble::after{
+        left:105px;
+      }
+
       .action-row{
         margin-top:-2px;
       }
@@ -313,6 +394,31 @@
       .s3{ top:150px; margin-left:152px; }
       .s4{ top:236px; margin-left:164px; }
 
+      .egg-hitbox{
+        width:94px;
+        height:102px;
+        margin-left:-74px;
+        margin-top:34px;
+        border-radius:18px;
+      }
+
+      .egg-bubble{
+        min-width:190px;
+        max-width:250px;
+        padding:10px 14px;
+        font-size:15px;
+        border-radius:16px;
+        margin-left:-42px;
+        margin-top:-74px;
+      }
+
+      .egg-bubble::after{
+        left:74px;
+        width:14px;
+        height:14px;
+        bottom:-9px;
+      }
+
       .error-btn{
         min-width:140px;
         height:48px;
@@ -346,6 +452,9 @@
           <span class="sweat s3"></span>
           <span class="sweat s4"></span>
 
+          <div id="eggBubble" class="egg-bubble"></div>
+          <div id="eggHitbox" class="egg-hitbox" aria-label="숨겨진 심볼 클릭 영역"></div>
+
           <img
             class="mascot-img"
             src="${path}/resources/images/common/error-symbol.png"
@@ -359,5 +468,38 @@
       </div>
     </section>
   </div>
+
+  <script>
+    (function () {
+      const hitbox = document.getElementById("eggHitbox");
+      const bubble = document.getElementById("eggBubble");
+      let clickCount = 0;
+      let hideTimer = null;
+
+      function showBubble(message) {
+        bubble.textContent = message;
+        bubble.classList.add("show");
+
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+        }
+
+        hideTimer = setTimeout(function () {
+          bubble.classList.remove("show");
+        }, 2400);
+      }
+
+      hitbox.addEventListener("click", function () {
+        clickCount++;
+
+        if (clickCount === 5) {
+          showBubble("심볼이 몰래 길을 찾고 있어요!");
+        } else if (clickCount === 10) {
+          showBubble("앗, 찾았다! ... 앗... 아직 아니에요..");
+          clickCount = 0;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

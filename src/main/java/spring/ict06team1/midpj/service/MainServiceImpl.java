@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import spring.ict06team1.midpj.dao.MainDAO;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.NoticeDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Service
@@ -155,5 +155,25 @@ public class MainServiceImpl implements MainService {
 		
 		List<FestivalDTO> BestFestTop5 = dao.bestFestTop5();
 	    return BestFestTop5;
+	}
+	
+	//최하단 공지 리스트
+	@Override
+	public List<NoticeDTO> getMainNoticeList() {
+	    System.out.println("[MainServiceImpl - getMainNoticeList()]");
+	    
+	    List<NoticeDTO> mainNoticeList = dao.getMainNoticeList();
+	    
+	    return mainNoticeList;
+	}
+
+	//최하단 이벤트 리스트
+	@Override
+	public List<NoticeDTO> getMainEventList() {
+	    System.out.println("[MainServiceImpl - getMainEventList()]");
+	    
+	    List<NoticeDTO> mainEventList = dao.getMainEventList();
+	    
+	    return mainEventList;
 	}
 }

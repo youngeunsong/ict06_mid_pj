@@ -53,7 +53,7 @@
 	    )
 	</insert>
 	
-	<!-- 작성자 검증 -->
+	<!-- 댓글 작성자 검증 -->
 	<select id="getCommentDetail" parameterType="int" resultMap="commentMap">
 	    SELECT comment_id,
 	           post_id,

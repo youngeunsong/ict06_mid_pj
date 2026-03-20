@@ -50,7 +50,7 @@ public class FestivalController {
 		return "user/festival/festival";
 	}
 	
-	// [festival] 상위 5개 축제 강조 
+	// [festival] 축제 랭킹 - 상위 5개 축제 강조 
 	@RequestMapping("/bestFestivals.fe")
 	public String bestFestivals(Model model) {
 
@@ -80,9 +80,8 @@ public class FestivalController {
         return "user/festival/bestFestivals";
     }
 	
-	// [랭킹 페이지 더보기 AJAX]
-    // 현재 선택된 탭/지역/카테고리 상태를 유지한 채 추가 랭킹 데이터를 JSON으로 반환하기 위해 사용
-    @RequestMapping("/bestFestivalsMore.rs")
+	// [festival] 축제 랭킹 - [랭킹 페이지 더보기 AJAX]
+    @RequestMapping("/bestFestivalsMore.fe")
     @ResponseBody
     public List<FestivalDTO> bestFestivalsMore(
             @RequestParam("offset") int offset,

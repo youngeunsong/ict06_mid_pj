@@ -97,7 +97,8 @@ public class FestivalDAOImpl implements FestivalDAO {
 	@Override
 	public List<FestivalDTO> getBestFestivalList() {
 		System.out.println("FestivalDAOImpl-getBestFestivalList()");
-		return session.selectList(NAMESPACE + "getBestFestivalList");
+		// return session.selectList(NAMESPACE + "getBestFestivalList");
+		return null; 
 	}
 
 	// 축제 총 갯수

@@ -146,18 +146,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* Notice Tabs */
-  document.querySelectorAll('.notice-tabs .nav-link').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
 
-      document.querySelectorAll('.notice-tabs .nav-link').forEach(function (l) {
-        l.classList.remove('active');
-      });
+/* =========================
+	이벤트 & 공지
+========================= */
+const noticeTabBtn = document.getElementById('noticeTabBtn');
+const eventTabBtn = document.getElementById('eventTabBtn');
+const noticeContent = document.getElementById('noticeContent');
+const eventContent = document.getElementById('eventContent');
 
-      this.classList.add('active');
-    });
+if (noticeTabBtn && eventTabBtn && noticeContent && eventContent) {
+  noticeTabBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    noticeTabBtn.classList.add('active');
+    eventTabBtn.classList.remove('active');
+
+    noticeContent.style.display = 'block';
+    eventContent.style.display = 'none';
   });
+
+  eventTabBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    eventTabBtn.classList.add('active');
+    noticeTabBtn.classList.remove('active');
+
+    eventContent.style.display = 'block';
+    noticeContent.style.display = 'none';
+  });
+}
+
+
+
+
 
   /* =========================
      TOP10 드롭다운
@@ -238,15 +262,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* =========================
-     TOP10 dots 초기화
-  ========================= */
+/* =========================
+	TOP10 dots 초기화
+========================= */
 
-  updateDots();
+updateDots();
 
-  /* 브라우저 resize 대응 */
-  window.addEventListener('resize', function () {
-    const maxTranslate = getMaxTranslate();
+/* 브라우저 resize 대응 */
+window.addEventListener('resize', function () {
+	const maxTranslate = getMaxTranslate();
 
     if (top10Offset > maxTranslate) {
       top10Offset = maxTranslate;
@@ -259,4 +283,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateDots();
   });
+});
+
+/* =========================
+	최하단 공지 이벤트 간락 표 형식
+========================= */
+document.addEventListener("DOMContentLoaded", function () {
+    const noticeTabBtn = document.getElementById("noticeTabBtn");
+    const eventTabBtn = document.getElementById("eventTabBtn");
+    const noticeContent = document.getElementById("noticeContent");
+    const eventContent = document.getElementById("eventContent");
+
+    if (!noticeTabBtn || !eventTabBtn || !noticeContent || !eventContent) return;
+
+    noticeTabBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        noticeTabBtn.classList.add("active");
+        eventTabBtn.classList.remove("active");
+
+        noticeContent.style.display = "block";
+        eventContent.style.display = "none";
+    });
+
+    eventTabBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        eventTabBtn.classList.add("active");
+        noticeTabBtn.classList.remove("active");
+
+        eventContent.style.display = "block";
+        noticeContent.style.display = "none";
+    });
 });

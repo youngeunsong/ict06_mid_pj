@@ -52,7 +52,7 @@ public class FestivalController {
 	
 	// [festival] 축제 랭킹 - 상위 5개 축제 강조 
 	@RequestMapping("/bestFestivals.fe")
-	public String bestFestivals(Model model) {
+	public String bestFestivals(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		logger.info("<<< url => /bestFestivals.fe >>>");
         int limit = 12; // 더보기 1회 요청 시 불러올 카드 수
@@ -74,8 +74,8 @@ public class FestivalController {
         model.addAttribute("nextOffset", 17); // 첫 더보기 클릭 시 18위부터 이어서 조회할 수 있도록 기준값 전달
         model.addAttribute("remainCount", remainCount);
         model.addAttribute("currentTab", "realtime");
-        model.addAttribute("currentRegion", "all");
-        model.addAttribute("currentCategory", "ALL");
+//        model.addAttribute("currentRegion", "all");
+//        model.addAttribute("currentCategory", "ALL");
 
         return "user/festival/bestFestivals";
     }

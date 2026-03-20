@@ -119,7 +119,7 @@ public class FestivalDAOImpl implements FestivalDAO {
 	@Override
 	public List<FestivalDTO> getBestFestivalTop5() {
 		System.out.println("FestivalDAOImpl-getBestFestivalTop5()");
-		return session.selectList(NAMESPACE + "deleteFavorite");
+		return session.selectList(NAMESPACE + "getBestFestivalTop5");
 	}
 
 }

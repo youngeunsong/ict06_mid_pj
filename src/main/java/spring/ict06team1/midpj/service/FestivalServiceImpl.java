@@ -136,6 +136,7 @@ public class FestivalServiceImpl implements FestivalService {
 	// 축제 top 5
 	@Override
 	public List<FestivalDTO> getBestFestivalTop5() {
+		System.out.println("FestivalServiceImpl-getBestFestivalTop5()");
 		// 상위 5개 데이터를 별도 조회해서 상단 강조 영역에 사용
         return dao.getBestFestivalTop5();
 	}

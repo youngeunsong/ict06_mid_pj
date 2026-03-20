@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <fmt:setTimeZone value="Asia/Seoul"/>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -53,11 +54,11 @@
 								</div>
 								
 								<%--키워드 검색 영역--%>
-								<div class="input-group input-group-sm" style="width:220px;">
-									<input type="text" id="keyword" name="keyword" class="form-control"
-										placeholder="ID / 예약번호 입력" value="${param.keyword}" style="font-size:0.78rem;">
+								<div class="input-group input-group-sm" style="width:300px;">
+									<input type="text" id="keyword" name="keyword" class="form-control form-control-sm"
+										placeholder="ID / 예약번호 입력" value="${param.keyword}">
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary" type="button" onclick="keywordSearch()" style="font-size:0.78rem;">
+										<button class="btn btn-outline-secondary btn-sm" type="button" onclick="keywordSearch()">
 											<i class="bi bi-search"></i>
 										</button>
 									</div>
@@ -101,7 +102,6 @@
 	
 							<%-- ===== 필터 검색버튼 ===== --%>
 							<div class="filter-row">
-								<span class="filter-row-label"></span>
 								<button type="button" class="btn btn-dark btn-filter-search" onclick="filterData()">
 									<i class="bi bi-search mr-1"></i>검색
 								</button>

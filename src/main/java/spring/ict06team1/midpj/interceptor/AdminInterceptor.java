@@ -60,8 +60,12 @@ public class AdminInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView mav)
 			throws Exception {
 		if(mav != null) {
-			int pendingCount = resService.getPendingCount();
-			mav.addObject("pendingCount", pendingCount);
+			String uri = request.getRequestURI();
+			//관리자 페이지에서만 조회(admin header > 알림 배지의 미처리예약 건수)
+			if(uri.contains(".ad")) {
+				int pendingCount = resService.getPendingCount();
+				mav.addObject("pendingCount", pendingCount);
+			}
 		}
 	}
 }

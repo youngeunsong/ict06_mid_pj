@@ -55,7 +55,7 @@ public class CommunityServiceImpl implements CommunityService {
 	    CommunityDTO dto = dao.getBoardDetail(post_id);
 	    
 	    //숨김 or 삭제된 게시글이면 접근 차단
-	    if(dto == null || dto.getStatus().equals("HIDDEN") || dto.getStatus().equals("DELETED")) {
+	    if(dto == null || dto.getStatus().equals("HIDDEN") || dto.getStatus().equals("BANNED")) {
 	    	model.addAttribute("errorMsg", "존재하지 않는 게시글입니다.");
 	    	return;
 	    }

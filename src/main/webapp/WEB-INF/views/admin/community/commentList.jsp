@@ -87,10 +87,10 @@
 																<span class="badge badge-success">정상</span>
 															</c:when>
 															<c:when test="${comment.status eq 'HIDDEN'}">
-																<span class="badge badge-warning">숨김</span>
-															</c:when>
-															<c:when test="${comment.status eq 'DELETED'}">
 																<span class="badge badge-danger">삭제</span>
+															</c:when>
+															<c:when test="${comment.status eq 'BANNED'}">
+																<span class="badge badge-warning">숨김</span>
 															</c:when>
 														</c:choose>
 													</td>
@@ -100,11 +100,11 @@
 															<c:when test="${comment.status eq 'DISPLAY'}">
 																<button type="button" class="tag tag-warning" onclick="hideComment(${comment.comment_id})">숨김</button>
 															</c:when>
-															<c:when test="${comment.status eq 'HIDDEN'}">
+															<c:when test="${comment.status eq 'BANNED'}">
 																<button type="button" class="tag tag-success" onclick="showComment(${comment.comment_id})">숨김해제</button>
 															</c:when>
 														</c:choose>
-														<c:if test="${comment.status ne 'DELETED'}">
+														<c:if test="${comment.status ne 'HIDDEN'}">
 															<button type="button" class="tag tag-danger" onclick="deleteComment(${comment.comment_id})">삭제</button>
 														</c:if>
 													</td>

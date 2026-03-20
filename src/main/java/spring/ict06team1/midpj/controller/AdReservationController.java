@@ -30,10 +30,10 @@ public class AdReservationController {
 	// [예약 관리]------------------------------------------
 	// 1. 예약 조회
 	// 1-1. 예약목록 전체 조회, 검색/필터
-	@RequestMapping("/getReservationList.ad")
+	@RequestMapping("/reservationList.ad")
 	public String getReservationList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("[url => /getReservationList.ad]");
+		logger.info("[url => /reservationList.ad]");
 		adResService.getReservationList(request, response, model);
 		
 		return "admin/reservation/reservationList";

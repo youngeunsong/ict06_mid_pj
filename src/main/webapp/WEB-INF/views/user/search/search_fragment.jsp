@@ -1,11 +1,17 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-08
+ * 최종수정일: 2026-03-10
+ 
+  AJAX 화면: 정렬/페이지 포함 상세 검색 결과
+ - type = REST / ACC / FEST
+ - ALL 은 초기 화면(viewAllPage) 복귀 전제
+ 
+ 검색바 > 검색 페이지 > 상단 탭(전체 숙소 맛집 축제) 클릭 화면
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
-
-<!-- =============================================
-    AJAX 화면: 정렬/페이지 포함 상세 검색 결과
-    - type = REST / ACC / FEST
-    - ALL 은 초기 화면(viewAllPage) 복귀 전제
-============================================= -->
 
 <c:choose>
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.NoticeDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface MainDAO {
@@ -36,6 +36,12 @@ public interface MainDAO {
 	
 	//BEST 추천 - 축제 5개
 	public List<FestivalDTO> bestFestTop5();
+	
+	//최하단 공지 리스트
+	public List<NoticeDTO> getMainNoticeList();
+	
+	//최하단 공지 리스트
+	public List<NoticeDTO> getMainEventList();
 	
 
 }

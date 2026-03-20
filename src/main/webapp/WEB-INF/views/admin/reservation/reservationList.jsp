@@ -266,6 +266,7 @@
 							<tr>
 								<th class="table-light" style="width:25%;">예약번호</th>
 								<td style="width:25%;">
+									<input type="hidden" id="update_reservation_id">
 									<span id="update_res_id" class="form-control-plaintext pl-2"></span>
 								</td>
 								<!--수정 가능 정보-->
@@ -288,22 +289,22 @@
 							<tr>
 								<th class="table-light">방문일</th>
 								<td>
-									<input type="date" id="update_check_in" class="form-control form-control-sm">
+									<input type="date" id="update_check_in" name="check_in" class="form-control form-control-sm">
 								</td>
 								<th class="table-light">퇴실일</th>
 								<td>
-									<input type="date" id="update_check_out" class="form-control form-control-sm">
+									<input type="date" id="update_check_out" name="check_out" class="form-control form-control-sm">
 								</td>
 							</tr>
 							<tr>
 								<th class="table-light">방문시간</th>
 								<td>
-									<input type="time" id="update_visit_time" class="form-control form-control-sm">
+									<input type="time" id="update_visit_time" name="visit_time" class="form-control form-control-sm">
 								</td>
 								<th class="table-light">인원수</th>
 								<td>
 									<div class="input-group input-group-sm">
-										<input type="number" id="update_guest_count" class="form-control form-control-sm" min="1">
+										<input type="number" id="update_guest_count" name="guest_count" class="form-control form-control-sm" min="1">
 										<div class="input-group-append">
 											<span class="input-group-text">명</span>
 										</div>
@@ -311,10 +312,10 @@
 								</td>
 							</tr>
 							<tr>
+								<th class="table-light">방문시간</th>
+								<td id="modal_visit_time"></td>
 								<th class="table-light">요청사항</th>
-								<td colspan="3">
-									<textarea id="update_request_note" class="form-control form-control-sm" rows="2" placeholder="요청사항 입력"></textarea>
-								</td>
+								<td colspan="3" id="modal_request_note"></td>
 							</tr>
 						</tbody>
 					</table>

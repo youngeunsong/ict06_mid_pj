@@ -238,10 +238,10 @@
                         <c:set var="detailUrl" value="${path}/restaurantDetail.rs?place_id=${place.place_id}" />
                     </c:when>
                     <c:when test="${place.place_type eq 'ACC'}">
-                        <c:set var="detailUrl" value="${path}/accommodationDetail.rs?place_id=${place.place_id}" />
+                        <c:set var="detailUrl" value="${path}/accommodationDetail.ac?place_id=${place.place_id}" />
                     </c:when>
                     <c:when test="${place.place_type eq 'FEST'}">
-                        <c:set var="detailUrl" value="${path}/festivalDetail.rs?place_id=${place.place_id}" />
+                        <c:set var="detailUrl" value="${path}/festivalDetail.fe?place_id=${place.place_id}" />
                     </c:when>
                     <c:otherwise>
                         <c:set var="detailUrl" value="javascript:void(0);" />

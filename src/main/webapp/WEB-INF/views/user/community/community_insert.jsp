@@ -1,3 +1,11 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-18
+ * 최종수정일: 2026-03-20
+ * 적용 라이브러리 : summernote
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
@@ -6,49 +14,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>커뮤니티 글쓰기</title>
-
+<title>커뮤니티 > 자유게시판 > 글쓰기</title>
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
-
-<!-- Summernote만 개별 페이지에서 추가 -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/lang/summernote-ko-KR.min.js"></script>
-
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/community_insert.css">
+
+<!-- Summernote -->
+<link rel="stylesheet" href="${path}/resources/admin/plugins/summernote/summernote-lite.css">
+
+<script>
+    window.__oldDefine = window.define;
+    window.__oldModule = window.module;
+    window.__oldExports = window.exports;
+
+    window.define = undefined;
+    window.module = undefined;
+    window.exports = undefined;
+</script>
+
+<script src="${path}/resources/admin/plugins/summernote/summernote-lite.js"></script>
+<script src="${path}/resources/admin/plugins/summernote/lang/summernote-ko-KR.js"></script>
+
+<script>
+    window.define = window.__oldDefine;
+    window.module = window.__oldModule;
+    window.exports = window.__oldExports;
+
+    delete window.__oldDefine;
+    delete window.__oldModule;
+    delete window.__oldExports;
+
+    window.contextPath = "${path}";
+</script>
+
 <script src="${path}/resources/js/community/community_insert.js" defer></script>
-
-<script>
-    const contextPath = "${path}";
-</script>
-
-<script>
-window.addEventListener("load", function () {
-    console.log("[inline test] jQuery =", window.jQuery);
-    console.log("[inline test] summernote =", window.jQuery ? window.jQuery.fn.summernote : "없음");
-
-    if (window.jQuery && typeof window.jQuery.fn.summernote === "function") {
-        $('#contentInput').summernote({
-            height: 350,
-            lang: 'ko-KR',
-            placeholder: '여행 이야기를 자유롭게 작성해보세요 :)'
-        });
-        console.log("[inline test] Summernote 초기화 성공");
-    } else {
-        console.log("[inline test] Summernote 초기화 실패");
-    }
-});
-</script>
-
 </head>
+
 <body>
 <div class="wrap">
 
     <%@ include file="../../common/header.jsp" %>
 
     <div class="page-body">
-        <div class="container" style="max-width:860px;">
+        <div class="container">
 
             <div class="breadcrumb-area">
                 <a href="${path}/community_free.co">커뮤니티</a>
@@ -66,6 +75,7 @@ window.addEventListener("load", function () {
 
                 <form action="${path}/community_insert.co"
                       method="post"
+                      enctype="multipart/form-data"
                       onsubmit="return validateInsertForm();">
 
                     <div class="write-form">
@@ -103,7 +113,7 @@ window.addEventListener("load", function () {
                                    placeholder="제목을 입력하세요 (최대 200자)"
                                    maxlength="200">
                             <div class="char-counter" id="titleCounter">0 / 200</div>
-                            <div class="err-msg" id="titleErr">제목을 입력해주세요.</div>
+                            <div class="err-msg" id="titleErr" style="display:none;">제목을 입력해주세요.</div>
                         </div>
 
                         <div>
@@ -114,7 +124,7 @@ window.addEventListener("load", function () {
                                       id="contentInput"
                                       class="textarea-content"></textarea>
                             <div class="char-counter" id="contentCounter">0자</div>
-                            <div class="err-msg" id="contentErr">내용을 입력해주세요.</div>
+                            <div class="err-msg" id="contentErr" style="display:none;">내용을 입력해주세요.</div>
                         </div>
 
                         <div>
@@ -139,7 +149,7 @@ window.addEventListener("load", function () {
                                    name="files"
                                    accept="image/jpeg, image/png"
                                    multiple
-                                   onchange="handleFiles(this.files)">
+                                   style="display:none;">
 
                             <div class="preview-grid" id="previewGrid"></div>
                         </div>
@@ -171,7 +181,6 @@ window.addEventListener("load", function () {
     </div>
 
     <%@ include file="../../common/footer.jsp" %>
-
 </div>
 </body>
 </html>

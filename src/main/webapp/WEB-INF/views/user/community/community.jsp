@@ -1,5 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-14
+ * 최종수정일: 2026-03-16
+ 
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
 
 <!DOCTYPE html>
@@ -8,9 +14,10 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>커뮤니티 메인화면 + 자유게시판</title>
+<title>커뮤니티/ 커뮤니티 > 자유게시판</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
@@ -50,52 +57,55 @@
 
 	<div class="page-body">
 		<div class="container">
+		
+			 <!-- 경로 -->
+			<div class="breadcrumb-area">
+			    <a href="${path}/community_free.co">커뮤니티</a>
+			    <i class="bi bi-chevron-right"></i>
+			    <span class="cur">자유게시판</span>
+			</div>
 
 			<!-- 인기글 TOP3 -->
-			<section class="popular-section">
-			    <div class="popular-header">
-			        <span class="popular-title">
-			            <i class="bi bi-fire text-warning me-1"></i>인기글 TOP 3
-			        </span>
-			        <span class="popular-sub">전체 게시글 기준 인기글</span>
+			<div class="popular-top3-wrap">
+			    <div class="section-title-row">
+			        <h2 class="section-title">
+			            <i class="bi bi-fire text-warning"></i> 인기글 TOP 3
+			        </h2>
+			        <span class="section-sub">전체 게시글 기준 인기글</span>
 			    </div>
 			
-			    <div class="popular-grid">
-			        <c:choose>
-			            <c:when test="${empty popularBoardList}">
-			                <div class="empty">
-			                    <i class="bi bi-chat-square-text"></i>
-			                    등록된 인기글이 없습니다.
+			    <div class="popular-top3-grid">
+			        <c:forEach var="dto" items="${popularList}" varStatus="status">
+			            <a href="${path}/community_detail.co?post_id=${dto.post_id}"
+			               class="popular-card text-decoration-none text-dark">
+			
+			                <div class="popular-rank ${status.count == 1 ? 'gold' : status.count == 2 ? 'silver' : 'bronze'}">
+			                    ${status.count}
 			                </div>
-			            </c:when>
 			
-			            <c:otherwise>
-			                <c:forEach var="post" items="${popularBoardList}" varStatus="st">
-			                    <a href="${path}/community_detail.co?post_id=${post.post_id}" class="popular-card">
-			                        <span class="popular-rank rank-${st.index + 1}">
-			                            ${st.index + 1}
-			                        </span>
+			                <div class="popular-thumb">
+			                    <img
+			                        src="${not empty dto.repImage and not empty dto.repImage.image_url ? dto.repImage.image_url : path.concat('/resources/images/common/no-image.png')}"
+			                        alt="${dto.title}"
+			                        class="popular-thumb-img">
+			                </div>
 			
-			                        <div class="popular-info">
-			                            <span class="popular-category">
-			                                <c:out value="${post.category}"/>
-			                            </span>
+			                <div class="popular-content">
+			                    <div class="popular-category-row">
+			                        <span class="badge-category">${dto.category}</span>
+			                    </div>
 			
-			                            <p class="popular-text">
-			                                <c:out value="${post.title}"/>
-			                            </p>
+			                    <div class="popular-title">${dto.title}</div>
 			
-			                            <div class="popular-meta">
-			                                <span><i class="bi bi-eye"></i> ${post.view_count}</span>
-			                                <span><i class="bi bi-heart-fill text-danger"></i> ${post.like_count}</span>
-			                            </div>
-			                        </div>
-			                    </a>
-			                </c:forEach>
-			            </c:otherwise>
-			        </c:choose>
+			                    <div class="popular-meta">
+			                        <span><i class="bi bi-eye"></i> ${dto.view_count}</span>
+			                        <span><i class="bi bi-heart-fill text-danger"></i> ${dto.like_count}</span>
+			                    </div>
+			                </div>
+			            </a>
+			        </c:forEach>
 			    </div>
-			</section>
+			</div>
 
 			<section class="guide-banner">
 				<div class="guide-banner-icon">
@@ -207,31 +217,69 @@
 				</div>
 			</section>
 
-			<nav class="paging">
-				<a class="pg">‹</a>
-				<a class="pg on">1</a>
-				<a class="pg">2</a>
-				<a class="pg">3</a>
-				<a class="pg">4</a>
-				<a class="pg">5</a>
-				<a class="pg">›</a>
-			</nav>
+			<!-- 페이징 -->
+			<c:if test="${paging.count > 0}">
+			    <nav class="paging">
+			
+			        <!-- 이전 블록 -->
+			        <c:if test="${paging.startPage > paging.pageBlock}">
+			            <c:url var="prevUrl" value="/community_free.co">
+			                <c:param name="pageNum" value="${paging.prev}" />
+			                <c:if test="${not empty category}">
+			                    <c:param name="category" value="${category}" />
+			                </c:if>
+			            </c:url>
+			            <a class="pg" href="${prevUrl}">‹</a>
+			        </c:if>
+			
+			        <!-- 페이지 번호 -->
+			        <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
+			            <c:url var="pageUrl" value="/community_free.co">
+			                <c:param name="pageNum" value="${i}" />
+			                <c:if test="${not empty category}">
+			                    <c:param name="category" value="${category}" />
+			                </c:if>
+			            </c:url>
+			
+			            <a class="pg ${paging.currentPage == i ? 'on' : ''}" href="${pageUrl}">
+			                ${i}
+			            </a>
+			        </c:forEach>
+			
+			        <!-- 다음 블록 -->
+			        <c:if test="${paging.endPage < paging.pageCount}">
+			            <c:url var="nextUrl" value="/community_free.co">
+			                <c:param name="pageNum" value="${paging.next}" />
+			                <c:if test="${not empty category}">
+			                    <c:param name="category" value="${category}" />
+			                </c:if>
+			            </c:url>
+			            <a class="pg" href="${nextUrl}">›</a>
+			        </c:if>
+			
+			    </nav>
+			</c:if>
 
-			<section class="search-row">
-				<div class="search-box">
-					<select>
-						<option>제목+내용</option>
-						<option>제목</option>
-						<option>작성자</option>
-					</select>
-					
-					<input type="text" placeholder="검색어를 입력하세요">
-					
-					<button type="button">
-						<i class="bi bi-search"></i>
-					</button>
-				</div>
-			</section>
+			<!-- 검색바 -->
+			<div class="search-row">
+			    <form class="search-box" action="${path}/community_free.co" method="get">
+			        <input type="hidden" name="category" value="${category}" />
+			
+			        <select name="searchType">
+			            <option value="title" ${searchType eq 'title' ? 'selected' : ''}>제목</option>
+			            <option value="content" ${searchType eq 'content' ? 'selected' : ''}>내용</option>
+			            <option value="title_content" ${searchType eq 'title_content' ? 'selected' : ''}>제목+내용</option>
+			            <option value="writer" ${searchType eq 'writer' ? 'selected' : ''}>작성자</option>
+			        </select>
+			
+			        <input type="text"
+			               name="searchKeyword"
+			               value="${searchKeyword}"
+			               placeholder="검색어를 입력하세요">
+			
+			        <button type="submit">검색</button>
+			    </form>
+			</div>
 
 		</div>
 	</div>

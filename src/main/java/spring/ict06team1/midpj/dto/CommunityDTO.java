@@ -11,16 +11,17 @@ public class CommunityDTO {
 	private String category;
 	private int view_count;
 	private int like_count;
-	private String status;
+	private String status; // 'DISPLAY','HIDDEN', 'COMMUNITY'
 	private Timestamp postDate;
 	private Timestamp postUpdateDate;
+	private ImageStoreDTO repImage; // 커뮤니티 이미지를 불러오기 위해 추가
 	
 	public CommunityDTO() {
 		super();
 	}
 
 	public CommunityDTO(int post_id, String user_id, String title, String content, String category, int view_count,
-			int like_count, String status, Timestamp postDate, Timestamp postUpdateDate) {
+			int like_count, String status, Timestamp postDate, Timestamp postUpdateDate, ImageStoreDTO repImage) {
 		super();
 		this.post_id = post_id;
 		this.user_id = user_id;
@@ -32,6 +33,7 @@ public class CommunityDTO {
 		this.status = status;
 		this.postDate = postDate;
 		this.postUpdateDate = postUpdateDate;
+		this.repImage = repImage;
 	}
 
 	public int getPost_id() {
@@ -114,11 +116,20 @@ public class CommunityDTO {
 		this.postUpdateDate = postUpdateDate;
 	}
 
+	public ImageStoreDTO getRepImage() {
+		return repImage;
+	}
+
+	public void setRepImage(ImageStoreDTO repImage) {
+		this.repImage = repImage;
+	}
+
 	@Override
 	public String toString() {
 		return "CommunityDTO [post_id=" + post_id + ", user_id=" + user_id + ", title=" + title + ", content=" + content
 				+ ", category=" + category + ", view_count=" + view_count + ", like_count=" + like_count + ", status="
-				+ status + ", postDate=" + postDate + ", postUpdateDate=" + postUpdateDate + "]";
+				+ status + ", postDate=" + postDate + ", postUpdateDate=" + postUpdateDate + ", repImage=" + repImage
+				+ "]";
 	}
 	
 }

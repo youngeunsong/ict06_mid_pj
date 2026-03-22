@@ -1,6 +1,8 @@
 -- 사용자용 메인 메뉴 사용을 위한 쿼리 모음
 
--- [ TOP10 ] - 맛집 숙소
+--------------------------------------
+-- TOP10 - 맛집 숙소
+--------------------------------------
 -- 30일 동안 조회수가 가장 높은 10개 가져오기
 -- (30일 내 10개가 안된다면 기간을 60일로 조회하여 10개 맞추기)
 -- 맛집
@@ -73,12 +75,18 @@ FROM (
 )
 WHERE ROWNUM <= 10
 
+
+--------------------------------------
+-- 즐겨찾기
+--------------------------------------
 -- [ 즐겨찾기 ] 즐겨찾기 place_id 조회
 SELECT place_id
   FROM FAVORITE
  WHERE user_id = 'user03'
- 
--- [ 리뷰 ]
+
+--------------------------------------
+-- 리뷰
+--------------------------------------
 -- 플레이스 별 리뷰 조회/ 플레이스 별 리뷰 갯수 및 평균 조회
 -- 플레이스 별 리뷰 갯수 및 평균 조회 
 SELECT p.PLACE_ID
@@ -91,7 +99,9 @@ LEFT JOIN REVIEW rv
 WHERE p.PLACE_ID IN 226
 GROUP BY p.PLACE_ID
 
--- [ 이달의 추천 국내 축제 ]
+--------------------------------------
+-- 이달의 추천 국내 축제
+--------------------------------------
 -- 현 달의 진행하는 축제 중, 조회수 기준 상위 8개를 평점 높은 순으로 정렬
 SELECT *
 FROM (
@@ -139,9 +149,18 @@ FROM (
 )
 ORDER BY AVG_RATING DESC, VIEW_COUNT DESC
 
--- [ BEST 추천 ]
+--------------------------------------
+-- BEST 추천
+--------------------------------------
 -- 최근 1주일 리뷰 기준 / 리뷰 1개 이상 / 통합 정렬
 --(전체 탭은 맛집/숙소/축제 통합하여 리뷰평균이 가장 높은 4개)
+
+-- 리뷰를 최근 7일 이내로 업데이트 하는 임시 쿼리
+UPDATE REVIEW
+SET CREATED_AT = SYSTIMESTAMP - (MOD(REVIEW_ID, 7) * INTERVAL '1' DAY)
+WHERE STATUS = 'DISPLAY';
+
+COMMIT;
 
 -- BEST 추천 - 전체 탭 우측 4개 
 SELECT *
@@ -308,3 +327,46 @@ FROM (
              COUNT(rv.REVIEW_ID) DESC
 )
 WHERE ROWNUM <= 5
+
+--------------------------------------
+-- 공지사항 & 이벤트
+--------------------------------------
+-- 공지사항
+SELECT *
+    FROM (
+        SELECT notice_id,
+               admin_id,
+               category,
+               title,
+               content,
+               image_url,
+               view_count,
+               is_top,
+               created_at,
+               updated_at
+          FROM NOTICE
+         WHERE category = 'NOTICE'
+           AND is_top = 'Y'
+         ORDER BY notice_id DESC
+    )
+    WHERE ROWNUM <= 5;
+
+-- 이벤트
+ SELECT *
+    FROM (
+        SELECT notice_id,
+               admin_id,
+               category,
+               title,
+               content,
+               image_url,
+               view_count,
+               is_top,
+               created_at,
+               updated_at
+          FROM NOTICE
+         WHERE category = 'EVENT'
+           AND is_top = 'Y'
+         ORDER BY notice_id DESC
+    )
+    WHERE ROWNUM <= 5;

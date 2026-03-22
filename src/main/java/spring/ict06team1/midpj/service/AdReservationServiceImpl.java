@@ -34,6 +34,7 @@ public class AdReservationServiceImpl implements AdReservationService {
 		String sortType = request.getParameter("sortType");
 		
 		//페이징 객체 생성
+		if(pageNum == null) pageNum = "1";
 		Paging paging = new Paging(pageNum);
 		
 		//검색조건 담을 map 생성
@@ -43,19 +44,26 @@ public class AdReservationServiceImpl implements AdReservationService {
         map.put("placeType", placeType);
         map.put("sortType",sortType != null ? sortType : "created_at_desc");
         
+        List<ReservationDTO> fullList = adResDao.getReservationList(map);
+
         //전체 건수 조회
-        int totalCount = adResDao.getReservationCount(map);
+        int totalCount = fullList.size();
         paging.setTotalCount(totalCount);
+        
+        int start = paging.getStartRow() - 1;
+        int end = paging.getEndRow();
+        
+        if(start < 0) start = 0;
+        if(end > totalCount) end = totalCount;
+       
+        List<ReservationDTO> list = fullList.subList(start, end);
         
         //페이징 범위 추가
         map.put("startRow", paging.getStartRow());
         map.put("endRow", paging.getEndRow());
-        
-        //목록 조회
-		List<ReservationDTO> list = adResDao.getReservationList(map);
-		System.out.println("전체 데이터 수: " + (list != null ? list.size() : 0));
 		
 		//Model에 담아서 jsp로 전달
+        model.addAttribute("fullList", fullList);
 		model.addAttribute("list", list);
 		model.addAttribute("paging", paging);
 		model.addAttribute("totalCount", totalCount);
@@ -70,7 +78,7 @@ public class AdReservationServiceImpl implements AdReservationService {
 	public void getReservationDetail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdminServiceImpl - getReservationDetail()]");
 		
-		String resId = request.getParameter("resId");
+		String resId = request.getParameter("res_id");
 		ReservationDTO dto = adResDao.getReservationDetail(resId);
 		request.setAttribute("dto", dto);
 	}
@@ -81,13 +89,13 @@ public class AdReservationServiceImpl implements AdReservationService {
 	public void modifyReservation(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdminServiceImpl - getReservationDetail()]");
 		
-		String resId = request.getParameter("resId");
+		String resId = request.getParameter("res_id");
 		String status = request.getParameter("status");
-		String checkIn = request.getParameter("checkIn");
-		String checkOut = request.getParameter("checkOut");
-		String guestCount = request.getParameter("guestCount");
-		String visitTime = request.getParameter("visitTime");
-		String requestNote = request.getParameter("requestNote");
+		String checkIn = request.getParameter("check_in");
+		String checkOut = request.getParameter("check_out");
+		String guestCount = request.getParameter("guest_count");
+		String visitTime = request.getParameter("visit_time");
+		String requestNote = request.getParameter("request_note");
 		
 		ReservationDTO dto = new ReservationDTO();
 		dto.setReservation_id(resId);

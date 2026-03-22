@@ -37,17 +37,15 @@
 	<!--===== 1. 예약 관리 =====-->
 	<!-- 1-1. 예약목록 전체 조회 -->
 	<select id="getReservationList" parameterType="map" resultMap="reservationMap">
-		SELECT * FROM (
-			SELECT ROWNUM AS rnum, A.* FROM (
-				SELECT R.reservation_id, R.user_id, R.place_id,
-					TRUNC(R.check_in) AS check_in,
-					TRUNC(R.check_out) AS check_out,
-					R.visit_time, R.guest_count,
-					R.request_note, R.status, R.payment_id, R.created_at,
-					P.name, P.address, P.place_type
-				FROM RESERVATION R
-				LEFT JOIN PLACE P
-				ON R.place_id = P.place_id
+		SELECT R.reservation_id, R.user_id, R.place_id,
+				TRUNC(R.check_in) AS check_in,
+				TRUNC(R.check_out) AS check_out,
+				R.visit_time, R.guest_count,
+				R.request_note, R.status, R.payment_id, R.created_at,
+				P.name, P.address, P.place_type
+		  FROM RESERVATION R
+		  LEFT JOIN PLACE P
+			ON R.place_id = P.place_id
 			<where>
 				<if test="keyword != null and keyword != ''">
 					(R.user_id LIKE '%'||#{keyword}||'%' OR R.reservation_id LIKE '%'||#{keyword}||'%')
@@ -72,9 +70,6 @@
 				<when test="sortType == 'status'">R.status ASC</when>
 				<otherwise>R.created_at DESC</otherwise>
 			</choose>
-			) A
-		)
-		WHERE rnum BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
 	<!-- 1-2. 예약 상세 조회 -->
@@ -121,12 +116,12 @@
 	<update id="modifyReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
 		UPDATE RESERVATION
 		SET status = #{status},
-			check_in = #{check_in},
-			check_out = #{check_out},
-			guest_count = #{guest_count},
+			check_in = #{check_in, jdbcType=DATE},
+			check_out = #{check_out, jdbcType=DATE},
+			guest_count = #{guest_count, jdbcType=INTEGER},
 			visit_time = #{visit_time},
-			request_note = #{request_note},
-			created_at = CURRENT_TIMESTAMP
+			request_note = #{request_note, jdbcType=VARCHAR},
+			updated_at = CURRENT_TIMESTAMP
 		WHERE reservation_id = #{reservation_id}
 	</update>
 	
@@ -230,6 +225,6 @@
 	 			ORDER BY R.created_at DESC
 	 		) A
 	 	)
-	 	WHERE rnum BETWEEN #{startRow} AND #{endRow}
+	 	WHERE rnum BETWEEN #{startRow, jdbcType=INTEGER} AND #{endRow, jdbcType=INTEGER}
 	 </select>
  </mapper> 

@@ -1,3 +1,7 @@
+--Ver.260320
+--변경사항
+--1) FAQ 테이블: view_count 필드 추가
+--------------------------------------------------
 --Ver.260319
 --변경사항
 --1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
@@ -35,7 +39,7 @@ CREATE TABLE MEMBER (
     updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 updateDate
     CONSTRAINT CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
 );
-SELECT * FROM MEMBER;
+SELECT * FROM MEMBER ORDER BY password;
 
 -- 2. 장소 통합
 CREATE TABLE PLACE (
@@ -205,6 +209,14 @@ CREATE TABLE COMMUNITY_COMMENT(
 	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY_COMMENT;
+SELECT 
+    constraint_name, 
+    search_condition 
+FROM 
+    user_constraints 
+WHERE 
+    table_name = 'COMMUNITY_COMMENT' 
+    AND constraint_name = 'CHK_COMMENT_STATUS';
 --제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
 ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
@@ -235,7 +247,7 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
-    order_no	CHAR(1),
+    order_no	NUMBER,
     visible     CHAR(1) DEFAULT 'Y',
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate

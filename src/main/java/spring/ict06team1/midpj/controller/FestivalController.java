@@ -21,15 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
-import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.service.FestivalServiceImpl;
 
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-17
+ * 최종수정일: 2026-03-22
  * 참고 코드: RestaurantController.java
  */
 
@@ -74,8 +72,6 @@ public class FestivalController {
         model.addAttribute("nextOffset", 17); // 첫 더보기 클릭 시 18위부터 이어서 조회할 수 있도록 기준값 전달
         model.addAttribute("remainCount", remainCount);
         model.addAttribute("currentTab", "realtime");
-//        model.addAttribute("currentRegion", "all");
-//        model.addAttribute("currentCategory", "ALL");
 
         return "user/festival/bestFestivals";
     }

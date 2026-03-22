@@ -1,7 +1,7 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-20
- * 최종수정일: 2026-03-20
+ * 최종수정일: 2026-03-22
  * 참고 코드: bestRestaurantsContent.jsp
 -->
 
@@ -21,8 +21,8 @@
     --%>
     <c:forEach var="item" items="${topList}" begin="0" end="0">
       <div class="rk-top1 mb-4">
-        <c:set var="rest" value="${item}" scope="request"/>
-        <c:set var="mode" value="top10" scope="request"/> <%-- BigFestCard에서 TOP 10 전용 스타일 구분 시 사용 --%>
+        <c:set var="fest" value="${item}" scope="request"/>
+        <c:set var="mode" value="top10" scope="request"/> <%-- BigFestCard에서 TOP 전용 스타일 구분 시 사용 --%>
         <c:set var="rank" value="1" scope="request"/> <%-- 1위 고정 표시 --%>
         <c:set var="rankCls" value="rank-1" scope="request"/> <%-- 1위 전용 뱃지 스타일 적용 --%>
         <c:set var="cardWrapClass" value="" scope="request"/>
@@ -73,7 +73,7 @@
 <div class="row g-4 rk-moreGrid" id="moreListWrap">
   <c:forEach var="item" items="${pageList}" varStatus="st">
     <div class="col-6 col-md-4 col-lg-3">
-      <c:set var="rest" value="${item}" scope="request"/>
+      <c:set var="fest" value="${item}" scope="request"/>
       <c:set var="mode" value="default" scope="request"/> <%-- 일반 카드 구간 표시용 모드값 --%>
       <c:set var="rank" value="${st.index + 6}" scope="request"/> <%-- TOP5 이후 시작이므로 6위부터 계산 --%>
       <c:set var="rankCls" value="rank-default" scope="request"/> <%-- 더보기 구간은 공통 뱃지 스타일 사용 --%>

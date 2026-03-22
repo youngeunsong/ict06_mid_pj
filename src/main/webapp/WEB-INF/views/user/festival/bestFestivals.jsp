@@ -1,12 +1,12 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-19
- * 최종수정일: 2026-03-20
+ * 최종수정일: 2026-03-22
  * 참고 코드: bestRestaurants.jsp
+ 현재 종료되지 않은 축제를 평점 순으로 조회 
 -->
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
 
 <!DOCTYPE html>
@@ -16,8 +16,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>맛집 랭킹</title>
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/> -->
 
 <%-- [랭킹 페이지 전용 스타일]
        TOP5 / 더보기 / 카드 크기 및 반응형 UI를 한 파일에서 제어하기 위해 사용
@@ -232,69 +230,6 @@
 				<div class="rk-sub">실시간 인기 축제를 한눈에 확인해보세요.</div>
 			</div>
 
-			<!-- 축제에서 현재 지원하지 않음. 추후 코드 응용하여 기능 확장 가능 -->
-			<%-- [탭 선택 영역]
-           실시간 / 지역 / 추천 기준으로 랭킹 데이터를 전환하기 위한 UI
-      --%>
-			<!-- <div class="rk-tabs">
-        <button type="button" class="rk-tab active" data-tab="realtime">🔥 실시간 인기</button>
-        <button type="button" class="rk-tab" data-tab="region">
-          <i class="fa-solid fa-location-dot text-danger me-1"></i> 지역 TOP
-        </button>
-        <button type="button" class="rk-tab" data-tab="recommend">
-          <i class="fa-solid fa-compass me-1" style="color:var(--rk-brand);"></i> 추천
-        </button>
-      </div> -->
-
-			<%-- [필터 영역]
-           추천 탭: 카테고리 필터 / 지역 탭: 지역 선택
-           탭 상태에 따라 JS에서 표시/숨김 처리됨
-      --%>
-			<%-- <div class="rk-filterRow">
-
-				추천 필터 (카테고리)
-				<div id="recommendFilterArea" style="display: none; width: 100%;">
-					<div class="rk-chipWrap" id="recommendChipWrap">
-						<button type="button" class="rk-chip active" data-category="ALL">전체</button>
-						<button type="button" class="rk-chip" data-category="한식">한식</button>
-						<button type="button" class="rk-chip" data-category="카페/디저트">카페</button>
-						<button type="button" class="rk-chip" data-category="일식">일식</button>
-						<button type="button" class="rk-chip" data-category="양식">양식</button>
-
-						처음에는 숨겨두고 "필터 더보기" 클릭 시 노출
-						<button type="button" class="rk-chip extra-filter d-none"
-							data-category="중식">중식</button>
-						<button type="button" class="rk-chip extra-filter d-none"
-							data-category="술집">술집</button>
-						<button type="button" class="rk-chip extra-filter d-none"
-							data-category="카페/디저트">디저트</button>
-						<button type="button" class="rk-chip extra-filter d-none"
-							data-category="분식">분식</button>
-					</div>
-
-					<div class="mt-2">
-						<button type="button" id="filterMoreBtn"
-							class="btn btn-sm btn-outline-secondary">필터 더보기</button>
-						<button type="button" id="filterCollapseBtn"
-							class="btn btn-sm btn-outline-secondary d-none">필터 접기</button>
-					</div>
-				</div> --%>
-
-				<!-- 현재 축제에서 미지원하는 기능. 추후 기능 추가 시 주석 해제하여 사용 -->
-				<%-- 지역 선택 (지역 탭에서만 사용) --%>
-				<!-- <select id="regionSelect" class="form-select" style="width:160px; display:none;">
-			          <option value="all">전체 지역</option>
-			          <option value="서울">서울</option>
-			          <option value="인천">인천</option>
-			          <option value="부산">부산</option>
-			          <option value="대전">대전</option>
-			        </select> -->
-			</div>
-
-			<!-- 현재 축제에서 미지원하는 기능. 추후 기능 추가 시 주석 해제하여 사용 -->
-			<%-- [랭킹 콘텐츠 영역]
-           탭 변경 시 AJAX로 해당 영역만 교체되도록 설계
-      --%>
 			<div id="rankingContent">
 				<jsp:include
 					page="/WEB-INF/views/user/festival/bestFestivalsContent.jsp" />
@@ -308,8 +243,8 @@
 	</script>
 
 	<%-- [랭킹 페이지 전용 JS]
-       더보기 기능을 담당 (탭 전환, 필터 미포함)
-  --%>
+       더보기 기능을 담당
+  	--%>
 	<script src="${path}/resources/js/festival/bestFestivals.js"></script>
 
 	<%@ include file="../../common/footer.jsp"%>

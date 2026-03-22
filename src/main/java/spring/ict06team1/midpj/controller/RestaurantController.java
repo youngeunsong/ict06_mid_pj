@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.service.RestaurantService;
 import spring.ict06team1.midpj.service.RestaurantServiceImpl;
 
 @Controller
@@ -29,14 +30,34 @@ public class RestaurantController {
     private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
     @Autowired
-    private RestaurantServiceImpl service;
+    private RestaurantService service;
 
-    // [restaurant] 맛집 페이지로 이동
+    // 맛집 페이지로 이동
     @RequestMapping("/restaurant.rs")
     public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
         logger.info("<<< url => restaurant.rs>>>");
         return "user/restaurant/restaurant";
+    }
+    
+    // 맛집 리스트 보여주기
+    @RequestMapping("/restaurantAjax.rs")
+    public String restaurantAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => restaurantAjax.rs>>>");
+        service.getNearbyRestaurantAjax(request, response, model);
+        return "user/restaurant/restaurantCard";
+    }
+    
+    // JSP로 이동하지 않고 데이터를 직접 리턴함
+    @ResponseBody
+    // 맛집 페이지로 이동
+    @RequestMapping("/getNearbyMarkersAjax.rs")
+    public List<PlaceDTO> getNearbyMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => getNearbyMarkersAjax.rs>>>");
+        List list = service.getNearbyMarkersAjax(request, response);
+        return list;
     }
 
     // [restaurant] 실시간 베스트 맛집 페이지로 이동

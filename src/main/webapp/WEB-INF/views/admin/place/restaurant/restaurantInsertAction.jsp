@@ -144,9 +144,7 @@
                 </div>
             </section>
         </div>
-         <footer class="main-footer">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
+         
     </div>
 <script>
     // 주소 검색 및 좌표 변환 (기존 로직 유지)
@@ -169,4 +167,7 @@
     }
 </script>
 </body>
+<footer class="main-footer">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

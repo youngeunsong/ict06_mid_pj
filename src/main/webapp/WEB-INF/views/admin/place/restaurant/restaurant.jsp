@@ -13,9 +13,12 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
+    <!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
         <%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
-
         <div class="content-wrapper">
             <div class="app-content-header py-3">
                 <div class="container-fluid">
@@ -149,11 +152,9 @@
 							    </c:choose>
 							</tbody>
                             </table>
-                            
                             <div class="pagination-right-wrapper border-top">
                                 <%@ include file="/WEB-INF/views/common/restaurant_pagination.jsp"%>
                             </div>
-                            
                             <div class="add-btn-area">
                                 <button type="button" class="btn btn-res-primary px-4 py-2"
                                         onclick="location.href='${path}/restaurantInsert.ad?areaCode=${areaCode}&pageNum=${paging.pageNum}&category=${category}&keyword=${keyword}'">
@@ -165,10 +166,9 @@
                 </div>
             </section>
         </div>
-
-        <footer class="main-footer text-center py-3">
-            <strong>Copyright &copy; 2026</strong>
-        </footer>
+		<footer class="main-footer text-center py-3">
+		    <strong>Copyright &copy; 2026</strong>
+		</footer>
     </div>
 <script>
 function handleCombinedSearch() {
@@ -193,7 +193,6 @@ function searchRestaurant() {
     // 1. 입력창(input)의 ID가 'keyword'인 요소에서 값을 가져옵니다.
     const keywordElement = document.getElementById("keyword");
     const keyword = keywordElement ? keywordElement.value : "";
-    
     const categoryElement = document.getElementById("category");
     const category = categoryElement ? categoryElement.value : "";
     // 2. 검색어가 비어있을 경우 유효성 검사 (선택 사항)
@@ -205,10 +204,10 @@ function searchRestaurant() {
 
     // 3. 지역 코드는 현재 '0'으로 고정하여 이동
     // [수정] 세미콜론 위치를 조정하고 category를 끝에 붙인다.
-    location.href = `${path}/restaurantSearch.ad?areaCode=0&keyword=` 
+    location.href = '${path}/restaurantSearch.ad?areaCode=0&keyword=' 
                     + encodeURIComponent(keyword) 
-                    + `&pageNum=1`
-                    + `&category=` + category; // 이제 URL에 category가 포함됩니다.
+                    + '&pageNum=1'
+                    + '&category=' + category; // 이제 URL에 category가 포함됩니다.
 }
 </script>
 </body>

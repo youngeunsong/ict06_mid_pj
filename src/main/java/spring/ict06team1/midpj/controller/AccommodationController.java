@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,30 +13,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.service.AccommodationServiceImpl;
 
 @Controller
 public class AccommodationController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 	
-//	@Autowired
-//	private AccommodationServiceImpl service;
+	
+	@Autowired
+	private AccommodationServiceImpl service;
 	
 	//[accommodation] ----------------------------------------------------------------------------------------
-	//[accommodation] 숙소 페이지로 이동
+	// 숙소 페이지로 이동
 	@RequestMapping("/accommodation.ac")	
 	public String accommodation(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => accommodation.ac>>>");
-		
 		return "user/accommodation/accommodation";
 	}
+	
+	// 맛집 리스트 보여주기
+    @RequestMapping("/accommodationAjax.ac")
+    public String restaurantAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => accommodationAjax.ac>>>");
+        service.getNearbyAccommodationAjax(request, response, model);
+        return "user/accommodation/accommodationCard";
+    }
+    
+    // JSP로 이동하지 않고 데이터를 직접 리턴함
+    @ResponseBody
+    // 숙소 페이지로 이동
+    @RequestMapping("/getNearbyMarkersAjax.ac")
+    public List<PlaceDTO> getNearbyMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => getNearbyMarkersAjax.ac>>>");
+        List list = service.getNearbyMarkersAjaxAcc(request, response);
+        return list;
+    }
 	
 	//[restaurant] 실시간 베스트 맛집 페이지로 이동
 	@RequestMapping("/bestAccommodations.ac")	
 	public String bestRestaurants(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => bestRestaurants.rs>>>");
+		logger.info("<<< url => bestRestaurants.ac>>>");
 		
 		return "user/accommodation/bestAccommodations";
 	}
@@ -44,7 +69,7 @@ public class AccommodationController {
 	@RequestMapping("/bestAccommodationRegion.ac")	
 	public String bestRestaurantsRegion(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => bestRestaurantsRegion.rs>>>");
+		logger.info("<<< url => bestRestaurantsRegion.ac>>>");
 		
 		return "user/accommodation/bestAccommodationRegion";
 	}
@@ -53,7 +78,7 @@ public class AccommodationController {
 	@RequestMapping("/accommodationDetail.ac")	
 	public String restaurantDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => restaurantDetail.rs>>>");
+		logger.info("<<< url => restaurantDetail.ac>>>");
 		
 		return "user/accommodation/accommodationDetail";
 	}
@@ -62,7 +87,7 @@ public class AccommodationController {
 	@RequestMapping("/accommodationMap.ac")	
 	public String restaurantMap(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => restaurantMap.rs>>>");
+		logger.info("<<< url => restaurantMap.ac>>>");
 		
 		return "user/accommodation/accommodationMap";
 	}

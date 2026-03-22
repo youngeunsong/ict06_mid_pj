@@ -476,7 +476,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	        String url = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2?serviceKey=" + serviceKey
 	                + "&areaCode=" + areaCode
 	                + "&contentTypeId=39"
-	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=100"
+	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=1000"
 	                + "&pageNo="+pageNo;
 
 	        // 8. API 호출 및 JSON 응답 받기
@@ -510,10 +510,49 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	                pdto.setName(item.path("title").asText("")); // 가게명
 	                pdto.setAddress(item.path("addr1").asText()); // 주소
 	                pdto.setImage_url(imageUrl); // 이미지 경로
+	                String areaCode1 = item.path("areacode").asText("");
+	                if (areaCode1 == null) areaCode1 = "기타";
+	                
+	                switch (areaCode1) {
+	                    case "1":  areaCode1 =  "서울"; break;
+	                    case "31": areaCode1 =  "경기"; break;
+	                    case "2":  areaCode1 =  "인천"; break;
+	                    case "6":  areaCode1 =  "부산"; break;
+	                    case "4":  areaCode1 =  "대구"; break;
+	                    case "3":  areaCode1 =  "대전"; break;
+	                    case "5":  areaCode1 =  "광주"; break;
+	                    case "7":  areaCode1 =  "울산"; break;
+	                    case "39": areaCode1 =  "제주"; break;
+	                    default:   areaCode1 =  "기타"; break;
+	                }
+	                rdto.setAreaCode(areaCode1);
 	                pdto.setLongitude(item.path("mapx").asDouble()); // 경도
 	                pdto.setLatitude(item.path("mapy").asDouble());  // 위도
-	                rdto.setPhone(item.path("tel").asText("")); // 전화번호
-	                rdto.setAreaCode(item.path("areacode").asText("")); // 지역 코드
+	                // 2. 전화번호 처리 (null일 경우 지역명에 맞는 지역번호로 랜덤 생성)
+	                String tel = item.path("tel").asText("").trim();
+	                String prefix ="";
+	                if (tel == null || tel.isEmpty() || tel.equals("null")) {
+	                    // 지역명에 따른 지역번호 설정
+	                   switch (rdto.getAreaCode()) {
+	                        case "서울" : prefix = "02"; break;
+	                        case "경기" : prefix = "031"; break;
+	                        case "인천" : prefix = "032"; break;
+	                        case "부산" : prefix = "051"; break;
+	                        case "대구" : prefix = "053"; break;
+	                        case "대전" : prefix = "042"; break;
+	                        case "광주" : prefix = "062"; break;
+	                        case "울산" : prefix = "052"; break;
+	                        case "제주" : prefix ="064"; break;
+	                        default : prefix = "0507"; break; // 기타 지역은 안심번호로 처리
+	                    };
+	                    
+	                    // 랜덤 번호 생성 (가운데 3~4자리, 끝 4자리)
+	                    int middle = (int)(Math.random() * 900) + 100; // 100~999
+	                    int last = (int)(Math.random() * 9000) + 1000;  // 1000~9999
+	                    
+	                    tel = prefix + "-" + middle + "-" + last;
+	                }
+	                rdto.setPhone(tel);
 
 	                // 15. [2단계] 공통 상세 정보(카테고리 등) 수집을 위한 추가 메서드 호출
 	                testRegisterDetail(contentId, rdto);
@@ -529,6 +568,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	                // 18. RESTAURANT 테이블에 상세 정보 저장 후 카운트 증가
 	                if(adResDao.testInsertRes(rdto)> 0) {
 	                    successCountRes++;
+	                    testRegisterImages(contentId);
 	                }
 	            }
 	        }
@@ -547,7 +587,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    model.addAttribute("countRes", successCountRes);
 	}
 	
-	// [메서드 추가] 소개 정보 조회 (영업시간, 휴무일, 주차시설 등)
+	// 소개 정보 조회 (영업시간, 휴무일, 주차시설 등)
 	@Override
 	public void testRegisterIntro(String contentId, RestaurantDTO rdto) {
 	    
@@ -635,7 +675,7 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    }
 	}
 
-	// 2. 수정된 공통 상세 정보 메서드 (YN 파라미터 모두 제거)
+	// 수정된 공통 상세 정보 메서드 (YN 파라미터 모두 제거)
 	@Override
 	public void testRegisterDetail(String contentId, RestaurantDTO rdto) {
 	    
@@ -679,7 +719,24 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	            rdto.setDescription(item.path("overview").asText(""));
 	            
 	            // 12. 'cat3' 필드에서 소분류 카테고리 코드(예: 한식, 중식 등)를 가져와 DTO에 저장
-	            rdto.setCategory(item.path("cat3").asText(""));
+	            String rawCat3 = item.path("cat3").asText("");
+	            String categoryName = "";
+
+	            // JSP의 option value와 공공데이터 cat3 코드를 매핑
+	            switch (rawCat3) {
+	                case "A05020100": categoryName = "한식"; break;
+	                case "A05020200": categoryName = "양식"; break;
+	                case "A05020300": categoryName = "일식"; break;
+	                case "A05020400": categoryName = "중식"; break;
+	                case "A05020500": categoryName = "기타"; break; // 설계하신 옵션 기준
+	                case "A05020600": categoryName = "카페"; break;
+	                case "A05020700": categoryName = "이색음식"; break;
+	                case "A05020900": categoryName = "식음료"; break;
+	                default:          categoryName = "기타"; break;
+	            }
+
+	            // 13. 최종 가공된 문자열을 DTO에 저장
+	            rdto.setCategory(categoryName);
 	            
 	            // 13. 콘솔에 수집 성공 여부 출력
 	            System.out.println(">>> " + contentId + " 공통 상세 수집 완료");
@@ -689,4 +746,69 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	        System.err.println("공통 상세 에러: " + e.getMessage());
 	    }
 	}
+	// 여러 이미지 저장하기 (최대 4장 제한)
+	@Override
+	public void testRegisterImages(String contentId) {
+	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
+	    RestTemplate restTemplate = new RestTemplate();
+	    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+	    restTemplate.setUriTemplateHandler(factory);
+
+	    String url = "https://apis.data.go.kr/B551011/KorService2/detailImage2?serviceKey=" + serviceKey
+	            + "&contentId=" + contentId
+	            + "&MobileOS=ETC&MobileApp=AppTest&_type=json";
+
+	    try {
+	        ObjectMapper mapper = new ObjectMapper();
+	        String res = restTemplate.getForObject(url, String.class);
+	        
+	        JsonNode root = mapper.readTree(res);
+	        JsonNode itemNode = root.path("response").path("body").path("items").path("item");
+
+	        // 1. 이미지가 배열 형태이고 실제 데이터가 있는지 확인
+	        if (itemNode.isArray() && itemNode.size() > 0) {
+	            int order = 0; 
+	            
+	            for (JsonNode item : itemNode) {
+	                // [제한 조건] 최대 4장까지만 저장 (0, 1, 2, 3번 인덱스)
+	                if (order >= 4) break;
+
+	                String imageUrl = item.path("originimgurl").asText("");
+	                
+	                if (!imageUrl.isEmpty()) {
+	                    Map<String, Object> imgMap = new HashMap<>();
+	                    imgMap.put("targetId", Integer.parseInt(contentId));
+	                    imgMap.put("targetType", "PLACE");
+	                    imgMap.put("imageUrl", imageUrl);
+	                    imgMap.put("sortOrder", order);
+	                    
+	                    // 0번째 이미지를 대표('Y')로 설정
+	                    imgMap.put("isRepresentative", (order == 0) ? "Y" : "N");
+
+	                    adResDao.insertImageStore(imgMap);
+	                    System.out.println(">>> [" + contentId + "] 이미지 저장 (" + (order + 1) + "/4): " + imageUrl);
+	                    order++;
+	                }
+	            }
+	        } else {
+	            // 2. 이미지가 하나도 없는 경우 처리
+	            System.out.println(">>> [" + contentId + "] 결과: no images (저장된 이미지가 없습니다.)");
+	            
+	            // 만약 DB에 'no images'라는 텍스트를 남겨야 한다면 아래 주석을 해제하세요.
+	            /*
+	            Map<String, Object> imgMap = new HashMap<>();
+	            imgMap.put("targetId", Integer.parseInt(contentId));
+	            imgMap.put("targetType", "PLACE");
+	            imgMap.put("imageUrl", "no images");
+	            imgMap.put("isRepresentative", "N");
+	            imgMap.put("sortOrder", 0);
+	            adResDao.insertImageStore(imgMap);
+	            */
+	        }
+	    } catch (Exception e) {
+	        System.err.println(">>> 추가 이미지 수집 실패: " + e.getMessage());
+	    }
+	}
+	
 }

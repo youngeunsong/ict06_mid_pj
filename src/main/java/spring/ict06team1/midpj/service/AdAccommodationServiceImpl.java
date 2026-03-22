@@ -477,7 +477,7 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	    	String url = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2?serviceKey=" + serviceKey
 	                + "&areaCode=" + areaCode
 	                + "&contentTypeId=32"  // 공공데이터 지정번호 32번 -> 숙소 정보
-	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=100"
+	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=1000"
 	                + "&pageNo="+pageNo;
 
 	        // 8. API 호출 및 JSON 응답 받기
@@ -515,20 +515,56 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	                pDto.setImage_url(imageUrl); //숙소 이미지 경로
 	                pDto.setLongitude(item.path("mapx").asDouble());//숙소 경도
 	                pDto.setLatitude(item.path("mapy").asDouble());//숙소 위도
-	                // 1. API에서 전화번호를 가져와서 앞뒤 공백 제거
-	                String telData = item.path("tel").asText("").trim();
+	                
+	            
+	                String areaCode1 = item.path("areacode").asText("");
+	                if (areaCode1 == null) areaCode1 = "기타";
+	                
+	                switch (areaCode1) {
+	                    case "1":  areaCode1 =  "서울"; break;
+	                    case "31": areaCode1 =  "경기"; break;
+	                    case "2":  areaCode1 =  "인천"; break;
+	                    case "6":  areaCode1 =  "부산"; break;
+	                    case "4":  areaCode1 =  "대구"; break;
+	                    case "3":  areaCode1 =  "대전"; break;
+	                    case "5":  areaCode1 =  "광주"; break;
+	                    case "7":  areaCode1 =  "울산"; break;
+	                    case "39": areaCode1 =  "제주"; break;
+	                    default:   areaCode1 =  "기타"; break;
+	                }
+	                aDto.setAreaCode(areaCode1); // 지역 코드
+	                
+	                // 2. 전화번호 처리 (null이거나, 빈 문자열이거나, 20자를 초과할 경우 랜덤 생성)
+	                String tel = item.path("tel").asText("").trim();
+	                String prefix = "";
 
-	                // 2. 문자열 내부의 모든 공백 제거 (자릿수 확보를 위한 압착)
-	                telData = telData.replaceAll("\\s", "");
-
-	                // 3. 20자 제한 적용 (20자보다 길면 자르기)
-	                if (telData.length() > 20) {
-	                    telData = telData.substring(0, 20);
+	                // [수정 핵심]: null 체크 뿐만 아니라 '길이가 20자 초과'인 경우도 포함합니다.
+	                if (tel == null || tel.isEmpty() || tel.equals("null") || tel.length() > 20) {
+	                    
+	                    // 지역명에 따른 지역번호 설정
+	                    switch (aDto.getAreaCode()) {
+	                        case "서울" : prefix = "02"; break;
+	                        case "경기" : prefix = "031"; break;
+	                        case "인천" : prefix = "032"; break;
+	                        case "부산" : prefix = "051"; break;
+	                        case "대구" : prefix = "053"; break;
+	                        case "대전" : prefix = "042"; break;
+	                        case "광주" : prefix = "062"; break;
+	                        case "울산" : prefix = "052"; break;
+	                        case "제주" : prefix = "064"; break;
+	                        default : prefix = "0507"; break; // 기타 지역은 안심번호로 처리
+	                    }
+	                    
+	                    // 랜덤 번호 생성 (가운데 3~4자리, 끝 4자리)
+	                    int middle = (int)(Math.random() * 900) + 100; // 100~999
+	                    int last = (int)(Math.random() * 9000) + 1000;  // 1000~9999
+	                    
+	                    tel = prefix + "-" + middle + "-" + last;
 	                }
 
-	                // 4. DTO에 최종 세팅
-	                aDto.setPhone(telData);
-	                aDto.setAreaCode(item.path("areacode").asText("")); // 지역 코드
+	                // 최종적으로 DTO에 20자 이하의 안전한 번호만 세팅됨
+	                aDto.setPhone(tel);
+	                
 	                //가격은 공공데이터 정보에 없기에 랜덤으로 생성
 	                Random random = new Random();
 		            // 5만원 ~ 30만원 사이를 '만원' 단위로 랜덤 생성
@@ -547,6 +583,7 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	                // 18. ACCOMMODATION 테이블에 상세 정보 저장 후 카운트 증가
 	                if(adAccDao.insertAcc(aDto)> 0) {
 	                    successCountAcc++;
+	                    testRegisterImages(contentId);
 	                }
 	            }
 	        }
@@ -607,7 +644,27 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	            aDto.setDescription(item.path("overview").asText("등록된 상세 설명이 없습니다."));
 	            
 	            // 12. 'cat3' 필드에서 소분류 카테고리 코드를 가져와 AccommodationDTO에 저장
-	            aDto.setCategory(item.path("cat3").asText(""));
+	            String rawCat3 = item.path("cat3").asText("");
+	            String categoryName = "";
+
+	            // JSP의 option value와 공공데이터 cat3 코드를 매핑
+	            switch (rawCat3) {
+	                case "B02010100": categoryName = "일반호텔"; break;
+	                case "B02011100": categoryName = "호스텔"; break;
+	                case "B02010700": categoryName = "펜션"; break;
+	                case "B02011200": categoryName = "서비스드레지던스"; break;
+	                case "B02011600": categoryName = "한옥스테이"; break; // 설계하신 옵션 기준
+	                case "B02010900": categoryName = "홈스테이"; break;
+	                case "B02011400": categoryName = "휴양펜션"; break;
+	                case "B02011000": categoryName = "유스호스텔"; break;
+	                case "B02010600": categoryName = "가족호텔"; break;
+	                case "B02010500": categoryName = "한국전통호텔"; break;
+	                case "B02010300": categoryName = "수상관광호텔"; break;
+	                case "B02011300": categoryName = "콘도미니엄"; break;
+	            }
+
+	            // 13. 최종 가공된 문자열을 DTO에 저장
+	            aDto.setCategory(categoryName);
 	            
 	            // 13. 콘솔에 수집 성공 여부 출력
 	            System.out.println(">>> " + contentId + " 공통 상세 수집 완료");
@@ -617,12 +674,69 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	        System.err.println("공통 상세 에러: " + e.getMessage());
 	    }
 	}
-
 	
+	// 여러 이미지 저장하기 (최대 4장 제한)
+	@Override
+	public void testRegisterImages(String contentId) {
+	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
+	    RestTemplate restTemplate = new RestTemplate();
+	    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+	    restTemplate.setUriTemplateHandler(factory);
 
-	
+	    String url = "https://apis.data.go.kr/B551011/KorService2/detailImage2?serviceKey=" + serviceKey
+	            + "&contentId=" + contentId
+	            + "&MobileOS=ETC&MobileApp=AppTest&_type=json";
 
-	
+	    try {
+	        ObjectMapper mapper = new ObjectMapper();
+	        String res = restTemplate.getForObject(url, String.class);
+	        
+	        JsonNode root = mapper.readTree(res);
+	        JsonNode itemNode = root.path("response").path("body").path("items").path("item");
 
-	
+	        // 1. 이미지가 배열 형태이고 실제 데이터가 있는지 확인
+	        if (itemNode.isArray() && itemNode.size() > 0) {
+	            int order = 0; 
+	            
+	            for (JsonNode item : itemNode) {
+	                // [제한 조건] 최대 4장까지만 저장 (0, 1, 2, 3번 인덱스)
+	                if (order >= 4) break;
+
+	                String imageUrl = item.path("originimgurl").asText("");
+	                
+	                if (!imageUrl.isEmpty()) {
+	                    Map<String, Object> imgMap = new HashMap<>();
+	                    imgMap.put("targetId", Integer.parseInt(contentId));
+	                    imgMap.put("targetType", "PLACE");
+	                    imgMap.put("imageUrl", imageUrl);
+	                    imgMap.put("sortOrder", order);
+	                    
+	                    // 0번째 이미지를 대표('Y')로 설정
+	                    imgMap.put("isRepresentative", (order == 0) ? "Y" : "N");
+
+	                    adAccDao.insertImageStore(imgMap);
+	                    System.out.println(">>> [" + contentId + "] 이미지 저장 (" + (order + 1) + "/4): " + imageUrl);
+	                    order++;
+	                }
+	            }
+	        } else {
+	            // 2. 이미지가 하나도 없는 경우 처리
+	            System.out.println(">>> [" + contentId + "] 결과: no images (저장된 이미지가 없습니다.)");
+	            
+	            // 만약 DB에 'no images'라는 텍스트를 남겨야 한다면 아래 주석을 해제하세요.
+	            /*
+	            Map<String, Object> imgMap = new HashMap<>();
+	            imgMap.put("targetId", Integer.parseInt(contentId));
+	            imgMap.put("targetType", "PLACE");
+	            imgMap.put("imageUrl", "no images");
+	            imgMap.put("isRepresentative", "N");
+	            imgMap.put("sortOrder", 0);
+	            adResDao.insertImageStore(imgMap);
+	            */
+	        }
+	    } catch (Exception e) {
+	        System.err.println(">>> 추가 이미지 수집 실패: " + e.getMessage());
+	    }
+	}
 }

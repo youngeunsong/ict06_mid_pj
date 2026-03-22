@@ -167,11 +167,7 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
     </div>
-
 <script>
 var geocoder;
 kakao.maps.load(function () {
@@ -198,4 +194,7 @@ function execPostcode() {
 }
 </script>
 </body>
+<footer class="main-footer">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

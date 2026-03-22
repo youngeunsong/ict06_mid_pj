@@ -138,7 +138,6 @@
             </section>
         </div>
     </div>
-
 <script>
 var geocoder;
 if (window.kakao && kakao.maps) {
@@ -208,4 +207,7 @@ function execPostcode() {
 }
 </script>
 </body>
+<footer class="main-footer text-center py-3">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

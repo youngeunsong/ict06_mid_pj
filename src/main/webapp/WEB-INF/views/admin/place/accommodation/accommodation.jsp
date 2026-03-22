@@ -18,6 +18,10 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
+	<!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp"%>
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp"%>
 
@@ -220,10 +224,6 @@
 				</div>
 			</section>
 		</div>
-
-		<footer class="main-footer text-center py-3">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
 	</div>
 <script>
 	function handleCombinedSearch() {
@@ -258,10 +258,13 @@
 		}
 		// 3. 지역 코드는 현재 '0'으로 고정하여 이동
 		// 세미콜론 위치를 조정하고 category를 끝에 붙인다.
-		location.href = `${path}/accommodationSearch.acc?areaCode=0&keyword=`
-				+ encodeURIComponent(keyword) + `&pageNum=1` + `&category=`
+		location.href = '${path}/accommodationSearch.acc?areaCode=0&keyword='
+				+ encodeURIComponent(keyword) + '&pageNum=1' + '&category='
 				+ category; // 이제 URL에 category가 포함됩니다.
 	}
 </script>
 </body>
+<footer class="main-footer text-center py-3">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

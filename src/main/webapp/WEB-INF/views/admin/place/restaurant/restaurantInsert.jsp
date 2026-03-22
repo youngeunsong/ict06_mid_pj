@@ -13,6 +13,10 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
+    <!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
         <%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
@@ -182,4 +186,7 @@ function execPostcode() {
 }
 </script>
 </body>
+<footer class="main-footer text-center py-3">
+    <strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

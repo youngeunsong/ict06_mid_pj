@@ -176,9 +176,6 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2026</strong>
-        </footer>
     </div>
 <script>
 var geocoder;
@@ -248,11 +245,13 @@ window.onload = function() {
         };
     }
 };
-
 // 지역 변경 시 안내 (필요 시 로직 추가 가능)
 function updateAddressGuide() {
     console.log("지역 코드가 변경되었습니다.");
 }
 </script>
 </body>
+<footer class="main-footer">
+    <strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

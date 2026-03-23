@@ -33,7 +33,7 @@ public interface AdFestivalService {
 	public String bringFestivalFromAPI(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
 	
 	// 오픈API로 가져온 정보 DB에 넣기 
-	public void insertFestivalsFromApi(String json)
+	public void insertFestivalsFromApi(String json, HttpServletRequest request, HttpServletResponse response, Model model)
 			throws Exception;
 
 }

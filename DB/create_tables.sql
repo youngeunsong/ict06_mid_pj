@@ -1,7 +1,3 @@
---Ver.260320
---변경사항
---1) FAQ 테이블: view_count 필드 추가
---------------------------------------------------
 --Ver.260319
 --변경사항
 --1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
@@ -125,7 +121,6 @@ CREATE TABLE FESTIVAL_TICKET (
     stock        NUMBER DEFAULT 0,       -- 티켓별 재고 (선택사항)
     description  VARCHAR2(500)           -- 티켓 상세 설명
 );
-SELECT * FROM FESTIVAL_TICKET;
 
 -- 7. 예약 테이블
 CREATE TABLE RESERVATION (
@@ -210,14 +205,6 @@ CREATE TABLE COMMUNITY_COMMENT(
 	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY_COMMENT;
-SELECT 
-    constraint_name, 
-    search_condition 
-FROM 
-    user_constraints 
-WHERE 
-    table_name = 'COMMUNITY_COMMENT' 
-    AND constraint_name = 'CHK_COMMENT_STATUS';
 --제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
 ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
@@ -248,7 +235,7 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
-    order_no	NUMBER,
+    order_no	CHAR(1),
     visible     CHAR(1) DEFAULT 'Y',
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
@@ -378,8 +365,7 @@ CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함
 
---예약/결제번호 생성용 트리거 미사용 예정!
-/*--2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
+--2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
 CREATE OR REPLACE TRIGGER TRG_RESERVATION_ID
 BEFORE INSERT ON RESERVATION FOR EACH ROW
 BEGIN
@@ -394,7 +380,7 @@ BEGIN
   SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_PAY.NEXTVAL, 3, '0')
   INTO :NEW.payment_id FROM DUAL;
 END;
-/*/
+/
 
 --3) 축제 status 자동계산 트리거
 CREATE OR REPLACE TRIGGER TRG_FESTIVAL_STATUS

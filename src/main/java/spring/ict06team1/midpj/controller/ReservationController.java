@@ -8,23 +8,53 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.service.ReservationService;
+
 @Controller
 public class ReservationController {
 
+	@Autowired
+	private ReservationService resService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 	
 	//[Reservation] ----------------------------------------------------------------------------------------
-	//[Reservation] 예약 페이지로 이동
-	@RequestMapping("/reservation.rv")	
-	public String reservation(HttpServletRequest request, HttpServletResponse response, Model model) 
+	//[Restaurant_Reservation] 식당 예약 페이지로 이동
+	@RequestMapping("/restReservation.rv")
+	public String restReservation(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => reservation.rv>>>");
+		logger.info("<<< url => restReservation.rv>>>");
 		
-		return "user/reservation/reservation";
+		return "user/reservation/restReservation";
+	}
+	
+	//[Accommodation_Reservation] 숙소 예약 페이지로 이동
+	@RequestMapping("/accReservation.rv")
+	public String accReservation(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => accReservation.rv>>>");
+		
+		return "user/reservation/accReservation";
+	}
+	
+	//[Festival_Reservation] 축제 예약 페이지로 이동
+	@RequestMapping("/festReservation.rv")
+	public String festReservation(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url => festReservation.rv>>>");
+		
+		int place_id = Integer.parseInt(request.getParameter("place_id"));
+		FestivalDTO festDto = resService.getFestivalTickets(place_id);
+		
+		model.addAttribute("festival", festDto);
+		
+		return "user/reservation/festReservation";
 	}
 	
 	//[Reservation] 예약 실행 페이지로 이동
@@ -32,7 +62,8 @@ public class ReservationController {
 	public String reservationAction(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => reservationAction.rv>>>");
-		
+
+		resService.createReservation(request, response, model);
 		return "user/reservation/reservationAction";
 	}
 	

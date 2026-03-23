@@ -20,7 +20,7 @@
 	        지도 보기
 	  </button>	
 	  
-	  <button type="button" class="btn_area" onclick="location.href='${path}/reservation.rv'">
+	  <button type="button" class="btn_area" onclick="location.href='${path}/accReservation.rv'">
 	        예약하기
 	  </button>	
       

@@ -46,41 +46,53 @@
 						<div class="card-body">
 							<form action="${path}/memberList.adme" method="get">
 								<div class="filter-box">
-									<!-- 검색 -->
-									<div class="filter-left">
-										<select name="searchType" class="form-control form-control-sm" style="width:100px;">
-											<option value="id" ${sf.searchType eq 'id' ? 'selected' : ''}>ID</option>
-											<option value="name" ${sf.searchType eq 'name' ? 'selected' : ''}>이름</option>
-										</select>
-										<input type="text" name="keyword" value="${sf.keyword}"
-												class="form-control form-control-sm" style="width:200px;" placeholder="검색어 입력">
+									<!-- 좌측: 검색창 -->
+									<div class="d-flex align-items-center" style="gap:10px;">
+										<div class="input-group input-group-sm" style="max-width:300px;">
+											<select name="searchType" class="form-control form-control-sm" style="width:80px; flex:none;">
+												<option value="id" ${sf.searchType eq 'id' ? 'selected' : ''}>ID</option>
+												<option value="name" ${sf.searchType eq 'name' ? 'selected' : ''}>이름</option>
+											</select>
+											<input type="text" name="keyword" value="${sf.keyword}"
+													class="form-control form-control-sm" placeholder="검색어 입력">
+											<div class="input-group-append">
+												<button type="submit" class="btn btn-outline-secondary btn-sm">
+													<i class="bi bi-search"></i>
+												</button>
+											</div>
+										</div>
 									</div>
 									
-									<!-- 필터 -->
+									<!-- 우측: 필터 -->
 									<div class="filter-right">
-										<div class="filter-title">필터</div>
 										<div class="filter-row">
 											<span class="filter-row-label">상태</span>
-											<span class="tag tag-secondary ${empty sf.status ? 'active' : ''}"
-													onclick="setFilter('status', '')">전체</span>
-											<span class="tag tag-success ${sf.status eq 'ACTIVE' ? 'active' : ''}"
-													onclick="setFilter('status', 'ACTIVE')">정상</span>
-											<span class="tag tag-danger ${sf.status eq 'BANNED' ? 'active' : ''}"
-													onclick="setFilter('status', 'BANNED')">제재</span>
+											<div style="display:flex; gap:4px;">
+												<span class="tag tag-secondary ${empty sf.status ? 'active' : ''}"
+														onclick="setFilter('status', '')">전체</span>
+												<span class="tag tag-success ${sf.status eq 'ACTIVE' ? 'active' : ''}"
+														onclick="setFilter('status', 'ACTIVE')">정상</span>
+												<span class="tag tag-danger ${sf.status eq 'BANNED' ? 'active' : ''}"
+														onclick="setFilter('status', 'BANNED')">제재</span>
+											</div>
 										</div>
 										<div class="filter-row">
 											<span class="filter-row-label">권한</span>
-											<span class="tag tag-secondary ${empty sf.role ? 'active' : ''}"
-													onclick="setFilter('role', '')">전체</span>
-											<span class="tag tag-success ${sf.role eq 'USER' ? 'active' : ''}"
-													onclick="setFilter('role', 'USER')">일반</span>
-											<span class="tag tag-danger ${sf.role eq 'ADMIN' ? 'active' : ''}"
-													onclick="setFilter('role', 'ADMIN')">관리자</span>
+											<div style="display:flex; gap:4px;">
+												<span class="tag tag-secondary ${empty sf.role ? 'active' : ''}"
+														onclick="setFilter('role', '')">전체</span>
+												<span class="tag tag-success ${sf.role eq 'USER' ? 'active' : ''}"
+														onclick="setFilter('role', 'USER')">일반</span>
+												<span class="tag tag-danger ${sf.role eq 'ADMIN' ? 'active' : ''}"
+														onclick="setFilter('role', 'ADMIN')">관리자</span>
+											</div>
 										</div>
-										<div class="filter-row">
+										<div class="filter-row filter-center">
 											<input type="hidden" id="statusInput" name="status" value="${sf.status}">
 											<input type="hidden" id="roleInput" name="role" value="${sf.role}">
-											<a href="${path}/memberList.adme" class="tag tag-secondary active btn-filter-search">초기화</a>
+											<button type="button" onclick="location.href='${path}/memberList.adme'" class="btn btn-dark btn-filter-search">
+												<i class="bi bi-arrow-counterclockwise"></i>초기화
+											</button>
 										</div>
 									</div>
 								</div>

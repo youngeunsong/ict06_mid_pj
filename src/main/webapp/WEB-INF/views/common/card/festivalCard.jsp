@@ -1,15 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<!-- ==============================================
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-03
+ * 최종수정일: 2026-03-10
+ * 참고 코드: restCard.jsp
+ 카드 내 축제 진행 여부/ 진행 기간 추가
+ 
 [공통 카드 구조]
 축제 전용 카드
 - mode = bestMain  / BEST 추천 빅카드용
 - mode = best      / BEST 추천 우측 카드용
 - mode = festival  / 메인 이달의 추천 축제
 - mode = search    / 검색 화면 카드용
-=============================================== -->
+
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <div class="${cardWrapClass}">
     <div class="place-card-wrap position-relative">
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.NoticeDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Repository
@@ -115,4 +116,25 @@ public class MainDAOImpl implements MainDAO {
 		
 		return BestFestTop5;
 	}
+	
+	//최하단 공지 리스트
+	public List<NoticeDTO> getMainNoticeList(){
+		System.out.println("[MainDAOImpl - getMainNoticeList()]");
+		
+		MainDAO dao = sqlSession.getMapper(MainDAO.class);
+		List<NoticeDTO> mainNoticeList = dao.getMainNoticeList();
+		
+		return mainNoticeList;
+	}
+	
+	//최하단 이벤트 리스트
+	public List<NoticeDTO> getMainEventList(){
+		System.out.println("[MainDAOImpl - getMainEventList()]");
+		
+		MainDAO dao = sqlSession.getMapper(MainDAO.class);
+		List<NoticeDTO> mainEventList = dao.getMainEventList();
+		
+		return mainEventList;
+	}
+	
 }

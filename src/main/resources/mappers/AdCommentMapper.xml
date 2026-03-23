@@ -17,7 +17,7 @@
 		<!-- CommunityDTO 매핑 -->
 		<association property="communityDTO" javaType="spring.ict06team1.midpj.dto.CommunityDTO">
 			<id property="post_id" column="post_id" />
-			<result property="title" column="title" />
+			<result property="title" column="post_title" />
 		</association>
 	</resultMap>
   	
@@ -32,12 +32,13 @@
 		 ORDER BY c.comment_id DESC
 	</select>
 	
-	<!-- 2. 댓글 숨김 -->
+	<!-- 2. 댓글 숨김/제재 -->
 	<update id="hideComment" parameterType="int">
 		UPDATE COMMUNITY_COMMENT
-		   SET status = 'HIDDEN',
+		   SET status = 'BANNED',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status = 'DISPLAY'
 	</update>
 	
 	<!-- 3. 댓글 숨김 해제 -->
@@ -46,13 +47,15 @@
 		   SET status = 'DISPLAY',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status = 'BANNED'
 	</update>
 	
 	<!-- 4. 댓글 삭제 -->
 	<update id="deleteComment" parameterType="int">
 		UPDATE COMMUNITY_COMMENT
-		   SET status = 'DELETED',
+		   SET status = 'HIDDEN',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status != 'HIDDEN'
 	</update>
 </mapper>

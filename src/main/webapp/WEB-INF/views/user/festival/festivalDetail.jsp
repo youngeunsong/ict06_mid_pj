@@ -470,7 +470,7 @@
               </div>
 
               <div class="text-center mt-3">
-                <button class="btn btn-success r-reserveBtn">
+                <button id="btnReserve" class="btn btn-success r-reserveBtn">
                   예약하기
                 </button>
               </div>
@@ -501,7 +501,8 @@
   const PLACE_ID = '<c:out value="${place_id}"/>';
 </script>
 
-<script src="${pageContext.request.contextPath}/resources/js/festival/festivalDetail.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/user/festivalDetail.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/user/festReservation.js"></script>
 
 <%@ include file="../../common/footer.jsp" %>
 </body>

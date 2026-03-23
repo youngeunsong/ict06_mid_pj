@@ -1,0 +1,104 @@
+@charset "UTF-8";
+
+/* CSS 변수 선언: 포인트 컬러를 한 곳에서 관리 */
+:root {
+	--point-color: #0CB574;
+}
+
+/* 전체 배경색 및 폰트 설정 */
+body {
+	background-color: #f8f9fa;
+	font-family: 'Pretendard', sans-serif;
+}
+
+/* 프로필 카드: 초록색 배경과 그림자 효과 */
+.profile_card {
+	background: var(--point-color);
+	border-radius: 20px;
+	color: white;
+	box-shadow: 0 8px 16px rgba(12, 181, 116, 0.2);
+}
+
+/* 프로필 이미지: 원형 테두리와 반투명 배경 */
+.profile_img {
+	width: 80px;
+	height: 80px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+}
+
+/* 활동 아이템(즐겨찾기 등): 마우스 올리면 위로 살짝 올라가는 효과 */
+.activity_item {
+	border-radius: 20px;
+	transition: 0.3s;
+	cursor: pointer;
+	border: none;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.activity_item:hover {
+	transform: translateY(-5px);
+	border: 1px solid var(--point-color);
+}
+
+/* 아이콘 박스: 둥근 배경 안에 아이콘 배치 */
+.icon_box {
+	width: 50px;
+	height: 50px;
+	background: #f0fdf4;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+	position: relative; /* 뱃지 위치의 기준점 */
+}
+
+/* 숫자 뱃지: 아이콘 오른쪽 상단에 작게 표시 */
+.count_badge {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	font-size: 10px;
+}
+
+/* 맛집 카드: 공통 카드 디자인 */
+.custom_card {
+	border-radius: 15px;
+	overflow: hidden;
+	border: none;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	transition: 0.3s;
+	height: 100%;
+}
+
+.custom_card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 이미지 영역: 배경이미지로 꽉 채움 */
+.card_img {
+	height: 160px;
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	background-color: #eee;
+}
+
+/* 순위 뱃지 (BEST 1 등): 이미지 왼쪽 상단 검은색 라벨 */
+.rank_badge {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	background: rgba(0, 0, 0, 0.7);
+	color: white;
+	font-size: 11px;
+	padding: 2px 8px;
+	border-radius: 5px;
+}

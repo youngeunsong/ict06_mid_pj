@@ -52,6 +52,17 @@ public interface UserService {
     public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
         throws ServletException, IOException;
     
+    // 마이페이지 홈 카운트
+    public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException;
+    
+    // 나의 예약목록
+    public void viewMyReservationsAction(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException;
+    // 나의 예약 상세
+    public void myReservationDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException;
+    
     //------------------------------
     //관리자 정보 조회 및 수정
     public MemberDTO getAdminDetail(String user_id);

@@ -226,8 +226,8 @@
       --%>
 			<div class="rk-head">
 				<h1 class="rk-title">
-					<i class="fa-solid fa-utensils me-2"
-						style="color: var(- -rk-brand);"></i> 축제 랭킹
+					<i class="fa-solid fa-icons" style="color: var(--rk-brand);"></i>
+					축제 랭킹
 				</h1>
 				<div class="rk-sub">실시간 인기 축제를 한눈에 확인해보세요.</div>
 			</div>

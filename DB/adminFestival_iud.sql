@@ -192,3 +192,26 @@ SELECT * FROM DUAL;
 INSERT INTO INQUIRY (inquiry_id, user_id, title, content)
 VALUES (1, 'user611', '그민페 언제 개최되나요?', '올해 그랜드민트페스티벌 개최 시점 및 장소 등 상세 정보 문의드려요~');
 
+-- 임시 : faq 테이블 속성 변경
+-- 아래 코드는 테이블이 비어있을 때만 작동
+--ALTER TABLE FAQ
+--MODIFY order_no NUMBER;
+
+-- [빈 테이블이 아닐 때엔 형 변환하여 컬럼 복사 -> 기존 컬럼 제거 -> 새 컬럼 이름을 기존 컬럼 이름으로 변경]
+-- 새 컬럼 추가
+ALTER TABLE FAQ ADD order_no_new NUMBER;
+
+-- 데이터 복사
+UPDATE FAQ
+SET order_no_new =
+    CASE
+        WHEN REGEXP_LIKE(order_no, '^[0-9]+$')
+        THEN TO_NUMBER(order_no)
+        ELSE NULL
+    END;
+
+-- 기존 컬럼 삭제
+ALTER TABLE FAQ DROP COLUMN order_no;
+
+-- 컬럼명 변경
+ALTER TABLE FAQ RENAME COLUMN order_no_new TO order_no;

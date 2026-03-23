@@ -39,16 +39,6 @@
     </script>
 </c:if>
 
-<c:if test="${updateCnt != 1}">
-    <script type="text/javascript">
-        setTimeout(function(){
-            alert("맛집 수정 실패!!");
-            <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
-            window.location="${path}/restaurantModify.ad?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
-        }, 1000);
-    </script>
-</c:if>
-
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">

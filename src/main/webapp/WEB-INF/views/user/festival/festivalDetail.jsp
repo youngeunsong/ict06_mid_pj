@@ -1,13 +1,13 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-17
+ * 최종수정일: 2026-03-22
  * 참고 코드: restaurantDetail.jsp
  맛집 상세 페이지와 달리 행사기간, 티켓 메뉴 가짐. 
+ * 업데이트
+ v260322: festivalDetail.js 경로 수정
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
 <!DOCTYPE html>
@@ -489,24 +489,6 @@
 				</button>
             </div>
           </div>
-
-		  <!-- 축제엔 필요없는 정보라 삭제 -->	
-          <!-- 영업시간 카드 -->
-          <!-- <div class="card shadow-sm border-0" style="border-radius:18px;">
-            <div class="card-body">
-              <div class="fw-bold fs-5 mb-2">영업시간</div>
-              <div class="r-muted" style="font-size:14px; line-height:1.8;">
-                <div><b class="text-dark">월요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">화요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">수요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">목요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">금요일</b> 10:00 - 23:00</div>
-                <div><b class="text-dark">토요일</b> 10:00 - 23:00</div>
-                <div><b class="text-dark">일요일</b> 10:00 - 22:00</div>
-              </div>
-            </div>
-          </div> -->
-
         </div>
       </div>
     </div>

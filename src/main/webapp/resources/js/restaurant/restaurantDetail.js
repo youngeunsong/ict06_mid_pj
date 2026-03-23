@@ -202,4 +202,141 @@ document.addEventListener("DOMContentLoaded", function () {
       }[c];
     });
   }
+  
+    // =========================
+  // 3) 예약 가능 일정 UI
+  // =========================
+  const dateSlider = document.getElementById("reserveDateSlider");
+  const timeSlotsWrap = document.getElementById("reserveTimeSlots");
+  const selectedReserveDateInput = document.getElementById("selectedReserveDate");
+  const selectedVisitTimeInput = document.getElementById("selectedVisitTime");
+
+  if (dateSlider && timeSlotsWrap && selectedReserveDateInput && selectedVisitTimeInput) {
+    const DAYS_TO_SHOW = 7;
+
+    // 예시 시간 슬롯
+    const baseSlots = [
+      { start: "10:00", end: "11:50" },
+      { start: "12:00", end: "13:50" },
+      { start: "14:00", end: "15:50" },
+      { start: "17:00", end: "18:50" },
+      { start: "19:00", end: "20:50" }
+    ];
+
+    const dayLabels = ["일", "월", "화", "수", "목", "금", "토"];
+
+    // 오늘부터 +7일 생성
+    const reserveDates = [];
+    const today = new Date();
+
+    for (let i = 0; i < DAYS_TO_SHOW; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const day = dayLabels[d.getDay()];
+
+      reserveDates.push({
+        value: yyyy + "-" + mm + "-" + dd,
+        labelTop: mm + "/" + dd,
+        labelBottom: "(" + day + ")"
+      });
+    }
+
+    let activeDate = reserveDates[0].value;
+
+    renderDateButtons();
+    renderTimeSlots(activeDate);
+
+    function renderDateButtons() {
+      dateSlider.innerHTML = "";
+
+      reserveDates.forEach(function (item) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "r-dateChip" + (item.value === activeDate ? " is-active" : "");
+        btn.innerHTML =
+            '<div class="r-dateTop">' + item.labelTop + '</div>'
+          + '<div class="r-dateBottom">' + item.labelBottom + '</div>';
+
+        btn.addEventListener("click", function () {
+			  if (activeDate === item.value) {
+			    activeDate = "";
+			    selectedReserveDateInput.value = "";
+			    selectedVisitTimeInput.value = "";
+			
+			    renderDateButtons();
+			    renderTimeSlots("");
+			    return;
+			  }
+			
+			  activeDate = item.value;
+			  selectedReserveDateInput.value = item.value;
+			  selectedVisitTimeInput.value = "";
+			
+			  renderDateButtons();
+			  renderTimeSlots(item.value);
+			});
+			
+			dateSlider.appendChild(btn);
+	      });
+
+      selectedReserveDateInput.value = activeDate;
+    }
+
+    function renderTimeSlots(dateValue) {
+	  timeSlotsWrap.innerHTML = "";
+	
+	  if (!dateValue) {
+	    return;
+	  }
+
+      // 임시 예시 비활성화 규칙
+      // 날짜 인덱스와 슬롯 인덱스를 조합해서 일부 슬롯을 회색 처리
+      const dateIndex = reserveDates.findIndex(function (d) {
+        return d.value === dateValue;
+      });
+
+      baseSlots.forEach(function (slot, idx) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "r-timeSlot";
+
+        const isDisabled =
+          (dateIndex === 0 && idx === 1) ||
+          (dateIndex === 2 && idx === 3) ||
+          (dateIndex === 4 && idx === 0) ||
+          (dateIndex === 6 && idx === 4);
+
+        if (isDisabled) {
+          btn.classList.add("is-disabled");
+          btn.disabled = true;
+        }
+
+        btn.textContent = slot.start + " ~ " + slot.end;
+
+        btn.addEventListener("click", function () {
+		  if (btn.disabled) return;
+		
+		  const alreadySelected = btn.classList.contains("is-selected");
+		
+		  timeSlotsWrap.querySelectorAll(".r-timeSlot").forEach(function (el) {
+		    el.classList.remove("is-selected");
+		  });
+		
+		  if (alreadySelected) {
+		    selectedVisitTimeInput.value = "";
+		    return;
+		  }
+		
+		  btn.classList.add("is-selected");
+		  selectedVisitTimeInput.value = slot.start;
+		});
+
+        timeSlotsWrap.appendChild(btn);
+      });
+    }
+  }
 });

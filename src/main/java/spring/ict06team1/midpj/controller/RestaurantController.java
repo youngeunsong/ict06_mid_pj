@@ -122,22 +122,22 @@ public class RestaurantController {
                                    HttpSession session,
                                    Model model) {
 
-        PlaceDTO restaurant = service.getRestaurantDetail(place_id);
+        RestaurantDTO restaurant = service.getRestaurantDetail(place_id);
 
         if (restaurant == null) {
-            return "common/main"; // 잘못된 place_id 접근 시 메인으로 이동
+            return "common/main";
         }
 
-        List<ReviewDTO> reviews = service.getReviewsPaged(place_id, 0, 5); // 상세 페이지 첫 진입 시 리뷰 5개만 먼저 출력
+        List<ReviewDTO> reviews = service.getReviewsPaged(place_id, 0, 5);
         int reviewTotalCount = service.getReviewCount(place_id);
 
         String loginUserId = getLoginUserId(session);
-        boolean favorite = service.isFavorite(loginUserId, place_id); // 로그인 사용자 기준 즐겨찾기 여부 확인
+        boolean favorite = service.isFavorite(loginUserId, place_id);
 
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("reviews", reviews);
         model.addAttribute("place_id", place_id);
-        model.addAttribute("reviewNextOffset", reviews.size()); // 리뷰 더보기 요청 시 다음 시작 위치로 사용
+        model.addAttribute("reviewNextOffset", reviews.size());
         model.addAttribute("reviewTotalCount", reviewTotalCount);
         model.addAttribute("isFavorite", favorite);
 
@@ -269,5 +269,11 @@ public class RestaurantController {
         }
 
         return wrappedList;
+    }
+
+    // 404 페이지 컨트롤러 
+    @RequestMapping("/error404.do")
+    public String error404() {
+        return "common/error404";
     }
 }

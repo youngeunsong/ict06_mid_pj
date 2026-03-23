@@ -17,7 +17,10 @@
       <%@ include file="../../common/header.jsp" %>
       
       <hr>
-      축제
+      축제<br>
+      
+      <!-- 임시 코드: 축제 랭킹 페이지로 연결 -->
+      <a href="${path}/bestFestivals.fe">축제 랭킹</a><br>
       
       	  <!-- 관련 SQL -->
 		SQL 쿼리 : 내 주변 축제 탐색

@@ -1,5 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-05
+ * 최종수정일: 2026-03-10
+ 
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="setting.jsp"%>
 
 <!DOCTYPE html>
@@ -16,9 +22,8 @@
 <link rel="stylesheet" href="${path}/resources/css/common/main.css">
 <link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
 
-<script src="https://kit.fontawesome.com/648e5e962b.js"
-	crossorigin="anonymous"></script>
-<!-- 아이콘 -->
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script> <!-- 아이콘 -->
+
 
 <script src="${path}/resources/js/user/main.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
@@ -65,7 +70,6 @@
 		<%@ include file="header.jsp"%>
 
 		<!-- 컨텐츠 시작 -->
-
 		<!-- 메인 배너S -->
 		<section class="position-relative">
 			<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel"
@@ -558,57 +562,99 @@
 		<!-- 이달의 추천 국내 축제E -->
 
 
-		<!-- 공지&이벤트 -->
-		<section class="notice-section">
+		<!-- 공지&이벤트S -->
+		<section class="notice-section py-4">
 			<div class="container">
-				<div class="d-flex align-items-center justify-content-between mb-2">
-					<h2 class="section-title">공지사항 & 이벤트</h2>
-					<a href="${path}/community.co" class="view-all">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<ul class="nav notice-tabs border-bottom mb-3">
+					    <li class="nav-item">
+					        <button type="button" class="nav-link active" id="noticeTabBtn">공지</button>
+					    </li>
+					    <li class="nav-item">
+					        <button type="button" class="nav-link" id="eventTabBtn">이벤트</button>
+					    </li>
+					</ul>
+	
+					<a href="${path}/community_free.co" class="view-all text-decoration-none">
 						전체보기 <i class="bi bi-chevron-right"></i>
 					</a>
 				</div>
-
-				<ul class="nav notice-tabs border-bottom mb-3">
-					<li class="nav-item"><a class="nav-link active" href="#">공지사항</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">이벤트</a></li>
-				</ul>
-
-				<table class="table notice-table mb-0">
-					<tbody>
-						<tr>
-							<td width="50"><span class="badge bg-success" style="font-size: .7rem;">공지</span></td>
-							<td>
-								<a href="#" class="notice-title">
-									[중요] 2025년 봄 시즌 여행상품 특가 이벤트 안내
-									<span class="notice-new">NEW</span>
-								</a>
-							</td>
-							<td class="date-col text-end">2026.03.09</td>
-						</tr>
-						<tr>
-							<td><span class="badge bg-warning text-dark" style="font-size: .7rem;">이벤트</span></td>
-							<td><a href="#" class="notice-title">봄맞이 국내여행 최대 40% 할인 프로모션</a></td>
-							<td class="date-col text-end">2026.03.07</td>
-						</tr>
-						<tr>
-							<td><span class="text-muted" style="font-size: .8rem;">일반</span></td>
-							<td><a href="#" class="notice-title">일본 노선 항공권 얼리버드 예약 안내</a></td>
-							<td class="date-col text-end">2026.03.05</td>
-						</tr>
-						<tr>
-							<td><span class="text-muted" style="font-size: .8rem;">일반</span></td>
-							<td><a href="#" class="notice-title">3월 여행박람회 참가 업체 모집 공고</a></td>
-							<td class="date-col text-end">2026.03.03</td>
-						</tr>
-						<tr>
-							<td><span class="text-muted" style="font-size: .8rem;">일반</span></td>
-							<td><a href="#" class="notice-title">앱 리뉴얼 업데이트 안내 및 이용방법 변경 사항</a></td>
-							<td class="date-col text-end">2026.02.28</td>
-						</tr>
-					</tbody>
-				</table>
+	
+				<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+					<div class="card-body p-0">
+	
+						<!-- 공지 영역 -->
+						<div id="noticeContent">
+							<table class="table notice-table mb-0">
+								<tbody>
+									<c:choose>
+										<c:when test="${not empty mainNoticeList}">
+											<c:forEach var="notice" items="${mainNoticeList}">
+											    <tr>
+											        <td width="70">
+											            <span class="badge bg-success" style="font-size:.7rem;">공지</span>
+											        </td>
+											        <td>
+											            <a href="${path}/community_notice_detail.co?notice_id=${notice.notice_id}" class="notice-title text-decoration-none text-dark">
+											                ${notice.title}
+											            </a>
+											        </td>
+											        <td class="date-col text-end">
+											            <fmt:formatDate value="${notice.noticeRegDate}" pattern="yyyy.MM.dd" />
+											        </td>
+											    </tr>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<tr>
+												<td colspan="3" class="text-center text-muted py-4">
+													등록된 공지글이 없습니다.
+												</td>
+											</tr>
+										</c:otherwise>
+									</c:choose>
+								</tbody>
+							</table>
+						</div>
+	
+						<!-- 이벤트 영역 -->
+						<div id="eventContent" style="display:none;">
+						    <table class="table notice-table mb-0">
+						        <tbody>
+						            <c:choose>
+						                <c:when test="${not empty mainEventList}">
+						                    <c:forEach var="event" items="${mainEventList}">
+						                        <tr>
+						                            <td width="50">
+						                                <span class="badge bg-warning text-dark" style="font-size:.7rem;">이벤트</span>
+						                            </td>
+						                            <td>
+						                                <a href="${path}/community_event_detail.co?notice_id=${event.notice_id}" class="notice-title">
+						                                    ${event.title}
+						                                </a>
+						                            </td>
+						                            <td class="date-col text-end">
+						                                <fmt:formatDate value="${event.noticeRegDate}" pattern="yyyy.MM.dd"/>
+						                            </td>
+						                        </tr>
+						                    </c:forEach>
+						                </c:when>
+						                <c:otherwise>
+						                    <tr>
+						                        <td colspan="3" class="text-center text-muted py-4">등록된 이벤트글이 없습니다.</td>
+						                    </tr>
+						                </c:otherwise>
+						            </c:choose>
+						        </tbody>
+						    </table>
+						</div>
+						
+						
+					</div>
+				</div>
 			</div>
 		</section>
+		<!-- 공지&이벤트E -->
 
 
 		<!-- 프로모션 배너 -->

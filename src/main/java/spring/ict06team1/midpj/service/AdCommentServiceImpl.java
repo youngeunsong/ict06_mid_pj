@@ -32,8 +32,20 @@ public class AdCommentServiceImpl implements AdCommentService {
 	public void hideComment(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommentServiceImpl - hideComment()]");
 		
-		int comment_id = Integer.parseInt(request.getParameter("comment_id"));
-		int result = adCmtDao.hideComment(comment_id);
+		String strCommentId = request.getParameter("comment_id");
+		int result = 0;
+		
+		//comment_id가 null인 경우 체크 후 parseInt 변환 
+		if(strCommentId != null && !strCommentId.isEmpty()) {
+			try {
+				int comment_id = Integer.parseInt(strCommentId);
+				result = adCmtDao.hideComment(comment_id);
+			} catch(NumberFormatException e) {
+				System.out.println("잘못된 comment_id: " + strCommentId);
+			}
+		} else {
+			System.out.println("comment_id가 전달되지 않음");
+		}
 		request.setAttribute("result", result);
 	}
 	
@@ -42,8 +54,20 @@ public class AdCommentServiceImpl implements AdCommentService {
 	public void showComment(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommentServiceImpl - showComment()]");
 		
-		int comment_id = Integer.parseInt(request.getParameter("comment_id"));
-		int result = adCmtDao.showComment(comment_id);
+		String strCommentId = request.getParameter("comment_id");
+		int result = 0;
+		
+		//comment_id가 null인 경우 체크 후 parseInt 변환 
+		if(strCommentId != null && !strCommentId.isEmpty()) {
+			try {
+				int comment_id = Integer.parseInt(strCommentId);
+				result = adCmtDao.showComment(comment_id);
+			} catch(NumberFormatException e) {
+				System.out.println("잘못된 comment_id: " + strCommentId);
+			}
+		} else {
+			System.out.println("comment_id가 전달되지 않음");
+		}
 		request.setAttribute("result", result);
 	}
 
@@ -52,8 +76,20 @@ public class AdCommentServiceImpl implements AdCommentService {
 	public void deleteComment(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommentServiceImpl - deleteComment()]");
 		
-		int comment_id = Integer.parseInt(request.getParameter("comment_id"));
-		int result = adCmtDao.deleteComment(comment_id);
+		String strCommentId = request.getParameter("comment_id");
+		int result = 0;
+		
+		//comment_id가 null인 경우 체크 후 parseInt 변환 
+		if(strCommentId != null && !strCommentId.isEmpty()) {
+			try {
+				int comment_id = Integer.parseInt(strCommentId);
+				result = adCmtDao.deleteComment(comment_id);
+			} catch(NumberFormatException e) {
+				System.err.println("잘못된 comment_id: " + strCommentId);
+			}
+		} else {
+			System.out.println("comment_id가 전달되지 않음");
+		}
 		request.setAttribute("result", result);
 	}
 
@@ -70,16 +106,22 @@ public class AdCommentServiceImpl implements AdCommentService {
 		
 		if(comment_ids != null) {
 			for(String id:comment_ids) {
-				int comment_id = Integer.parseInt(id);
-				int result = 0;
-				if("hide".equals(action)) {
-					result = adCmtDao.hideComment(comment_id);
-				} else if("show".equals(action)) {
-					result = adCmtDao.showComment(comment_id);
-				} else if("delete".equals(action)) {
-					result = adCmtDao.deleteComment(comment_id);
+				if(id == null || id.isEmpty())
+					continue;
+				try {
+					int comment_id = Integer.parseInt(id);
+					int result = 0;
+					if("hide".equals(action)) {
+						result = adCmtDao.hideComment(comment_id);
+					} else if("show".equals(action)) {
+						result = adCmtDao.showComment(comment_id);
+					} else if("delete".equals(action)) {
+						result = adCmtDao.deleteComment(comment_id);
+					}
+					if(result > 0) successCount++;
+				} catch(NumberFormatException e) {
+					System.err.println("잘못된 comment_id: " + id);
 				}
-				if(result > 0) successCount++;
 			}
 		}
 		request.setAttribute("successCount", successCount);

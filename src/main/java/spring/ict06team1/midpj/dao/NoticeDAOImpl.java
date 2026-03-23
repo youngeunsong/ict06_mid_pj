@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,8 @@ public class NoticeDAOImpl implements NoticeDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    // 공지사항 상단 고정
+    // 공지사항 =========================
+ 	// 공지사항 - 상단 고정 공지
     @Override
     public List<NoticeDTO> getTopNoticeList() {
     	System.out.println("[NoticeDAOImpl - getTopNoticeList()]");
@@ -25,40 +27,63 @@ public class NoticeDAOImpl implements NoticeDAO {
         return topNoticeList;
     }
 
-    // 공지사항 일반 목록
+    // 공지사항 - 일반 공지
     @Override
-    public List<NoticeDTO> getNoticeList() {
+    public List<NoticeDTO> getNoticeList(Map<String, Object> map) {
     	System.out.println("[NoticeDAOImpl - getNoticeList()]");
     	
     	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
-    	List<NoticeDTO> noticeList = dao.getNoticeList();
+    	List<NoticeDTO> noticeList = dao.getNoticeList(map);
     	
         return noticeList;
     }
-
-    // 이벤트 상단 고정
+    
+    // 공지사항 - 페이징
     @Override
-    public List<NoticeDTO> getTopEventList() {
+    public int getNoticeCount(Map<String, Object> map) {
+    	System.out.println("[NoticeDAOImpl - getNoticeCount()]");
+    	
+    	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
+    	int noticeCount = dao.getNoticeCount(map);
+    	
+        return noticeCount;
+    }
+
+    // 이벤트 =========================
+    // 이벤트 - 진행중인 이벤트
+    @Override
+    public List<NoticeDTO> getOngoingEventList() {
     	System.out.println("[NoticeDAOImpl - getTopEventList()]");
     	
     	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
-    	List<NoticeDTO> topEventList = dao.getTopEventList();
+    	List<NoticeDTO> ongoingEventList = dao.getOngoingEventList();
     	
-        return topEventList;
+        return ongoingEventList;
     }
 
-    // 이벤트 일반 목록
+    // 이벤트 - 종류 이벤트
     @Override
-    public List<NoticeDTO> getEventList() {
-    	System.out.println("[NoticeDAOImpl - getEventList()]");
+    public List<NoticeDTO> getEndEventList(Map<String, Object> map) {
+    	System.out.println("[NoticeDAOImpl - getEndedEventList()]");
     	
     	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
-    	List<NoticeDTO> eventList = dao.getEventList();
+    	List<NoticeDTO> endEventList = dao.getEndEventList(map);
     	
-        return eventList;
+        return endEventList;
+    }
+    
+    // 이벤트 - 페이징
+    @Override
+    public int getEndEventCount(Map<String, Object> map) {
+    	System.out.println("[NoticeDAOImpl - getEndedEventCount()]");
+    	
+    	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
+    	int endEventCount = dao.getEndEventCount(map);
+    	
+        return endEventCount;
     }
 
-    // 공지/이벤트 상세
+    // 상세(공지/ 이벤트 공통 활용)
     @Override
     public NoticeDTO getNoticeDetail(int notice_id) {
     	System.out.println("[NoticeDAOImpl - getNoticeDetail()]");

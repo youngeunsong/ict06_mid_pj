@@ -108,17 +108,10 @@
                                             <option value="A05020200" ${rDto.category == 'A05020200' ? 'selected' : ''}>양식</option>
                                             <option value="A05020300" ${rDto.category == 'A05020300' ? 'selected' : ''}>일식</option>
 											<option value="A05020400" ${rDto.category == 'A05020400' ? 'selected' : ''}>중식</option>
-<<<<<<< HEAD
-											<option value="A05020500" ${rDto.category == 'A05020200' ? 'selected' : ''}>기타</option>
-										    <option value="A05020600" ${rDto.category == 'A05020200' ? 'selected' : ''}>카페</option>                    
-								            <option value="A05020700" ${rDto.category == 'A05020200' ? 'selected' : ''}>이색음식</option>        
-							                <option value="A05020900" ${rDto.category == 'A05020200' ? 'selected' : ''}>식음료</option>           
-=======
 											<option value="A05020500" ${rDto.category == 'A05020500' ? 'selected' : ''}>기타</option>
 										    <option value="A05020600" ${rDto.category == 'A05020600' ? 'selected' : ''}>카페</option>                    
 								            <option value="A05020700" ${rDto.category == 'A05020700' ? 'selected' : ''}>이색음식</option>        
 							                <option value="A05020900" ${rDto.category == 'A05020900' ? 'selected' : ''}>식음료</option>           
->>>>>>> dev
                                         </select>
                                     </div>
 

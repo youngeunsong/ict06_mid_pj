@@ -91,10 +91,10 @@
 																<span class="badge badge-success">정상</span>
 															</c:when>
 															<c:when test="${post.status eq 'HIDDEN'}">
-																<span class="badge badge-warning">숨김</span>
+																<span class="badge badge-warning">삭제</span>
 															</c:when>
-															<c:when test="${post.status eq 'DELETED'}">
-																<span class="badge badge-danger">삭제</span>
+															<c:when test="${post.status eq 'BANNED'}">
+																<span class="badge badge-danger">숨김</span>
 															</c:when>
 														</c:choose>
 													</td>
@@ -104,11 +104,11 @@
 															<c:when test="${post.status eq 'DISPLAY'}">
 																<button type="button" class="tag tag-warning" onclick="hidePost(${post.post_id})">숨김</button>
 															</c:when>
-															<c:when test="${post.status eq 'HIDDEN'}">
+															<c:when test="${post.status eq 'BANNED'}">
 																<button type="button" class="tag tag-success" onclick="showPost(${post.post_id})">숨김해제</button>
 															</c:when>
 														</c:choose>
-														<c:if test="${post.status ne 'DELETED'}">
+														<c:if test="${post.status ne 'HIDDEN'}">
 															<button type="button" class="tag tag-danger" onclick="deletePost(${post.post_id})">삭제</button>
 														</c:if>
 														<button type="button" class="tag tag-info" onclick="location.href='${path}/communityDetail.adco?post_id=${post.post_id}'">상세보기</button>

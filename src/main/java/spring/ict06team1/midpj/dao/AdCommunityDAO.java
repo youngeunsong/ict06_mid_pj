@@ -12,13 +12,13 @@ public interface AdCommunityDAO {
 	//2. 게시글 상세보기
 	public CommunityDTO getAdPostDetail(int post_id);
 	
-	//3. 게시글 숨김(status='HIDDEN')
+	//3. 게시글 숨김/제재(status='BANNED')
 	public int hidePost(int post_id);
 	
 	//4. 게시글 숨김 해제(status='DISPLAY')
 	public int showPost(int post_id);
 	
-	//5. 게시글 삭제(status='DELETED')
+	//5. 게시글 삭제(status='HIDDEN')
 	public int deletePost(int post_id);
 	
 }

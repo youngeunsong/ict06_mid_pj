@@ -28,7 +28,7 @@ public class AdCommunityDAOImpl implements AdCommunityDAO {
 		return sqlSession.getMapper(AdCommunityDAO.class).getAdPostDetail(post_id);
 	}
 	
-	//3. 게시글 숨김(status='HIDDEN')
+	//3. 게시글 숨김/제재(status='BANNED')
 	@Override
 	public int hidePost(int post_id) {
 		System.out.println("[AdCommunityDAOImpl - hidePost()]");
@@ -42,7 +42,7 @@ public class AdCommunityDAOImpl implements AdCommunityDAO {
 		return sqlSession.getMapper(AdCommunityDAO.class).showPost(post_id);
 	}
 
-	//5. 게시글 삭제(status='DELETED')
+	//5. 게시글 삭제(status='HIDDEN'))
 	@Override
 	public int deletePost(int post_id) {
 		System.out.println("[AdCommunityDAOImpl - deletePost()]");

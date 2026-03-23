@@ -19,7 +19,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantDAO dao;
 
     @Override
-    public PlaceDTO getRestaurantDetail(int place_id) {
+    public RestaurantDTO getRestaurantDetail(int place_id) {
         dao.increaseViewCount(place_id); // 상세 페이지 진입 시 조회수를 먼저 증가
         return dao.getRestaurantDetail(place_id); // 증가된 조회수를 포함한 상세 정보 반환
     }

@@ -45,7 +45,7 @@ public class AdReservationDAOImpl implements AdReservationDAO {
 	//2-1. 예약 수정
 	@Override
 	public int modifyReservation(ReservationDTO dto) {
-		System.out.println("[AdReservationDAOImpl - getReservationDetail()]");
+		System.out.println("[AdReservationDAOImpl - modifyReservation()]");
 		
 		return sqlSession.getMapper(AdReservationDAO.class).modifyReservation(dto);
 	}

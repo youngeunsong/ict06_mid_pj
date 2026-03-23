@@ -1,14 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!-- ==============================================
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-03
+ * 최종수정일: 2026-03-10
+ 
 [공통 카드 구조]
 맛집 전용 카드
 - mode = top10     / 슬라이더
 - mode = bestMain  / BEST 추천 빅카드용
 - mode = best      / BEST 추천 우측 카드용
 - mode = search    / 검색 화면 카드용
-=============================================== -->
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="placeId" value="${rest.placeDTO.place_id}" />
 <c:choose>

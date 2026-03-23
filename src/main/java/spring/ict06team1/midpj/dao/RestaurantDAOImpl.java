@@ -22,8 +22,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
     private static final String NAMESPACE = "PlaceMapper.";
 
     @Override
-    public PlaceDTO getRestaurantDetail(int place_id) {
-        return session.selectOne(NAMESPACE + "selectPlaceDetail", place_id); // 맛집 상세 1건 조회
+    public RestaurantDTO getRestaurantDetail(int place_id) {
+        return session.selectOne(NAMESPACE + "getRestaurantDetail", place_id); // 맛집 상세 1건 조회
     }
 
     @Override

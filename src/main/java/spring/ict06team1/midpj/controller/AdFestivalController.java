@@ -108,7 +108,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 			throws Exception {
 		logger.info("[url => /festivalImportAction.adfe]");
 		String json = adFestService.bringFestivalFromAPI(request, response, model); 
-		adFestService.insertFestivalsFromApi(json);
-	    return "success";
+		adFestService.insertFestivalsFromApi(json, request, response, model);
+	    return "admin/place/festival/festivalImportAction";
 	}
 }

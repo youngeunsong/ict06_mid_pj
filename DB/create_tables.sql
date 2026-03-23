@@ -1,3 +1,7 @@
+--Ver.260320
+--변경사항
+--1) FAQ 테이블: view_count 필드 추가
+--------------------------------------------------
 --Ver.260319
 --변경사항
 --1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
@@ -14,61 +18,8 @@
 --변경사항
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
-
--- [변경사항 적용 임시 쿼리]--------------------------------------------------
--- 1) RESTAURANT 테이블: restDate, areaCode 필드 추가
-ALTER TABLE RESTAURANT ADD (
-    restDate  VARCHAR2(30),
-    areaCode  VARCHAR2(30)
-);
-
--- 2) INQUIRY 테이블: status 제약조건에 'PROGRESS' 추가
--- 기존 제약조건을 먼저 삭제 (제약조건 이름 CHK_INQUIRY_STATUS)
-ALTER TABLE INQUIRY DROP CONSTRAINT CHK_INQUIRY_STATUS;
-
--- 새로운 제약조건 추가
-ALTER TABLE INQUIRY ADD CONSTRAINT CHK_INQUIRY_STATUS 
-    CHECK (status IN ('PENDING', 'PROGRESS', 'ANSWERED'));
-
-----------------------------------------------------------------------------------------------------
-
---Ver.260318
---변경사항
---1) COMMUNITY 테이블: status 필드 CHECK 제약 조건에 'BANNED' 추가
---2) COMMUNITY_COMMENT 테이블: status 필드 CHECK 제약 조건에 'BANNED' 추가
--- DISPLAY: 노출 됨 | HIDDEN : 삭제 (db 숨김처리) | BANNED : 관리자에 의한 제제처리
-
--- [1) 변경사항] --------------------------------------------------
--- 기본 제약조건 먼저 삭제 (제약조건 이름 CHK_POST_STATUS)
-ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
-
--- 새로운 제약조건 추가
-ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS 
-    CHECK (status IN ('DISPLAY','HIDDEN', 'BANNED'));
-
--- [2) 변경사항] --------------------------------------------------
--- 기본 제약조건 먼저 삭제 (제약조건 이름 CHK_COMMENT_STATUS)
-ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
-
--- 새로운 제약조건 추가
-ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS 
-    CHECK (status IN ('DISPLAY','HIDDEN', 'BANNED'));
-
-----------------------------------------------------------------------------------------------------
-
---Ver.260320
---변경 요청사항
---1) IMAGE_STORE 테이블: TARGET_TYPE 필드 CHECK 제약 조건에 'COMMUNITY' 추가
-
--- [1) 변경 요청사항] --------------------------------------------------
-ALTER TABLE IMAGE_STORE DROP CONSTRAINT CHK_IMG_TARGETTYPE;
-
-ALTER TABLE IMAGE_STORE ADD CONSTRAINT CHK_IMG_TARGETTYPE
-CHECK (TARGET_TYPE IN ('PLACE', 'REVIEW', 'COMMUNITY'));
-
--------------------------------------------------------------------
-
-
+--------------------------------------------------
+--------------------------------------------------
 --DB 테이블 생성
 
 -- 1. 회원
@@ -105,11 +56,11 @@ CREATE TABLE PLACE (
     CONSTRAINT CHK_PLACE_PLACETYPE CHECK(place_type IN ('REST','ACC','FEST'))
 );
 
-SELECT COUNT(*) FROM PLACE
+SELECT * FROM PLACE
 WHERE place_type = 'REST'; --563건
-SELECT COUNT(*) FROM PLACE
+SELECT * FROM PLACE
 WHERE place_type = 'ACC'; --288건
-SELECT COUNT(*) FROM PLACE
+SELECT * FROM PLACE
 WHERE place_type = 'FEST'; --149건
 
 -- 3. 맛집 (PLACE 참조)
@@ -174,6 +125,7 @@ CREATE TABLE FESTIVAL_TICKET (
     stock        NUMBER DEFAULT 0,       -- 티켓별 재고 (선택사항)
     description  VARCHAR2(500)           -- 티켓 상세 설명
 );
+SELECT * FROM FESTIVAL_TICKET;
 
 -- 7. 예약 테이블
 CREATE TABLE RESERVATION (
@@ -258,6 +210,14 @@ CREATE TABLE COMMUNITY_COMMENT(
 	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY_COMMENT;
+SELECT 
+    constraint_name, 
+    search_condition 
+FROM 
+    user_constraints 
+WHERE 
+    table_name = 'COMMUNITY_COMMENT' 
+    AND constraint_name = 'CHK_COMMENT_STATUS';
 --제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
 ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
@@ -272,7 +232,7 @@ CREATE TABLE IMAGE_STORE (
     is_representative  CHAR(1) DEFAULT 'N', 
     sort_order         NUMBER DEFAULT 0,
     created_at         TIMESTAMP DEFAULT SYSTIMESTAMP,	--DTO는 imgUploadDate
-    CONSTRAINT CHK_IMG_TARGETTYPE CHECK(TARGET_TYPE IN('PLACE','REVIEW', 'COMMUNITY')),
+    CONSTRAINT CHK_IMG_TARGETTYPE CHECK(TARGET_TYPE IN('PLACE','REVIEW')),
     CONSTRAINT CHK_IMG_ISREPRESENTATIVE CHECK(IS_REPRESENTATIVE IN('Y','N'))
 );
 SELECT * FROM IMAGE_STORE;
@@ -288,7 +248,7 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
-    order_no	CHAR(1),
+    order_no	NUMBER,
     visible     CHAR(1) DEFAULT 'Y',
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
@@ -364,20 +324,6 @@ CREATE TABLE NOTICE (
 );
 SELECT * FROM NOTICE;
 
-
-
--- updated_at 추가를 위한 임시 쿼리
--- 이것만 비활성화
-ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK DISABLE;
-
-ALTER TABLE NOTICE 
-ADD updated_at TIMESTAMP DEFAULT SYSTIMESTAMP;
-
--- 작업 끝나면 바로 활성화
-ALTER TRIGGER TRG_NOTICE_ADMIN_CHECK ENABLE;
-
-
-
 -- 19. FAVORITE (즐겨찾기 / 북마크)
 CREATE TABLE FAVORITE (
     favorite_id  NUMBER PRIMARY KEY,
@@ -398,16 +344,15 @@ CREATE TABLE SEARCH_HISTORY (
 );
 SELECT * FROM SEARCH_HISTORY;
 
--- 21. COMMUNITY_LIKE(커뮤니티 좋아요 관리 테이블)
+-- 21. COMMUNITY_LIKE(커뮤니티 게시글 좋아요 관리)
 CREATE TABLE COMMUNITY_LIKE (
-    like_id      NUMBER PRIMARY KEY,
-    user_id      VARCHAR2(50) NOT NULL REFERENCES MEMBER(user_id) ON DELETE CASCADE,
-    post_id      NUMBER NOT NULL REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
-    created_at   TIMESTAMP DEFAULT SYSTIMESTAMP, -- DTO는 resDate
-    CONSTRAINT UQ_COMMUNITY_LIKE UNIQUE (user_id, post_id)
+    like_id		NUMBER PRIMARY KEY,
+    user_id		VARCHAR2(50) NOT NULL REFERENCES MEMBER(user_id) ON DELETE CASCADE,
+    post_id		NUMBER NOT NULL REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
+    created_at	TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 likeDate
+    updated_at	TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 likeUpdateDate
+    CONSTRAINT CLIKE_USER_POST UNIQUE(user_id, post_id)
 );
-
-
 
 --------------------------------------------------
 -- 시퀀스/트리거 생성
@@ -433,7 +378,8 @@ CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함
 
---2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
+--예약/결제번호 생성용 트리거 미사용 예정!
+/*--2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
 CREATE OR REPLACE TRIGGER TRG_RESERVATION_ID
 BEFORE INSERT ON RESERVATION FOR EACH ROW
 BEGIN
@@ -448,7 +394,7 @@ BEGIN
   SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_PAY.NEXTVAL, 3, '0')
   INTO :NEW.payment_id FROM DUAL;
 END;
-/
+/*/
 
 --3) 축제 status 자동계산 트리거
 CREATE OR REPLACE TRIGGER TRG_FESTIVAL_STATUS
@@ -472,22 +418,13 @@ CREATE OR REPLACE PROCEDURE PROC_CHECK_ADMIN_AUTH (
 ) IS
     v_role VARCHAR2(20);
 BEGIN
-    --0. NULL 체크
-	IF p_admin_id IS NULL THEN
-		RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 ID가 없습니다.');
-	END IF;
-
-	-- 1. 아이디 형식 체크 (admin+숫자)
+    -- 1. 아이디 형식 체크 (admin+숫자)
     IF NOT REGEXP_LIKE(p_admin_id, '^admin[0-9]+$') THEN
-        RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 ID 형식이 올바르지 않습니다.');
+        RAISE_APPLICATION_ERROR(-20001, '오류: 관리자 아이디 형식이 올바르지 않습니다. (예: admin01)');
     END IF;
 
     -- 2. 역할(role) 체크
-    SELECT ROLE
-      INTO v_role
-      FROM MEMBER
-     WHERE user_id = p_admin_id;
-    
+    SELECT role INTO v_role FROM MEMBER WHERE user_id = p_admin_id;
     IF v_role != 'ADMIN' THEN
         RAISE_APPLICATION_ERROR(-20002, '오류: 관리자 권한이 없는 사용자입니다.');
     END IF;
@@ -511,11 +448,18 @@ CREATE OR REPLACE TRIGGER TRG_NOTICE_ADMIN_CHECK
 BEFORE INSERT OR UPDATE ON NOTICE
 FOR EACH ROW
 BEGIN
-	IF INSERTING THEN
-		PROC_CHECK_ADMIN_AUTH(:NEW.ADMIN_ID);
-	ELSIF UPDATING('ADMIN_ID') THEN
-		PROC_CHECK_ADMIN_AUTH(:NEW.ADMIN_ID);
+	--1. admin_id가 NULL인 경우(세션 없는 경우)
+	IF :NEW.admin_id IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20004, '관리자 인증 정보가 없습니다. 로그인 상태를 확인해주세요.');
 	END IF;
+
+	--2. 관리자 인증 프로시저 호출
+    PROC_CHECK_ADMIN_AUTH(:NEW.admin_id);
+	
+	EXCEPTION
+		WHEN OTHERS THEN
+			--다른 오류 발생 시에도 해당 예외를 상위로 던져 INSERT/UPDATE 차단
+			RAISE;
 END;
 /
 

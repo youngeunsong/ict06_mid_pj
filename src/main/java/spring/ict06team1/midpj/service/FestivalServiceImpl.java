@@ -17,8 +17,12 @@ import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-17
+ * 최종수정일: 2026-03-19
  * 참고 코드: RestaurantServiceImpl
+ * ----------------------------------
+ * v260319
+ * 랭킹 기능 구현을 위한 메써드 추가 (getBestFestivalCount, getBestFestivalList, getBestFestivalPageList, getBestFestivalTop5)
+ * ----------------------------------
  */
 @Service
 public class FestivalServiceImpl implements FestivalService {
@@ -102,4 +106,39 @@ public class FestivalServiceImpl implements FestivalService {
             return true;
         }
 	}
+	
+	// 축제 총 갯수 조회
+	@Override
+	public int getBestFestivalCount() {
+		System.out.println("FestivalServiceImpl-getBestFestivalCount()");
+        return dao.getBestFestivalCount();
+	}
+
+	// 축제 랭킹 전체 목록 조회
+	@Override
+	public List<FestivalDTO> getBestFestivalList() {
+		System.out.println("FestivalServiceImpl-getBestFestivalList()");
+		return dao.getBestFestivalList(); 
+	}
+
+	// 축제 페이지 리스트 (6위부터)
+	@Override
+	public List<FestivalDTO> getBestFestivalPageList(int start, int end) {
+		System.out.println("FestivalServiceImpl-getBestFestivalPageList()");
+		// start ~ end 범위와 필터 조건을 함께 전달해서 기본 리스트/더보기 구간을 공통 처리
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("start", start);
+        map.put("end", end);
+        return dao.getBestFestivalPageList(map);
+	}
+
+	// 축제 top 5
+	@Override
+	public List<FestivalDTO> getBestFestivalTop5() {
+		System.out.println("FestivalServiceImpl-getBestFestivalTop5()");
+		// 상위 5개 데이터를 별도 조회해서 상단 강조 영역에 사용
+        return dao.getBestFestivalTop5();
+	}
+
+
 }

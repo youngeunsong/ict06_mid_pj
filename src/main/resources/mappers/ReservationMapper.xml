@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="spring.ict06team1.midpj.dao.ReservationDAO">
+
+	 <!-- 0. 매핑 -->
+	 <resultMap id="reservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
+	 	<id property="reservation_id" column="reservation_id"/>
+	 	<result property="user_id" column="user_id"/>
+	 	<result property="place_id" column="place_id"/>
+	 	<result property="check_in" column="check_in"/>
+	 	<result property="check_out" column="check_out"/>
+	 	<result property="visit_time" column="visit_time"/>
+	 	<result property="ticket_id" column="ticket_id"/>
+	 	<result property="guest_count" column="guest_count"/>
+	 	<result property="request_note" column="request_note"/>
+	 	<result property="status" column="status"/>
+	 	<result property="payment_id" column="payment_id"/>
+	 	<result property="resDate" column="res_created_at"/>
+	 	<result property="resUpdateDate" column="res_updated_at"/>
+	 	
+	 	<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	 		<id property="place_id" column="place_id"></id>
+	 		<result property="place_type" column="place_type"></result>
+	 		<result property="name" column="name"></result>
+	 		<result property="address" column="address"></result>
+	 		<result property="view_count" column="view_count"></result>
+	 		<result property="latitude" column="latitude"></result>
+	 		<result property="longitude" column="longitude"></result>
+	 		<result property="image_url" column="image_url"></result>
+	 		<result property="placeRegDate" column="place_created_at"></result>
+	 		<result property="placeUpdateDate" column="place_updated_at"></result>
+	 	</association>
+	 </resultMap>
+
+	<!-- 1. festival 상세 정보 -->
+	<select id="getFestivalDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalDTO">
+		SELECT festival_id, description, start_date, end_date, status
+		FROM FESTIVAL
+		WHERE festival_id = #{festival_id}
+	</select>
+	
+	<!-- 2. place 정보 -->
+	<select id="getPlaceDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+		SELECT place_id, place_type, name, address,
+			   view_count, latitude, longitude,
+			   image_url, created_at
+		FROM PLACE
+		WHERE place_id = #{place_id}
+	</select>
+	
+	<!-- 3. 티켓 리스트 조회 -->
+	<select id="getFestivalTickets" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+		SELECT ticket_id, festival_id, ticket_type,
+			   price, stock, description
+		FROM FESTIVAL_TICKET
+		WHERE festival_id = #{festival_id}
+	</select>
+	
+	<!-- 4. 티켓 가격 조회 -->
+	<select id="getTicketPrice" parameterType="int" resultType="int">
+		SELECT price
+		FROM FESTIVAL_TICKET
+		WHERE ticket_id = #{ticket_id}
+	</select>	
+
+	<!-- 5. 예약 처리 -->
+	<insert id="insertReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
+		<selectKey keyProperty="reservation_id" resultType="String" order="BEFORE">
+			SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 5, '0')
+			FROM DUAL
+		</selectKey>
+		
+		INSERT INTO RESERVATION (
+			reservation_id, user_id, place_id,
+			check_in, ticket_id, guest_count, request_note,
+			status
+		) VALUES (
+			#{reservation_id}, #{user_id}, #{place_id},
+			#{check_in}, #{ticket_id}, #{guest_count},
+			#{request_note}, 'PENDING'
+		)
+	</insert>
+
+	<!-- 6. 결제 처리 -->
+	<insert id="insertPayment" parameterType="map">
+		<selectKey keyProperty="payment_id" resultType="String" order="BEFORE">
+			SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 3, '0')
+			FROM DUAL
+		</selectKey>
+		INSERT INTO PAYMENT (
+			payment_id, user_id, reservation_id,
+			amount, payment_method, payment_status
+		) VALUES (
+			#{payment_id}, #{user_id}, #{reservation_id},
+			#{amount}, #{payment_method, jdbcType=VARCHAR}, 'PENDING'
+		)
+	</insert>
+	
+	<!-- 4. 예약+장소 조회(마이페이지용) -->
+	<select id="getReservationList" parameterType="String" resultMap="reservationMap">
+		SELECT
+			r.reservation_id, r.user_id, r.place_id,
+			r.check_in, r.check_out, r.visit_time,
+			r.ticket_id, r.guest_count, r.request_note,
+			r.status,
+			r.created_at AS res_created_at,
+			r.updated_at AS res_updated_at,
+			
+			p.place_type, p.name, p.address,
+			p.view_count, p.latitude, p.longitude,
+			p.image_url,
+			p.created_at AS place_created_at,
+			p.updated_at AS place_updated_at
+		  FROM RESERVATION r
+		  JOIN PLACE p ON r.place_id = p.place_id
+		 WHERE r.user_id = #{user_id}
+		 ORDER BY r.created_at DESC
+	</select>
+ </mapper> 

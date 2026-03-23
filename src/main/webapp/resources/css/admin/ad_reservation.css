@@ -20,8 +20,6 @@
 	color: rgba(0,0,0,0.9) !important;
 }
 
-/* ========== 기본 ========== */
-/* ── 기본 body/배경 ── */
 body {
 	background-color: var(--main-bg) !important;
 	color: var(--text-main);
@@ -102,7 +100,6 @@ body {
 	align-items: flex-start; /* 상단 정렬 */
 	gap: 20px;
 	padding: 15px;
-	background: #fff;
 	border: 1px solid #eee;
 	border-radius: 10px;
 }
@@ -218,27 +215,33 @@ body {
 
 /* ========== 태그 ========== */
 .tag {
-	font-size: 0.75rem;
-	padding: 3px 10px;
-	border-radius: 4px;
-	cursor: pointer;
-	border: 1.5px solid;
 	background: #fff;
-	user-select: none;
+	border: 1px solid #ddd;
+	cursor: pointer;
+	font-size: 0.8rem;
 	transition: background 0.13s, color 0.13s;
+	padding: 4px 10px;
+	border-radius: 15px;
 	white-space: nowrap;
+	user-select: none;
 	line-height: 1.4;
+}
+
+.tag.active {
+	background-color: var(--point);
+	color: #fff;
+	border-color: var(--point);
 }
 
 /* 비활성 — 외곽선 + 글자 */
 .tag-success {
-	border-color: #28a745;
-	color: #28a745;
+	border-color: #01D281;
+	color: #01D281;
 }
 
 .tag-warning {
-	border-color: #e0a800;
-	color: #856404;
+	border-color: #e6c84f;
+	color: #b59b00;
 }
 
 .tag-danger {
@@ -258,14 +261,14 @@ body {
 
 /* 활성 — 꽉 채운 색 */
 .tag-success.active {
-	background: #28a745;
+	background: #01D281;
 	color: #fff;
-	border-color: #28a745;
+	border-color: #01D281;
 }
 
 .tag-warning.active {
-	background: #ffc107;
-	color: #212529;
+	background: #FEFBDA;
+	color: #333;
 	border-color: #ffc107;
 }
 
@@ -305,14 +308,47 @@ body {
 
 /* ── 수정 버튼 ── */
 .btn-edit {
-	background-color: #01D281;
+	background-color: var(--point);
+	border-color: var(--point);
 	color: #fff;
 }
 
 .btn-edit:hover {
 	background-color: #00b86b;
-	border-color: #d4ce9a;
+	border-color: #00b86b;
 	color: #fff;
+}
+
+.btn-outline-edit {
+	color: var(--point);
+	border: 1px solid var(--point);
+	background-color: #fff;
+}
+
+.btn-outline-edit:hover {
+	background-color: var(--point);
+	color: #fff;
+}
+
+.list-group-item:hover {
+	background-color: #FEFBDA;
+}
+
+/* ========== FullCalendar ========== */
+/* ── 배경색 ── */
+.fc {
+	background-color: var(--main-bg);
+}
+
+.fc-daygrid-more-link {
+	color: #01D281;
+	font-weight: 600;
+}
+
+/* ── 날짜 셀 hover ── */
+.fc-daygrid-day:hover {
+	background-color: #FEFBDA;
+	transition: 0.2s;
 }
 
 /* ========== 페이징 ========== */
@@ -327,6 +363,7 @@ body {
 .modal-header-success {
 	background-color: var(--point);	
 	color: #fff;
+	border-bottom: none;
 }
 
 .modal-header-success .close {
@@ -341,7 +378,7 @@ body {
 
 /* ── 모달 헤더 버튼 (BS4 대응) ── */
 .modal-header-success .close {
-	background-color: #01D281;
+	background-color: var(--point);
 }
 
 .modal-header-success .close:hover {
@@ -349,6 +386,10 @@ body {
 }
 
 /* ── 모달 body ── */
+.modal-body {
+	background-color: var(--main-bg);
+}
+
 .modal-body table th {
 	background-color: var(--main-bg);
 	border-bottom: 2px solid var(--point);
@@ -475,7 +516,7 @@ body.dark-mode .table-hover tbody tr:hover {
 }
 
 body.dark-mode .table-hover tbody td a:hover {
-	color: #01D281 !important;
+	color: var(--point) !important;
 }
 
 /* filter-box */

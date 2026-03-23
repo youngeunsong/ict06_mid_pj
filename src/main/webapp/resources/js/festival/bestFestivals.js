@@ -1,12 +1,12 @@
 /*
  * @author 송영은
  * 최초작성일: 2026-03-20
- * 최종수정일: 2026-03-22
+ * 최종수정일: 2026-03-23
  * 참고 코드: bestRestaurants.js
 */
 
 // [랭킹 페이지 초기 설정]
-// 맛집 랭킹 페이지 진입 시 탭, 필터, 더보기 기능을 한 번에 연결하기 위해 사용
+// 맛집 랭킹 페이지 진입 시 더보기 기능 구현
 document.addEventListener("DOMContentLoaded", function () {
     const rankingContent = document.getElementById("rankingContent");
 
@@ -24,6 +24,18 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
+    }
+
+    // 날짜 데이터 포맷 처리 함수 : '월.일' 포맷으로 변환 
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+
+        const d = new Date(dateStr);
+
+        const month = d.getMonth() + 1;
+        const day = String(d.getDate()).padStart(2, '0');
+
+        return `${month}.${day}`;
     }
 
     // [더보기 카드 HTML 생성]
@@ -44,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const start_date = escapeHtml(place.start_date || "");
             const end_date = escapeHtml(place.end_date || "");
+
             const description = escapeHtml(place.description || "");
             const status = escapeHtml(place.status || "");
 
@@ -81,7 +94,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <span><i class="fa-regular fa-comment"></i> ${reviewCount}</span>
                                 </div>
 
-                                ${start_date ||  end_date ? `<div class="big-rest-card__phone"><i class="bi bi-calendar-event"></i><fmt:formatDate value="${place.start_date}" pattern="M.dd"/>~<fmt:formatDate value="${place.end_date}" pattern="M.dd"/></div>` : ""} <!-- start_date 혹은 end_date 있는 경우에만 표시 -->
+                                ${start_date || end_date ? `
+                                <div class="big-rest-card__phone">
+                                    <i class="bi bi-calendar-event"></i>
+                                    ${formatDate(start_date)} ~ ${formatDate(end_date)}
+                                </div>` : ""} <!-- start_date 혹은 end_date 있는 경우에만 표시 -->
+
                                 ${status ? `<div class="big-rest-card__status">${status}</div>` : ""} <!-- 상태값이 있을 때만 표시 -->
                             </div>
                         </a>

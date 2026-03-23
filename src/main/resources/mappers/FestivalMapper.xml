@@ -34,6 +34,13 @@
 	</resultMap>
   
   <!-- 축제 상세 정보 조회 -->
+  <!-- 0단계: place_id로 festival_id 조회 -->
+  <select id="getFestivalIdByPlaceId" parameterType="int" resultType="int">
+  	SELECT festival_id
+  	FROM FESTIVAL
+  	WHERE place_id = #{place_id}
+  </select>
+  
   <!-- 1단계: Place, Review 함께 조회 -->
   <select id="selectPlaceDetail"
         parameterType="int"
@@ -76,7 +83,7 @@
 				start_date,
 				end_date,
 				status
-		FROM 	FESTIVAL 
+		FROM 	FESTIVAL
 		WHERE festival_id = #{festival_id}
 	</select>
 	
@@ -90,7 +97,7 @@
 			    stock,
 			    description
 		  FROM  FESTIVAL_TICKET
-		 WHERE  festival_id = #{festival_id}
+		WHERE festival_id = #{festival_id}
   </select>
   
   <!-- 조회수 증가 -->

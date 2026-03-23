@@ -107,35 +107,38 @@ VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 
 SELECT * FROM MEMBER;
 
 --=====축제 티켓 샘플 데이터=====
-INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
-VALUES (SEQ_TICKET.NEXTVAL, 
-       (SELECT MIN(festival_id) FROM FESTIVAL), 
-       '1일권', 15000, 100, '강릉 커피축제 일반 입장권');
+-- 1. 3번 축제 (3/7 ~ 3/16) 티켓
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (1, 3, '성인 1일권', 15000, 100, '만 19세 이상 성인 전용');
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (2, 3, '청소년 1일권', 10000, 50, '만 13세 ~ 18세 청소년');
 
--- 1) 첫 번째 축제(가장 작은 ID)에 '청소년권' 추가
-INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
-VALUES (SEQ_TICKET.NEXTVAL, 
-       (SELECT MIN(festival_id) FROM FESTIVAL), 
-       '청소년권', 10000, 50, '강릉 커피축제 청소년(중고생) 입장권');
+-- 2. 11번 축제 (5/22 ~ 5/30) 티켓
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (3, 11, '얼리버드 전일권', 30000, 30, '축제 전 기간 이용 가능 (한정수량)');
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (4, 11, '일반 평일권', 12000, 200, '월~목요일 중 1일 선택 이용');
 
--- 2) 두 번째로 생성된 축제에 '종일권' 추가
-INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
-VALUES (SEQ_TICKET.NEXTVAL, 
-       (SELECT festival_id FROM (SELECT festival_id, ROW_NUMBER() OVER (ORDER BY festival_id) as rn FROM FESTIVAL) WHERE rn = 2), 
-       '종일권', 25000, 200, '서울 불꽃축제 유료석 종일권');
+-- 3. 22번 축제 (4/13 ~ 4/17) 티켓
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (5, 22, 'VIP 패키지', 50000, 10, '우선 입장 및 기프트 세트 포함');
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (6, 22, '일반권', 20000, 150, '기본 입장권');
 
--- 3) 세 번째로 생성된 축제에 '얼리버드권' 추가 (재고 적게 설정)
-INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
-VALUES (SEQ_TICKET.NEXTVAL, 
-       (SELECT festival_id FROM (SELECT festival_id, ROW_NUMBER() OVER (ORDER BY festival_id) as rn FROM FESTIVAL) WHERE rn = 3), 
-       '얼리버드', 12000, 10, '한정 수량 선착순 할인 티켓');
+-- 4. 36번 축제 (3/25 ~ 4/1) 티켓
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (7, 36, '야간 개장권', 8000, 100, '18시 이후 입장 가능');
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (8, 36, '가족 패키지(3인)', 40000, 20, '성인 2인 + 소인 1인 구성');
 
--- 4) 가장 최근에 생성된 축제에 'VIP권' 추가
-INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description)
-VALUES (SEQ_TICKET.NEXTVAL, 
-       (SELECT MAX(festival_id) FROM FESTIVAL), 
-       'VIP권', 50000, 20, '전용 라운지 이용 포함 VIP 티켓');
+-- 5. 53번 축제 (8/8 ~ 8/10) 티켓
+INSERT INTO FESTIVAL_TICKET (ticket_id, festival_id, ticket_type, price, stock, description) 
+VALUES (9, 53, '1일 통합권', 25000, 300, '체험 시설 포함 통합권');
 
+COMMIT;
+
+-- 데이터 확인
+SELECT * FROM FESTIVAL_TICKET;
 COMMIT;
 
 SELECT * FROM FESTIVAL_TICKET;

@@ -202,7 +202,8 @@ function showMoreEventsModal(jsEvent, dateStr) {
 				t.classList.remove('active');			
 			});
 			tab.classList.add('active');
-			renderEventList(tab.dataset.status, allEvents);
+			window._moreEvents = allEvents;
+			renderEventList(tab.dataset.status, allEvents, 1);
 		};
 	});
 	
@@ -211,51 +212,87 @@ function showMoreEventsModal(jsEvent, dateStr) {
 		t.classList.remove('active');
 	});
 	document.querySelector('#moreEventTabs .nav-link[data-status="ALL"]').classList.add('active');
-	renderEventList('ALL', allEvents);
+	
+	window._moreEvents = allEvents;
+	renderEventList('ALL', allEvents, 1);
 	
 	$('#moreEventsModal').modal('show');
-	
-	}
-	
-	function renderEventList(status, allEvents) {
-		const listEl = document.getElementById('moreEventList');
-		listEl.innerHTML = '';
-		
-		const statusLabelMap = {
-			'RESERVED': '확정', 'PENDING': '결제대기',
-			'CANCELLED': '취소', 'COMPLETED': '이용완료'
-		};
-		
-		 const filtered = status === 'ALL' ? allEvents : allEvents.filter(function(ev) {
-		 	return ev.extendedProps.status === status;
-		 });
-		 
-		 if(filtered.length === 0) {
-		 	listEl.innerHTML = '<li class="list-group-item text-center text-muted">해당 상태의 예약이 없습니다.</li>';
-		 	return;
-		 }
-		 
-		 filtered.forEach(function(ev) {
-		 	const li = document.createElement('li');
-		 	li.className = 'list-group-item d-flex justify-content-between align-items-center';
-		 	li.style.cursor = 'pointer';
-		 	const evStatus = ev.extendedProps.status || '';
-		 	li.innerHTML = `
-		 		<span>
-		 			<span style="display:inline-block; width:10px; height:10px; border-radius:50%;
-		 			background:${ev.backgroundColor}; margin-right:6px;"></span>
-		 			${ev.title}
-		 		</span>
-		 		<span class="badge badge-secondary">상세보기</span>
-		 	`;
-		 	
-		 	li.onclick = function() {
-		 		$('#moreEventsModal').modal('hide');
-		 		viewDetail(ev.id);
-		 	};
-		 	listEl.appendChild(li);
-	});
 }
+	
+function renderEventList(status, allEvents, page) {
+	page = page || 1;
+	const pageSize = 10;
+	const listEl = document.getElementById('moreEventList');
+	listEl.innerHTML = '';
+	
+	const statusLabelMap = {
+		'RESERVED': '확정', 'PENDING': '결제대기',
+		'CANCELLED': '취소', 'COMPLETED': '이용완료'
+	};
+	
+	 const filtered = status === 'ALL' ? allEvents : allEvents.filter(function(ev) {
+	 	return ev.extendedProps.status === status;
+	 });
+	 
+	 if(filtered.length === 0) {
+	 	listEl.innerHTML = '<li class="list-group-item text-center text-muted">해당 상태의 예약이 없습니다.</li>';
+	 	return;
+	 }
+	 
+	 //페이징 계산
+	 const totalPages = Math.ceil(filtered.length / pageSize);
+	 const start = (page - 1) * pageSize;
+	 const paged = filtered.slice(start, start + pageSize);
+	 
+	 //리스트 생성
+	 paged.forEach(function(ev) {
+	 	const li = document.createElement('li');
+	 	li.className = 'list-group-item d-flex justify-content-between align-items-center';
+	 	li.style.cursor = 'pointer';
+	 	li.innerHTML = `
+	 		<span>
+	 			<span style="display:inline-block; width:10px; height:10px; border-radius:50%;
+	 			background:${ev.backgroundColor}; margin-right:6px;"></span>
+	 			${ev.title}
+	 		</span>
+	 		<span class="badge badge-secondary">상세보기</span>
+	 	`;
+	 	
+	 	li.onclick = function() {
+	 		$('#moreEventsModal').modal('hide');
+	 		viewDetail(ev.id);
+	 	};
+	 	listEl.appendChild(li);
+	});
+	
+	if(totalPages > 1) {
+		const pagingEl = document.createElement('div');
+		pagingEl.className = 'd-flex justify-content-center align-items-center mt-2';
+		let pagingHtml = '';
+		
+		//이전 버튼
+		pagingHtml += `<button class="btn btn-sm btn-outline-secondary mr-1"
+					${page === 1 ? 'disabled' : ''}
+					onclick="renderEventList('${status}', window._moreEvents, ${page - 1})">&lt;</button>`;
+					
+		//페이지 번호(현재 페이지 기준 앞뒤 2개씩 최대 5개)
+		const startPage = Math.max(1, page - 2);
+		const endPage = Math.min(totalPages, startPage + 4);
+		
+		for(let i = startPage; i <= endPage; i++) {
+			pagingHtml += `<button class="btn btn-sm ${i === page ? 'btn-dark' : 'btn-outline-secondary'} mr-1"
+					onclick="renderEventList('${status}', window._moreEvents, ${i})">${i}</button>`;
+		}
+			
+		//다음 버튼
+		pagingHtml += `<button class="btn btn-sm btn-outline-secondary mr-1"
+					${page === totalPages ? 'disabled' : ''}
+					onclick="renderEventList('${status}', window._moreEvents, ${page + 1})">&gt;</button>`;
+		pagingEl.innerHTML = pagingHtml;
+		listEl.appendChild(pagingEl);
+	}
+}
+
 //==============================
 //태그 토글
 function toggleTag(el) {

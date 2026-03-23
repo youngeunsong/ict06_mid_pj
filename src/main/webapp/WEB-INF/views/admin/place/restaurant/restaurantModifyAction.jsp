@@ -38,8 +38,6 @@
         }, 1000);
     </script>
 </c:if>
-=======
-</c:if>
 
 <c:if test="${updateCnt != 1}">
     <script type="text/javascript">
@@ -50,7 +48,7 @@
         }, 1000);
     </script>
 </c:if>
->>>>>>> dev
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">

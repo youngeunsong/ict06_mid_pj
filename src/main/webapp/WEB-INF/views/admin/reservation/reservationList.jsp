@@ -204,7 +204,7 @@
 			<div class="modal-content">
 				<div class="modal-header modal-header-success text-white">
 					<h5 class="modal-title"><i class="bi bi-calendar-date mr-2"></i>예약 목록</h5>
-					<button type="button" class="close text-white" data-dismiss="modal">
+					<button type="button" class="close text-white" onclick="$('#moreEventsModal').modal('hide')">
 						<span>&times;</span>
 					</button>
 				</div>
@@ -247,7 +247,7 @@
 					<ul class="list-group" id="moreEventList" style="max-height:400px; overflow-y:auto;"></ul>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#moreEventsModal').modal('hide')">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -261,7 +261,7 @@
 					<h5 class="modal-title">
 						<i class="bi bi-info-circle mr-2"></i>예약 상세 정보
 					</h5>
-					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close text-white" onclick="$('#resDetailModal').modal('hide')">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -297,7 +297,7 @@
 					<button type="button" class="btn btn-edit" onclick="$('#resDetailModal').modal('hide'); editReservation($('#modal_res_id').text());">
 						수정하기
 					</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#resDetailModal').modal('hide')">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -311,7 +311,7 @@
 					<h5 class="modal-title font-weight-bold">
 						<i class="bi bi-pencil-square mr-2"></i>예약 정보 수정
 					</h5>
-					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close text-white" onclick="$('#resUpdateModal').modal('hide')">
 						<span>&times;</span>
 					</button>
 				</div>
@@ -377,7 +377,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-edit" onclick="updateReservation()">변경사항 저장</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#resUpdateModal').modal('hide')">취소</button>
 				</div>
 			</div>
 		</div>

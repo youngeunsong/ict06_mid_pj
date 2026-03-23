@@ -39,7 +39,7 @@ CREATE TABLE MEMBER (
     updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO에서는 updateDate
     CONSTRAINT CHK_MEMBER_GENDER CHECK(gender IN ('M', 'F'))
 );
-SELECT * FROM MEMBER ORDER BY password;
+SELECT * FROM MEMBER;
 
 -- 2. 장소 통합
 CREATE TABLE PLACE (
@@ -125,6 +125,7 @@ CREATE TABLE FESTIVAL_TICKET (
     stock        NUMBER DEFAULT 0,       -- 티켓별 재고 (선택사항)
     description  VARCHAR2(500)           -- 티켓 상세 설명
 );
+SELECT * FROM FESTIVAL_TICKET;
 
 -- 7. 예약 테이블
 CREATE TABLE RESERVATION (
@@ -377,7 +378,8 @@ CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함
 
---2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
+--예약/결제번호 생성용 트리거 미사용 예정!
+/*--2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
 CREATE OR REPLACE TRIGGER TRG_RESERVATION_ID
 BEFORE INSERT ON RESERVATION FOR EACH ROW
 BEGIN
@@ -392,7 +394,7 @@ BEGIN
   SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_PAY.NEXTVAL, 3, '0')
   INTO :NEW.payment_id FROM DUAL;
 END;
-/
+/*/
 
 --3) 축제 status 자동계산 트리거
 CREATE OR REPLACE TRIGGER TRG_FESTIVAL_STATUS

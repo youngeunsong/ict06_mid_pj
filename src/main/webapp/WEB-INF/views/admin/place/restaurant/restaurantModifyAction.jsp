@@ -38,9 +38,7 @@
         }, 1000);
     </script>
 </c:if>
-=======
-</c:if>
-
+ 	
 <c:if test="${updateCnt != 1}">
     <script type="text/javascript">
         setTimeout(function(){

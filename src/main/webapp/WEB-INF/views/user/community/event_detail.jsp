@@ -7,7 +7,7 @@
  
  * 적용 외부 API : Kakao 공유 API
  (PC : 정상 작동/ 모바일 : URL 올바르게 들어가나 페이지 못 불러옴 <= 정상)
-  ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가
+  ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가 	
   
 -->
 
@@ -106,15 +106,15 @@
                     <div class="event-meta">
                         <div class="meta-author">
                             <div class="admin-avatar">AD</div>
-                            <div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="author-name">${noticeDTO.admin_id}</span>
-                                    <span class="author-role event-role">관리자</span>
-                                </div>
-                                <div class="author-date">
-                                    <fmt:formatDate value="${noticeDTO.noticeRegDate}" pattern="yyyy.MM.dd HH:mm"/>
-                                </div>
-                            </div>
+							  <div>
+							    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+							        <span class="author-name">${noticeDTO.admin_id}</span>
+							        <span class="author-role event-role">관리자</span>
+							        <span class="author-date">
+							            <fmt:formatDate value="${noticeDTO.noticeRegDate}" pattern="yyyy.MM.dd HH:mm"/>
+							        </span>
+							    </div>
+							</div>
                         </div>
 
                         <div class="meta-stats">
@@ -127,17 +127,23 @@
                     ${noticeDTO.content}
                 </div>
 
-                <div class="event-footer">
-                    <a href="${path}/community_event.co" class="btn-list">
-                        <i class="bi bi-list"></i> 목록
-                    </a>
-                    
-                    <button type="button" id="kakaoShareBtn" class="btn btn-warning btn-sm">
-				        카카오톡 공유
-				    </button>
-                </div>
+				<!-- 하단 액션 버튼 영역 -->
+                <div class="detail-action-wrap">
+				    <div class="detail-action-bar">
+				        <a href="${path}/community_event.co" class="pill-btn list-pill-btn">
+				            <i class="bi bi-list"></i>
+				            <span>목록</span>
+				        </a>
+				
+				        <button type="button" id="kakaoShareBtn" class="pill-btn kakao-pill-btn">
+				            <span class="kakao-dot">💬</span>
+				            <span>카카오톡 공유</span>
+				        </button>
+				    </div>
+				</div>
+				<br>
+				
             </div>
-
         </div>
     </div>
 

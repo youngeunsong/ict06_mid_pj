@@ -1,3 +1,17 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-15
+ * 최종수정일: 2026-03-20
+ 
+ [공지사항] => 공지는 “읽어야 할 정보”
+ 상단 고정 공지 : 별도 조회
+ CATEGORY='NOTICE' AND IS_TOP='Y'
+	
+ 일반 공지 : 검색 + 페이징
+ CATEGORY='NOTICE' AND IS_TOP='N'
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
@@ -8,19 +22,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>커뮤니티 - 공지사항</title>
 
-<!-- =====================================
-	[공지사항] => 공지는 “읽어야 할 정보”
-	상단 고정 공지 : 별도 조회
-	CATEGORY='NOTICE' AND IS_TOP='Y'
-	
-	일반 공지 : 검색 + 페이징
-	CATEGORY='NOTICE' AND IS_TOP='N'
-
-===================================== -->
-
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/notice.css">
+
 </head>
 <body>
 <div class="wrap">

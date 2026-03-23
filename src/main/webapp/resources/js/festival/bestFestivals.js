@@ -45,16 +45,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const start_date = escapeHtml(place.start_date || "");
             const end_date = escapeHtml(place.end_date || "");
             const description = escapeHtml(place.description || "");
-            // const phone = escapeHtml(place.phone || "");
             const status = escapeHtml(place.status || "");
 
             const rank = startRank + index; // 시작 순위에서 index만큼 증가시켜 이어지는 순위 계산
 
             html += `
                 <div class="col-6 col-md-4 col-lg-3 ranking-added-item">
-                    <div class="place-card-wrap position-relative big-fest-card-wrap">
+                    <div class="place-card-wrap position-relative big-rest-card-wrap">
                         <a href="${path}/festivalDetail.fe?place_id=${placeId}"
-                           class="place-card big-fest-card text-decoration-none text-dark d-block">
+                           class="place-card big-rest-card text-decoration-none text-dark d-block">
 
                             <div class="place-card__thumb-wrap position-relative">
                                 <img src="${imageUrl}"
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     ${address}
                                 </div>
 
-                                ${description ? `<div class="big-fest-card__desc">${description}</div>` : ""} <!-- 설명이 있을 때만 표시 -->
+                                ${description ? `<div class="big-rest-card__desc">${description}</div>` : ""} <!-- 설명이 있을 때만 표시 -->
 
                                 <div class="place-card__meta">
                                     <span><i class="fa-regular fa-eye"></i> ${viewCount}</span>
@@ -82,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <span><i class="fa-regular fa-comment"></i> ${reviewCount}</span>
                                 </div>
 
-                                ${start_date ||  end_date ? `<div class="big-fest-card__phone"><i class="bi bi-calendar-event"></i><fmt:formatDate value="${place.start_date}" pattern="M.dd"/>~<fmt:formatDate value="${place.end_date}" pattern="M.dd"/></div>` : ""} <!-- start_date 혹은 end_date 있는 경우에만 표시 -->
-                                ${status ? `<div class="big-fest-card__status">${status}</div>` : ""} <!-- 상태값이 있을 때만 표시 -->
+                                ${start_date ||  end_date ? `<div class="big-rest-card__phone"><i class="bi bi-calendar-event"></i><fmt:formatDate value="${place.start_date}" pattern="M.dd"/>~<fmt:formatDate value="${place.end_date}" pattern="M.dd"/></div>` : ""} <!-- start_date 혹은 end_date 있는 경우에만 표시 -->
+                                ${status ? `<div class="big-rest-card__status">${status}</div>` : ""} <!-- 상태값이 있을 때만 표시 -->
                             </div>
                         </a>
                     </div>

@@ -3,6 +3,7 @@
  * 최초작성일: 2026-03-20
  * 최종수정일: 2026-03-22
  * 참고 코드: bestRestaurantsContent.jsp
+ 실질적으로 축제 랭킹 페이지 표현
 -->
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

@@ -3,7 +3,7 @@
  * 최초작성일: 2026-03-19
  * 최종수정일: 2026-03-22
  * 참고 코드: bestRestaurants.jsp
- 현재 종료되지 않은 축제를 평점 순으로 조회 
+ 현재 종료되지 않은 축제를 평점 순으로 조회. 현재 틀만 제공.  
 -->
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -15,7 +15,9 @@
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>맛집 랭킹</title>
+<title>축제 랭킹</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
 <%-- [랭킹 페이지 전용 스타일]
        TOP5 / 더보기 / 카드 크기 및 반응형 UI를 한 파일에서 제어하기 위해 사용

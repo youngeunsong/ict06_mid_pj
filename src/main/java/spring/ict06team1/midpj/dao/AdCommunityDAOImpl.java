@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,16 @@ public class AdCommunityDAOImpl implements AdCommunityDAO {
 
 	//1. 전체 게시글 목록(숨김 포함)
 	@Override
-	public List<CommunityDTO> getAdPostList() {
+	public List<CommunityDTO> getAdPostList(Map<String, Object> map) {
 		System.out.println("[AdCommunityDAOImpl - getAdPostList()]");
-		return sqlSession.getMapper(AdCommunityDAO.class).getAdPostList();
+		return sqlSession.getMapper(AdCommunityDAO.class).getAdPostList(map);
+	}
+	
+	//1-1. 전체 게시글 수
+	@Override
+	public int getAdPostCount(Map<String, Object> map) {
+		System.out.println("[AdCommunityDAOImpl - getAdPostCount()]");
+		return sqlSession.getMapper(AdCommunityDAO.class).getAdPostCount(map);
 	}
 
 	//2. 게시글 상세보기

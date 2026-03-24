@@ -25,12 +25,20 @@ body {
 	color: var(--text-main);
 }
 
+.content-wrapper {
+	min-height: unset !important;
+	height: auto !important;
+	overflow: visible !important;
+}
+
 .container-fluid {
 	max-width: 1400px;
 }
 
 /* ── main footer ── */
 .main-footer {
+	position: relative !important;
+	z-index: !important;
 	text-align: center;
 }
 
@@ -88,6 +96,32 @@ body {
 
 .table-hover tbody tr:hover {
 	background-color: #fcfcfc !important;
+}
+
+/* ========== 대시보드 ========== */
+/* 1:1문의 미처리 박스 */
+.inquiry-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+
+.inquiry-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.inquiry-title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+.inquiry-meta {
+	white-space: nowrap;
+	font-size: 0.8rem;
 }
 
 /* ========== 필터 ========== */

@@ -11,6 +11,7 @@ public class FaqDTO {
 	private String category;
 	private int order_no;
 	private String visible;
+	private int view_count;
 	private Timestamp faqRegDate;
 	private Timestamp faqUpdateDate;
 	
@@ -19,7 +20,7 @@ public class FaqDTO {
 	}
 
 	public FaqDTO(int faq_id, String admin_id, String question, String answer, String category, int order_no,
-			String visible, Timestamp faqRegDate, Timestamp faqUpdateDate) {
+			String visible, int view_count, Timestamp faqRegDate, Timestamp faqUpdateDate) {
 		super();
 		this.faq_id = faq_id;
 		this.admin_id = admin_id;
@@ -28,6 +29,7 @@ public class FaqDTO {
 		this.category = category;
 		this.order_no = order_no;
 		this.visible = visible;
+		this.view_count = view_count;
 		this.faqRegDate = faqRegDate;
 		this.faqUpdateDate = faqUpdateDate;
 	}
@@ -88,6 +90,14 @@ public class FaqDTO {
 		this.visible = visible;
 	}
 
+	public int getView_count() {
+		return view_count;
+	}
+
+	public void setView_count(int view_count) {
+		this.view_count = view_count;
+	}
+
 	public Timestamp getFaqRegDate() {
 		return faqRegDate;
 	}
@@ -107,8 +117,8 @@ public class FaqDTO {
 	@Override
 	public String toString() {
 		return "FaqDTO [faq_id=" + faq_id + ", admin_id=" + admin_id + ", question=" + question + ", answer=" + answer
-				+ ", category=" + category + ", order_no=" + order_no + ", visible=" + visible + ", faqRegDate="
-				+ faqRegDate + ", faqUpdateDate=" + faqUpdateDate + "]";
+				+ ", category=" + category + ", order_no=" + order_no + ", visible=" + visible + ", view_count="
+				+ view_count + ", faqRegDate=" + faqRegDate + ", faqUpdateDate=" + faqUpdateDate + "]";
 	}
 
 }

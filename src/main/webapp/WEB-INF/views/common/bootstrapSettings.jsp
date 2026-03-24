@@ -13,7 +13,6 @@
 - 개별 JSP에서 동일한 라이브러리를 중복 선언하지 않는다.
 - 라이브러리 추가/버전 변경 시 이 파일만 수정한다.
 ========================================================= -->
-
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 

@@ -18,9 +18,9 @@
       
       <button type="button" class="btn_area" onclick="location.href='${path}/accommodationMap.ac'">
 	        지도 보기
-	  </button>	
+	  </button>
 	  
-	  <button type="button" class="btn_area" onclick="location.href='${path}/accReservation.rv'">
+	  <button type="button" class="btn_area" onclick="location.href='${path}/accReservation.rv?place_id=${accommodation.placeDTO.place_id}'">
 	        예약하기
 	  </button>	
       

@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
-<!-- ${path} 정의 -->
 
 <!DOCTYPE html>
 <html>
@@ -9,88 +8,173 @@
 <meta charset="UTF-8">
 <title>예약상세</title>
 
-<!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
-<script src="https://kit.fontawesome.com/648e5e962b.js"
-	crossorigin="anonymous"></script>
-
-<style>
-.delete_info {
-	background-color: #f8f8f8;
-	padding: 20px;
-	border-radius: 8px;
-	text-align: left;
-	margin-bottom: 25px;
-	font-size: 14px;
-	color: #666;
-	line-height: 1.6;
-}
-
-.delete_info strong {
-	color: #f91a32;
-}
-
-.btn_delete {
-	width: 100%;
-	padding: 15px;
-	background-color: #999; /* 처음엔 무채색 */
-	color: white;
-	border: none;
-	border-radius: 4px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: 0.3s;
-}
-
-.btn_delete:hover {
-	background-color: #f91a32;
-} /* 하버 시 빨간색 */
-</style>
-
+<link rel="stylesheet"
+	href="${path}/resources/css/user/mypage/reservationDetail.css">
 </head>
 <body>
 	<div class="wrap">
 		<%@ include file="../../common/header.jsp"%>
 
-		<!-- 컨텐츠 시작 -->
-		<div align="center">
-			<img src="${path}/resources/images/user/mypage/reservationDetail.png"
-				width="100%" alt="main">
-		</div>
+		<div class="reservation_detail_wrap">
+			<div class="reservation_detail_inner">
 
-		<!-- 관련 SQL -->
-		SQL 쿼리 : 모든 예약 목록 조회
-		<pre>
-			<code>
-	   	  SELECT
-		        r.reservation_id,
-		        r.user_id,
-		        r.place_id,
-		        
-		        p.name AS place_name,
-		        p.place_type,
-	        
-	        CASE
-	            WHEN p.place_type = 'FEST' THEN '축제'
-	            WHEN p.place_type = 'ACC'  THEN '숙소'
-	            WHEN p.place_type = 'REST' THEN '음식점'
-	        END AS place_type_name,
-	        
-		        r.check_in,
-		        r.check_out,
-		        r.visit_time,
-		        r.ticket_type,
-		        r.guest_count,
-		        r.status,
-		        r.created_at
-		        
-		    FROM RESERVATION r
-		    JOIN PLACE p
-		        ON r.place_id = p.place_id
-		    WHERE r.reservation_id = #${'{'}reservation_id}
-			</code>
-		</pre>
+				<div class="page-header">
+				    <h2><i class="bi bi-calendar-check"></i> 예약 상세</h2>
+				</div>
+
+				<div class="reservation_card">
+
+					<div class="reservation_image_area">
+						<c:choose>
+							<c:when test="${not empty dto.placeDTO.image_url}">
+								<img src="${dto.placeDTO.image_url}" alt="장소 이미지"
+									class="reservation_image">
+							</c:when>
+							<c:otherwise>
+								<div class="no_image">이미지 준비중</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+
+					<div class="reservation_content_area">
+
+						<div class="place_summary">
+								<c:choose>
+									<c:when test="${dto.placeDTO.place_type eq 'REST'}">
+										<div class="place_type_badge badge_rest">맛집</div>
+									</c:when>
+									<c:when test="${dto.placeDTO.place_type eq 'ACC'}">
+										<div class="place_type_badge badge_acc">숙소</div>
+									</c:when>
+									<c:when test="${dto.placeDTO.place_type eq 'FEST'}">
+										<div class="place_type_badge badge_fest">축제</div>
+									</c:when>
+									<c:otherwise>
+										<div class="place_type_badge">장소</div>
+									</c:otherwise>
+								</c:choose>
+
+							<h3 class="place_name">${dto.placeDTO.name}</h3>
+							<p class="place_address">${dto.placeDTO.address}</p>
+						</div>
+
+						<div class="detail_section">
+							<h4 class="section_title">예약 정보</h4>
+
+							<div class="detail_row">
+								<div class="detail_label">예약번호</div>
+								<div class="detail_value">${dto.reservation_id}</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">예약일</div>
+								<div class="detail_value">
+									<fmt:formatDate value="${dto.resDate}" pattern="yyyy-MM-dd" />
+								</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">이용일정</div>
+								<div class="detail_value">
+									<fmt:formatDate value="${dto.check_in}" pattern="yyyy-MM-dd" />
+									<c:if test="${not empty dto.check_out}">
+										&nbsp;~&nbsp;
+										<fmt:formatDate value="${dto.check_out}" pattern="yyyy-MM-dd" />
+									</c:if>
+								</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">방문시간</div>
+								<div class="detail_value">
+									<c:choose>
+										<c:when test="${not empty dto.visit_time}">
+											${dto.visit_time}
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">인원</div>
+								<div class="detail_value">${dto.guest_count}명</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">요청사항</div>
+								<div class="detail_value request_note">
+									<c:choose>
+										<c:when test="${not empty dto.request_note}">
+											${dto.request_note}
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+
+							<div class="detail_row">
+								<div class="detail_label">예약상태</div>
+								<div class="detail_value">
+									<span
+										class="status_badge
+										<c:if test='${dto.status eq "PENDING"}'> pending</c:if>
+										<c:if test='${dto.status eq "RESERVED"}'> reserved</c:if>
+										<c:if test='${dto.status eq "COMPLETED"}'> completed</c:if>
+										<c:if test='${dto.status eq "CANCELLED"}'> cancelled</c:if>
+										<c:if test='${dto.status eq "NOSHOW"}'> noshow</c:if>
+									">
+										<c:choose>
+											<c:when test="${dto.status eq 'PENDING'}">예약대기</c:when>
+											<c:when test="${dto.status eq 'RESERVED'}">예약확정</c:when>
+											<c:when test="${dto.status eq 'COMPLETED'}">이용완료</c:when>
+											<c:when test="${dto.status eq 'CANCELLED'}">예약취소</c:when>
+											<c:when test="${dto.status eq 'NOSHOW'}">미방문</c:when>
+											<c:otherwise>${dto.status}</c:otherwise>
+										</c:choose>
+									</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="delete_info">
+							예약 취소 시 시점에 따라 <strong>취소 수수료</strong>가 발생할 수 있습니다.<br> 상세
+							정책은 해당 장소의 운영 기준에 따라 달라질 수 있습니다.
+						</div>
+
+						<div class="button_area">
+							<button type="button" class="btn_line"
+								onclick="location.href='${path}/viewReservations.do'">목록으로</button>
+
+							<c:choose>
+								<c:when test="${dto.status eq 'COMPLETED'}">
+									<button type="button" class="btn_point"
+										onclick="location.href='${path}/surveyReview.rv?reservation_id=${dto.reservation_id}'">
+										리뷰쓰기</button>
+								</c:when>
+
+								<c:when test="${dto.status eq 'CANCELLED'}">
+									<button type="button" class="btn_disabled" disabled>취소된
+										예약</button>
+								</c:when>
+
+								<c:when test="${dto.status eq 'NOSHOW'}">
+									<button type="button" class="btn_disabled" disabled>미방문</button>
+								</c:when>
+
+								<c:otherwise>
+									<button type="button" class="btn_delete">예약취소</button>
+								</c:otherwise>
+							</c:choose>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
 
 		<%@ include file="../../common/footer.jsp"%>
 	</div>

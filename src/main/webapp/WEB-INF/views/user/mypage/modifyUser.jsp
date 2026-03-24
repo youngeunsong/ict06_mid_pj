@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- 공통 경로(${path}) 및 설정값 포함 --%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
@@ -17,36 +16,7 @@
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <%-- 기존 로그인 디자인과 통일감을 주기 위해 로드 --%>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
-
-<%-- 아이콘 사용을 위한 폰트어썸 키트 --%>
-<script src="https://kit.fontawesome.com/648e5e962b.js"
-	crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="${path}/resources/css/common/header.css">
-<link rel="stylesheet" href="${path}/resources/css/common/footer.css">
-
-<style>
-/* .auth-container: 인증 박스의 최대 너비를 제한하고 테두리 설정 */
-.auth-container {
-	max-width: 450px;
-	border: 1px solid #eee;
-}
-/* .input-group-text: 입력창 옆 아이콘이 들어가는 배경색 설정 */
-.input-group-text {
-	background-color: #f9f9f9;
-	border-right: none;
-}
-/* .form-control:focus: 입력창 클릭 시 테두리 색상을 포인트 컬러(#0CB574)로 변경 */
-.form-control:focus {
-	border-color: #0CB574;
-	box-shadow: none;
-}
-/* .btn-dark:hover: 버튼에 마우스 올리면 초록색 포인트컬러(#0CB574)으로 강조 */
-.btn-dark:hover {
-	background-color: #0CB574 !important;
-	border-color: #0CB574 !important;
-}
-</style>
+<link rel="stylesheet" href="${path}/resources/css/user/mypage/modifyUser.css">
 </head>
 <body class="bg-light">
 	<%-- bg-light: 전체적으로 아주 연한 회색 배경 적용 --%>
@@ -80,7 +50,7 @@
 						<%-- 아이디 표시 영역: 읽기 전용(readonly), 배경은 밝은 회색(bg-light) --%>
 						<div class="input-group mb-3">
 							<span class="input-group-text text-secondary"> <i
-								class="fa-regular fa-user"></i>
+								class="bi bi-person"></i>
 							</span> <input type="text" class="form-control bg-light"
 								value="${sessionScope.sessionID}" readonly>
 						</div>
@@ -88,7 +58,7 @@
 						<%-- 비밀번호 입력 영역: input-group으로 아이콘과 입력창 결합 --%>
 						<div class="input-group mb-4">
 							<span class="input-group-text text-secondary"> <i
-								class="fa-solid fa-lock"></i>
+								class="bi bi-lock"></i>
 							</span> <input type="password" name="password" id="password"
 								class="form-control" placeholder="비밀번호 입력" required autofocus>
 							<%-- required: 필수입력, autofocus: 페이지 로드 시 자동 포커스 --%>
@@ -97,7 +67,7 @@
 						<%-- 에러 메시지 표시 영역 추가 --%>
 						<c:if test="${not empty errMsg}">
 							<div class="text-danger small text-start mb-3" id="pwError">
-								<i class="fa-solid fa-circle-exclamation"></i> ${errMsg}
+								<i class="bi bi-exclamation-circle"></i> ${errMsg}
 							</div>
 						</c:if>
 

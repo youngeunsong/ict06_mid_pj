@@ -1,0 +1,387 @@
+@charset "UTF-8";
+
+.my-reservation-section {
+	max-width: 1200px;
+	margin: 50px auto;
+	padding: 0 20px;
+	min-height: 600px;
+}
+
+.page-header {
+	margin-bottom: 35px;
+	border-bottom: 3px solid #0CB574;
+	padding-bottom: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.page-header h2 {
+	font-size: 28px;
+	font-weight: 800;
+	color: #222;
+	margin: 0;
+}
+
+.page-header h2 i {
+	color: #0CB574;
+	margin-right: 12px;
+}
+
+/* 상태 필터 */
+.filter-tabs {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 25px;
+	flex-wrap: wrap;
+}
+
+.filter-tab {
+	padding: 8px 22px;
+	border-radius: 30px;
+	border: 1px solid #ddd;
+	background-color: #fff;
+	font-size: 14px;
+	color: #666;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.filter-tab:hover {
+	border-color: #0CB574;
+	color: #0CB574;
+}
+
+.filter-tab.active {
+	background-color: #0CB574;
+	color: #fff;
+	border-color: #0CB574;
+	font-weight: 600;
+	box-shadow: 0 4px 10px rgba(12, 181, 116, 0.2);
+}
+
+.reservation-list {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.reservation-card {
+	background: #fff;
+	border: 1px solid #e8ecef;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+	transition: all 0.25s ease;
+	cursor: pointer;
+}
+
+.reservation-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+}
+
+.reservation-card-inner {
+	display: flex;
+	gap: 22px;
+	padding: 22px;
+	align-items: stretch;
+}
+
+.reservation-thumb {
+	width: 260px;
+	min-width: 260px;
+	height: 180px;
+	border-radius: 18px;
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	overflow: hidden;
+	background-color: #f3f5f7;
+}
+
+.reservation-thumb.no-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #eef2f3, #dfe8ea);
+	color: #9aa4aa;
+	font-size: 42px;
+}
+
+.type-chip {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	padding: 6px 13px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	box-shadow: 0 3px 8px rgba(0,0,0,0.16);
+}
+
+.badge-rest {
+	background-color: #ff7a59;
+}
+
+.badge-acc {
+	background-color: #4b7bec;
+}
+
+.badge-fest {
+	background-color: #a55eea;
+}
+
+.badge-etc {
+	background-color: #7f8c8d;
+}
+
+.reservation-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.reservation-top {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.place-name {
+	font-size: 24px;
+	font-weight: 800;
+	color: #1f2937;
+	margin: 0 0 8px;
+	line-height: 1.3;
+}
+
+.place-address {
+	margin: 0;
+	font-size: 14px;
+	color: #6b7280;
+	line-height: 1.5;
+}
+
+.place-address i {
+	margin-right: 6px;
+	color: #0CB574;
+}
+
+.badge-status {
+	display: inline-block;
+	padding: 7px 14px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+/* 예약 대기 - 주황 */
+.badge-pending {
+	background-color: #fff4e5;
+	color: #ff8a00;
+}
+
+/* 예약 확정 - 파랑 */
+.badge-reserved {
+	background-color: #edf5ff;
+	color: #2b6cb0;
+}
+
+/* 이용 완료 - 초록 */
+.badge-completed {
+	background-color: #edf9f1;
+	color: #2f855a;
+}
+
+/* 예약 취소 - 빨강 */
+.badge-cancelled {
+	background-color: #fff1f1;
+	color: #e53e3e;
+}
+
+/* 미방문 - 회색 */
+.badge-noshow {
+	background-color: #f5f5f5;
+	color: #888;
+}
+
+.reservation-meta {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px 20px;
+	margin-bottom: 14px;
+}
+
+.meta-line {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 24px;
+}
+
+.meta-label {
+	font-size: 14px;
+	font-weight: 700;
+	color: #374151;
+	min-width: 95px;
+}
+
+.meta-value {
+	font-size: 14px;
+	color: #4b5563;
+	line-height: 1.5;
+	word-break: break-word;
+}
+
+.request-inline {
+	margin-top: 8px;
+	padding: 12px 14px;
+	border-radius: 12px;
+	background-color: #f8fafb;
+	border: 1px solid #eef1f4;
+	font-size: 14px;
+	color: #4b5563;
+	line-height: 1.6;
+}
+
+.payment-text {
+	margin-top: 14px;
+	font-size: 13px;
+	color: #7b8794;
+	text-align: right;
+}
+
+.no-data {
+	text-align: center;
+	padding: 120px 20px;
+	background-color: #f0fbf7;
+	border-radius: 15px;
+	border: 1px dashed #0CB574;
+}
+
+.no-data i {
+	font-size: 60px;
+	color: #0CB574;
+	margin-bottom: 25px;
+	opacity: 0.7;
+}
+
+.no-data p {
+	font-size: 18px;
+	color: #555;
+	margin-bottom: 25px;
+	line-height: 1.7;
+}
+
+.btn-sig {
+	background-color: #0CB574;
+	color: white !important;
+	padding: 12px 40px;
+	border-radius: 5px;
+	font-weight: 600;
+	font-size: 16px;
+	transition: 0.3s;
+	border: none;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.btn-sig:hover {
+	background-color: #098a58;
+	transform: translateY(-3px);
+	box-shadow: 0 5px 15px rgba(12, 181, 116, 0.3);
+}
+
+/* 페이징 */
+.paging-wrap {
+	margin-top: 40px;
+	display: flex;
+	justify-content: center;
+}
+
+.pagination {
+	display: flex;
+	gap: 8px;
+	padding-left: 0;
+	list-style: none;
+	margin: 0;
+}
+
+.page-item {
+	list-style: none;
+}
+
+.page-link {
+	display: inline-block;
+	min-width: 40px;
+	padding: 9px 14px;
+	text-align: center;
+	text-decoration: none;
+	border: 1px solid #dcdcdc;
+	border-radius: 10px;
+	background-color: #fff;
+	color: #444;
+	font-size: 14px;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+.page-link:hover {
+	background-color: #f3fbf8;
+	border-color: #0CB574;
+	color: #0CB574;
+}
+
+.page-item.active .page-link {
+	background-color: #0CB574;
+	color: #fff;
+	border-color: #0CB574;
+	box-shadow: 0 4px 10px rgba(12, 181, 116, 0.2);
+}
+
+@media screen and (max-width: 992px) {
+	.reservation-card-inner {
+		flex-direction: column;
+	}
+
+	.reservation-thumb {
+		width: 100%;
+		min-width: 100%;
+		height: 220px;
+	}
+
+	.reservation-meta {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.page-header h2 {
+		font-size: 24px;
+	}
+
+	.filter-tab {
+		padding: 8px 16px;
+		font-size: 13px;
+	}
+
+	.place-name {
+		font-size: 20px;
+	}
+
+	.reservation-card-inner {
+		padding: 16px;
+	}
+
+	.reservation-thumb {
+		height: 180px;
+	}
+}

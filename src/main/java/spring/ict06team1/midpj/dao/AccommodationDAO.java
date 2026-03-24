@@ -29,15 +29,37 @@ public interface AccommodationDAO {
 
     // 즐겨찾기 삭제
     int deleteFavorite(Map<String, Object> map);
-}
 
+    // 숙소 총 갯수
+ 	int getAccommodationCount();
+     
+ 	// 숙소 페이지 리스트
+ 	List<AccommodationDTO> getAccommodationPageList(Map<String, Object> map);
+ 	
+ 	// [숙소 랭킹 관련 메서드] ----------------------------------------------------------
+ 	// 숙소 랭킹 목록 조회
+     List<AccommodationDTO> getBestAccommodationList();
+     
+     // 별점 평균
+     double getAvgRating(int place_id);
+     
+     // 숙소 총 갯수
+     int getBestAccommodationCount(Map<String, Object> map);
+     
+     // 숙소 페이지 리스트
+     List<AccommodationDTO> getBestAccommodationPageList(Map<String, Object> map);
+     
+     // 숙소 랭킹 top5
+     List<AccommodationDTO> getBestAccommodationTop5(Map<String, Object> map);
+ }
 /*
- * @author 김다솜
+ * @author 김다솜, 송영은 , 송창범
  * 최초작성일: 2026-03-24
  * 최종수정일: 2026-03-24
- * 참고 코드: FestivalDAO
- * ----------------------------------
+ * 참고 코드: RestaurantsDAO, FestivalDAO
+ * 변경사항: 
  * v260324
+<<<<<<< HEAD
  * ----------------------------------
  */
 

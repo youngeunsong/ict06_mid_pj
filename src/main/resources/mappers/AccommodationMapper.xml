@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="AccommodationMapper">
 
     <!-- 숙소 상세 -->
@@ -154,5 +155,253 @@
         WHERE user_id = #{userId}
           AND place_id = #{placeId}
     </delete>
+	
+	<!-- [숙소 랭킹용 resultMap]
+       PLACE + ACCOMMODATION 조인 결과를 AccommodationDTO 안의 placeDTO 구조에 맞게 매핑하기 위해 사용
+       프론트에서 acc.placeDTO.xxx 형태로 접근할 수 있도록 구조를 통일
+  -->
+  <resultMap id="accommodationRankResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
+    <id property="accommodation_id" column="accommodation_id" />
+    <result property="description" column="description" />
+    <result property="phone" column="phone" />
+    <result property="category" column="category" />
+    <result property="status" column="status" />
+    <result property="price" column="price" />
+    <result property="areaCode" column="areacode" />
+
+    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+      <id property="place_id" column="place_id" />
+      <result property="place_type" column="place_type" />
+      <result property="name" column="name" />
+      <result property="address" column="address" />
+      <result property="view_count" column="view_count" />
+      <result property="latitude" column="latitude" />
+      <result property="longitude" column="longitude" />
+      <result property="image_url" column="image_url" />
+      <result property="placeRegDate" column="placeRegDate" />
+      <result property="review_count" column="review_count" />
+      <result property="avg_rating" column="avg_rating" />
+    </association>
+  </resultMap>
+  
+    <!-- [숙소 랭킹 목록 조회]
+       TOP5 아래 기본 리스트와 더보기 AJAX에서 공통으로 사용하는 랭킹 조회 쿼리
+       지역 조건에 따라 목록을 유동적으로 필터링하기 위해 사용
+ 	-->
+	<select id="getBestAccommodationPageList"
+          parameterType="map"
+          resultMap="accommodationRankResultMap">
+	    SELECT *
+	    FROM (
+	        SELECT
+	          p.place_id,
+	          p.place_type,
+	          p.name,
+	          p.address,
+	          NVL(p.view_count, 0) AS view_count,
+	          p.latitude,
+	          p.longitude,
+	          p.image_url,
+	          p.created_at AS placeRegDate,
+	
+	          acc.accommodation_id,
+	          DBMS_LOB.SUBSTR(acc.description, 4000, 1) AS description, -- CLOB 컬럼을 JSP에서 사용 가능한 길이로 잘라서 조회
+	          acc.phone,
+	          acc.category,
+	          acc.status,
+	          acc.price,
+	          acc.areacode,
+	
+	          COUNT(r.review_id) AS review_count,
+	          NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+	
+	          ROW_NUMBER() OVER (
+	            ORDER BY
+	              CASE
+	                WHEN p.created_at >= SYSTIMESTAMP -
+	                     CASE
+	                       WHEN (
+	                         SELECT COUNT(*)
+	                         FROM place p2
+	                         JOIN accommodation acc2
+	                           ON p2.place_id = acc2.accommodation_id
+	                         WHERE p2.place_type = 'ACC'
+	                           AND acc2.status = 'OPEN'
+	                           <if test="region != null and region != '' and region != 'all'">
+	                             AND p2.address LIKE '%' || #{region} || '%'
+	                           </if>
+	                           AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+	                       ) &lt; 10
+	                       THEN INTERVAL '60' DAY
+	                       ELSE INTERVAL '30' DAY
+	                     END
+	                THEN 0
+	                ELSE 1
+	              END ASC, -- 최근 등록된 맛집 수가 적으면 60일, 충분하면 30일 기준으로 최신 맛집을 우선 노출
+	              NVL(p.view_count, 0) DESC, -- 최신 조건이 같으면 조회수 높은 순
+	              p.place_id DESC -- 마지막 동점 정렬 기준
+	          ) AS rn
+	
+	        FROM place p
+	        JOIN accommodation acc
+	          ON p.place_id = acc.accommodation_id
+	        LEFT JOIN review r
+	          ON p.place_id = r.place_id
+	         AND r.status = 'DISPLAY'
+	        WHERE p.place_type = 'ACC'
+	          AND acc.status = 'OPEN' -- 영업 중인 맛집만 랭킹 대상
+	        <if test="region != null and region != '' and region != 'all'">
+	          AND p.address LIKE '%' || #{region} || '%'
+	        </if>
+	        GROUP BY
+	          p.place_id,
+	          p.place_type,
+	          p.name,
+	          p.address,
+	          p.view_count,
+	          p.latitude,
+	          p.longitude,
+	          p.image_url,
+	          p.created_at,
+	          acc.accommodation_id,
+	          DBMS_LOB.SUBSTR(acc.description, 4000, 1),
+	          acc.phone,
+	          acc.category,
+	          acc.status,
+	          acc.price,
+	          acc.areacode
+	    )
+	    WHERE rn &gt; #{start}
+	      AND rn &lt;= #{end} -- start 초과 ~ end 이하 구간만 조회
+  	</select>
+	  
+   	<!-- [평균 별점 조회]
+      	특정 숙소의 평균 평점을 별도로 조회할 때 사용
+	-->
+	<select id="getAvgRating"
+          parameterType="int"
+          resultType="double">
+	    SELECT NVL(ROUND(AVG(r.rating), 1), 0)
+	    FROM review r
+	    WHERE r.place_id = #{value}
+	      AND r.status = 'DISPLAY'
+  	</select>  
+  	
+  	<!-- [전체 숙소 수 조회]
+       현재 지역 조건에 맞는 전체 개수를 구해서 더보기 가능 여부를 판단할 때 사용
+  	-->
+  	<select id="getBestAccommodationCount"
+          parameterType="map"
+          resultType="int">
+	    SELECT COUNT(*)
+	    FROM place p
+	    JOIN accommodation acc
+	      ON p.place_id = acc.accommodation_id
+	    WHERE p.place_type = 'ACC'
+	      AND acc.status = 'OPEN'
+	    <if test="region != null and region != '' and region != 'all'">
+	      AND p.address LIKE '%' || #{region} || '%'
+	    </if>
+  	</select>   
+  	
+  	<!-- [숙소 랭킹 TOP5 조회]
+       랭킹 페이지 상단 TOP5 강조 영역에 사용할 데이터를 조회하기 위해 사용
+       정렬 기준은 목록 조회와 동일하게 유지해서 TOP5와 나머지 리스트 흐름이 이어지도록 구성
+  	-->
+  	<!-- TODO: 이 아래부터 수정 -->
+  	<select id="getBestAccommodationTop5"
+          parameterType="map"
+          resultMap="accommodationRankResultMap">
+    SELECT *
+    FROM (
+        SELECT
+          p.place_id,
+          p.place_type,
+          p.name,
+          p.address,
+          NVL(p.view_count, 0) AS view_count,
+          p.latitude,
+          p.longitude,
+          p.image_url,
+          p.created_at AS placeRegDate,
+
+          acc.accommodation_id,
+          DBMS_LOB.SUBSTR(acc.description, 4000, 1) AS description,
+          acc.phone,
+          acc.category,
+          acc.status,
+          acc.price,
+          acc.areacode,
+
+          COUNT(r.review_id) AS review_count,
+          NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+
+          ROW_NUMBER() OVER (
+            ORDER BY
+              CASE
+                WHEN p.created_at >= SYSTIMESTAMP -
+                     CASE
+                       WHEN (
+                         SELECT COUNT(*)
+                         FROM place p2
+                         JOIN accommodation acc2
+                           ON p2.place_id = acc2.accommodation_id
+                         WHERE p2.place_type = 'ACC'
+                           AND acc2.status = 'OPEN'
+                           <if test="region != null and region != '' and region != 'all'">
+                             AND p2.address LIKE '%' || #{region} || '%'
+                           </if>
+                           AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+                       ) &lt; 10
+                       THEN INTERVAL '60' DAY
+                       ELSE INTERVAL '30' DAY
+                     END
+                THEN 0
+                ELSE 1
+              END ASC,
+              NVL(p.view_count, 0) DESC,
+              p.place_id DESC
+          ) AS rn
+
+        FROM place p
+        JOIN accommodation acc
+          ON p.place_id = acc.accommodation_id
+        LEFT JOIN review r
+          ON p.place_id = r.place_id
+         AND r.status = 'DISPLAY'
+        WHERE p.place_type = 'ACC'
+          AND acc.status = 'OPEN'
+        <if test="region != null and region != '' and region != 'all'">
+          AND p.address LIKE '%' || #{region} || '%'
+        </if>
+        GROUP BY
+          p.place_id,
+          p.place_type,
+          p.name,
+          p.address,
+          p.view_count,
+          p.latitude,
+          p.longitude,
+          p.image_url,
+          p.created_at,
+          acc.accommodation_id,
+          DBMS_LOB.SUBSTR(acc.description, 4000, 1),
+          acc.phone,
+          acc.category,
+          acc.status,
+          acc.price,
+          acc.areacode
+    )
+    WHERE rn &lt;= 5
+  </select>  
+
+	<!-- 
+	 * @author 송영은
+	 * 최초작성일: 2026-03-24
+	 * 최종수정일: 2026-03-24
+	 * 참고 코드: PlaceMapper.xml
+	 * 변경사항: 
+	 * v260324: 숙소 랭킹 관련 메서드 구현
+	 -->
 
 </mapper>

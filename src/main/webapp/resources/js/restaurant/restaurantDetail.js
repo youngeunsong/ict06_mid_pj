@@ -209,9 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const dateSlider = document.getElementById("reserveDateSlider");
   const timeSlotsWrap = document.getElementById("reserveTimeSlots");
   const selectedReserveDateInput = document.getElementById("selectedReserveDate");
-  const selectedVisitTimeInput = document.getElementById("selectedVisitTime");
 
-  if (dateSlider && timeSlotsWrap && selectedReserveDateInput && selectedVisitTimeInput) {
+  if (dateSlider && timeSlotsWrap && selectedReserveDateInput) {
     const DAYS_TO_SHOW = 7;
 
     // 예시 시간 슬롯
@@ -262,47 +261,49 @@ document.addEventListener("DOMContentLoaded", function () {
           + '<div class="r-dateBottom">' + item.labelBottom + '</div>';
 
         btn.addEventListener("click", function () {
-			  if (activeDate === item.value) {
-			    activeDate = "";
-			    selectedReserveDateInput.value = "";
-			    selectedVisitTimeInput.value = "";
-			
-			    renderDateButtons();
-			    renderTimeSlots("");
-			    return;
-			  }
-			
-			  activeDate = item.value;
-			  selectedReserveDateInput.value = item.value;
-			  selectedVisitTimeInput.value = "";
-			
-			  renderDateButtons();
-			  renderTimeSlots(item.value);
-			});
-			
-			dateSlider.appendChild(btn);
-	      });
+          if (activeDate === item.value) {
+            activeDate = "";
+            selectedReserveDateInput.value = "";
+            renderDateButtons();
+            renderTimeSlots("");
+            return;
+          }
+
+          activeDate = item.value;
+          selectedReserveDateInput.value = item.value;
+
+          renderDateButtons();
+          renderTimeSlots(item.value);
+        });
+
+        dateSlider.appendChild(btn);
+      });
 
       selectedReserveDateInput.value = activeDate;
     }
 
     function renderTimeSlots(dateValue) {
-	  timeSlotsWrap.innerHTML = "";
-	
-	  if (!dateValue) {
-	    return;
-	  }
+      timeSlotsWrap.innerHTML = "";
+
+      if (!dateValue) {
+        return;
+      }
 
       // 임시 예시 비활성화 규칙
-      // 날짜 인덱스와 슬롯 인덱스를 조합해서 일부 슬롯을 회색 처리
+      // 나중에는 서버 예약 데이터 기준으로 회색 처리하면 됨
       const dateIndex = reserveDates.findIndex(function (d) {
         return d.value === dateValue;
       });
 
       baseSlots.forEach(function (slot, idx) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "r-timeSlot";
+        const slotBox = document.createElement("div");
+        const badge = document.createElement("span");
+        const timeText = document.createElement("span");
+
+        timeText.className = "r-timeText";
+        timeText.textContent = slot.start + " ~ " + slot.end;
+
+        badge.className = "r-slotBadge";
 
         const isDisabled =
           (dateIndex === 0 && idx === 1) ||
@@ -311,31 +312,18 @@ document.addEventListener("DOMContentLoaded", function () {
           (dateIndex === 6 && idx === 4);
 
         if (isDisabled) {
-          btn.classList.add("is-disabled");
-          btn.disabled = true;
+          slotBox.className = "r-timeSlot is-disabled";
+          badge.className += " is-disabled";
+          badge.textContent = "예약 마감";
+        } else {
+          slotBox.className = "r-timeSlot is-available";
+          badge.className += " is-available";
+          badge.textContent = "예약 가능";
         }
 
-        btn.textContent = slot.start + " ~ " + slot.end;
-
-        btn.addEventListener("click", function () {
-		  if (btn.disabled) return;
-		
-		  const alreadySelected = btn.classList.contains("is-selected");
-		
-		  timeSlotsWrap.querySelectorAll(".r-timeSlot").forEach(function (el) {
-		    el.classList.remove("is-selected");
-		  });
-		
-		  if (alreadySelected) {
-		    selectedVisitTimeInput.value = "";
-		    return;
-		  }
-		
-		  btn.classList.add("is-selected");
-		  selectedVisitTimeInput.value = slot.start;
-		});
-
-        timeSlotsWrap.appendChild(btn);
+        slotBox.appendChild(timeText);
+        slotBox.appendChild(badge);
+        timeSlotsWrap.appendChild(slotBox);
       });
     }
   }

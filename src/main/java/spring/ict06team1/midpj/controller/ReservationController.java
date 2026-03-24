@@ -102,7 +102,6 @@ public class ReservationController {
 	public String surveyReview(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => surveyReview.rv>>>");
-
 		return "user/reservation/surveyReview";
 	}
 

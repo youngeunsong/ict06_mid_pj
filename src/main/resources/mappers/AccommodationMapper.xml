@@ -2,16 +2,160 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AccommodationMapper">
-	<!-- 
-	 * @author 송영은
-	 * 최초작성일: 2026-03-24
-	 * 최종수정일: 2026-03-24
-	 * 참고 코드: PlaceMapper.xml
-	 * 변경사항: 
-	 * v260324: 숙소 랭킹 관련 메서드 구현
-	 -->
 
+
+<mapper namespace="AccommodationMapper">
+
+    <!-- 숙소 상세 -->
+    <resultMap id="accommodationResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
+        <id property="accommodation_id" column="accommodation_id"/>
+        <result property="description" column="description"/>
+        <result property="phone" column="phone"/>
+        <result property="price" column="price"/>
+        <result property="status" column="status"/>
+        <result property="areaCode" column="areacode"/>
+
+        <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+            <id property="place_id" column="place_id"/>
+            <result property="place_type" column="place_type"/>
+            <result property="name" column="name"/>
+            <result property="address" column="address"/>
+            <result property="view_count" column="view_count"/>
+            <result property="latitude" column="latitude"/>
+            <result property="longitude" column="longitude"/>
+            <result property="image_url" column="image_url"/>
+            <result property="placeRegDate" column="created_at"/>
+            <result property="review_count" column="review_count"/>
+            <result property="avg_rating" column="avg_rating"/>
+        </association>
+    </resultMap>
+
+    <!-- 리뷰 -->
+    <resultMap id="reviewMap" type="spring.ict06team1.midpj.dto.ReviewDTO">
+        <id property="review_id" column="review_id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="place_id" column="place_id"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="reviewDate" column="reviewDate"/>
+    </resultMap>
+
+    <!-- 숙소 상세 조회 -->
+    <select id="getAccommodationDetail" parameterType="int" resultMap="accommodationResultMap">
+    SELECT
+        p.place_id,
+        p.place_type,
+        p.name,
+        p.address,
+        NVL(p.view_count, 0) AS view_count,
+        p.latitude,
+        p.longitude,
+        p.image_url,
+        p.created_at AS placeRegDate,
+        COUNT(r.review_id) AS review_count,
+        NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+        a.accommodation_id,
+        DBMS_LOB.SUBSTR(a.description, 4000, 1) AS description,
+        a.phone,
+        a.price,
+        a.status,
+        a.areacode
+    FROM place p
+    JOIN accommodation a
+      ON p.place_id = a.accommodation_id
+    LEFT JOIN review r
+      ON p.place_id = r.place_id
+     AND r.status = 'DISPLAY'
+    WHERE p.place_id = #{value}
+      AND p.place_type = 'ACC'
+    GROUP BY
+        p.place_id,
+        p.place_type,
+        p.name,
+        p.address,
+        p.view_count,
+        p.latitude,
+        p.longitude,
+        p.image_url,
+        p.created_at,
+        a.accommodation_id,
+        DBMS_LOB.SUBSTR(a.description, 4000, 1),
+        a.phone,
+        a.price,
+        a.status,
+        a.areacode
+</select>
+
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount" parameterType="int">
+        UPDATE place
+        SET view_count = NVL(view_count, 0) + 1
+        WHERE place_id = #{value}
+    </update>
+
+    <!-- 리뷰 페이징 -->
+    <select id="selectReviewsPaged" parameterType="map" resultMap="reviewMap">
+        <![CDATA[
+        SELECT *
+        FROM (
+            SELECT
+                r.review_id,
+                r.user_id,
+                r.place_id,
+                r.rating,
+                r.content,
+                r.status,
+                r.created_at AS reviewDate,
+                ROW_NUMBER() OVER (ORDER BY r.created_at DESC) AS rn
+            FROM review r
+            WHERE r.place_id = #{placeId}
+              AND r.status = 'DISPLAY'
+        )
+        WHERE rn > #{offset}
+          AND rn <= (#{offset} + #{limit})
+        ]]>
+    </select>
+
+    <!-- 리뷰 개수 -->
+    <select id="getReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM review
+        WHERE place_id = #{value}
+          AND status = 'DISPLAY'
+    </select>
+
+    <!-- 즐겨찾기 여부 -->
+    <select id="isFavorite" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM favorite
+        WHERE user_id = #{userId}
+          AND place_id = #{placeId}
+    </select>
+
+    <!-- 즐겨찾기 추가 -->
+    <insert id="insertFavorite" parameterType="map">
+        INSERT INTO favorite (
+            favorite_id,
+            user_id,
+            place_id,
+            created_at
+        )
+        VALUES (
+            SEQ_FAVORITE.NEXTVAL,
+            #{userId},
+            #{placeId},
+            SYSTIMESTAMP
+        )
+    </insert>
+
+    <!-- 즐겨찾기 삭제 -->
+    <delete id="deleteFavorite" parameterType="map">
+        DELETE FROM favorite
+        WHERE user_id = #{userId}
+          AND place_id = #{placeId}
+    </delete>
+	
 	<!-- [숙소 랭킹용 resultMap]
        PLACE + ACCOMMODATION 조인 결과를 AccommodationDTO 안의 placeDTO 구조에 맞게 매핑하기 위해 사용
        프론트에서 acc.placeDTO.xxx 형태로 접근할 수 있도록 구조를 통일
@@ -249,5 +393,15 @@
           acc.areacode
     )
     WHERE rn &lt;= 5
-  </select>    
+  </select>  
+
+	<!-- 
+	 * @author 송영은
+	 * 최초작성일: 2026-03-24
+	 * 최종수정일: 2026-03-24
+	 * 참고 코드: PlaceMapper.xml
+	 * 변경사항: 
+	 * v260324: 숙소 랭킹 관련 메서드 구현
+	 -->
+
 </mapper>

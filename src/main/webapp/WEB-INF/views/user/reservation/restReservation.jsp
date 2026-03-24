@@ -1,8 +1,8 @@
 <!-- 
  * @author 김다솜
- * 최초작성일: 2026-03-22
- * 최종수정일: 2026-03-23
- * 참고 코드: festivalDetail.jsp
+ * 최초작성일: 2026-03-24
+ * 최종수정일: 2026-03-24
+ * 참고 코드: festReservation.jsp
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -16,7 +16,7 @@
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>축제 예약 정보 입력</title>
+<title>맛집 예약 정보 입력</title>
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -250,7 +250,6 @@
 </style>
 </head>
 
-
 <body>
 	<%@ include file="../../common/header.jsp"%>
 
@@ -260,48 +259,32 @@
 
 				<!-- ===== 상단 헤더 ===== -->
 				<div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded-3">
-					<img src="${festival.placeDTO.image_url}"
-						style="width:80px; height:80px; object-fit:cover; border-radius:12px;">
+					<img src="${restaurant.placeDTO.image_url}"
+						style="width:80px; height:80px;	object-fit:cover; border-radius:12px;">
 					<div>
-						<h4 class="mb-1 fw-bold">${festival.placeDTO.name}</h4>
-						<p class="text-muted mb-0 small"><i class="fa-solid fa-calendar-days me-1"></i>
-							${festival.start_date} ~ ${festival.end_date}
+						<h4 class="mb-1 fw-bold">${restaurant.placeDTO.name}</h4>
+						<p class="text-muted mb-0 small">
+							<i class="fa-solid fa-location-dot me-1"></i>
+							${restaurant.placeDTO.address}
 						</p>
 					</div>
 				</div>
 				
 				<h3 class="fw-bold mb-4">예약 정보 입력</h3>
 				
-				<!-- 방문일 -->
 				<div class="card shadow-sm border-0 p-4" style="border-radius: 20px;">
+					<!-- 방문일 -->
 					<div class="mb-3">
 						<label class="form-label fw-bold">방문 예정일</label>
 						<input type="date" id="visit_date" class="form-control form-control-lg" 
-								min="${festival.start_date}" max="${festival.end_date}">
+								min="">
 					</div>
 					
-					<!-- 티켓 종류 -->
+					<!-- 방문 시간 -->
 					<div class="mb-3">
-						<label class="form-label fw-bold">티켓 종류</label>
-						<div>
-							<c:forEach var="ticket" items="${festival.ticketList}">
-								<div class="form-check mb-2">
-									<input class="form-check-input ticket-checkbox" type="radio"
-											name="ticket_id" value="${ticket.ticket_id}"
-											data-price="${ticket.price}" data-stock="${ticket.stock}"
-											<c:if test="${ticket.stock == 0}">
-												<span class="text-danger">(매진)</span>
-											</c:if>
-									>
-											
-									<label class="form-check-label">
-										${ticket.ticket_type} -
-										<fmt:formatNumber value="${ticket.price}" type="currency" />
-										(잔여: ${ticket.stock}매)
-									</label>
-								</div>
-							</c:forEach>
-						</div>
+						<label class="form-label fw-bold">방문 시간</label>
+						<input type="time" id="visit_time" class="form-control form-control-lg" 
+								min="">
 					</div>
 					
 					<!-- 인원수 -->
@@ -321,16 +304,16 @@
 					
 					<hr class="my-4">
 					
-					<!-- 최종 결제 금액 -->
-					<div class="d-flex justify-content-between align-items-center mb-4">
-						<span class="fs-5 fw-bold">최종 결제 금액</span>
-						<span id="total_price" class="fs-3 fw-bold text-success"></span>
+ 					<!-- 현장 결제 안내 -->
+					<div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+						<i class="fa-solid fa-circle-info me-2"></i>
+						<span>이 식당은 <strong>현장 결제</strong> 방식입니다. 방문 시 직접 결제해 주세요.</span>
 					</div>
 					
 					<!-- 결제/예약 버튼 -->
 					<button id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
-							onclick="submitReservation()" style="border-radius:15px;">
-						결제 및 예약하기
+							onclick="submitReservation()" style="border-radius:15px;" disabled>
+						예약하기
 					</button>
 				</div>
 			</div>
@@ -339,11 +322,11 @@
 
 <script>
 	const CTX = '${path}';
-	const PLACE_ID = '${festival.placeDTO.place_id}';
-	const PLACE_TYPE = 'FEST';
+	const PLACE_ID = '${restaurant.placeDTO.place_id}';
+	const PLACE_TYPE = 'REST';
 </script>
 
-<script src="${pageContext.request.contextPath}/resources/js/user/festReservation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/user/restReservation.js"></script>
 
 <%@ include file="../../common/footer.jsp"%>
 </body>

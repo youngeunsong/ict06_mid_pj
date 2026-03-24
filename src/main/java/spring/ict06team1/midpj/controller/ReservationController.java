@@ -93,10 +93,20 @@ public class ReservationController {
     //[Reservation] 결제 최종 확인 페이지 이동
     @RequestMapping("/reservationConfirm.rv")
     public String reservationConfirm(
-            @RequestParam("reservation_id") String reservation_id,
-            Model model) {
+            @RequestParam("reservation_id") String reservation_id, Model model) {
 
         ReservationDTO reservation = resService.getReservationById(reservation_id);
+        
+        if (reservation == null) {
+            reservation = new ReservationDTO();
+            reservation.setReservation_id(reservation_id);
+            reservation.setUser_id("testUser");
+            reservation.setPlace_id(1);
+            reservation.setGuest_count(2);
+            reservation.setRequest_note("테스트 요청사항");
+            reservation.setStatus("PENDING");
+        }
+        
         model.addAttribute("reservation", reservation);
 
         // 네이버페이 테스트용 공개값

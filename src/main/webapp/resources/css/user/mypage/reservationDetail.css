@@ -1,0 +1,339 @@
+@charset "UTF-8";
+
+.reservation_detail_wrap {
+	width: 100%;
+	padding: 50px 0 70px;
+	background-color: #fff;
+}
+
+.reservation_detail_inner {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px;
+	min-height: 600px;
+}
+
+/* ===== 제목 영역 ===== */
+.page-header {
+    margin-bottom: 35px;
+    border-bottom: 3px solid #0CB574;
+    padding-bottom: 15px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #222;
+    margin: 0;
+}
+
+.page-header h2 i {
+    color: #0CB574;
+    margin-right: 12px;
+}
+
+/* ===== 카드 ===== */
+.reservation_card {
+	display: flex;
+	gap: 32px;
+	padding: 30px;
+	border: 1px solid #eef2f0;
+	border-radius: 18px;
+	background-color: #fff;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+	overflow: hidden;
+}
+
+/* ===== 이미지 ===== */
+.reservation_image_area {
+	width: 360px;
+	flex-shrink: 0;
+}
+
+.reservation_image {
+	width: 100%;
+	height: 420px;
+	object-fit: cover;
+	border-radius: 14px;
+	border: 1px solid #eee;
+	display: block;
+}
+
+.no_image {
+	width: 100%;
+	height: 420px;
+	border-radius: 14px;
+	border: 1px solid #eee;
+	background-color: #f8f8f8;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+	color: #999;
+}
+
+/* ===== 콘텐츠 ===== */
+.reservation_content_area {
+	flex: 1;
+	min-width: 0;
+}
+
+.place_summary {
+	margin-bottom: 26px;
+	padding-bottom: 22px;
+	border-bottom: 1px solid #f1f3f5;
+}
+
+/* ===== 타입 배지 ===== */
+.place_type_badge {
+	display: inline-block;
+	margin-bottom: 14px;
+	padding: 6px 14px;
+	border-radius: 20px;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.place_type_badge.badge_rest {
+	background-color: #fff1e8;
+	color: #ff7a45;
+}
+
+.place_type_badge.badge_acc {
+	background-color: #f3ecff;
+	color: #8b5cf6;
+}
+
+.place_type_badge.badge_fest {
+	background-color: #f5eefe;
+	color: #a855f7;
+}
+
+/* ===== 장소 정보 ===== */
+.place_name {
+	margin: 0 0 10px;
+	font-size: 28px;
+	font-weight: 800;
+	color: #222;
+	line-height: 1.4;
+}
+
+.place_address {
+	margin: 0;
+	font-size: 14px;
+	color: #666;
+	line-height: 1.7;
+}
+
+/* ===== 상세 정보 ===== */
+.detail_section {
+	margin-bottom: 24px;
+}
+
+.section_title {
+	margin: 0 0 14px;
+	font-size: 16px;
+	font-weight: 800;
+	color: #222;
+}
+
+.detail_box {
+	background-color: #fff;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.detail_row {
+	display: flex;
+	align-items: flex-start;
+	padding: 15px 0;
+	border-bottom: 1px solid #f3f3f3;
+}
+
+.detail_row:first-of-type {
+	border-top: 1px solid #f3f3f3;
+}
+
+.detail_label {
+	width: 130px;
+	flex-shrink: 0;
+	font-size: 14px;
+	font-weight: 700;
+	color: #555;
+}
+
+.detail_value {
+	flex: 1;
+	font-size: 14px;
+	color: #444;
+	line-height: 1.8;
+	word-break: break-word;
+}
+
+.request_note {
+	white-space: pre-line;
+}
+
+/* ===== 상태 배지 ===== */
+.status_badge {
+	display: inline-block;
+	padding: 6px 14px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.status_badge.pending {
+	background-color: #fff4e6;
+	color: #ff922b;
+}
+
+.status_badge.reserved {
+	background-color: #edf5ff;
+	color: #2b6cb0;
+}
+
+.status_badge.completed {
+	background-color: #0CB574;
+	color: #fff;
+}
+
+.status_badge.cancelled {
+	background-color: #fff1f1;
+	color: #e53e3e;
+}
+
+.status_badge.noshow {
+	background-color: #f5f5f5;
+	color: #888;
+}
+
+/* ===== 안내 영역 ===== */
+.delete_info {
+	background-color: #fff8ef;
+	border: 1px solid #ffe3b3;
+	border-radius: 18px;
+	padding: 24px 26px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+	font-size: 14px;
+	color: #8a5a00;
+	line-height: 1.7;
+}
+
+.delete_info strong {
+	color: #f91a32;
+}
+
+/* ===== 버튼 ===== */
+.button_area {
+	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.btn_line,
+.btn_delete,
+.btn_point,
+.btn_disabled {
+	min-width: 140px;
+	padding: 12px 24px;
+	border: none;
+	border-radius: 8px;
+	font-size: 15px;
+	font-weight: 700;
+	text-align: center;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.btn_line {
+	background-color: #fff;
+	color: #555;
+	border: 1px solid #ddd;
+	cursor: pointer;
+}
+
+.btn_line:hover {
+	background-color: #f8f8f8;
+}
+
+.btn_delete {
+	background-color: #999;
+	color: #fff;
+	cursor: pointer;
+}
+
+.btn_delete:hover {
+	background-color: #f91a32;
+}
+
+.btn_point {
+	background-color: #0CB574;
+	color: #fff;
+	cursor: pointer;
+}
+
+.btn_point:hover {
+	background-color: #098a58;
+}
+
+.btn_disabled {
+	background-color: #ddd;
+	color: #888;
+	cursor: default;
+}
+
+/* ===== 반응형 ===== */
+@media screen and (max-width: 1024px) {
+	.reservation_card {
+		flex-direction: column;
+	}
+
+	.reservation_image_area {
+		width: 100%;
+	}
+
+	.reservation_image,
+	.no_image {
+		height: 320px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.reservation_detail_wrap {
+		padding: 30px 0 50px;
+	}
+
+	.reservation_detail_inner {
+		padding: 0 15px;
+	}
+
+	.reservation_card {
+		padding: 22px;
+		gap: 24px;
+	}
+
+	.reservation_detail_inner .page_title {
+		font-size: 24px;
+	}
+
+	.place_name {
+		font-size: 24px;
+	}
+
+	.detail_row {
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.detail_label {
+		width: 100%;
+	}
+
+	.button_area {
+		justify-content: flex-start;
+	}
+}

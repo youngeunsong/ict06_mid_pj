@@ -22,3 +22,12 @@ public interface AccommodationService {
     // 즐겨찾기 토글
     boolean toggleFavorite(String userId, int place_id);
 }
+/*
+ * @author 김다솜
+ * 최초작성일: 2026-03-24
+ * 최종수정일: 2026-03-24
+ * 참고 코드: FestivalService
+ * ----------------------------------
+ * v260324
+ * ----------------------------------
+ */

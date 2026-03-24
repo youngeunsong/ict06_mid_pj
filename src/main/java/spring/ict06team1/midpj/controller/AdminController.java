@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.service.AdDashboardServiceImpl;
 import spring.ict06team1.midpj.service.UserServiceImpl;
 
 @Controller
@@ -23,12 +24,16 @@ public class AdminController {
 	
 	@Autowired
 	private UserServiceImpl userService;
+	@Autowired
+	private AdDashboardServiceImpl adDashService;
 
-	// 0. ADMIN HOME
+	// 0. ADMIN HOME / 대시보드
 	@RequestMapping("/adminHome.ad")
 	public String adminHome(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /adminHome.ad]");
+		
+		adDashService.getDashboardData(request, response, model);
 		return "admin/adminHome";
 	}
 	
@@ -57,11 +62,12 @@ public class AdminController {
 		return "admin/mypage/adminMyPageAction";
 	}
 	
-	// Sample page 테스트
-	@RequestMapping("/adminSample.ad")
-	public String adminSample(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		logger.info("[url => /adminSample.ad]");
-		return "admin/adminSample";
-	}
+	/*
+	 * // Sample page 테스트
+	 * 
+	 * @RequestMapping("/adminSample.ad") public String
+	 * adminSample(HttpServletRequest request, HttpServletResponse response, Model
+	 * model) throws ServletException, IOException {
+	 * logger.info("[url => /adminSample.ad]"); return "admin/adminSample"; }
+	 */
 }

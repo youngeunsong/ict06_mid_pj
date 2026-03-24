@@ -1,4 +1,4 @@
-	package spring.ict06team1.midpj.service;
+package spring.ict06team1.midpj.service;
 	
 	import java.util.HashMap;
 	import java.util.List;
@@ -72,3 +72,14 @@
 	        }
 	    }
 	}
+
+/*
+ * @author 김다솜
+ * 최초작성일: 2026-03-24
+ * 최종수정일: 2026-03-24
+ * 참고 코드: FestivalService
+ * ----------------------------------
+ * v260324
+ * ----------------------------------
+ */
+

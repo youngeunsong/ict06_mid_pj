@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import spring.ict06team1.midpj.dto.AccommodationDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 
 @Repository
@@ -53,3 +54,4 @@ public class AccommodationDAOImpl implements AccommodationDAO {
         return session.delete(NAMESPACE + "deleteFavorite", map);
     }
 }
+

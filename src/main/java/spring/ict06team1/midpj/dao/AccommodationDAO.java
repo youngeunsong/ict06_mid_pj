@@ -3,6 +3,7 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
+
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 
@@ -29,3 +30,14 @@ public interface AccommodationDAO {
     // 즐겨찾기 삭제
     int deleteFavorite(Map<String, Object> map);
 }
+
+/*
+ * @author 김다솜
+ * 최초작성일: 2026-03-24
+ * 최종수정일: 2026-03-24
+ * 참고 코드: FestivalDAO
+ * ----------------------------------
+ * v260324
+ * ----------------------------------
+ */
+

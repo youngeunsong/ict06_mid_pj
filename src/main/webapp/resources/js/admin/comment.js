@@ -6,8 +6,22 @@
 document.addEventListener("DOMContentLoaded", function() {
 	const checkAll = document.getElementById("checkAll");
 	if(checkAll) {
+		//전체 선택-해제
 		checkAll.addEventListener("change", function() {
-			document.querySelectorAll(".comment-check").forEach(cb => cb.checked = this.checked);
+			document.querySelectorAll(".comment-check").forEach(cb => {
+				cb.checked = this.checked;
+			});
+		});
+		
+		//개별 체크박스 클릭 시 전체 선택 상태 업데이트
+		document.addEventListener("change", function(e) {
+			if(e.target.classList.contains("comment-check")) {
+				const allCount = document.querySelectorAll(".comment-check").length;
+				const checkedCount = document.querySelectorAll(".comment-check:checked").length;
+				
+				//모든 개별 체크박스가 선택된 경우에만 전체 선택이 체크됨
+				checkAll.checked = (allCount === checkedCount);
+			}
 		});
 	}
 });
@@ -32,6 +46,13 @@ function bulkCommentAction(action) {
 	if(!confirm(ids.length + "개 댓글을 " + actionText + " 처리하시겠습니까?"))
 		return;
 	
+	//[GA4 이벤트] 댓글 일괄 처리 수집
+	gtag('event', 'admin_bulk_action', {
+		'action_type': action,
+		'item_count': ids.length,
+		'target_category': 'comment'
+	});
+	
 	const params = new URLSearchParams();
 	params.append("action", action);
 	ids.forEach(id => params.append("comment_ids", encodeURIComponent(id)));
@@ -52,6 +73,14 @@ function bulkCommentAction(action) {
 function hideComment(comment_id) {
 	if(!confirm("이 댓글을 숨김 처리하시겠습니까?"))
 		return;
+
+	//[GA4 이벤트] 개별 댓글 숨김
+	gtag('event', 'admin_single_action', {
+		'action_type': 'hide',
+		'target_type': 'comment',
+		'target_id': comment_id
+	});
+	
 	fetch(path + "/hideComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -68,6 +97,14 @@ function hideComment(comment_id) {
 function showComment(comment_id) {
 	if(!confirm("숨김을 해제하시겠습니까?"))
 		return;
+
+	//[GA4 이벤트] 개별 댓글 숨김 해제
+	gtag('event', 'admin_single_action', {
+		'action_type': 'show',
+		'target_type': 'comment',
+		'target_id': comment_id
+	});
+	
 	fetch(path + "/showComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -85,6 +122,14 @@ function showComment(comment_id) {
 function deleteComment(comment_id) {
 	if(!confirm("이 댓글을 삭제하시겠습니까?"))
 		return;
+
+	//[GA4 이벤트] 개별 댓글 삭제
+	gtag('event', 'admin_single_action', {
+		'action_type': 'delete',
+		'target_type': 'comment',
+		'target_id': comment_id
+	});
+	
 	fetch(path + "/deleteComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -96,3 +141,23 @@ function deleteComment(comment_id) {
 		location.reload();
 	})
 }
+
+//[GA4 이벤트] 댓글 관리 페이지 검색 이벤트 추적
+document.addEventListener("DOMContentLoaded", function() {
+	const commentSearchForm = document.querySelector("form[action*='commentList.adco']");
+	
+	if(commentSearchForm) {
+		commentSearchForm.addEventListener("submit", function() {
+			const searchType = this.querySelector("select[name='searchType']").value;
+			const keyword = this.querySelector("input[name='keyword']").value;
+			
+			if(keyword.trim() !== "") {
+				gtag('event', 'admin_search', {
+					'search_type': searchType,
+					'search_keyword': keyword,
+					'menu_location': 'comment_management'
+				});
+			}
+		})
+	}
+})

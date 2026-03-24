@@ -358,7 +358,7 @@
 			}
 		};
 	</script>
-	<script src="${path}/resources/js/admin/dashboard.js"></script>
+	<script src="${path}/resources/js/admin/adResDashboard.js"></script>
 </body>
 <!--end::Body-->
 </html>

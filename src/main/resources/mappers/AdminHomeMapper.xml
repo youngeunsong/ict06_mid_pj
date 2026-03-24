@@ -277,7 +277,6 @@
 
     <!-- ==============================
          9. 미답변 문의 최근 10건
-         status: PENDING, PROGRESS
     ============================== -->
     <select id="getPendingInquiryTop10" resultMap="inquiryResultMap">
 		SELECT *
@@ -292,7 +291,7 @@
 	            created_at AS inquiryDate,
 	            answered_at AS answerDate
 	        FROM INQUIRY
-	        WHERE status IN ('PENDING', 'PROGRESS')
+	        WHERE status = 'PENDING'
 	        ORDER BY created_at DESC, inquiry_id DESC
 	    )
         WHERE ROWNUM &lt;= 10

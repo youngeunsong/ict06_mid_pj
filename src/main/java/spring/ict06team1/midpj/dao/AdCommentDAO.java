@@ -1,13 +1,15 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import spring.ict06team1.midpj.dto.CommunityCommentDTO;
 
 public interface AdCommentDAO {
 
-	//1. 전체 댓글 목록(숨김 포함)
-	public List<CommunityCommentDTO> getAdCommentList();
+	//1. 전체 댓글 목록(숨김 포함), 댓글 수
+	public List<CommunityCommentDTO> getAdCommentList(Map<String, Object> map);
+	public int getAdCommentCount(Map<String, Object> map);
 	
 	//2. 댓글 숨김
 	public int hideComment(int comment_id);

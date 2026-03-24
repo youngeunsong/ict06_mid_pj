@@ -133,7 +133,7 @@ public class AdminHomeServiceImpl implements AdminHomeService {
         List<Map<String, Object>> statsList = dao.getSatisfactionStats(periodMap);
 
         List<String> subjectiveAnswers = dao.getSubjectiveSurveyAnswers(periodMap);
-        List<InquiryDTO> pendingInquiryList = dao.getPendingInquiryTop10();
+        List<InquiryDTO> pendingInquiryList = dao.getPendingInquiryTop10(); // 1:1문의 미처리
 
         /* 7. GA 전용 트래픽 데이터 조회
            - visitorCount : 방문자 수(activeUsers)
@@ -168,7 +168,7 @@ public class AdminHomeServiceImpl implements AdminHomeService {
         model.addAttribute("npsDistribution", npsDistribution);
         model.addAttribute("statsList", statsList);
         model.addAttribute("subjectiveAnswers", subjectiveAnswers);
-        model.addAttribute("pendingInquiryList", pendingInquiryList);
+        model.addAttribute("pendingInquiryList", pendingInquiryList); // 1:1문의 미처리
         model.addAttribute("startDate", startDate.toString());
         model.addAttribute("endDate", endDate.toString());
         model.addAttribute("today", today.toString());

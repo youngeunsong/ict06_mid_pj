@@ -15,7 +15,8 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자 홈</title>
+
+<title>관리자 Home</title>
 
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_home.css">
 
@@ -410,6 +411,9 @@
    });
 </script>
 
+
+<script>const path = "${path}";</script>
+<script src="${path}/resources/js/admin/adHomeDashboard.js"></script>
 
 </body>
 </html>

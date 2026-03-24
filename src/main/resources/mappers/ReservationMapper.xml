@@ -3,10 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
- <mapper namespace="spring.ict06team1.midpj.dao.ReservationDAO">
+<mapper namespace="spring.ict06team1.midpj.dao.ReservationDAO">
 
-	 <!-- 0. 매핑 -->
-	 <resultMap id="reservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
+	<!-- 0. 예약 조회 결과 매핑 -->
+	<!-- 예약 정보 + 장소 정보 + 결제 금액을 ReservationDTO로 매핑 -->
+	<resultMap id="reservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
 	 	<id property="reservation_id" column="reservation_id"/>
 	 	<result property="user_id" column="user_id"/>
 	 	<result property="place_id" column="place_id"/>
@@ -20,29 +21,24 @@
 	 	<result property="payment_id" column="payment_id"/>
 	 	<result property="resDate" column="res_created_at"/>
 	 	<result property="resUpdateDate" column="res_updated_at"/>
+	 	<result property="amount" column="amount"/>
 	 	
+	 	<!-- 장소 정보는 PlaceDTO에 함께 매핑 -->
 	 	<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	 		<id property="place_id" column="place_id"></id>
-	 		<result property="place_type" column="place_type"></result>
-	 		<result property="name" column="name"></result>
-	 		<result property="address" column="address"></result>
-	 		<result property="view_count" column="view_count"></result>
-	 		<result property="latitude" column="latitude"></result>
-	 		<result property="longitude" column="longitude"></result>
-	 		<result property="image_url" column="image_url"></result>
-	 		<result property="placeRegDate" column="place_created_at"></result>
-	 		<result property="placeUpdateDate" column="place_updated_at"></result>
+	 		<id property="place_id" column="place_id"/>
+	 		<result property="place_type" column="place_type"/>
+	 		<result property="name" column="name"/>
+	 		<result property="address" column="address"/>
+	 		<result property="view_count" column="view_count"/>
+	 		<result property="latitude" column="latitude"/>
+	 		<result property="longitude" column="longitude"/>
+	 		<result property="image_url" column="image_url"/>
+	 		<result property="placeRegDate" column="place_created_at"/>
+	 		<result property="placeUpdateDate" column="place_updated_at"/>
 	 	</association>
-	 </resultMap>
+	</resultMap>
 
-	<!-- 1. festival 상세 정보 -->
-	<select id="getFestivalDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalDTO">
-		SELECT festival_id, description, start_date, end_date, status
-		FROM FESTIVAL
-		WHERE festival_id = #{festival_id}
-	</select>
-	
-	<!-- 2. place 정보 -->
+	<!-- 1. 장소 정보 조회 -->
 	<select id="getPlaceDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
 		SELECT place_id, place_type, name, address,
 			   view_count, latitude, longitude,
@@ -51,7 +47,28 @@
 		WHERE place_id = #{place_id}
 	</select>
 	
-	<!-- 3. 티켓 리스트 조회 -->
+	<!-- 2-1. 축제 상세 정보 조회 -->
+	<select id="getFestivalDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalDTO">
+		SELECT festival_id, description, start_date, end_date, status
+		FROM FESTIVAL
+		WHERE festival_id = #{festival_id}
+	</select>
+	
+	<!-- 2-2. 숙소 상세 정보 조회 -->
+	<select id="getAccommodationDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.AccommodationDTO">
+		SELECT accommodation_id, description, phone, price, status, areaCode, category
+		FROM ACCOMMODATION
+		WHERE accommodation_id = #{accommodation_id}
+	</select>
+	
+	<!-- 2-3. 맛집 상세 정보 조회 -->
+	<select id="getRestaurantDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.RestaurantDTO">
+		SELECT restaurant_id, description, phone, category, status, restDate, areaCode
+		FROM RESTAURANT
+		WHERE restaurant_id = #{restaurant_id}
+	</select>
+	
+	<!-- 3. 축제 티켓 목록 조회 -->
 	<select id="getFestivalTickets" parameterType="int" resultType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
 		SELECT ticket_id, festival_id, ticket_type,
 			   price, stock, description
@@ -66,8 +83,15 @@
 		WHERE ticket_id = #{ticket_id}
 	</select>	
 
-	<!-- 5. 예약 처리 -->
-	<insert id="insertReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
+	<!-- 5. 숙소 가격 조회 -->
+	<select id="getAccommodationPrice" parameterType="int" resultType="int">
+		SELECT price FROM ACCOMMODATION
+		WHERE accommodation_id = #{place_id}
+	</select>
+	
+	<!-- 6-1. 축제 예약 저장 -->
+	<!-- 예약번호를 먼저 생성한 뒤 RESERVATION 테이블에 저장 -->
+	<insert id="insertFestReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
 		<selectKey keyProperty="reservation_id" resultType="String" order="BEFORE">
 			SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 5, '0')
 			FROM DUAL
@@ -75,8 +99,8 @@
 		
 		INSERT INTO RESERVATION (
 			reservation_id, user_id, place_id,
-			check_in, ticket_id, guest_count, request_note,
-			status
+			check_in, ticket_id, guest_count,
+			request_note, status
 		) VALUES (
 			#{reservation_id}, #{user_id}, #{place_id},
 			#{check_in}, #{ticket_id}, #{guest_count},
@@ -84,7 +108,46 @@
 		)
 	</insert>
 
-	<!-- 6. 결제 처리 -->
+	<!-- 6-2. 숙소 예약 저장 -->
+	<!-- 예약번호를 먼저 생성한 뒤 RESERVATION 테이블에 저장 -->
+	<insert id="insertAccReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
+		<selectKey keyProperty="reservation_id" resultType="String" order="BEFORE">
+			SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 5, '0')
+			FROM DUAL
+		</selectKey>
+		
+		INSERT INTO RESERVATION (
+			reservation_id, user_id, place_id,
+			check_in, check_out, guest_count,
+			request_note, status
+		) VALUES (
+			#{reservation_id}, #{user_id}, #{place_id},
+			#{check_in}, #{check_out}, #{guest_count},
+			#{request_note}, 'PENDING'
+		)
+	</insert>
+
+	<!-- 6-3. 맛집 예약 저장 -->
+	<!-- 예약번호를 먼저 생성한 뒤 RESERVATION 테이블에 저장 -->
+	<insert id="insertRestReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
+		<selectKey keyProperty="reservation_id" resultType="String" order="BEFORE">
+			SELECT 'R' || TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 5, '0')
+			FROM DUAL
+		</selectKey>
+		
+		INSERT INTO RESERVATION (
+			reservation_id, user_id, place_id,
+			check_in, visit_time, guest_count,
+			request_note, status
+		) VALUES (
+			#{reservation_id}, #{user_id}, #{place_id},
+			#{check_in}, #{visit_time}, #{guest_count},
+			#{request_note}, 'PENDING'
+		)
+	</insert>
+
+	<!-- 7. 결제 예정 정보 저장 -->
+	<!-- payment_id를 생성한 뒤 PAYMENT 테이블에 저장 -->
 	<insert id="insertPayment" parameterType="map">
 		<selectKey keyProperty="payment_id" resultType="String" order="BEFORE">
 			SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 3, '0')
@@ -99,7 +162,32 @@
 		)
 	</insert>
 	
-	<!-- 4. 예약+장소 조회(마이페이지용) -->
+	<!-- 8. 예약 1건 조회 -->
+	<!-- 예약 확인 페이지에서 예약 1건 + 장소 정보 + 결제 금액 조회 -->
+	<select id="getReservationById" parameterType="String" resultMap="reservationMap">
+		SELECT
+			r.reservation_id, r.user_id, r.place_id,
+			r.check_in, r.check_out, r.visit_time,
+			r.ticket_id, r.guest_count, r.request_note,
+			r.status, r.payment_id,
+			r.created_at AS res_created_at,
+			r.updated_at AS res_updated_at,
+	
+			p.place_type, p.name, p.address,
+			p.view_count, p.latitude, p.longitude,
+			p.image_url,
+			p.created_at AS place_created_at,
+			p.updated_at AS place_updated_at,
+			
+			py.amount
+		FROM RESERVATION r
+		JOIN PLACE p ON r.place_id = p.place_id
+		LEFT JOIN PAYMENT py ON r.reservation_id = py.reservation_id
+		WHERE r.reservation_id = #{reservation_id}
+	</select>
+	
+	<!-- 8-1. 예약 목록 조회 -->
+	<!-- 마이페이지 등에서 사용자 예약 목록을 조회할 때 사용 -->
 	<select id="getReservationList" parameterType="String" resultMap="reservationMap">
 		SELECT
 			r.reservation_id, r.user_id, r.place_id,
@@ -119,4 +207,20 @@
 		 WHERE r.user_id = #{user_id}
 		 ORDER BY r.created_at DESC
 	</select>
- </mapper> 
+	
+	<!-- 9. 결제 상태 변경 -->
+	<!-- 네이버페이 승인 성공 후 PAYMENT.payment_status를 COMPLETED로 변경 -->
+	<update id="updatePaymentStatusPaid" parameterType="string">
+	    UPDATE PAYMENT
+	    SET payment_status = 'COMPLETED'
+	    WHERE reservation_id = #{reservationId}
+	</update>
+	
+	<!-- 10. 예약 상태 변경 -->
+	<!-- 결제 승인 성공 후 예약 확정 상태를 RESERVED로 변경 -->
+	<update id="updateReservationStatusConfirmed" parameterType="string">
+	    UPDATE RESERVATION
+	    SET status = 'RESERVED'
+	    WHERE reservation_id = #{reservationId}
+	</update>
+</mapper>

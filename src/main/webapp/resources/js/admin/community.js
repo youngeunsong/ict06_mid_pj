@@ -32,6 +32,13 @@ function bulkAction(action) {
 	if(!confirm(ids.length + "개 게시글을 " + actionText + " 처리하시겠습니까?"))
 		return;
 	
+	//[Google Analytics 이벤트] 일괄 처리 액션 수집
+	gtag('event', 'admin_bulk_action', {
+		'action_mode': action,			//hide, show, delete
+		'item_count': ids.length,		//일괄처리에 선택된 게시글 수
+		'target_category': 'post_list'	//대상 카테고리
+	});
+	
 	const params = new URLSearchParams();
 	params.append("action", action);
 	ids.forEach(id => params.append("post_ids", id));
@@ -53,6 +60,13 @@ function bulkAction(action) {
 function hidePost(post_id) {
 	if(!confirm("이 게시글을 숨김 처리하시겠습니까?"))
 		return;
+	
+	//[Google Analytics 이벤트] 개별 숨김 액션 수집
+	gtag('event', 'admin_single_action', {
+		'action_type': 'hide',	//
+		'post_id': post_id		//단건의 게시글에서 실행
+	});
+		
 	fetch(path + "/hidePost.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -69,6 +83,13 @@ function hidePost(post_id) {
 function showPost(post_id) {
 	if(!confirm("숨김을 해제하시겠습니까?"))
 		return;
+
+	//[Google Analytics 이벤트] 개별 숨김 해제 액션 수집
+	gtag('event', 'admin_single_action', {
+		'action_type': 'show',	//보이기 처리
+		'post_id': post_id		//단건의 게시글에서 실행
+	});
+	
 	fetch(path + "/showPost.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -81,11 +102,17 @@ function showPost(post_id) {
 	});
 }
 
-
 //게시글 삭제
 function deletePost(post_id) {
 	if(!confirm("이 게시글을 삭제하시겠습니까?"))
 		return;
+
+	//[Google Analytics 이벤트] 개별 삭제 액션 수집
+	gtag('event', 'admin_single_action', {
+		'action_type': 'delete',
+		'post_id': post_id		//단건의 게시글에서 실행
+	});
+	
 	fetch(path + "/deletePost.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
@@ -97,3 +124,23 @@ function deletePost(post_id) {
 		location.reload();
 	})
 }
+
+//GA4 검색 이벤트 수집
+document.addEventListener("DOMContentLoaded", function() {
+	const communitySearchForm = document.querySelector("form[action*='communityHome.adco']");
+	
+	if(communitySearchForm) {
+		communitySearchForm.addEventListener("submit", function() {
+			const searchType = this.querySelector("select[name='searchType']").value;
+			const keyword = this.querySelector("input[name='keyword']").value;
+			
+			if(keyword.trim() !== "") {
+				gtag('event', 'admin_search', {
+					'search_type': searchType,		//title, user_id, content
+					'search_keyword': keyword,
+					'menu_location': 'community_post_management'
+				});
+			}
+		})
+	}
+})

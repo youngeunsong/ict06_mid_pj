@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,16 @@ public class AdCommentDAOImpl implements AdCommentDAO {
 	
 	//1. 전체 댓글 목록(숨김 포함)
 	@Override
-	public List<CommunityCommentDTO> getAdCommentList() {
+	public List<CommunityCommentDTO> getAdCommentList(Map<String, Object> map) {
 		System.out.println("[AdCommentDAOImpl - getAdCommentList()]");
-		return sqlSession.getMapper(AdCommentDAO.class).getAdCommentList();
+		return sqlSession.getMapper(AdCommentDAO.class).getAdCommentList(map);
+	}
+	
+	//1-1. 전체 댓글 수
+	@Override
+	public int getAdCommentCount(Map<String, Object> map) {
+		System.out.println("[AdCommentDAOImpl - getAdCommentCount()]");
+		return sqlSession.getMapper(AdCommentDAO.class).getAdCommentCount(map);
 	}
 
 	//2. 댓글 숨김

@@ -1,9 +1,17 @@
-//예약 통계 대시보드
+/* ========================================
+   adResDashboard.js - 관리자 > 예약관리 > 대시보드 공통 JS
+   ========================================*/
+
 let placeTypeChartInstance = null;
 let statusChartInstance = null;
 
 //===예약상태별+장소분류별 비율 호출===
 function switchRatioChart(type) {
+	//[GA4 이벤트] 어떤 차트 탭 클릭했는지 수집
+	gtag('event', 'admin_chart_tab_switch', {
+		'chart_type': type		//status or place
+	});
+	
 	if(type === 'status') {
 		document.getElementById('statusChartWrap').style.display = 'block';
 		document.getElementById('placeChartWrap').style.display = 'none';

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author 김다솜 -->
+<!-- 최초작성일: 2026-03-23 -->
+<!-- 최종수정일: 2026-03-23 -->
+<!-- 참고 코드: None -->
+<!-- ========================= -->
+<!-- v260323 -->
+<!-- 1:1문의 미처리 목록 출력 sql문 추가 -->
+<!-- ========================= -->
+
+<mapper namespace="spring.ict06team1.midpj.dao.AdDashboardDAO">
+
+	<resultMap id="adDashboardMap" type="spring.ict06team1.midpj.dto.InquiryDTO">
+		<id property="inquiry_id" column="inquiry_id" />
+		<result property="user_id" column="user_id" />
+		<result property="category" column="category" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="status" column="status" />
+		<result property="admin_reply" column="admin_reply" />
+		<result property="inquiryDate" column="created_at" />
+		<result property="answerDate" column="answered_at" />
+	</resultMap>
+  	
+	<!-- 1. 기간별 KPI 요약 -->
+	
+	<!-- 2. 만족도 설문 wordcloud -->
+	
+	<!-- 3. 1:1문의 미처리 -->
+	<select id="getPendingInquiryTop10" resultType="spring.ict06team1.midpj.dto.InquiryDTO">
+		SELECT * FROM (
+			SELECT inquiry_id, user_id, category, title, status,
+				   created_at AS inquiryDate
+			FROM INQUIRY
+			WHERE status = 'PENDING'
+			ORDER BY created_at DESC
+		)
+		WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<!-- 4. 사용자 만족도 설문 결과 -->
+</mapper>

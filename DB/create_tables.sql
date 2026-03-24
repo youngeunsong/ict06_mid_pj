@@ -250,11 +250,15 @@ CREATE TABLE FAQ (
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
     order_no	NUMBER,
     visible     CHAR(1) DEFAULT 'Y',
+    view_count	NUMBER DEFAULT 0,
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
 SELECT * FROM FAQ;
+ALTER TABLE FAQ ADD(
+	view_count	NUMBER DEFAULT 0
+);
 
 -- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (

@@ -135,9 +135,8 @@ function submitReservation() {
 		type: "post",
 		data: data,
 		success: function(res) {
-			alert("예약 완료!");
-			location.href = CTX + "viewReservations.do";
-			
+			alert("확인 페이지 이동");
+			location.href = CTX + "/reservationConfirm.rv?reservation_id=" + res.reservation_id;
 		},
 		error: function() {
 			alert("예약 실패");

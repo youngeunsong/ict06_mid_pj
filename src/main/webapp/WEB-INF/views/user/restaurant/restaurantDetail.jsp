@@ -209,30 +209,84 @@
 	  margin-top:2px;
 	}
 	
+	/* 범례 */
+	.r-slotLegend{
+	  display:flex;
+	  gap:12px;
+	  flex-wrap:wrap;
+	  margin-bottom:12px;
+	}
+	.r-legendItem{
+	  display:flex;
+	  align-items:center;
+	  gap:6px;
+	  font-size:12px;
+	  font-weight:700;
+	  color:var(--r-muted);
+	}
+	.r-legendDot{
+	  width:10px;
+	  height:10px;
+	  border-radius:50%;
+	  display:inline-block;
+	}
+	.r-legendDot.is-available{
+	  background:#22c55e;
+	}
+	.r-legendDot.is-disabled{
+	  background:#9ca3af;
+	}
+	
+	/* 시간 슬롯 */
 	.r-timeSlot{
+	  display:flex;
+	  align-items:center;
+	  justify-content:space-between;
+	  gap:10px;
 	  border:1px solid var(--r-line);
 	  background:#fff;
 	  border-radius:14px;
 	  padding:12px 14px;
 	  font-weight:700;
 	  color:var(--r-text);
-	  text-align:left;
 	  transition:.15s;
 	}
-	.r-timeSlot:hover{
-	  transform:translateY(-1px);
+	
+	.r-timeSlot.is-available{
+	  background:#f0fdf4;
+	  border-color:#86efac;
+	  color:#166534;
 	}
+	
 	.r-timeSlot.is-disabled{
-	  background:#e5e7eb;
+	  background:#f3f4f6;
 	  color:#9ca3af;
 	  border-color:#d1d5db;
-	  cursor:not-allowed;
 	}
-	.r-timeSlot.is-selected{
-	  border-color:var(--r-brand);
-	  background:#ecfdf5;
-	  color:#065f46;
+	
+	.r-timeText{
+	  font-weight:800;
 	}
+	
+	.r-slotBadge{
+	  font-size:12px;
+	  font-weight:800;
+	  padding:5px 10px;
+	  border-radius:999px;
+	  white-space:nowrap;
+	  flex:0 0 auto;
+	}
+	
+	.r-slotBadge.is-available{
+	  background:#dcfce7;
+	  color:#166534;
+	}
+	
+	.r-slotBadge.is-disabled{
+	  background:#e5e7eb;
+	  color:#6b7280;
+	}
+	
   </style>
 </head>
 
@@ -273,7 +327,7 @@
       </div>
     </div>
 
-    <!-- 이미지 영역 -->
+        <!-- 이미지 영역 -->
     <div class="row g-3 mb-3">
       <div class="col-lg-8">
         <div class="r-hero shadow-sm">
@@ -286,32 +340,42 @@
       </div>
 
       <div class="col-lg-4">
-		  <div class="card shadow-sm border-0" style="border-radius:18px;">
-		    <div class="card-body">
-		      <div class="d-flex justify-content-between align-items-center mb-3">
-		        <div class="fw-bold fs-5">예약 가능 일정</div>
-		        <span class="badge bg-light text-dark">+7일</span>
-		      </div>
-		
-		      <!-- 날짜 슬라이드 영역 -->
-		      <div id="reserveDateSlider" class="d-flex gap-2 mb-3" style="overflow-x:auto; white-space:nowrap; padding-bottom:4px;">
-		        <!-- JS로 날짜 버튼 들어갈 자리 -->
-		      </div>
-		
-		      <!-- 시간 슬롯 영역 -->
-		      <div id="reserveTimeSlots" class="d-grid gap-2">
-		        <!-- JS로 시간 슬롯 들어갈 자리 -->
-		      </div>
-		      	
-		      	<input type="hidden" id="selectedReserveDate" value="">
-				<input type="hidden" id="selectedVisitTime" value="">
-		
-		      <div class="r-muted mt-3" style="font-size:13px;">
-		        날짜를 선택하면 예약 가능 시간이 표시됩니다.
-		      </div>
-		    </div>
-		  </div>
-		</div>
+        <div class="card shadow-sm border-0 h-100" style="border-radius:18px;">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="fw-bold" style="font-size:18px;">예약 가능 일정</div>
+              <span class="badge bg-light text-dark">+7일</span>
+            </div>
+
+            <!-- 날짜 슬라이드 영역 -->
+            <div id="reserveDateSlider" class="d-flex gap-2 mb-2" style="overflow-x:auto; white-space:nowrap; padding-bottom:4px;">
+              <!-- JS로 날짜 버튼 들어갈 자리 -->
+            </div>
+
+            <!-- 범례 -->
+            <div class="r-slotLegend">
+              <span class="r-legendItem">
+                <span class="r-legendDot is-available"></span> 가능
+              </span>
+              <span class="r-legendItem">
+                <span class="r-legendDot is-disabled"></span> 마감
+              </span>
+            </div>
+
+            <!-- 시간 슬롯 영역 -->
+            <div id="reserveTimeSlots" class="d-grid gap-2">
+              <!-- JS로 시간 슬롯 들어갈 자리 -->
+            </div>
+
+            <input type="hidden" id="selectedReserveDate" value="">
+
+            <div class="r-muted mt-2" style="font-size:12px;">
+              날짜를 선택하면 예약 현황이 표시됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- 탭 -->
     <ul class="nav nav-tabs mb-3" id="detailTabs" role="tablist">

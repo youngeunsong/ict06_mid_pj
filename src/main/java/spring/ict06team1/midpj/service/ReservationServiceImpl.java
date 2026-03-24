@@ -133,9 +133,15 @@ public class ReservationServiceImpl implements ReservationService {
 		}
 		//맛집: visit_date, visit_time
 		else if("REST".equals(placeType)) {
-			dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
-			dto.setVisit_time(request.getParameter("visit_time"));
-			totalAmount = 0;
+		    dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
+		    dto.setVisit_time(request.getParameter("visit_time"));
+
+		    // 맛집은 노쇼 방지 예약금: 인원수 * 1000원
+		    totalAmount = dto.getGuest_count() * 1000;
+
+		    if(totalAmount < 10) {
+		        throw new RuntimeException("맛집 예약금 금액 오류");
+		    }
 		}
 		
 		//예약 저장
@@ -154,7 +160,7 @@ public class ReservationServiceImpl implements ReservationService {
 		map.put("user_id", dto.getUser_id());
 		map.put("reservation_id", dto.getReservation_id());
 		map.put("amount", totalAmount);
-		map.put("payment_method", "REST".equals(placeType) ? "FREE" : "CARD");
+		map.put("payment_method", "CARD");
 		
 		resDao.insertPayment(map);
 		dto.setPayment_id((String)map.get("payment_id"));

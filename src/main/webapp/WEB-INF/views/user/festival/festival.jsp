@@ -36,8 +36,7 @@
 			      --%>
 				<div class="rk-head">
 					<h1 class="rk-title">
-						<i class="fa-solid fa-utensils me-2"
-							style="color: var(--rk-brand);"></i> 국내 축제
+						<i class="fa-solid fa-icons" style="color: var(--rk-brand);"></i>국내 축제
 					</h1>
 					<div class="rk-sub">나와 가까운 축제, 인기 있는 국내 축제를 한 눈에 확인해보세요.</div>
 				</div>
@@ -114,9 +113,7 @@
 
 				<!-- 지도 시작 -->
 				<div id="map" style="width:500px;height:400px;"></div>
-				<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=발급받은 APP KEY를 넣으시면 됩니다."></script> -->
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b28017774bdca5bee6c607b53f370dcd"></script>
-				<script src="${path}/resources/js/festival/festivalMap.js"></script>
+				
 				<!-- 지도 끝 -->
 
 				<!-- 카드 목록 시작 -->
@@ -124,6 +121,16 @@
 				<!-- 카드 끝 -->
 			</div>
 		</main>
+		<!-- [JS에서 사용할 공통 path 설정] -->
+		<script>
+			const path = "${path}";
+		</script>
+		
+		<!-- 지도용 js -->
+		<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=발급받은 APP KEY를 넣으시면 됩니다."></script> -->
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b28017774bdca5bee6c607b53f370dcd"></script>
+		<script src="${path}/resources/js/festival/festivalMap.js"></script>
+		
 		<%@ include file="../../common/footer.jsp"%>
 	</div>
 </body>

@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+/* 수정 페이지 전용 영역 */
+.modify-container {
+	max-width: 800px;
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 15px;
+	overflow: hidden;
+}
+/* 입력 아이콘 영역 */
+.modify-container .input-group-text {
+	background-color: #f9f9f9;
+	border-right: none;
+}
+/* 
+- 부트스트랩 기본 form-control:focus보다 우선 적용
+- modify-container 안에서만 적용되도록 범위 제한
+*/
+.modify-container .form-control:focus {
+	border-color: #0CB574;
+	box-shadow: none;
+	outline: none;
+}
+/*
+- btn-dark를 쓰더라도
+- modify 페이지 안에서만 스타일 변경
+*/
+.modify-container .btn-dark:hover {
+	background-color: #0CB574 !important;
+	border-color: #0CB574 !important;
+}

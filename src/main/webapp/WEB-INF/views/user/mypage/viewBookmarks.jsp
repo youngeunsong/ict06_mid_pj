@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -10,212 +10,7 @@
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
-<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
-
-<style>
-    .my-favorite-section {
-        max-width: 1200px;
-        margin: 50px auto;
-        padding: 0 20px;
-        min-height: 600px;
-    }
-
-    .page-header {
-        margin-bottom: 35px;
-        border-bottom: 3px solid #0CB574;
-        padding-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .page-header h2 {
-        font-size: 28px;
-        font-weight: 800;
-        color: #222;
-        margin: 0;
-    }
-
-    .page-header h2 i {
-        color: #0CB574;
-        margin-right: 12px;
-    }
-
-    .count-info {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .count-info strong {
-        color: #0CB574;
-        font-size: 20px;
-        font-weight: 800;
-    }
-
-    .bookmark-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 24px;
-    }
-
-    .bookmark-card-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .bookmark-card {
-        background-color: #fff;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        transition: all 0.25s ease;
-        border: 1px solid #edf1ef;
-        height: 100%;
-    }
-
-    .bookmark-card-link:hover .bookmark-card {
-        transform: translateY(-6px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    }
-
-    .bookmark-img-wrap {
-        position: relative;
-        width: 100%;
-        height: 160px;
-        overflow: hidden;
-        background-color: #f4f4f4;
-    }
-
-    .bookmark-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .type-tag {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 10;
-        color: #fff;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 700;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-    }
-
-    .type-rest {
-        background-color: #ff7a59;
-    }
-
-    .type-acc {
-        background-color: #4b7bec;
-    }
-
-    .type-fest {
-        background-color: #a55eea;
-    }
-
-    .type-etc {
-        background-color: #7f8c8d;
-    }
-
-    .bookmark-content {
-        padding: 16px;
-    }
-
-    .place-title {
-        font-size: 19px;
-        font-weight: 800;
-        margin-bottom: 10px;
-        line-height: 1.4;
-        min-height: 52px;
-        color: #222;
-    }
-
-    .place-address {
-        font-size: 13px;
-        color: #777;
-        line-height: 1.5;
-        min-height: 40px;
-        margin-bottom: 14px;
-    }
-
-    .place-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 13px;
-        color: #444;
-    }
-
-    .meta-item {
-        background-color: #f7f8f9;
-        border-radius: 20px;
-        padding: 5px 10px;
-    }
-
-    .no-data {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 120px 0;
-        background-color: #f0fbf7;
-        border-radius: 15px;
-        border: 1px dashed #0CB574;
-    }
-
-    .no-data i {
-        font-size: 60px;
-        color: #0CB574;
-        margin-bottom: 25px;
-        opacity: 0.7;
-    }
-
-    .no-data p {
-        font-size: 18px;
-        color: #555;
-        margin-bottom: 25px;
-        line-height: 1.7;
-    }
-
-    .btn-sig {
-        background-color: #0CB574;
-        color: white !important;
-        padding: 12px 40px;
-        border-radius: 5px;
-        font-weight: 600;
-        font-size: 16px;
-        transition: 0.3s;
-        border: none;
-        display: inline-block;
-        text-decoration: none;
-    }
-
-    .btn-sig:hover {
-        background-color: #098a58;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(12, 181, 116, 0.3);
-    }
-
-    @media screen and (max-width: 768px) {
-        .page-header {
-            align-items: flex-start;
-        }
-
-        .page-header h2 {
-            font-size: 24px;
-        }
-
-        .bookmark-img-wrap {
-            height: 150px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="${path}/resources/css/user/mypage/viewBookmarks.css">
 </head>
 <body>
 <div class="wrap">
@@ -223,13 +18,25 @@
 
     <section class="my-favorite-section">
         <div class="page-header">
-            <h2><i class="fa-solid fa-seedling"></i>내 즐겨찾기</h2>
-
-            <div class="count-info">
-                전체 <strong>${fn:length(list)}</strong>곳의 소중한 장소들
-            </div>
+            <h2><i class="bi bi-flower1"></i> 내 즐겨찾기</h2>
         </div>
 
+        <!-- 카테고리 필터 -->
+        <div class="filter-tabs">
+            <button class="filter-tab ${empty category or category eq 'all' ? 'active' : ''}"
+                    onclick="filterBookmark('all')">전체</button>
+
+            <button class="filter-tab ${category eq 'REST' ? 'active' : ''}"
+                    onclick="filterBookmark('REST')">맛집</button>
+
+            <button class="filter-tab ${category eq 'FEST' ? 'active' : ''}"
+                    onclick="filterBookmark('FEST')">축제</button>
+
+            <button class="filter-tab ${category eq 'ACC' ? 'active' : ''}"
+                    onclick="filterBookmark('ACC')">숙소</button>
+        </div>
+
+        <!-- 즐겨찾기 카드 목록 -->
         <div class="bookmark-grid">
             <c:forEach var="place" items="${list}">
 
@@ -263,22 +70,22 @@
                             <c:choose>
                                 <c:when test="${place.place_type eq 'REST'}">
                                     <span class="type-tag type-rest">
-                                        <i class="fa-solid fa-utensils me-1"></i> 맛집
+                                        <i class="bi bi-cup-hot me-1"></i> 맛집
                                     </span>
                                 </c:when>
                                 <c:when test="${place.place_type eq 'ACC'}">
                                     <span class="type-tag type-acc">
-                                        <i class="fa-solid fa-hotel me-1"></i> 숙소
+                                        <i class="bi bi-building me-1"></i> 숙소
                                     </span>
                                 </c:when>
                                 <c:when test="${place.place_type eq 'FEST'}">
                                     <span class="type-tag type-fest">
-                                        <i class="fa-solid fa-masks-theater me-1"></i> 축제
+                                        <i class="bi bi-emoji-smile me-1"></i> 축제
                                     </span>
                                 </c:when>
                                 <c:otherwise>
                                     <span class="type-tag type-etc">
-                                        <i class="fa-solid fa-location-dot me-1"></i> 기타
+                                        <i class="bi bi-geo-alt me-1"></i> 기타
                                     </span>
                                 </c:otherwise>
                             </c:choose>
@@ -288,18 +95,18 @@
                             <div class="place-title">${place.name}</div>
 
                             <div class="place-address">
-                                <i class="fa-solid fa-location-dot me-1"></i> ${place.address}
+                                <i class="bi bi-geo-alt me-1"></i> ${place.address}
                             </div>
 
                             <div class="place-meta">
                                 <span class="meta-item">
-                                    <i class="fa-solid fa-star me-1"></i> 평점 ${place.avg_rating}
+                                    <i class="bi bi-star me-1"></i> 평점 ${place.avg_rating}
                                 </span>
                                 <span class="meta-item">
-                                    <i class="fa-solid fa-comment-dots me-1"></i> 리뷰 ${place.review_count}
+                                    <i class="bi bi-chat-dots me-1"></i> 리뷰 ${place.review_count}
                                 </span>
                                 <span class="meta-item">
-                                    <i class="fa-solid fa-eye me-1"></i> 조회 ${place.view_count}
+                                    <i class="bi bi-eye me-1"></i> 조회 ${place.view_count}
                                 </span>
                             </div>
                         </div>
@@ -307,9 +114,10 @@
                 </a>
             </c:forEach>
 
+            <!-- 데이터 없을 때 -->
             <c:if test="${empty list}">
                 <div class="no-data">
-                    <i class="fa-solid fa-heart-circle-plus"></i>
+                    <i class="bi bi-heart"></i>
                     <p>
                         아직 즐겨찾기에 담은 장소가 없네요.<br>
                         당신만의 특별한 장소를 찾아보세요!
@@ -318,9 +126,52 @@
                 </div>
             </c:if>
         </div>
+
+        <!-- 페이징 -->
+        <c:if test="${not empty paging and paging.count > 0}">
+            <div class="paging-wrap">
+
+                <!-- 이전 -->
+                <c:if test="${paging.startPage > paging.pageBlock}">
+                    <a class="paging-btn"
+                       href="${path}/viewBookmarks.do?pageNum=${paging.startPage - paging.pageBlock}&category=${category}">
+                        이전
+                    </a>
+                </c:if>
+
+                <!-- 페이지 번호 -->
+                <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
+                    <c:choose>
+                        <c:when test="${i == paging.currentPage}">
+                            <span class="paging-btn active">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="paging-btn"
+                               href="${path}/viewBookmarks.do?pageNum=${i}&category=${category}">
+                                ${i}
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <!-- 다음 -->
+                <c:if test="${paging.pageCount > paging.endPage}">
+                    <a class="paging-btn"
+                       href="${path}/viewBookmarks.do?pageNum=${paging.startPage + paging.pageBlock}&category=${category}">
+                        다음
+                    </a>
+                </c:if>
+            </div>
+        </c:if>
     </section>
 
     <%@ include file="../../common/footer.jsp"%>
 </div>
+
+<script>
+    function filterBookmark(category) {
+        location.href = '${path}/viewBookmarks.do?category=' + category;
+    }
+</script>
 </body>
 </html>

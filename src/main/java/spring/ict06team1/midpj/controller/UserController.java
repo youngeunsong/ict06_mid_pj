@@ -152,6 +152,14 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => myPageHome.do>>>");
 		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		if(sessionID == null) {
+			return "redirect:/login.do";
+		}
+		
+		service.myPageHomeAction(request, response, model);
+		
 		return "user/mypage/myPageHome";
 	}
 	
@@ -225,6 +233,14 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => viewReservations.do>>>");
 		
+		String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    if (sessionID == null) {
+	        return "redirect:/login.do";
+	    }
+
+	    service.viewMyReservationsAction(request, response, model);
+	    
 		return "user/mypage/viewReservations";
 	}
 	
@@ -233,6 +249,14 @@ public class UserController {
 	public String reservationDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => reservationDetail.do>>>");
+		
+		 String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+		    if (sessionID == null) {
+		        return "redirect:/login.do";
+		    }
+		    
+		    service.myReservationDetailAction(request, response, model);
 		
 		return "user/mypage/reservationDetail";
 	}

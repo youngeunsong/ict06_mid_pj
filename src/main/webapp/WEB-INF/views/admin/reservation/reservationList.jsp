@@ -27,15 +27,20 @@
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
 		<!-- ================= CONTENT ================= -->
-		<!--begin::content 헤더-->
+		<!--begin::content-wrapper-->
 		<div class="content-wrapper">
+			<!--begin::content-header-->
 			<div class="content-header">
+				<!--begin::container-fluid-->
 				<div class="container-fluid">
 					<h3 class="mb-0 font-weight-bold">예약 관리</h3>
 				</div>
 			</div>
+			<!--end::content-header-->
 			
-			<div class="app-content">
+			<!--begin::content-->
+			<section class="content">
+				<!--begin::container-fluid-->
 				<div class="container-fluid">
 				
 					<%--필터 영역--%>
@@ -189,14 +194,18 @@
 					</div>
 					
 				</div>
-			</div>
+				<!--end::container-fluid-->
+			</section>
+			<!--end::content-->
 		</div>
+		<!--end::content-wrapper-->
 		
 		<!-- ================= FOOTER ================= -->
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
 	</div>
+	<!--end::wrapper-->
 	
 	<%-- ===== 캘린더 더보기 Modal ===== --%>
 	<div class="modal fade" id="moreEventsModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -382,7 +391,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 <!-- FullCalendar -->
 <script>
 const reservationData = [
@@ -426,7 +435,6 @@ const reservationData = [
 
 <script>const path = "${path}";</script>
 <script src="${path}/resources/js/admin/reservation.js"></script>
-
 
 </body>
 </html>

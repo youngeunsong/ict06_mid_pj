@@ -12,13 +12,13 @@ import spring.ict06team1.midpj.dto.SurveyDTO;
 
 
 /*
- * @author 김다솜/ 송혜진
+ * @author 김다솜/ 송혜진 / 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-24
+ * 최종수정일: 2026-03-25
  * 참고 코드: None
  * ----------------------------------
  * v260325
- * 
+ * 기간내 사용자 만족도 표 조회 기능 추가 (송영은)
  * ----------------------------------
  */
 
@@ -94,6 +94,26 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		
 		return subjectiveSurveyAnswers;
 	}
+	
+	// 기간내 만족도 표 
+	@Override
+	public List<Map<String, Object>> getSatisfactionList(Map<String, Object> map) {
+		System.out.println("[AdDashboardDAOImpl - getSatisfactionList()]");
+		AdDashboardDAO dao = sqlSession.getMapper(AdDashboardDAO.class);
+		List<Map<String, Object>> satisfactionList = dao.getSatisfactionList(map);
+		return satisfactionList;
+	}
+	
+	// 기간내 만족도 표 총 개수 
+	@Override
+	public int getSurveyCount(Map<String, Object> map) {
+		System.out.println("[AdDashboardDAOImpl - getSurveyCount()]");
+		
+		AdDashboardDAO dao = sqlSession.getMapper(AdDashboardDAO.class);
+		int surveyCount = dao.getSurveyCount(map);
+		
+		return surveyCount;
+	}
 
 	// 금일 만족도 표 | 현 메서드 미사용/ 추후 작업 중 필요 시 사용하기 위해 파일만 유지
 	@Override
@@ -127,5 +147,9 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		
 		return pendingInquiryTop10;
 	}
+
+	
+
+	
 
 }

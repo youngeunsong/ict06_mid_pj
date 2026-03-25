@@ -34,8 +34,8 @@
       <div class="rk-head">
         <h1 class="rk-title">
         	<!-- 숙소 페이지에 어울리게 수정할 예정 -->
-          <i class="fa-solid fa-utensils me-2" style="color:var(--rk-brand);"></i> 
-          숙소 랭킹
+        	<i class="fa-solid fa-bed" style="color:var(--rk-brand);"></i>
+          	숙소 랭킹
         </h1>
         <div class="rk-sub">실시간 인기, 지역별 TOP 숙소를 한눈에 확인해보세요.</div>
       </div>

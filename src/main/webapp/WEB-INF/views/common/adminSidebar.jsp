@@ -87,7 +87,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/accommodation.acc" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
+							<a href="${path}/accommodation.adac" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
 								숙소 관리
 							</a>
 						</li>

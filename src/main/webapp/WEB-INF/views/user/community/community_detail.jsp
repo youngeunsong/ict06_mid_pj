@@ -1,7 +1,7 @@
 <!-- 
  * @author 송혜진
  * 최초작성일: 2026-03-16
- * 최종수정일: 2026-03-20
+ * 최종수정일: 2026-03-23
  * 적용 외부 API : Kakao 공유 API
  (PC : 정상 작동/ 모바일 : URL 올바르게 들어가나 페이지 못 불러옴 <= 정상)
   ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가
@@ -156,40 +156,45 @@
                     ${dto.content}
                 </div>
 
-                <button type="button" class="btn-like" id="likeBtn" data-post-id="${dto.post_id}">
-				    <i class="bi bi-heart"></i>
-				    좋아요 <span id="likeCount">${dto.like_count}</span>
-				</button>
-
-                <div class="post-footer">
-				    <a href="${path}/community_free.co" class="btn-list">
-				        <i class="bi bi-list-ul"></i> 목록
-				    </a>
-				    
-				    <button type="button" id="kakaoShareBtn" class="btn btn-warning btn-sm">
-				        카카오톡 공유
-				    </button>
+				<!-- 하단 액션 버튼 영역 -->
+				<div class="detail-action-wrap">
+				    <div class="detail-action-bar">
 				
-				    <c:if test="${sessionScope.sessionID == dto.user_id}">
-				        <div class="post-footer-right">
-				            <a href="${path}/community_modify.co?post_id=${dto.post_id}" class="btn-edit">
-				                <i class="bi bi-pencil-square"></i> 수정
-				            </a>
+				        <button type="button" class="pill-btn like-pill-btn" id="likeBtn" data-post-id="${dto.post_id}">
+				            <i class="bi bi-heart"></i>
+				            <span>좋아요</span>
+				            <span class="divider">|</span>
+				            <span id="likeCount">${dto.like_count}</span><span>명</span>
+				        </button>
 				
-				            <form action="${path}/community_delete.co" method="post" style="display:inline;">
-				                <input type="hidden" name="post_id" value="${dto.post_id}">
-				                <button type="submit"
-				                        class="btn-del"
-				                        onclick="return confirm('게시글을 삭제하시겠습니까?');">
-				                    <i class="bi bi-trash"></i> 삭제
-				                </button>
-				            </form>
-				        </div>
-				    </c:if>
+				        <a href="${path}/community_free.co" class="pill-btn list-pill-btn">
+				            <i class="bi bi-list"></i>
+				            <span>목록</span>
+				        </a>
+				
+				        <button type="button" id="kakaoShareBtn" class="pill-btn kakao-pill-btn">
+				            <span class="kakao-dot">💬</span>
+				            <span>카카오톡 공유</span>
+				        </button>
+				    </div>
 				</div>
-
-            </div>
-
+				
+				<c:if test="${sessionScope.sessionID == dto.user_id}">
+				    <div class="post-footer mt-3">
+				        <a href="${path}/community_modify.co?post_id=${dto.post_id}" class="btn btn-outline-secondary">수정</a>
+				
+				        <form action="${path}/community_delete.co" method="post" style="display:inline;">
+				            <input type="hidden" name="post_id" value="${dto.post_id}">
+				            <button type="submit"
+				                    class="btn btn-outline-danger"
+				                    onclick="return confirm('게시글을 삭제하시겠습니까?');">
+				                삭제
+				            </button>
+				        </form>
+				    </div>
+				</c:if>
+				
+				
             <!-- 게시글 댓글 S -->
             <div class="comment-box">
 			    <div class="comment-header">

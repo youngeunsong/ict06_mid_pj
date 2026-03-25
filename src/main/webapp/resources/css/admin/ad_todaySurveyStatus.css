@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+/* ad_todaySurveyStatus.css */
+
+.survey-status-wrap {
+    padding-bottom: 24px;
+}
+
+.survey-status-header {
+    padding-top: 8px;
+}
+
+.survey-status-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #111827;
+}
+
+.survey-status-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.summary-card,
+.survey-table-card {
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.summary-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+}
+
+.accent-blue::before {
+    background: #2563eb;
+}
+
+.summary-card .card-body h6 {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.summary-card .card-body h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0;
+}
+
+.table-count-text {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.survey-table thead th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.survey-table tbody td {
+    vertical-align: middle;
+    color: #111827;
+}
+
+.survey-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.empty-row {
+    color: #6b7280;
+    padding: 24px 0 !important;
+}
+
+.paging-wrap {
+    margin-top: 20px;
+}
+
+.pagination .page-link {
+    color: #2563eb;
+    border-radius: 8px;
+    margin: 0 3px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .survey-status-title {
+        font-size: 1.4rem;
+    }
+}

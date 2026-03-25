@@ -260,6 +260,19 @@ CREATE TABLE FAQ (
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
+
+--Ver.260320 변경사항 적용 쿼리
+--FAQ 테이블: view_count 필드 추가
+-- 1. 트리거 비활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK DISABLE;
+
+-- 2. 컬럼 추가
+ALTER TABLE FAQ ADD view_count NUMBER DEFAULT 0;
+
+-- 3. 트리거 다시 활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK ENABLE;
+----------------------------------------------
+
 SELECT * FROM FAQ;
 ALTER TABLE FAQ ADD(
 	view_count	NUMBER DEFAULT 0
@@ -318,6 +331,8 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+-- INQUIRY > category 추가 쿼리
+ALTER TABLE INQUIRY ADD (category VARCHAR2(200));
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (

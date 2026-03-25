@@ -26,11 +26,10 @@ public class SearchController {
 	@Autowired
 	private SearchServiceImpl searchService;
 	
-	/* ================================================== 
-	   검색바 > 검색 결과 페이지
-	   결과 페이지 + AJAX 필터화면 + 즐겨찾기
-	================================================== */
-	// 결과 페이지
+    /* ==========================================
+		검색 키워드 결과 가져오기
+		최근 검색어 추가 | 키워드(맛집/ 숙소/ 축제) 별 리스트 | 리뷰 갯수 + 리뷰 통계 조회 | 즐겨찾기 조회
+	========================================== */
 	@RequestMapping("/search.do")
 	public String executeSearch(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
@@ -42,7 +41,10 @@ public class SearchController {
 		return "user/search/search";
 	}
 	
-	// AJAX 필터화면
+    /* ==========================================
+		AJAX 화면
+		키워드(맛집/ 숙소/ 축제) 별 리스트+페이징 | 리뷰 갯수 + 리뷰 통계 조회 | 즐겨찾기 조회
+	========================================== */
 	@RequestMapping("/search/ajax")
 	public String searchAjax(
 			@RequestParam String keyword,
@@ -74,7 +76,9 @@ public class SearchController {
 		return "user/search/search_fragment";
 	}
 
-	// 즐겨찾기
+	/* ==========================================
+		즐겨찾기(여부체크/ 삭제/ 추가)
+	========================================== */
 	@RequestMapping("/favorite/toggle")
 	@ResponseBody
 	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
@@ -85,9 +89,9 @@ public class SearchController {
 	
 	/* ================================================== 
 	   검색바
-	   자동완성 + 최근 검색어
+	   자동완성 10개 + 최근 검색어 5개 조회/ 추가
 	================================================== */
-	// 자동완성
+	// 자동완성 10개
 	@RequestMapping("/search/autocomplete")
 	@ResponseBody
 	public java.util.List<String> getAutoComplete(@RequestParam String keyword) {
@@ -96,7 +100,7 @@ public class SearchController {
 	    return searchService.getAutoComplete(keyword);
 	}
 
-	// 최근 검색어
+	// 최근 검색어 5개 조회/ 추가
 	@RequestMapping("/search/recent")
 	@ResponseBody
 	public java.util.List<spring.ict06team1.midpj.dto.SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {

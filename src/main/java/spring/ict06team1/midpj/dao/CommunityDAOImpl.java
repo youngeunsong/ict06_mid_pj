@@ -16,7 +16,7 @@ public class CommunityDAOImpl implements CommunityDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    // 자유게시판 목록 총 갯수
+    // 자유게시판 목록 갯수
     @Override
     public int freeBoardCount(String category) {
         System.out.println("[CommunityDAOImpl - freeBoardCount()]");
@@ -27,7 +27,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         return freeBoardCount;
     }
     
-    // 자유게시판 목록 페이징
+    // 자유게시판 목록(카테고리 필터 + 페이징)
     @Override
     public List<CommunityDTO> freeBoardPage(Map<String, Object> map) {
         System.out.println("[CommunityDAOImpl - freeBoardPage()]");
@@ -49,7 +49,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         return popularList;
     }
 
-    // 게시글 상세
+    // 게시글 1건 조회
     @Override
     public CommunityDTO boardDetail(int post_id) {
         System.out.println("[CommunityDAOImpl - getBoardDetail()]");
@@ -69,7 +69,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         dao.increaseViewCount(post_id);
     }
 
-    // 게시글 등록
+    // 게시글 작성(본문)
     @Override
     public void insertBoard(CommunityDTO dto) {
         System.out.println("[CommunityDAOImpl - insertBoard()]");
@@ -78,7 +78,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         dao.insertBoard(dto);
     }
     
-    // 게시글 이미지 등록
+    // 게시글 대표 이미지 등록
     @Override
     public void insertCommunityImage(ImageStoreDTO dto) {
         System.out.println("[CommunityDAOImpl - insertCommunityImage()]");
@@ -96,7 +96,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         dao.deleteBoard(post_id);
     }
 
-    // 게시글 수정
+    // 게시글 수정(본문)
 	@Override
 	public void updateBoard(CommunityDTO dto) {
 		System.out.println("[CommunityDAOImpl - updateBoard()]");
@@ -105,7 +105,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         dao.updateBoard(dto);
 	}
 	
-	// 게시글 이미지 수정
+	// 게시글 수정(기존 대표 이미지 삭제)
 	@Override
 	public void deleteCommunityImagesByPostId(int post_id) {
 	    System.out.println("[CommunityDAOImpl - deleteCommunityImagesByPostId()]");
@@ -114,7 +114,7 @@ public class CommunityDAOImpl implements CommunityDAO {
 	    dao.deleteCommunityImagesByPostId(post_id);
 	}
 	
-	// 검색 게시글 갯수
+	// 자유게시판 검색 목록 갯수
 	@Override
 	public int searchFreeBoardCount(Map<String, Object> map) {
 		System.out.println("[CommunityDAOImpl - searchFreeBoardCount()]");
@@ -125,7 +125,7 @@ public class CommunityDAOImpl implements CommunityDAO {
         return searchCount;
 	}
 	
-	// 검색 게시글 리스트
+	// 자유게시판 검색 목록(카테고리 필터 + 페이징)
 	@Override
 	public List<CommunityDTO> searchFreeBoardPage(Map<String, Object> map) {
 		System.out.println("[CommunityDAOImpl - searchFreeBoardPage()]");
@@ -186,6 +186,5 @@ public class CommunityDAOImpl implements CommunityDAO {
 		return decreaseLikeCount;
 	}
 
-	
 	
 }

@@ -194,7 +194,7 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
     /* ==========================================
-		게시글 작성(등록)(게시글 내 내용 + 대표 이미지 등록)
+		게시글 작성(등록)(게시글 본문 + 대표 이미지 등록)
 	========================================== */
 	@Override
 	public void insertBoard(MultipartHttpServletRequest request) {
@@ -202,7 +202,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	    String sessionID = (String) request.getSession().getAttribute("sessionID");
 
-	    /* [ 게시글 내 내용 등록 ] ------------------------------------------------------------------ */
+	    /* [ 게시글 본문 등록 ] ------------------------------------------------------------------ */
 	    String title = request.getParameter("title");
 	    String content = request.getParameter("content");
 	    String category = request.getParameter("category");
@@ -297,7 +297,9 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 	
-	// 게시글 삭제
+    /* ==========================================
+		게시글 삭제
+	========================================== */
 	@Override
 	public void deleteBoard(HttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - deleteBoard()]");
@@ -312,21 +314,26 @@ public class CommunityServiceImpl implements CommunityService {
 	    }
 	}
 
-	// 게시글 수정(등록)
+    /* ==========================================
+		게시글 수정(등록)(게시글 본문 + 기존 대표 이미지 삭제, 수정 대표 이미지 신규 등록)
+	========================================== */
 	@Override
 	public void updateBoard(MultipartHttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - updateBoard()]");
 
 	    int post_id = Integer.parseInt(request.getParameter("post_id"));
 	    String sessionID = (String) request.getSession().getAttribute("sessionID");
-
+	    
+	    /* [ 게시글 본문 수정 등록 ] ------------------------------------------------------------------ */
+	    // 기존에 작성한 게시글 1건 조회
 	    CommunityDTO originDto = dao.boardDetail(post_id);
 
 	    // 작성자 본인만 수정 가능
 	    if (originDto == null || sessionID == null || !sessionID.equals(originDto.getUser_id())) {
 	        return;
 	    }
-
+	    
+	    // 수정한 내용 수집
 	    String title = request.getParameter("title");
 	    String content = request.getParameter("content");
 	    String category = request.getParameter("category");
@@ -337,12 +344,13 @@ public class CommunityServiceImpl implements CommunityService {
 	    dto.setContent(content);
 	    dto.setCategory(category);
 
-	    // 1. COMMUNITY 본문 수정
+	    // 수정한 본문 등록
 	    dao.updateBoard(dto);
-
-	    // 2. 새 대표 이미지가 있으면 기존 이미지 전체 교체
+	    
+	    /* [ 게시글 대표 이미지 수정 등록 ] 새 대표 이미지가 있으면 기존 이미지 전체 교체 ------------------------------------------------------------------ */
 	    List<MultipartFile> files = request.getFiles("files");
 
+	    // 신규 등록 이미지 여부 체크
 	    boolean hasNewFile = false;
 	    if (files != null) {
 	        for (MultipartFile file : files) {
@@ -413,7 +421,5 @@ public class CommunityServiceImpl implements CommunityService {
 	        sortOrder++;
 	    }
 	}
-	
-
 	
 }

@@ -15,8 +15,10 @@ public class NoticeDAOImpl implements NoticeDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    // 공지사항 =========================
- 	// 공지사항 - 상단 고정 공지
+    /* ==========================================
+		공지사항
+	========================================== */
+ 	// 상단 고정 공지
     @Override
     public List<NoticeDTO> getTopNoticeList() {
     	System.out.println("[NoticeDAOImpl - getTopNoticeList()]");
@@ -27,7 +29,7 @@ public class NoticeDAOImpl implements NoticeDAO {
         return topNoticeList;
     }
 
-    // 공지사항 - 일반 공지
+    // 일반 공지
     @Override
     public List<NoticeDTO> getNoticeList(Map<String, Object> map) {
     	System.out.println("[NoticeDAOImpl - getNoticeList()]");
@@ -38,7 +40,7 @@ public class NoticeDAOImpl implements NoticeDAO {
         return noticeList;
     }
     
-    // 공지사항 - 페이징
+    // 공지사항 페이징
     @Override
     public int getNoticeCount(Map<String, Object> map) {
     	System.out.println("[NoticeDAOImpl - getNoticeCount()]");
@@ -49,8 +51,10 @@ public class NoticeDAOImpl implements NoticeDAO {
         return noticeCount;
     }
 
-    // 이벤트 =========================
-    // 이벤트 - 진행중인 이벤트
+	/* ==========================================
+		이벤트
+	========================================== */
+    // 진행중인 이벤트
     @Override
     public List<NoticeDTO> getOngoingEventList() {
     	System.out.println("[NoticeDAOImpl - getTopEventList()]");
@@ -61,7 +65,7 @@ public class NoticeDAOImpl implements NoticeDAO {
         return ongoingEventList;
     }
 
-    // 이벤트 - 종류 이벤트
+    // 종류 이벤트
     @Override
     public List<NoticeDTO> getEndEventList(Map<String, Object> map) {
     	System.out.println("[NoticeDAOImpl - getEndedEventList()]");
@@ -72,7 +76,7 @@ public class NoticeDAOImpl implements NoticeDAO {
         return endEventList;
     }
     
-    // 이벤트 - 페이징
+    // 이벤트 페이징
     @Override
     public int getEndEventCount(Map<String, Object> map) {
     	System.out.println("[NoticeDAOImpl - getEndedEventCount()]");
@@ -83,7 +87,7 @@ public class NoticeDAOImpl implements NoticeDAO {
         return endEventCount;
     }
 
-    // 상세(공지/ 이벤트 공통 활용)
+    // 공지/ 이벤트 상세
     @Override
     public NoticeDTO getNoticeDetail(int notice_id) {
     	System.out.println("[NoticeDAOImpl - getNoticeDetail()]");

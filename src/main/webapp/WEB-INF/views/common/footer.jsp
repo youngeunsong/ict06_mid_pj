@@ -66,38 +66,7 @@
         </ul>
       </div>
 
-      <!-- 4) 공지사항 -->
-      <div class="col-12 col-md-3">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div class="fw-bold">공지사항</div>
-          <a class="small text-decoration-none" href="${path}/notice.do">더보기 +</a>
-        </div>
-
-        <div class="border rounded-3 p-3 bg-light">
-          <!-- 공지 3~5개 리스트 -->
-          <div class="d-flex justify-content-between small py-1 border-bottom">
-            <a class="text-decoration-none text-dark text-truncate" style="max-width: 75%;" href="/notice/1">
-              시스템 점검 안내 (02/26)
-            </a>
-            <span class="text-secondary">02.20</span>
-          </div>
-          <div class="d-flex justify-content-between small py-1 border-bottom">
-            <a class="text-decoration-none text-dark text-truncate" style="max-width: 75%;" href="/notice/2">
-              이용약관 개정 사전 공지
-            </a>
-            <span class="text-secondary">02.18</span>
-          </div>
-          <div class="d-flex justify-content-between small py-1">
-            <a class="text-decoration-none text-dark text-truncate" style="max-width: 75%;" href="/notice/3">
-              이벤트 당첨자 발표
-            </a>
-            <span class="text-secondary">02.10</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
+     
     <!-- 가장 하단 회사 정보 -->
     <div class="pt-3 mt-3 border-top small text-secondary">
       <div class="d-flex flex-wrap gap-3">

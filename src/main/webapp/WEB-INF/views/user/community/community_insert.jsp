@@ -45,7 +45,7 @@
     delete window.__oldModule;
     delete window.__oldExports;
 
-    window.contextPath = "${path}";
+    const CTX = "${path}";
 </script>
 
 <script src="${path}/resources/js/community/community_insert.js" defer></script>

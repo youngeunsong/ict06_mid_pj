@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import spring.ict06team1.midpj.dto.ReservationDTO;
+import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.dto.SurveyDTO;
 
 /*
@@ -15,7 +16,8 @@ import spring.ict06team1.midpj.dto.SurveyDTO;
  * 최종수정일: 2026-03-24
  * 참고 코드: None
  * ----------------------------------
- * v260324
+ * v260325
+ * 설문 응답 후 리뷰/별점 등록 기능을 위한 메서드 추가(insertReview, checkReviewExists)
  * ----------------------------------
  */
 @Repository
@@ -43,6 +45,19 @@ public class SurveyDAOImpl implements SurveyDAO {
 	public List<ReservationDTO> getSurveyTargetList(String user_id) {
 		System.out.println("[SurveyDAOImpl - getSurveyTargetList()]");
 		return sqlSession.getMapper(SurveyDAO.class).getSurveyTargetList(user_id);
+	}
+	//리뷰 등록
+	@Override
+	public int insertReview(ReviewDTO dto) {
+		System.out.println("[SurveyDAOImpl - insertReview()]");
+		return sqlSession.getMapper(SurveyDAO.class).insertReview(dto);
+	}
+
+	//리뷰 중복 체크
+	@Override
+	public int checkReviewExists(String reservation_id) {
+		System.out.println("[SurveyDAOImpl - checkReviewExists()]");
+		return sqlSession.getMapper(SurveyDAO.class).checkReviewExists(reservation_id);
 	}
     
 

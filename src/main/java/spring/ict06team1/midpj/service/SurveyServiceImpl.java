@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import spring.ict06team1.midpj.dao.ReservationDAO;
+import spring.ict06team1.midpj.dao.SurveyDAO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
+import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.dto.SurveyDTO;
 
 /*
@@ -17,11 +20,15 @@ import spring.ict06team1.midpj.dto.SurveyDTO;
  * 최종수정일: 2026-03-24
  * 참고 코드: None
  * ----------------------------------
- * v260324
+ * v260325
+ * 리뷰/별점 등록 기능을 위한 메서드 추가(insertReview)
  * ----------------------------------
  */
+@Service
 public class SurveyServiceImpl implements SurveyService {
 
+	@Autowired
+	public SurveyDAO svDao;
 	@Autowired
 	public ReservationDAO resDao;
 
@@ -32,13 +39,83 @@ public class SurveyServiceImpl implements SurveyService {
 	    System.out.println("[SurveyServiceImpl - insertSurvey()]");
 	    
 	    Map<String, Object> result = new HashMap<String, Object>();
-		return null;
+	    
+	    try {
+	    	//1. 예약 존재 여부 체크
+	    	ReservationDTO resDto = resDao.getReservationById(dto.getReservation_id());
+	    	
+	    	if(resDto == null) {
+	    		throw new RuntimeException("존재하지 않는 예약");
+	    	}
+	    	
+	    	//2. 본인 예약인지 체크
+	    	if(!dto.getUser_id().equals(resDto.getUser_id())) {
+	    		throw new RuntimeException("본인 예약만 설문 가능");
+	    	}
+	    	
+	    	//3. 이용 완료 상태인지 체크
+	    	if(!"COMPLETED".equals(resDto.getStatus())) {
+	    		throw new RuntimeException("이용 완료된 예약만 설문 가능");
+	    	}
+	    	
+	    	//4. 이미 설문 작성했는지 체크
+	    	if(svDao.checkSurveyExists(resDto.getReservation_id()) > 0) {
+	    		throw new RuntimeException("이미 설문 작성함");
+	    	}
+	    	
+	    	//5. 설문 저장
+	    	svDao.insertSurvey(dto);
+	    	
+	    	result.put("success", true);
+	    	result.put("msg", "설문 등록 완료");
+	    } catch(Exception e) {
+	    	e.printStackTrace();
+	    	result.put("success", false);
+	    	result.put("msg", e.getMessage());
+	    }
+		return result;
 	}
 
 	// 설문 대상 조회
 	@Override
 	public List<ReservationDTO> getSurveyTargetList(String user_id) {
 	    System.out.println("[SurveyServiceImpl - getSurveyTargetList()]");
-		return null;
+		
+	    return svDao.getSurveyTargetList(user_id);
+	}
+
+	//리뷰 등록
+	@Override
+	public Map<String, Object> insertReview(ReviewDTO dto, String reservation_id) {
+	    System.out.println("[SurveyServiceImpl - insertReview()]");
+	    
+	    Map<String, Object> result = new HashMap<String, Object>();
+	    
+	    try {
+	    	//1. 예약 존재 여부 체크
+	    	ReservationDTO resDto = resDao.getReservationById(reservation_id);
+	    	if(resDto == null)
+	    		throw new RuntimeException("존재하지 않는 예약");
+
+	    	if(!dto.getUser_id().equals(resDto.getUser_id()))
+	    		throw new RuntimeException("본인 예약만 리뷰 가능");
+	    	
+	    	if(!"COMPLETED".equals(resDto.getStatus()))
+	    		throw new RuntimeException("이용 완료된 예약만 리뷰 가능");
+	    	
+	    	if(svDao.checkReviewExists(reservation_id) > 0)
+	    		throw new RuntimeException("이미 리뷰 작성함");
+	    	
+	    	dto.setPlace_id(resDto.getPlace_id());
+	    	svDao.insertReview(dto);
+	    	
+	    	result.put("success", true);
+	    	result.put("msg", "리뷰 등록 완료");
+	    } catch(Exception e) {
+	    	e.printStackTrace();
+	    	result.put("success", false);
+	    	result.put("msg", e.getMessage());
+	    }
+		return result;
 	}
 }

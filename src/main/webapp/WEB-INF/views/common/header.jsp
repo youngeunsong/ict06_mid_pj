@@ -97,3 +97,5 @@
 	</nav>
 </header>
 <!-- header 끝 -->
+
+<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp" %>

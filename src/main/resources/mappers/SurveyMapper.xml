@@ -16,9 +16,20 @@
 	 	<result property="improvements" column="improvements"/>
 	 	<result property="surveyDate" column="created_at"/>
 	 	
-	 	<association property="reservationDTO" javaType="spring.ict06team1.midpj.dto.reservationDTO">
+	 	<association property="reservationDTO" javaType="spring.ict06team1.midpj.dto.ReservationDTO">
 	 		<id property="reservation_id" column="reservation_id"></id>
 	 		<result property="user_id" column="user_id"></result>
+	 	</association>
+	 </resultMap>
+	 
+	 <resultMap id="reservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
+	 	<id property="reservation_id" column="reservation_id"/>
+	 	<result property="user_id" column="user_id"/>
+	 	<result property="place_id" column="place_id"/>
+	 	
+	 	<association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	 		<id property="place_id" column="p_place_id"></id>
+	 		<result property="name" column="p_name"></result>
 	 	</association>
 	 </resultMap>
 
@@ -47,14 +58,38 @@
 	</select>
 	
 	<!-- 3. 설문 대상 예약 조회 -->
-	<select id="getSurveyTargetList" parameterType="String" resultType="spring.ict06team1.midpj.dto.SurveyDTO">
-		SELECT *
-		FROM RESERVATION
-		WHERE user_id = #{user_id}
-		AND status = 'COMPLETED'
-		AND reservation_id NOT IN (
+	<select id="getSurveyTargetList" parameterType="String" resultMap="reservationMap">
+		SELECT r.reservation_id, r.user_id, r.place_id,
+			   p.place_id AS p_place_id, p.name AS p_name
+		FROM RESERVATION r
+		LEFT JOIN PLACE p ON r.place_id = p.place_id
+		WHERE r.user_id = #{user_id}
+		AND r.status = 'COMPLETED'
+		AND r.reservation_id NOT IN (
 			SELECT reservation_id FROM SURVEY
 		)
-		ORDER BY created_at DESC
+		ORDER BY r.created_at DESC
+	</select>
+	
+	<!-- 4. 리뷰 등록 -->
+	<insert id="insertReview" parameterType="spring.ict06team1.midpj.dto.ReviewDTO">
+		<selectKey keyProperty="review_id" resultType="int" order="BEFORE">
+			SELECT SEQ_REVIEW.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO REVIEW(
+			review_id, place_id, reservation_id,
+			rating, content, created_at
+		)
+		VALUES(
+			#{review_id}, #{place_id}, #{reservation_id},
+			#{rating}, #{content}, SYSDATE
+		)
+	</insert>
+	
+	<!-- 5. 리뷰 중복 체크 -->
+	<select id="checkReviewExists" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE reservation_id = #{reservation_id}
 	</select>
  </mapper>

@@ -1,3 +1,8 @@
+--Ver.260324
+--변경사항
+--1) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
+--------------------------------------------------
 --Ver.260320
 --변경사항
 --1) FAQ 테이블: view_count 필드 추가(자료형 NUMBER)
@@ -263,15 +268,18 @@ ALTER TABLE FAQ ADD(
 -- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (
     survey_id       NUMBER PRIMARY KEY,
-    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id), -- 자료형 수정
+    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id),
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id),
     nps_score       NUMBER(2),
     satisfaction_score NUMBER(2),
     inconvenience	CLOB,
     info_reliability_score	NUMBER(2),
     improvements	CLOB,
-    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 surveyDate
+    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP,    --DTO는 surveyDate
+    UNIQUE(reservation_id)
 );
 SELECT * FROM SURVEY;
+DROP TABLE SURVEY; --후 테이블 새로 생성
 
 -- 15. POINT_POLICY (포인트 지급 기준)
 CREATE TABLE POINT_POLICY (

@@ -20,6 +20,14 @@ SELECT p.place_id
   FROM PLACE p
   JOIN FESTIVAL f
     ON f.FESTIVAL_ID = p.PLACE_ID
+ WHERE name LIKE '그랜드 민트 페스티벌 2025'
+   AND address LIKE '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원'
+   AND f.START_DATE = '2025-10-18'; 
+
+SELECT * 
+  FROM PLACE p
+  JOIN FESTIVAL f
+    ON f.FESTIVAL_ID = p.PLACE_ID
  WHERE name = '그랜드 민트 페스티벌 2025'
    AND address = '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원'
    AND f.START_DATE = '2025-10-18'; 

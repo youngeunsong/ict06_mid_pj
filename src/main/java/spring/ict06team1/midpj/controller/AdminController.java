@@ -14,10 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import spring.ict06team1.midpj.dto.MemberDTO;
-import spring.ict06team1.midpj.service.AdminHomeServiceImpl;
-/*=======
 import spring.ict06team1.midpj.service.AdDashboardServiceImpl;
->>>>>>> dev*/
+
 import spring.ict06team1.midpj.service.UserServiceImpl;
 
 @Controller
@@ -29,26 +27,18 @@ public class AdminController {
 	private UserServiceImpl userService;
 	
 	@Autowired
-	private AdminHomeServiceImpl adminHomeService;
-	/*
-	 * =======
-	 * 
-	 * @Autowired private AdDashboardServiceImpl adDashService; >>>>>>> dev
-	 */
-
+	private AdDashboardServiceImpl adDashService;
+	
 	// 0. ADMIN HOME / 대시보드
 	@RequestMapping("/adminHome.ad")
 	public String adminHome(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /adminHome.ad]");
 		
-		adminHomeService.getAdminHomeDashboard(request, response, model);
+		adDashService.getAdminHomeDashboard(request, response, model);
 		
         return "admin/adminHome";
-/*=======
-		adDashService.getDashboardData(request, response, model);
-		return "admin/adminHome";
->>>>>>> dev*/
+
 	}
 	
 	// 1. 금일 사용자 만족도 표
@@ -57,7 +47,7 @@ public class AdminController {
     public String todaySurveyStatus(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("[url => /todaySurveyStatus.ad]");
         
-        adminHomeService.getTodaySurveyStatus(request, response, model);
+		adDashService.getTodaySurveyStatus(request, response, model);
         
         return "admin/todaySurveyStatus";
     }

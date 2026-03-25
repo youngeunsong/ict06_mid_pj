@@ -1,6 +1,8 @@
---Ver.260324
+--Ver.260325
 --변경사항
---1) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--1) REVIEW 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--필드 추가용 ALTER 쿼리 넣어두었습니다. 
+--2) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
 --해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
 --------------------------------------------------
 --Ver.260320
@@ -172,6 +174,7 @@ SELECT * FROM PAYMENT;
 CREATE TABLE REVIEW (
     review_id      NUMBER PRIMARY KEY,
     user_id        VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL,
     place_id       NUMBER REFERENCES PLACE(place_id),
     rating         NUMBER(1) CHECK(rating BETWEEN 1 AND 5),
     content        CLOB,
@@ -182,6 +185,10 @@ CREATE TABLE REVIEW (
     CONSTRAINT CHK_REVIEW_RATING CHECK(RATING BETWEEN 1 AND 5)
 );
 SELECT * FROM REVIEW;
+ALTER TABLE REVIEW ADD(
+	reservation_id VARCHAR2(50),
+	CONSTRAINT fk_review_reservation FOREIGN KEY(reservation_id) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL
+);
 
 -- 10. COMMUNITY(커뮤니티/사용자 게시판)
 CREATE TABLE COMMUNITY(

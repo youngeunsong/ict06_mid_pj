@@ -1,13 +1,15 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import spring.ict06team1.midpj.dto.CommunityDTO;
 
 public interface AdCommunityDAO {
 
-	//1. 전체 게시글 목록(숨김 포함)
-	public List<CommunityDTO> getAdPostList();
+	//1. 전체 게시글 목록(숨김 포함), 게시글 수
+	public List<CommunityDTO> getAdPostList(Map<String, Object> map);
+	public int getAdPostCount(Map<String, Object> map);
 	
 	//2. 게시글 상세보기
 	public CommunityDTO getAdPostDetail(int post_id);

@@ -56,7 +56,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Value("${naverpay.approve-url}")
 	private String naverPayApproveUrl;
 
-	// 1. 축제 예약 페이지에 필요한 데이터 조회
+	// 1-1. 축제 예약 페이지에 필요한 데이터 조회
 	// place_id를 기준으로 축제 정보, 장소 정보, 티켓 목록을 묶어서 반환
 	@Override
 	public FestivalDTO getFestivalTickets(int place_id) {
@@ -87,15 +87,12 @@ public class ReservationServiceImpl implements ReservationService {
 		System.out.println("[ReservationServiceImpl - createReservation()]");
 		
 		ReservationDTO dto = new ReservationDTO();
+		String placeType = request.getParameter("place_type");
 		
-		// 요청값을 DTO에 세팅
+		// 공통 요청값 DTO에 세팅
 		dto.setPlace_id(Integer.parseInt(request.getParameter("place_id")));
-		dto.setTicket_id(Integer.parseInt(request.getParameter("ticket_id")));
 		dto.setGuest_count(Integer.parseInt(request.getParameter("guest_count")));
 		dto.setRequest_note(request.getParameter("request_note"));
-		
-		// 방문일 문자열을 Date로 변환
-		dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
 		
 		// 로그인한 사용자 id 세팅
 		String user_id = (String)request.getSession().getAttribute("sessionID");
@@ -109,32 +106,66 @@ public class ReservationServiceImpl implements ReservationService {
 		if(dto.getGuest_count() <= 0) {
 			throw new RuntimeException("인원 수 확인");
 		}
+		
+		int totalAmount = 0;
+		
+		//장소종류별 추가 요청값 세팅
+		//축제: ticket_id, visit_date
+		if("FEST".equals(placeType)) {
+			dto.setTicket_id(Integer.parseInt(request.getParameter("ticket_id")));
+			dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
+			
+			int price = resDao.getTicketPrice(dto.getTicket_id());
+			totalAmount = price * dto.getGuest_count();
+			if(totalAmount <= 0)
+				throw new RuntimeException("결제 금액 오류");
+		}
+		//숙소: check_in, check_out
+		else if("ACC".equals(placeType)) {
+			dto.setCheck_in(Date.valueOf(request.getParameter("check_in")));
+			dto.setCheck_out(Date.valueOf(request.getParameter("check_out")));
 
-		// 선택한 티켓 가격 조회
-		int price = resDao.getTicketPrice(dto.getTicket_id());
+			int price = resDao.getAccommodationPrice(dto.getPlace_id());
+			long nights = (dto.getCheck_out().getTime() - dto.getCheck_in().getTime()) / (1000*60*60*24);
+			totalAmount = price * (int)nights;
+			if(totalAmount <= 0)
+				throw new RuntimeException("결제 금액 오류");
+		}
+		//맛집: visit_date, visit_time
+		else if("REST".equals(placeType)) {
+		    dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
+		    dto.setVisit_time(request.getParameter("visit_time"));
+
+		    // 맛집은 노쇼 방지 예약금: 인원수 * 1000원
+		    totalAmount = dto.getGuest_count() * 1000;
+
+		    if(totalAmount < 10) {
+		        throw new RuntimeException("맛집 예약금 금액 오류");
+		    }
+		}
 		
-		// 총 결제 금액 계산
-		int totalAmount = price * dto.getGuest_count();
-		if(totalAmount <= 0)
-			throw new RuntimeException("결제 금액 오류");
-		
-		// 예약 저장
-		resDao.insertReservation(dto);
-		
-		// 결제 예정 정보 구성
+		//예약 저장
+		if("FEST".equals(placeType)) {
+			resDao.insertFestReservation(dto);
+		}
+		else if("ACC".equals(placeType)) {
+			resDao.insertAccReservation(dto);
+		}
+		if("REST".equals(placeType)) {
+			resDao.insertRestReservation(dto);
+		}
+
+		//결제 예정 정보 저장(무료예약도 amount=0으로 저장)
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", dto.getUser_id());
 		map.put("reservation_id", dto.getReservation_id());
 		map.put("amount", totalAmount);
 		map.put("payment_method", "CARD");
 		
-		// 결제 예정 정보 저장
 		resDao.insertPayment(map);
 		dto.setPayment_id((String)map.get("payment_id"));
 		
-		model.addAttribute("msg", "예약 완료");
-		
-		// 프론트에 반환할 값 구성
+		//프론트에 반환할 값 구성
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("reservation_id", dto.getReservation_id());
 		result.put("payment_id", dto.getPayment_id());

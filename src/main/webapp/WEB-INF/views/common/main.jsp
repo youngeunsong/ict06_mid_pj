@@ -27,7 +27,7 @@
 
 <script src="${path}/resources/js/user/main.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
-<script> window.contextPath = '${path}'; </script>
+<script> const CTX = '${path}'; </script>
 
 </head>
 <body>
@@ -70,6 +70,7 @@
 		<%@ include file="header.jsp"%>
 
 		<!-- 컨텐츠 시작 -->
+		
 		<!-- 메인 배너S -->
 		<section class="position-relative">
 			<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel"
@@ -690,6 +691,9 @@
 		<!-- footer -->
 		<%@ include file="footer.jsp"%>
 
+		<!-- 설문 모달 -->
+		<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp"%>
+		<script src="${path}/resources/js/user/survey.js"></script>
 	</div>
 </body>
 </html>

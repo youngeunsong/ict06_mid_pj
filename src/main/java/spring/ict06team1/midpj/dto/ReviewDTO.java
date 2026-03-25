@@ -6,6 +6,7 @@ public class ReviewDTO {
 
 	private int review_id;
 	private String user_id;
+	private String reservation_id;
 	private int place_id;
 	private int rating;
 	private String content;
@@ -17,11 +18,12 @@ public class ReviewDTO {
 		super();
 	}
 
-	public ReviewDTO(int review_id, String user_id, int place_id, int rating, String content, String status,
-			Timestamp reviewDate, Timestamp reviewUpdateDate) {
+	public ReviewDTO(int review_id, String user_id, String reservation_id, int place_id, int rating, String content,
+			String status, Timestamp reviewDate, Timestamp reviewUpdateDate) {
 		super();
 		this.review_id = review_id;
 		this.user_id = user_id;
+		this.reservation_id = reservation_id;
 		this.place_id = place_id;
 		this.rating = rating;
 		this.content = content;
@@ -44,6 +46,14 @@ public class ReviewDTO {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public String getReservation_id() {
+		return reservation_id;
+	}
+
+	public void setReservation_id(String reservation_id) {
+		this.reservation_id = reservation_id;
 	}
 
 	public int getPlace_id() {
@@ -96,9 +106,9 @@ public class ReviewDTO {
 
 	@Override
 	public String toString() {
-		return "ReviewDTO [review_id=" + review_id + ", user_id=" + user_id + ", place_id=" + place_id + ", rating="
-				+ rating + ", content=" + content + ", status=" + status + ", reviewDate=" + reviewDate
-				+ ", reviewUpdateDate=" + reviewUpdateDate + "]";
+		return "ReviewDTO [review_id=" + review_id + ", user_id=" + user_id + ", reservation_id=" + reservation_id
+				+ ", place_id=" + place_id + ", rating=" + rating + ", content=" + content + ", status=" + status
+				+ ", reviewDate=" + reviewDate + ", reviewUpdateDate=" + reviewUpdateDate + "]";
 	}
 
 }

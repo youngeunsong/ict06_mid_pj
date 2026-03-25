@@ -105,8 +105,21 @@ public class UserDAOImpl implements UserDAO {
 	// 즐겨찾기 목록 카운트
 	@Override
 	public int getFavoriteListCount(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - getFavoriteListCount()");
+		
 	    int count = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.getFavoriteListCount", map);
+	    
 	    return count;
+	}
+	
+	// 마이페이지 홈 즐겨찾기 카테고리별 탑3
+	@Override
+	public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - getFavoriteTop3ByCategory()");
+		
+		List<PlaceDTO> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.getFavoriteTop3ByCategory", map);
+		
+		return list;
 	}
 
 	// 나의 문의 목록 조회

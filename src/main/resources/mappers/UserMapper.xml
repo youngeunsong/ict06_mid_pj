@@ -98,6 +98,31 @@
 	    WHERE user_id = #{user_id}
 	</select>
 	
+	<!-- 마이페이지 홈 - 즐겨찾기 카테고리별 탑3 -->
+	<select id="getFavoriteTop3ByCategory" parameterType="map"
+	        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+	
+	    SELECT *
+	    FROM (
+	        SELECT
+	              p.PLACE_ID
+	            , p.PLACE_TYPE
+	            , p.NAME
+	            , p.ADDRESS
+	            , p.IMAGE_URL
+	            , p.VIEW_COUNT
+	            <!-- 조회수 기준 정렬, 순번 부여 -->
+	            , ROW_NUMBER() OVER(ORDER BY p.VIEW_COUNT DESC) AS rn
+	        FROM PLACE p
+	        JOIN FAVORITE f
+	          ON p.PLACE_ID = f.PLACE_ID
+	        WHERE f.USER_ID = #{user_id}
+	          AND p.PLACE_TYPE = #{category}
+	    )
+	    <!-- 상위 3개 제한 (&lt : < ) -->
+	    WHERE rn &lt;= 3
+	</select>
+	
 	<!-- 나의 즐겨찾기 목록 조회 -->
 	<select id="getFavoriteList" parameterType="map" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
 	    SELECT

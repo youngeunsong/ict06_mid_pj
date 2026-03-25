@@ -38,6 +38,9 @@ public interface UserDAO {
     // 즐겨찾기 목록 카운트
     public int getFavoriteListCount(Map<String, Object> map);
     
+    // 마이페이지 홈 즐겨찾기 카테고리별 탑3
+    public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map);
+    
     // 나의 문의 목록 조회
     public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map);
     

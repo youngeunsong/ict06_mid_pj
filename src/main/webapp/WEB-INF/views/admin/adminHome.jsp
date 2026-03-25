@@ -1,9 +1,9 @@
 <!-- 
- * @author 송혜진
+ * @author 송혜진 / 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-24
- 
- 
+ * 최종수정일: 2026-03-25
+ * 수정 내용
+ v260325: 조회 기간 내 사용자 만족도 조사 결과 표 추가 (송영은)
 -->
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -266,6 +266,51 @@
 					</div>
 				</div>
 				<!-- ===== 만족도 핵심 통계 표E ===== -->
+				
+				<!-- ===== 만족도 조사 결과 표S ===== -->
+				<div class="row mb-4">
+					<div class="col-12">
+						<div class="card dashboard-card">
+							<div class="card-header">
+								<h5 class="mb-0">기간 내 맛집만족도 / 정보신뢰도 / NPS 조사 결과 표</h5>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table dashboard-table mb-0">
+										<thead>
+											<tr>
+												<th>번호</th>
+												<th>만족도</th>
+												<th>정보신뢰도</th>
+												<th>NPS 점수</th>
+												<th>예약번호</th>
+												<th>제출일</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="dto" items="${satisfactionList}">
+												<tr>
+													<td>${dto.survey_id}</td>
+													<td>${dto.satisfaction_score}</td>
+													<td>${dto.info_reliability_score}</td>
+													<td>${dto.nps_score}</td>
+													<td>${dto.reservation_id}</td>
+													<td>${dto.surveyDate}</td>
+												</tr>
+											</c:forEach>
+										</tbody> 
+									</table>
+								</div>
+								
+								<!-- 페이징 처리 : 설문 전용 페이징 -->
+								<div class="py-3 border-top">
+									<%@ include file="/WEB-INF/views/admin/surveyPagination.jsp"%>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- ===== 만족도 조사 결과 표E ===== -->
 
 				<!-- ===== 문의S ===== -->
 				<div class="row g-4 mb-4">

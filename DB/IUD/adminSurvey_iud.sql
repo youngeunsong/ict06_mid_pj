@@ -9,6 +9,12 @@ DROP SEQUENCE SEQ_SURVEY;
 SELECT max(survey_ID) FROM survey; 
 CREATE SEQUENCE SEQ_SURVEY START WITH 257 INCREMENT BY 1;
 
+-- 특정 기간 내 사용자 만족도 조사 결과 갯수 
+SELECT COUNT(*)
+  FROM SURVEY
+ WHERE CREATED_AT >= '2026-03-01 00:00:00'
+   AND CREATED_AT < '2026-03-24 23:59:59'; 
+
 -- 특정 기간 내의 survey 데이터 표로 열람 (페이징 처리)
  SELECT  	survey_id, 
  			user_id, 

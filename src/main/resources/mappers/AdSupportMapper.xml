@@ -63,7 +63,7 @@
 	                </if>
 	            </where>
 	    <![CDATA[
-	            ORDER BY inquiry_id DESC
+	            ORDER BY created_at DESC, inquiry_id DESC
 	        ) a 
 	        WHERE rownum <= #{endRow}
 	    ) 
@@ -116,7 +116,7 @@
 	        created_at, 
 	        updated_at
 	    ) VALUES (
-	        faq_seq.nextval, 
+	        SEQ_FAQ.nextval, 
 	        #{admin_id, jdbcType=VARCHAR}, 
 	        #{question, jdbcType=VARCHAR}, 
 	        #{answer, jdbcType=VARCHAR}, 

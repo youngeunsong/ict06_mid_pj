@@ -226,6 +226,7 @@ CREATE TABLE FAQ (
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
     order_no	CHAR(1),
     visible     CHAR(1) DEFAULT 'Y',
+    view_count  NUMBER,
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
@@ -274,7 +275,7 @@ CREATE TABLE INQUIRY (
     category	VARCHAR2(200),
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
-    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
+    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, PROGRESS, ANSWERED
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
@@ -282,6 +283,8 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+SELECT * FROM INQUIRY 
+ORDER BY created_at desc;
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (

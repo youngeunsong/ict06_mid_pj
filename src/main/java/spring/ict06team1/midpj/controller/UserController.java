@@ -245,65 +245,6 @@ public class UserController {
 		
 		return "user/mypage/inquiryDetail";
 	}
+
+}	
 	
-	
-	// [고객지원] ----------------------------------------------------------------------------------------
-
-    // [고객지원]고객센터 메인: FAQ 전체 및 카테고리 메인 페이지
-    @RequestMapping("/faqMain.sp")
-    public String faqMain(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("[url => /faqMain.sp]");
-        
-        // 서비스에서 초기 FAQ 데이터를 가져와 model에 담는 로직이 들어갈 예정입니다.
-        // service.getFaqMainList(request, response, model);
-        
-        return "support/faqMain"; // FAQ 메인 JSP로 이동
-    }
-    
-    // [고객지원]FAQ 카테고리별 데이터 조회: 비동기(Ajax) 방식으로 리스트(JSON) 반환
-    @ResponseBody // 별도의 JSP 없이 리스트 객체를 직접 데이터로 전송합니다.
-    @RequestMapping("/getFaqByCategory.sp")
-    public List<FaqDTO> getFaqByCategory(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("[url => /getFaqByCategory.sp]");
-        
-        // 서비스에서 카테고리 필터링된 리스트를 반환받습니다.
-        // return supportService.getFaqListByCategory(request, response, model);
-        return null; 
-    }
-
-    // [고객지원]1:1 문의 작성 폼 이동
-    @RequestMapping("/inquiryWrite.sp")
-    public String inquiryWrite(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("[url => /inquiryWrite.sp]");
-        
-        return "support/inquiryWrite"; // 문의 작성 페이지
-    }
-
-    // [고객지원]1:1 문의 등록 처리 (Action)
-    @RequestMapping("/inquiryWriteAction.sp")
-    public String inquiryWriteAction(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("[url => /inquiryWriteAction.sp]");
-        
-        // 사용자가 입력한 제목, 내용 등을 DB에 저장하는 로직입니다.
-        // supportService.insertInquiryAction(request, response, model);
-        
-        return "support/inquiryWriteAction"; // 등록 완료 알림 및 리다이렉트 페이지
-    }
-
-    // [고객지원]나의 문의내역: 본인이 작성한 내역만 확인 
-    @RequestMapping("/myInquiryList.sp")
-    public String myInquiryList(HttpServletRequest request, HttpServletResponse response, Model model)
-            throws ServletException, IOException {
-        logger.info("[url => /myInquiryList.sp]");
-        
-        // 세션 ID를 기준으로 본인의 문의글만 조회하여 model에 담습니다.
-        // supportService.getMyInquiryList(request, response, model);
-        
-        return "support/myInquiryList"; // 나의 문의내역 JSP
-    }
-
-}

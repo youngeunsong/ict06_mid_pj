@@ -202,9 +202,12 @@
 	            longitude = #{longitude, jdbcType=DOUBLE}, 
 	            image_url = #{image_url, jdbcType=VARCHAR}
 	    WHEN NOT MATCHED THEN
-	        INSERT (place_id, place_type, name, address, view_count, latitude, longitude, image_url, created_at)
-	        VALUES (#{place_id}, 'ACC', #{name, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, 0, 
-	                #{latitude, jdbcType=DOUBLE}, #{longitude, jdbcType=DOUBLE}, #{image_url, jdbcType=VARCHAR}, SYSTIMESTAMP)
+	        INSERT (place_id, place_type, name, address, view_count, 
+	        latitude, longitude, image_url, created_at)
+	        VALUES (#{place_id}, 'ACC', #{name, jdbcType=VARCHAR}, 
+	        #{address, jdbcType=VARCHAR}, 0, 
+            #{latitude, jdbcType=DOUBLE}, #{longitude, jdbcType=DOUBLE}, 
+            #{image_url, jdbcType=VARCHAR}, SYSTIMESTAMP)
 	</update>
 	
 	<!--  API 수집 데이터 전용 장소 삽입 -->
@@ -219,9 +222,12 @@
 	            price = #{price, jdbcType=INTEGER}, 
 	            areaCode = #{areaCode, jdbcType=VARCHAR}
 	    WHEN NOT MATCHED THEN
-	        INSERT (accommodation_id, description, phone, category, status, price, areaCode)
-	        VALUES (#{accommodation_id}, #{description, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR}, 
-	                #{category, jdbcType=VARCHAR}, 'OPEN', #{price, jdbcType=INTEGER}, #{areaCode, jdbcType=VARCHAR})
+	        INSERT (accommodation_id, description, phone, 
+	        category, status, price, areaCode)
+	        VALUES (#{accommodation_id}, #{description, jdbcType=VARCHAR}, 
+	        #{phone, jdbcType=VARCHAR}, 
+            #{category, jdbcType=VARCHAR}, 'OPEN', 
+            #{price, jdbcType=INTEGER}, #{areaCode, jdbcType=VARCHAR})
 	</update>
 	
 	<!-- 중복 데이터 체크 -->

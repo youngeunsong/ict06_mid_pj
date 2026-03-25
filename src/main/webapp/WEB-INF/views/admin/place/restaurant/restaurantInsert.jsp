@@ -30,7 +30,7 @@
                             </h4>
                         </div>
                         
-                        <form action="${path}/restaurantInsertAction.ad" method="post" enctype="multipart/form-data" name="insertForm">
+                        <form action="${path}/restaurantInsertAction.adre" method="post" enctype="multipart/form-data" name="insertForm">
                             <input type="hidden" name="areaCode1" id="areaCodeHidden" value="${param.areaCode}">
                             <input type="hidden" name="pageNum" value="${param.pageNum}">
                             <input type="hidden" name="category1" value="${param.category}">
@@ -46,15 +46,15 @@
                                         <label class="form-label">지역 선택 *</label>
                                         <select id="areaCodeSelect" class="form-select"name="areaCode" required>
                                         	<option value="">지역을 선택해주세요</option>
-                                            <option value="1">서울</option>
-									        <option value="31">경기</option>
-									        <option value="2">인천</option>
-									        <option value="6">부산</option>
-									        <option value="4">대구</option>
-									        <option value="3">대전</option>
-									        <option value="5">광주</option>
-									        <option value="7">울산</option>
-									        <option value="39">제주</option>
+                                            <option value="서울">서울</option>
+									        <option value="경기">경기</option>
+									        <option value="인천">인천</option>
+									        <option value="부산">부산</option>
+									        <option value="대구">대구</option>
+									        <option value="대전">대전</option>
+									        <option value="광주">광주</option>
+									        <option value="울산">울산</option>
+									        <option value="제주">제주</option>
                                         </select>
                                     </div>
 
@@ -78,14 +78,14 @@
                                         <label class="form-label">맛집 유형 *</label>
                                         <select name="category" class="form-select" required>
                                             <option value="">-- 맛집 유형 선택 --</option>
-                                            <option value="A05020100">한식</option>
-                                            <option value="A05020200">양식</option>
-                                            <option value="A05020300">일식</option>
-                                            <option value="A05020400">중식</option>
-                                            <option value="A05020500">기타</option>
-                                            <option value="A05020600">카페</option>
-                                            <option value="A05020700">이색음식</option>
-                                            <option value="A05020900">식음료</option>
+                                            <option value="한식">한식</option>
+                                            <option value="양식">양식</option>
+                                            <option value="일식">일식</option>
+                                            <option value="중식">중식</option>
+                                            <option value="기타">기타</option>
+                                            <option value="카페">카페</option>
+                                            <option value="이색음식">이색음식</option>
+                                            <option value="식음료">식음료</option>
                                         </select>
                                     </div>
                                     

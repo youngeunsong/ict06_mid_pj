@@ -207,6 +207,15 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => viewBookmarks.do>>>");
 		
+		// 세션에서 로그인 여부 확인
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		if (sessionID == null) {
+			return "redirect:/login.do";
+		}
+		
+		service.viewBookmarksAction(request, response, model);
+		
 		return "user/mypage/viewBookmarks";
 	}
 	
@@ -234,6 +243,16 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => viewInquiries.do>>>");
 		
+		// 세션에서 로그인 여부 확인
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		if (sessionID == null) {
+			return "redirect:/login.do";
+		}
+		
+		// 페이징 계산, db조회 처리
+		service.viewInquiriesAction(request, response, model);
+		
 		return "user/mypage/viewInquiries";
 	}
 	
@@ -242,6 +261,14 @@ public class UserController {
 	public String inquiryDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => inquiryDetail.do>>>");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		if (sessionID == null) {
+			return "redirect:/login.do";
+		}
+		
+		service.inquiryDetailAction(request, response, model);
 		
 		return "user/mypage/inquiryDetail";
 	}

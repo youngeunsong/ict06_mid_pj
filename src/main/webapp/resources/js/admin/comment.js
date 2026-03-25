@@ -29,12 +29,12 @@ function bulkCommentAction(action) {
 		return;
 	
 	const actionText = action === 'hide' ? '숨김' : action === 'show' ? '숨김해제' : '삭제';
-	if(!confirm(ids.length + "개 댓글을" + actionText + " 처리하시겠습니까?"))
+	if(!confirm(ids.length + "개 댓글을 " + actionText + " 처리하시겠습니까?"))
 		return;
 	
 	const params = new URLSearchParams();
 	params.append("action", action);
-	ids.forEach(id => params.append("comment_ids", id));
+	ids.forEach(id => params.append("comment_ids", encodeURIComponent(id)));
 	
 	fetch(path + "/bulkCommentAction.adco", {
 		method: "post",
@@ -43,8 +43,7 @@ function bulkCommentAction(action) {
 	})
 	.then(res => res.text())
 	.then(result => {
-		const parts = result.split("/");
-		alert(parts[0] + "/" + parts[1] + "개 처리 완료");
+		alert(result + "개 처리 완료");
 		location.reload();
 	});
 }
@@ -56,7 +55,7 @@ function hideComment(comment_id) {
 	fetch(path + "/hideComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
-		body: "comment_id=" + comment_id
+		body: "comment_id=" + encodeURIComponent(comment_id)
 	})
 	.then(res => res.text())
 	.then(result => {
@@ -72,7 +71,7 @@ function showComment(comment_id) {
 	fetch(path + "/showComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
-		body: "comment_id=" + comment_id
+		body: "comment_id=" + encodeURIComponent(comment_id)
 	})
 	.then(res => res.text())
 	.then(result => {
@@ -89,7 +88,7 @@ function deleteComment(comment_id) {
 	fetch(path + "/deleteComment.adco", {
 		method: "post",
 		headers: {"Content-Type":"application/x-www-form-urlencoded"},
-		body: "comment_id=" + comment_id
+		body: "comment_id=" + encodeURIComponent(comment_id)
 	})
 	.then(res => res.text())
 	.then(result => {

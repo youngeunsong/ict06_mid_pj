@@ -49,41 +49,41 @@
 						<div class="card-body">
 							<table class="table table-bordered">
 								<tr>
-									<th width="15%">번호</th>
-									<td width="35%">${dto.post_id}</td>
-									<th width="15%">상태</th>
+									<th class="detail-th">번호</th>
+									<td>${dto.post_id}</td>
+									<th class="detail-th">상태</th>
 									<td>
 										<c:choose>
 											<c:when test="${dto.status eq 'DISPLAY'}">
 												<span class="badge badge-success">정상</span>
 											</c:when>
 											<c:when test="${dto.status eq 'HIDDEN'}">
-												<span class="badge badge-warning">숨김</span>
-											</c:when>
-											<c:when test="${dto.status eq 'DELETED'}">
 												<span class="badge badge-danger">삭제</span>
+											</c:when>
+											<c:when test="${dto.status eq 'BANNED'}">
+												<span class="badge badge-warning">숨김/제재</span>
 											</c:when>
 										</c:choose>
 									</td>
 								</tr>
 								<tr>
-									<th>카테고리</th>
+									<th class="detail-th">카테고리</th>
 									<td>${dto.category}</td>
-									<th>작성일</th>
+									<th class="detail-th">작성일</th>
 									<td><fmt:formatDate value="${dto.postDate}" pattern="yyyy.MM.dd HH:mm" /></td>
 								</tr>
 								<tr>
-									<th>작성자</th>
+									<th class="detail-th">작성자</th>
 									<td>${dto.user_id}</td>
-									<th>조회/추천</th>
+									<th class="detail-th">조회/추천</th>
 									<td>${dto.view_count} / ${dto.like_count}</td>
 								</tr>
 								<tr>
-									<th>제목</th>
+									<th class="detail-th">제목</th>
 									<td colspan="3">${dto.title}</td>
 								</tr>
 								<tr>
-									<th>내용</th>
+									<th class="detail-th">내용</th>
 									<td colspan="3" style="white-space:pre-wrap;">${dto.content}</td>
 								</tr>
 							</table>
@@ -93,11 +93,11 @@
 								<c:when test="${dto.status eq 'DISPLAY'}">
 									<button type="button" class="btn btn-warning" onclick="hidePost(${dto.post_id})">숨김</button>
 								</c:when>
-								<c:when test="${dto.status eq 'HIDDEN'}">
+								<c:when test="${dto.status eq 'BANNED'}">
 									<button type="button" class="btn btn-success" onclick="showPost(${dto.post_id})">숨김해제</button>
 								</c:when>
 							</c:choose>
-							<c:if test="${dto.status ne 'DELETED'}">
+							<c:if test="${dto.status ne 'HIDDEN'}">
 								<button type="button" class="btn btn-danger" onclick="deletePost(${dto.post_id})">삭제</button>
 							</c:if>
 							<button type="button" class="btn btn-secondary float-right" 
@@ -113,9 +113,9 @@
 						<div class="card-body">
 							<table class="table table-bordered">
 								<tr>
-									<th width="15%">작성자 ID</th>
-									<td width="35%">${member.user_id}</td>
-									<th width="15%">현재 상태</th>
+									<th class="detail-th">작성자 ID</th>
+									<td>${member.user_id}</td>
+									<th class="detail-th">현재 상태</th>
 									<td>
 										<c:choose>
 											<c:when test="${member.status eq 'ACTIVE'}">

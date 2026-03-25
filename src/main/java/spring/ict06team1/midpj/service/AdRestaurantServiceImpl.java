@@ -447,61 +447,56 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	@Override
 	public void testRegister(HttpServletRequest request, HttpServletResponse response, Model model) 
 	        throws ServletException, IOException {
-	    // 1. 요청 파라미터에서 지역 코드(keyword)를 가져옴
+	    // 요청 파라미터에서 지역 코드(keyword)를 가져옴
 	    String areaCode = request.getParameter("keyword");
-	    int pageNo = 1; // 기본 페이지 번호 설정
+	    int pageNo = Integer.parseInt(request.getParameter("pageNo"));
+	    int numOfRows = Integer.parseInt(request.getParameter("numOfRows"));
 	    
-	    // 2. 지역 코드가 없으면 기본값 "1"(서울)로 설정
+	    // 지역 코드가 없으면 기본값 "1"(서울)로 설정
 	    if (areaCode == null || areaCode.isEmpty()) areaCode = "1";
 	    
-	    // 3. 특정 조건("1-1")인 경우 서울의 2페이지 데이터를 가져오도록 설정
-	    if(areaCode.equals("1-1")) {
-	        areaCode = "1";
-	        pageNo = 2;
-	    }
-	    
-	    // 4. 성공 횟수를 저장할 카운터 변수 초기화
+	    // 성공 횟수를 저장할 카운터 변수 초기화
 	    int successCountRes = 0;   // 맛집 정보 저장 성공 횟수
 	    int successCountPlace = 0; // 장소 정보 저장 성공 횟수
 	    
-	    // 5. 공공데이터포털 API 서비스 키
+	    // 공공데이터포털 API 서비스 키
 	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
 
-	    // 6. 외부 API 호출을 위한 RestTemplate과 JSON 파싱을 위한 ObjectMapper 생성
+	    // 외부 API 호출을 위한 RestTemplate과 JSON 파싱을 위한 ObjectMapper 생성
 	    RestTemplate restTemplate = new RestTemplate();
 	    ObjectMapper mapper = new ObjectMapper();
 
 	    try {
-	        // 7. [1단계] 지역 기반 관광 정보 목록 조회 API URL 생성 (음식점 타입: contentTypeId=39)
+	        // [1단계] 지역 기반 관광 정보 목록 조회 API URL 생성 (음식점 타입: contentTypeId=39)
 	        String url = "https://apis.data.go.kr/B551011/KorService2/areaBasedList2?serviceKey=" + serviceKey
 	                + "&areaCode=" + areaCode
 	                + "&contentTypeId=39"
-	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=1000"
+	                + "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows="+numOfRows
 	                + "&pageNo="+pageNo;
 
-	        // 8. API 호출 및 JSON 응답 받기
+	        // API 호출 및 JSON 응답 받기
 	        String jsonResponse = restTemplate.getForObject(url, String.class);
 	        
-	        // 9. 응답받은 JSON에서 실제 아이템 목록(item) 노드까지 접근
+	        // 응답받은 JSON에서 실제 아이템 목록(item) 노드까지 접근
 	        JsonNode items = mapper.readTree(jsonResponse).path("response").path("body").path("items").path("item");
 
-	        // 10. 아이템 목록이 배열 형태인지 확인 후 반복문 실행
+	        // 아이템 목록이 배열 형태인지 확인 후 반복문 실행
 	        if (items.isArray()) {
 	            for (JsonNode item : items) {
-	                // 11. 각 아이템의 콘텐츠 ID와 대표 이미지 URL 추출
+	                // 각 아이템의 콘텐츠 ID와 대표 이미지 URL 추출
 	                String contentId = item.path("contentid").asText().trim();
 	                String imageUrl = item.path("firstimage").asText("");
 	                
-	                // 12. [필터링] 이미지가 없는 장소는 우리 서비스 품질을 위해 저장하지 않고 건너뜀
+	                // [필터링] 이미지가 없는 장소는 우리 서비스 품질을 위해 저장하지 않고 건너뜀
 	                if (imageUrl == null || imageUrl.trim().isEmpty()) {
 	                    System.out.println(">>> [건너뛰기] 이미지 정보가 없는 장소입니다.");
 	                    continue; 
 	                }
 	                
-	                // 13. [중복 체크] 이미 DB에 존재하는 contentId인지 확인하여 중복 저장 방지
+	                // [중복 체크] 이미 DB에 존재하는 contentId인지 확인하여 중복 저장 방지
 	                if (adResDao.checkDuplicate(contentId) > 0) continue;
 
-	                // 14. DTO 객체 생성 및 기본 정보 세팅 (Place: 공통 정보, Restaurant: 음식점 전용)
+	                // DTO 객체 생성 및 기본 정보 세팅 (Place: 공통 정보, Restaurant: 음식점 전용)
 	                RestaurantDTO rdto = new RestaurantDTO();
 	                PlaceDTO pdto = new PlaceDTO();
 	                
@@ -554,18 +549,18 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	                }
 	                rdto.setPhone(tel);
 
-	                // 15. [2단계] 공통 상세 정보(카테고리 등) 수집을 위한 추가 메서드 호출
+	                // [2단계] 공통 상세 정보(카테고리 등) 수집을 위한 추가 메서드 호출
 	                testRegisterDetail(contentId, rdto);
 	                
-	                // 16. [3단계] 소개 정보(개요 등) 수집을 위한 추가 메서드 호출
+	                // [3단계] 소개 정보(개요 등) 수집을 위한 추가 메서드 호출
 	                testRegisterIntro(contentId, rdto);
 	                
-	                // 17. PLACE 테이블에 기본 정보 저장 후 카운트 증가
+	                // PLACE 테이블에 기본 정보 저장 후 카운트 증가
 	                if (adResDao.testInsertPlace(pdto) > 0) {
 	                    successCountPlace++;
 	                }
 	                
-	                // 18. RESTAURANT 테이블에 상세 정보 저장 후 카운트 증가
+	                // RESTAURANT 테이블에 상세 정보 저장 후 카운트 증가
 	                if(adResDao.testInsertRes(rdto)> 0) {
 	                    successCountRes++;
 	                    testRegisterImages(contentId);
@@ -573,16 +568,16 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	            }
 	        }
 	        
-	        // 19. 수집 결과 로그 출력
+	        // 수집 결과 로그 출력
 	        System.out.println("🚩 place 수집 완료 : " + successCountPlace + "건");
 	        System.out.println("🚩 RESTAURANT 수집 완료 : " + successCountRes + "건");
 
 	    } catch (Exception e) {
-	        // 20. 에러 발생 시 스택 트레이스 출력
+	        // 에러 발생 시 스택 트레이스 출력
 	        e.printStackTrace();
 	    }
 	    
-	    // 21. 화면(JSP)에 수집된 결과 건수를 보여주기 위해 모델에 저장
+	    // 화면(JSP)에 수집된 결과 건수를 보여주기 위해 모델에 저장
 	    model.addAttribute("countPlace", successCountPlace);
 	    model.addAttribute("countRes", successCountRes);
 	}
@@ -626,7 +621,9 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	            
 	            // 10. 값이 비어있을 경우 null로 처리하여 후속 로직 오류 방지
 	            if (restdate == null || restdate.isEmpty()) restdate = null ;
-
+	            
+	            restdate = restdate.replaceAll("(?i)<br\\s*/?>", "\n"); 
+	            
 	            // 11. [전처리] DB 컬럼 크기에 맞추기 위해 불필요한 단어들을 짧게 축약 (부피 줄이기)
 	            // 예: "매주 월요일" -> "월", "연중무휴" -> "무휴"
 	            String compressed = restdate.replaceAll("\\s+", "")  // 모든 공백 제거

@@ -1,223 +1,231 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-
-<!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>커뮤니티 - 공지사항</title>
 
-<!-- 부트스트랩 선언 + 헤더/푸터 -->
+<!-- =====================================
+	[공지사항] => 공지는 “읽어야 할 정보”
+	상단 고정 공지 : 별도 조회
+	CATEGORY='NOTICE' AND IS_TOP='Y'
+	
+	일반 공지 : 검색 + 페이징
+	CATEGORY='NOTICE' AND IS_TOP='N'
+
+===================================== -->
+
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/notice.css">
-
-<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script><!-- 아이콘 -->
-
-<script src="${path}/resources/js/community/notice.js" defer></script>
- 
 </head>
 <body>
 <div class="wrap">
 
-    <!-- header -->
     <%@ include file="../../common/header.jsp" %>
 
-    <!-- 커뮤니티 상단 탭 -->
     <div class="comm-tabs">
-      <div class="container">
-        <a href="${path}/community_free.co" class="tab ${tab eq 'free' ? 'on' : ''}">자유게시판</a>
-        <a href="${path}/community_notice.co" class="tab ${tab eq 'notice' ? 'on' : ''}">공지사항</a>
-        <a href="${path}/community_event.co" class="tab ${tab eq 'event' ? 'on' : ''}">이벤트</a>
-      </div>
+        <div class="container">
+            <a href="${path}/community_free.co" class="tab ${tab eq 'free' ? 'on' : ''}">자유게시판</a>
+            <a href="${path}/community_notice.co" class="tab ${tab eq 'notice' ? 'on' : ''}">공지사항</a>
+            <a href="${path}/community_event.co" class="tab ${tab eq 'event' ? 'on' : ''}">이벤트</a>
+        </div>
     </div>
 
-    <!-- 본문 -->
     <div class="page-body">
-      <div class="container">
+        <div class="container">
 
-        <!-- 경로 -->
-        <div class="breadcrumb-area">
-          <a href="${path}/community_free.co">커뮤니티</a>
-          <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
-          <span class="cur">공지사항</span>
+            <!-- breadcrumb -->
+            <div class="breadcrumb-area">
+                <a href="${path}/community_free.co">커뮤니티</a>
+                <i class="bi bi-chevron-right"></i>
+                <span class="cur">공지사항</span>
+            </div>
+
+            <!-- page title -->
+            <div class="page-title-row">
+                <span class="page-title">
+                    <i class="bi bi-megaphone-fill text-success me-1"></i> 공지사항
+                </span>
+            </div>
+
+            <!-- intro -->
+            <div class="info-card">
+                <div style="display:flex; align-items:flex-start; gap:10px;">
+                    <div style="font-size:1.1rem; color:#198754; line-height:1;">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:.9rem; font-weight:700; color:#212529; margin-bottom:4px;">
+                            서비스 공지 및 업데이트 안내
+                        </div>
+                        <div style="font-size:.8rem; color:#6c757d; line-height:1.7;">
+                            점검, 정책 변경, 서비스 업데이트 등 주요 안내사항을 확인할 수 있습니다.
+                            상단 고정 공지는 반드시 먼저 확인해 주세요.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상단 고정 공지 -->
+            <c:if test="${not empty topNoticeList}">
+                <section class="board-section">
+                    <div class="board-card notice-fixed-card">
+
+                        <div class="board-section-title">
+                            <i class="bi bi-pin-angle-fill"></i>
+                            고정 공지
+                        </div>
+
+                        <div class="notice-table-head">
+                            <span>구분</span>
+                            <span>제목</span>
+                            <span class="c">작성자</span>
+                            <span class="c">조회</span>
+                            <span class="r">날짜</span>
+                        </div>
+
+                        <div class="notice-table-body">
+                            <c:forEach var="dto" items="${topNoticeList}">
+                                <a href="${path}/community_notice_detail.co?notice_id=${dto.notice_id}" class="notice-row pinned">
+                                    <span>
+                                        <span class="bdg bdg-notice">
+                                            <i class="bi bi-megaphone"></i> 공지
+                                        </span>
+                                    </span>
+
+                                    <span class="notice-title-wrap">
+                                        <span class="notice-title-text">${dto.title}</span>
+                                        <span class="bdg bdg-pin">📌 고정</span>
+                                    </span>
+
+                                    <span class="c meta">${dto.admin_id}</span>
+                                    <span class="c meta">${dto.view_count}</span>
+                                    <span class="r meta">
+                                        <fmt:formatDate value="${dto.noticeRegDate}" pattern="yyyy.MM.dd"/>
+                                    </span>
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </section>
+            </c:if>
+
+            <!-- 일반 공지 -->
+            <section class="board-section">
+                <div class="board-card">
+
+                    <div class="board-section-title normal">
+                        <i class="bi bi-list-ul"></i>
+                        일반 공지
+                    </div>
+
+                    <div class="notice-table-head">
+                        <span>구분</span>
+                        <span>제목</span>
+                        <span class="c">작성자</span>
+                        <span class="c">조회</span>
+                        <span class="r">날짜</span>
+                    </div>
+
+                    <div class="notice-table-body">
+                        <c:choose>
+                            <c:when test="${empty noticeList}">
+                                <div class="empty">
+                                    <i class="bi bi-megaphone"></i>
+                                    등록된 공지사항이 없습니다.
+                                </div>
+                            </c:when>
+
+                            <c:otherwise>
+                                <c:forEach var="dto" items="${noticeList}">
+                                    <a href="${path}/community_notice_detail.co?notice_id=${dto.notice_id}" class="notice-row">
+                                        <span>
+                                            <span class="bdg bdg-notice">
+                                                <i class="bi bi-megaphone"></i> 공지
+                                            </span>
+                                        </span>
+
+                                        <span class="notice-title-wrap">
+                                            <span class="notice-title-text">${dto.title}</span>
+                                        </span>
+
+                                        <span class="c meta">${dto.admin_id}</span>
+                                        <span class="c meta">${dto.view_count}</span>
+                                        <span class="r meta">
+                                            <fmt:formatDate value="${dto.noticeRegDate}" pattern="yyyy.MM.dd"/>
+                                        </span>
+                                    </a>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 페이징 -->
+            <c:if test="${paging.count > 0}">
+                <nav class="paging">
+
+                    <c:if test="${paging.startPage > paging.pageBlock}">
+                        <c:url var="prevUrl" value="/community_notice.co">
+                            <c:param name="pageNum" value="${paging.prev}" />
+                            <c:param name="searchType" value="${searchType}" />
+                            <c:param name="searchKeyword" value="${searchKeyword}" />
+                        </c:url>
+                        <a class="pg" href="${prevUrl}">‹</a>
+                    </c:if>
+
+                    <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
+                        <c:url var="pageUrl" value="/community_notice.co">
+                            <c:param name="pageNum" value="${i}" />
+                            <c:param name="searchType" value="${searchType}" />
+                            <c:param name="searchKeyword" value="${searchKeyword}" />
+                        </c:url>
+
+                        <a class="pg ${paging.currentPage == i ? 'on' : ''}" href="${pageUrl}">
+                            ${i}
+                        </a>
+                    </c:forEach>
+
+                    <c:if test="${paging.endPage < paging.pageCount}">
+                        <c:url var="nextUrl" value="/community_notice.co">
+                            <c:param name="pageNum" value="${paging.next}" />
+                            <c:param name="searchType" value="${searchType}" />
+                            <c:param name="searchKeyword" value="${searchKeyword}" />
+                        </c:url>
+                        <a class="pg" href="${nextUrl}">›</a>
+                    </c:if>
+
+                </nav>
+            </c:if>
+
+            <!-- search -->
+            <div class="search-row">
+                <form class="search-box" action="${path}/community_notice.co" method="get">
+
+                    <select name="searchType">
+                        <option value="title" ${searchType eq 'title' ? 'selected' : ''}>제목</option>
+                        <option value="content" ${searchType eq 'content' ? 'selected' : ''}>내용</option>
+                        <option value="title_content" ${searchType eq 'title_content' ? 'selected' : ''}>제목+내용</option>
+                    </select>
+
+                    <input type="text"
+                           name="searchKeyword"
+                           value="${searchKeyword}"
+                           placeholder="공지사항 검색어를 입력하세요">
+
+                    <button type="submit">검색</button>
+                </form>
+            </div>
+
         </div>
-
-        <!-- 타이틀 -->
-        <div class="page-title-row">
-          <span class="page-title">
-            <i class="bi bi-megaphone-fill text-success me-1"></i> 공지사항
-          </span>
-        </div>
-
-        <!-- 공지사항 목록 -->
-        <div class="board-card">
-
-          <!-- 컬럼 헤더 -->
-          <div class="tbl-head">
-            <span>구분</span>
-            <span>제목</span>
-            <span class="c">작성자</span>
-            <span class="c">조회</span>
-            <span class="r">날짜</span>
-          </div>
-
-          <!-- 상단 고정 -->
-          <a href="#" class="tbl-row pinned">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">맛집내 서비스 이용약관 개정 안내</span>
-              <span class="bdg-pin">📌 고정</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">5,210</span>
-            <span class="r meta">2026.01.15</span>
-          </a>
-
-          <a href="#" class="tbl-row pinned">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">개인정보처리방침 변경 안내 (2026년 1월 기준)</span>
-              <span class="bdg-pin">📌 고정</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">3,874</span>
-            <span class="r meta">2026.01.15</span>
-          </a>
-
-          <!-- 구분선 -->
-          <div style="border-top: 2px dashed #e9ecef; margin: 0;"></div>
-
-          <!-- 일반 목록 -->
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">2026년 3월 정기 점검 안내</span>
-              <span class="bdg-new">N</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">1,034</span>
-            <span class="r meta">2026.03.08</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">맛집내 앱 v2.3.0 업데이트 안내</span>
-              <span class="bdg-new">N</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">876</span>
-            <span class="r meta">2026.03.05</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">고객센터 운영시간 변경 안내 (주말 포함)</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">2,450</span>
-            <span class="r meta">2026.02.20</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">포인트 정책 개편 안내 – 리뷰·로그인 적립 변경</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">3,100</span>
-            <span class="r meta">2026.02.10</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">결제 오류 관련 긴급 안내 및 조치 사항</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">4,820</span>
-            <span class="r meta">2026.01.30</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">2026년 설 연휴 고객센터 운영 안내</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">1,980</span>
-            <span class="r meta">2026.01.22</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">맛집내 커뮤니티 운영 정책 안내</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">6,320</span>
-            <span class="r meta">2026.01.02</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">리뷰 작성 가이드라인 업데이트 안내</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">2,710</span>
-            <span class="r meta">2025.12.15</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">2025년 연말 점검 일정 안내</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">1,640</span>
-            <span class="r meta">2025.12.01</span>
-          </a>
-
-          <a href="#" class="tbl-row">
-            <span><span class="bdg bdg-notice"><i class="bi bi-megaphone"></i> 공지</span></span>
-            <span class="notice-ttl">
-              <span class="t">예약 취소·환불 정책 개편 안내</span>
-            </span>
-            <span class="c meta">관리자</span>
-            <span class="c meta">5,130</span>
-            <span class="r meta">2025.11.20</span>
-          </a>
-
-        </div>
-
-        <!-- 페이지네이션 -->
-        <div class="paging">
-          <a class="pg">‹</a>
-          <a class="pg on">1</a>
-          <a class="pg">2</a>
-          <a class="pg">3</a>
-          <a class="pg">›</a>
-        </div>
-
-        <!-- 검색 -->
-        <div class="search-row">
-          <div class="search-box">
-            <input type="text" placeholder="공지사항 검색">
-            <button type="button"><i class="bi bi-search"></i></button>
-          </div>
-        </div>
-
-      </div>
     </div>
 
-    <!-- footer -->
     <%@ include file="../../common/footer.jsp" %>
-
 </div>
 </body>
 </html>

@@ -30,7 +30,7 @@
                             </h4>
                         </div>
                         
-                        <form action="${path}/accommodationInsertAction.acc" method="post" enctype="multipart/form-data" name="insertForm">
+                        <form action="${path}/accommodationInsertAction.adac" method="post" enctype="multipart/form-data" name="insertForm">
                             <input type="hidden" name="areaCode1" id="areaCodeHidden" value="${param.areaCode}">
                             <input type="hidden" name="pageNum" value="${param.pageNum}">
                             <input type="hidden" name="category1" value="${param.category}">
@@ -46,15 +46,15 @@
                                         <label class="form-label">지역 선택 *</label>
                                         <select id="areaCodeSelect" class="form-select"name="areaCode" required>
                                         	<option value="">지역을 선택해주세요</option>
-                                            <option value="1">서울</option>
-									        <option value="31">경기</option>
-									        <option value="2">인천</option>
-									        <option value="6">부산</option>
-									        <option value="4">대구</option>
-									        <option value="3">대전</option>
-									        <option value="5">광주</option>
-									        <option value="7">울산</option>
-									        <option value="39">제주</option>
+                                            <option value="서울">서울</option>
+									        <option value="경기">경기</option>
+									        <option value="인천">인천</option>
+									        <option value="부산">부산</option>
+									        <option value="대구">대구</option>
+									        <option value="대전">대전</option>
+									        <option value="광주">광주</option>
+									        <option value="울산">울산</option>
+									        <option value="제주">제주</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
@@ -75,18 +75,18 @@
                                         <label class="form-label">숙소 유형 *</label>
                                         <select name="category" class="form-select" required>
                                             <option value="">-- 숙소 유형 선택 --</option>
-                                            <option value="B02010100">일반호텔</option>
-                                            <option value="B02011100">호스텔</option>
-                                            <option value="B02010700">펜션</option>
-                                            <option value="B02011200">서비스드레지던스</option>
-                                            <option value="B02011600">한옥스테이</option>
-                                            <option value="B02010900">홈스테이</option>
-                                            <option value="B02011400">휴양펜션</option>
-                                            <option value="B02011000">유스호스텔</option>
-                                            <option value="B02010600">가족호텔</option>
-                                            <option value="B02010500">한국전통호텔</option>
-                                            <option value="B02010300">수상관광호텔</option>
-                                            <option value="B02011300">콘도미니엄</option>
+                                            <option value="일반호텔">일반호텔</option>
+                                            <option value="호스텔">호스텔</option>
+                                            <option value="펜션">펜션</option>
+                                            <option value="서비스드레지던스">서비스드레지던스</option>
+                                            <option value="한옥스테이">한옥스테이</option>
+                                            <option value="홈스테이">홈스테이</option>
+                                            <option value="휴양펜션">휴양펜션</option>
+                                            <option value="유스호스텔">유스호스텔</option>
+                                            <option value="가족호텔">가족호텔</option>
+                                            <option value="한국전통호텔">한국전통호텔</option>
+                                            <option value="수상관광호텔">수상관광호텔</option>
+                                            <option value="콘도미니엄">콘도미니엄</option>
                                         </select>
                                     </div>
                                     

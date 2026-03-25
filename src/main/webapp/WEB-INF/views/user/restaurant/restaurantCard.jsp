@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="request" />
-
 <%-- CSS 파일 연결 --%>
 <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurantCard.css">
-
 <div class="row"> 
     <c:forEach var="rest" items="${restaurantList}">
         <c:set var="placeId" value="${rest.placeDTO.place_id}" />
@@ -12,7 +10,6 @@
 
         <div class="${finalCardWrapClass}">
             <div class="place-card-wrap position-relative shadow-sm border rounded bg-white h-100">
-
                 <%-- [북마크 판별 로직] --%>
                 <c:set var="isFav" value="false" />
                 <c:if test="${not empty favoritePlaceIds}">
@@ -22,7 +19,6 @@
                         </c:if>
                     </c:forEach>
                 </c:if>
-
                 <%-- [북마크 버튼] 
                      - background를 메인과 동일한 rgba(255,255,255,0.9)로 설정
                      - 위치 10px 고정 및 클릭 우선순위(z-index) 확보

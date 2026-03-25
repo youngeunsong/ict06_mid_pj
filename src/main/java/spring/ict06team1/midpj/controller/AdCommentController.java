@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.service.AdCommentService;
 
@@ -37,6 +38,7 @@ public class AdCommentController {
 
 	//2. 댓글 숨김(AJAX)
 	@RequestMapping("/hideComment.adco")
+	@ResponseBody
 	public String hideComment(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /hideComment.adco]");
@@ -48,6 +50,7 @@ public class AdCommentController {
 
 	//3. 댓글 숨김 해제(AJAX)
 	@RequestMapping("/showComment.adco")
+	@ResponseBody
 	public String showComment(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /showComment.adco]");
@@ -59,6 +62,7 @@ public class AdCommentController {
 
 	//4. 댓글 삭제(AJAX)
 	@RequestMapping("/deleteComment.adco")
+	@ResponseBody
 	public String deleteComment(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /deleteComment.adco]");
@@ -70,11 +74,12 @@ public class AdCommentController {
 
 	//5. 일괄 처리(AJAX)
 	@RequestMapping("/bulkCommentAction.adco")
+	@ResponseBody
 	public String bulkAction(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /bulkCommentAction.adco]");
 		
-		adCmtService.showComment(request, response, model);
+		adCmtService.bulkAction(request, response, model);
 		int successCount = (Integer)request.getAttribute("successCount");
 		int totalCount = (Integer)request.getAttribute("totalCount");
 		return successCount + "/" + totalCount;

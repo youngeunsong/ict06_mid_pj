@@ -26,23 +26,28 @@ public class SearchController {
 	@Autowired
 	private SearchServiceImpl searchService;
 	
-	//[검색바] 검색 페이지로 이동
+	/* ================================================== 
+	   검색바 > 검색 결과 페이지
+	   결과 페이지 + AJAX 필터화면 + 즐겨찾기
+	================================================== */
+	// 결과 페이지
 	@RequestMapping("/search.do")
 	public String executeSearch(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		
 		logger.info("<<< url => search.do>>>");
+		
 		searchService.getSearchList(request, response, model);
 		
-		return "common/search";
+		return "user/search/search";
 	}
 	
-	//[검색페이지] AJAX 필터화면
+	// AJAX 필터화면
 	@RequestMapping("/search/ajax")
 	public String searchAjax(
 			@RequestParam String keyword,
-			@RequestParam(defaultValue = "ALL") String type,
-			@RequestParam(defaultValue  = "popular") String sort,
+			@RequestParam(defaultValue = "ALL") String type,      // ALL / REST / ACC / FEST
+			@RequestParam(defaultValue  = "popular") String sort, // popular(조회순) / latest(최신순)
 			@RequestParam(defaultValue = "1") int page,
 			Model model){
 		
@@ -50,32 +55,39 @@ public class SearchController {
 		
 		Map<String, Object> data = searchService.getSearchAjax(keyword, type, sort, page);
 		
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("type", data.get("type"));
-		model.addAttribute("restList", data.get("restList"));
-		model.addAttribute("accList", data.get("accList"));
-		model.addAttribute("festList", data.get("festList"));
-	    model.addAttribute("totalCnt", data.get("totalCnt"));
-	    model.addAttribute("totalPages", data.get("totalPages"));
-	    model.addAttribute("currentPage", data.get("currentPage"));
-	    model.addAttribute("reviewCountMap", data.get("reviewCountMap"));
-		model.addAttribute("avgRatingMap", data.get("avgRatingMap"));
-		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds"));
+		model.addAttribute("keyword", keyword);       // 검색 키워드
+		model.addAttribute("type", data.get("type")); // ALL / REST / ACC / FEST
 		
-		return "common/search_fragment";
+		model.addAttribute("restList", data.get("restList")); // 키워드 식당 리스트
+		model.addAttribute("accList", data.get("accList"));   // 키워드 숙소 리스트
+		model.addAttribute("festList", data.get("festList")); // 키워드 축제 리스트
+		
+	    model.addAttribute("totalCnt", data.get("totalCnt"));     // 페이징 전체 검색 수
+	    model.addAttribute("totalPages", data.get("totalPages")); // 페이징 전체 페이지 수
+	    
+	    model.addAttribute("currentPage", data.get("currentPage"));
+	    
+	    model.addAttribute("reviewCountMap", data.get("reviewCountMap"));     // 리뷰 수
+		model.addAttribute("avgRatingMap", data.get("avgRatingMap"));         // 리뷰 평균
+		model.addAttribute("favoritePlaceIds", data.get("favoritePlaceIds")); // 북마크
+		
+		return "user/search/search_fragment";
 	}
 
-	//[즐겨찾기]
+	// 즐겨찾기
 	@RequestMapping("/favorite/toggle")
 	@ResponseBody
 	public Map<String, Object> toggleFavorite(HttpServletRequest request) {
 		logger.info("<<< url => /favorite/toggle>>>");
 		
 		return searchService.toggleFavorite(request);
-		
 	}
 	
-	// [자동완성]
+	/* ================================================== 
+	   검색바
+	   자동완성 + 최근 검색어
+	================================================== */
+	// 자동완성
 	@RequestMapping("/search/autocomplete")
 	@ResponseBody
 	public java.util.List<String> getAutoComplete(@RequestParam String keyword) {
@@ -84,7 +96,7 @@ public class SearchController {
 	    return searchService.getAutoComplete(keyword);
 	}
 
-	//[최근 검색어]
+	// 최근 검색어
 	@RequestMapping("/search/recent")
 	@ResponseBody
 	public java.util.List<spring.ict06team1.midpj.dto.SearchHistoryDTO> getRecentKeywords(HttpServletRequest request) {

@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
 

@@ -120,13 +120,24 @@
 	<!-- 2-1. 예약 수정(상태, 날짜, 인원, 시간, 요청사항 등) -->
 	<update id="modifyReservation" parameterType="spring.ict06team1.midpj.dto.ReservationDTO">
 		UPDATE RESERVATION
-		SET status = #{status},
-			check_in = #{check_in},
-			check_out = #{check_out},
+		<set>
+			status = #{status, jdbcType=VARCHAR},
 			guest_count = #{guest_count},
-			visit_time = #{visit_time},
-			request_note = #{request_note},
-			created_at = CURRENT_TIMESTAMP
+			updated_at = CURRENT_TIMESTAMP,
+			
+			<if test="check_in != null">
+				check_in = #{check_in, jdbcType=DATE},
+			</if>
+			<if test="check_out != null">
+				check_out = #{check_out, jdbcType=DATE},
+			</if>
+			<if test="visit_time != null and visit_time != ''">
+				visit_time = #{visit_time, jdbcType=VARCHAR},
+			</if>
+			<if test="request_note != null">
+				request_note = #{visit_time, jdbcType=VARCHAR},
+			</if>
+		</set>
 		WHERE reservation_id = #{reservation_id}
 	</update>
 	

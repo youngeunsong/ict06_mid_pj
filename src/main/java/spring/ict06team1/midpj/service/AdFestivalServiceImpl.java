@@ -1,7 +1,20 @@
+/**
+ * @author 송영은
+ * 최초작성일: 26.03.10
+ * 최종수정일: 26.03.18
+ * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
+ * 
+ * 코드 변경사항
+ * v260318: 
+ *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
+ * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ */
+
 package spring.ict06team1.midpj.service;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,17 +27,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.AdFestivalDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.util.FestivalApiClient;
+
 
 @Service
 public class AdFestivalServiceImpl implements AdFestivalService{
 
 	@Autowired
 	private AdFestivalDAO dao; 
+	
+	@Autowired
+    FestivalApiClient apiClient;
 	
 	// 축제 목록 조회
 	@Override
@@ -189,6 +210,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 	// 신규 축제 등록
 	@Override
+	@Transactional
 	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdFestivalServiceImpl - insertFestival()]");
 		
@@ -220,11 +242,17 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		dto.setStart_date(start_date);
 		dto.setEnd_date(end_date);
 		
-		// DAO 호출하여 DB에 데이터 추가 시도  
-		int insertCntPlace = dao.insertPlace(plDto);
+		// 기존 DB에 있는 축제인지 확인
+		Integer placeId = dao.checkDuplication(dto);
+		System.out.println("placeId : "+ placeId);
+		int insertCntPlace = 0; 
+		if(placeId == null){
+	        // 새로운 장소 DB에 추가
+			insertCntPlace = dao.insertPlace(plDto);
+	    	placeId = plDto.getPlace_id();
 		
-		// Place 테이블에 먼저 추가 시도하여 성공 시 
-		if(insertCntPlace > 0) {
+	    	// Place 테이블에 먼저 추가 시도하여 성공 시 
+			dto.setFestival_id(placeId);
 			int insertFestivalCnt = dao.insertFestival(dto);
 			
 			// Festival 테이블에 추가 시도하여 성공 시
@@ -236,6 +264,9 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 				
 				for(int i = 0; i < ticket_types.length; i++) {
 					FestivalTicketDTO ticketDTO = new FestivalTicketDTO();
+					
+					ticketDTO.setFestival_id(placeId);
+					
 					ticketDTO.setTicket_type(ticket_types[i]);			
 					ticketDTO.setPrice(parseInteger(request.getParameter("price" + ticket_types[i])));
 					ticketDTO.setStock(parseInteger(request.getParameter("stock" + ticket_types[i])));
@@ -258,6 +289,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		} 
 		// Place 테이블에 추가 실패 시 
 		else {
+			System.out.println("이미 등록된 축제");
 			//Model에 담아서 jsp로 전달
 			model.addAttribute("insertCnt", 0); 
 		}
@@ -298,5 +330,120 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	    return Double.parseDouble(value);
 	}
 
+	// 전국문화축제표준데이터 오픈 API로 축제 정보 가져오기
+	@Override
+	public String bringFestivalFromAPI(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		int page = Integer.parseInt(request.getParameter("pageNo"));
+		int numOfRows = Integer.parseInt(request.getParameter("numOfRows"));
+		String json = apiClient.callAPI(page, numOfRows);
+		return json; 
+	}
 	
+	// 오픈API로 가져온 정보 DB에 넣기 
+	@Override
+	@Transactional
+	public void insertFestivalsFromApi(String json) 
+			throws Exception {
+		List<FestivalDTO> list = parseFestivalJson(json);
+
+		for(FestivalDTO dto : list){
+		    PlaceDTO place = dto.getPlaceDTO();
+		    Integer placeId = dao.checkDuplication(dto);
+
+		    if(placeId == null){
+		        // 새로운 장소
+		    	dao.insertPlace(place);
+		    	placeId = place.getPlace_id();
+		    }
+		    
+		    dto.setFestival_id(placeId);
+		    dao.insertFestival(dto);
+		}
+	}
+	
+	// JSON 파싱 메서드 : 오픈 API 데이터 파싱
+	private List<FestivalDTO> parseFestivalJson(String json) {
+
+	    List<FestivalDTO> list = new ArrayList<>();
+
+	    ObjectMapper mapper = new ObjectMapper();
+
+	    try {
+
+	        JsonNode root = mapper.readTree(json);
+
+	        JsonNode items = root
+	                .path("response")
+	                .path("body")
+	                .path("items");
+
+	        for(JsonNode item : items){
+
+	            FestivalDTO dto = new FestivalDTO();
+	            PlaceDTO placeDto = new PlaceDTO();
+
+	            placeDto.setPlace_type("FEST");
+	            
+	            // item.path("전국문화축제표준데이터 오픈API에서 제공하는 변수명")
+	            placeDto.setName(item.path("fstvlNm").asText());
+	            placeDto.setAddress(item.path("rdnmadr").asText());
+	            placeDto.setLatitude(item.path("latitude").asDouble());
+	            placeDto.setLongitude(item.path("longitude").asDouble());
+	            placeDto.setImage_url(item.path("image_url").asText());
+	            
+	            dto.setPlaceDTO(placeDto);
+	            
+	            dto.setDescription(item.path("fstvlCo").asText());
+
+	            // 날짜 보정
+	            String startStr = item.path("fstvlStartDate").asText();
+	            String endStr = item.path("fstvlEndDate").asText();
+
+	            Date startDate = null;
+	            Date endDate = null;
+
+	            try{
+	                if(startStr != null && !startStr.trim().isEmpty()){
+	                    startDate = Date.valueOf(startStr);
+	                }
+	            }catch(Exception e){}
+
+	            try{
+	                if(endStr != null && !endStr.trim().isEmpty()){
+	                    endDate = Date.valueOf(endStr);
+	                }
+	            }catch(Exception e){}
+
+	            // NULL 보정
+	            if(startDate == null && endDate == null){
+	                Date today = new Date(System.currentTimeMillis());
+	                startDate = today;
+	                endDate = today;
+	            }
+	            else if(startDate == null){
+	                startDate = endDate;
+	            }
+	            else if(endDate == null){
+	                endDate = startDate;
+	            }
+
+	            // 날짜 역전 방지 (매우 중요)
+	            if(startDate.after(endDate)){
+	                Date temp = startDate;
+	                startDate = endDate;
+	                endDate = temp;
+	            }
+
+	            dto.setStart_date(startDate);
+	            dto.setEnd_date(endDate);
+	            
+	            list.add(dto);
+	        }
+
+	    } catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
 }

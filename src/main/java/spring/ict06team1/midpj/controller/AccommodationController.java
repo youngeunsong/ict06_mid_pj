@@ -60,7 +60,7 @@ public class AccommodationController {
 	@RequestMapping("/bestAccommodations.ac")	
 	public String bestRestaurants(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => bestRestaurants.ac>>>");
+		logger.info("<<< url => bestAccommodations.ac>>>");
 		
 		return "user/accommodation/bestAccommodations";
 	}
@@ -69,7 +69,7 @@ public class AccommodationController {
 	@RequestMapping("/bestAccommodationRegion.ac")	
 	public String bestRestaurantsRegion(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
-		logger.info("<<< url => bestRestaurantsRegion.ac>>>");
+		logger.info("<<< url => bestAccommodationsRegion.ac>>>");
 		
 		return "user/accommodation/bestAccommodationRegion";
 	}

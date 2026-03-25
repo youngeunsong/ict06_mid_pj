@@ -7,60 +7,287 @@
 
     <!-- COMMUNITY DTO 매핑 -->
     <resultMap id="communityMap" type="spring.ict06team1.midpj.dto.CommunityDTO">
-        <id property="post_id" column="post_id"/>
-        <result property="user_id" column="user_id"/>
-        <result property="title" column="title"/>
-        <result property="content" column="content"/>
-        <result property="category" column="category"/>
-        <result property="view_count" column="view_count"/>
-        <result property="like_count" column="like_count"/>
-        <result property="status" column="status"/>
-        <result property="postDate" column="created_at"/>
-        <result property="postUpdateDate" column="updated_at"/>
-    </resultMap>
+	    <id property="post_id" column="post_id"/>
+	    <result property="user_id" column="user_id"/>
+	    <result property="title" column="title"/>
+	    <result property="content" column="content"/>
+	    <result property="category" column="category"/>
+	    <result property="view_count" column="view_count"/>
+	    <result property="like_count" column="like_count"/>
+	    <result property="status" column="status"/>
+	    <result property="postDate" column="created_at"/>
+	    <result property="postUpdateDate" column="updated_at"/>
+	
+	    <association property="repImage" javaType="spring.ict06team1.midpj.dto.ImageStoreDTO">
+	        <id property="image_id" column="rep_image_id"/>
+	        <result property="target_id" column="rep_target_id"/>
+	        <result property="target_type" column="rep_target_type"/>
+	        <result property="image_url" column="rep_image_url"/>
+	        <result property="is_representative" column="rep_is_representative"/>
+	        <result property="sort_order" column="rep_sort_order"/>
+	        <result property="imgUploadDate" column="rep_created_at"/>
+	    </association>
+	</resultMap>
+	
+	<!-- 자유게시판 목록 총 갯수 -->
+    <select id="freeBoardCount" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	      FROM COMMUNITY
+	     WHERE status = 'DISPLAY'
+	    <if test="_parameter != null and _parameter != '' and _parameter != '전체'">
+	       AND category = #{_parameter}
+	    </if>
+	</select>
 
-    <!-- 자유게시판 목록 (카테고리 필터) -->
-    <select id="getFreeBoardList" parameterType="string" resultMap="communityMap">
-        SELECT post_id,
-               user_id,
-               title,
-               content,
-               category,
-               view_count,
-               like_count,
-               status,
-               created_at,
-               updated_at
-          FROM COMMUNITY
-         WHERE status = 'DISPLAY'
-        <if test="_parameter != null and _parameter != ''">
-           AND category = #{_parameter}
-        </if>
-         ORDER BY post_id DESC
-    </select>
+    <!-- 자유게시판 목록(카테고리 필터 + 페이징) -->
+    <select id="freeBoardPage" parameterType="map" resultMap="communityMap">
+	    SELECT post_id,
+	           user_id,
+	           title,
+	           content,
+	           category,
+	           view_count,
+	           like_count,
+	           status,
+	           created_at,
+	           updated_at
+	      FROM (
+	            SELECT ROW_NUMBER() OVER (ORDER BY post_id DESC) AS rn,
+	                   post_id,
+	                   user_id,
+	                   title,
+	                   content,
+	                   category,
+	                   view_count,
+	                   like_count,
+	                   status,
+	                   created_at,
+	                   updated_at
+	              FROM COMMUNITY
+	             WHERE status = 'DISPLAY'
+	            <if test="category != null and category != '' and category != '전체'">
+	               AND category = #{category}
+	            </if>
+	           )
+	     WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
 
     <!-- 인기글 TOP3 -->
-    <select id="getPopularBoardList" resultMap="communityMap">
-        SELECT *
-          FROM (
-                SELECT post_id,
-                       user_id,
-                       title,
-                       content,
-                       category,
-                       view_count,
-                       like_count,
-                       status,
-                       created_at,
-                       updated_at
-                  FROM COMMUNITY
-                 WHERE status = 'DISPLAY'
-                 ORDER BY like_count DESC, post_id DESC
-               )
-         WHERE ROWNUM <![CDATA[ <= ]]> 3
+    <select id="popularList" resultMap="communityMap">
+	    SELECT *
+	      FROM (
+	            SELECT c.post_id,
+	                   c.user_id,
+	                   c.title,
+	                   c.content,
+	                   c.category,
+	                   c.view_count,
+	                   c.like_count,
+	                   c.status,
+	                   c.created_at,
+	                   c.updated_at,
+	                   img.image_id          AS rep_image_id,
+	                   img.target_id         AS rep_target_id,
+	                   img.target_type       AS rep_target_type,
+	                   img.image_url         AS rep_image_url,
+	                   img.is_representative AS rep_is_representative,
+	                   img.sort_order        AS rep_sort_order,
+	                   img.created_at        AS rep_created_at
+	              FROM COMMUNITY c
+	              LEFT JOIN IMAGE_STORE img
+	                ON c.post_id = img.target_id
+	               AND img.target_type = 'COMMUNITY'
+	               AND img.is_representative = 'Y'
+	             WHERE c.status = 'DISPLAY'
+	             ORDER BY c.like_count DESC, c.view_count DESC, c.post_id DESC
+	           )
+	     WHERE ROWNUM <![CDATA[<=]]> 3
     </select>
 
-    <!-- 공지사항 목록 -->
+    <!-- 게시글 상세 -->
+    <select id="boardDetail" parameterType="int" resultMap="communityMap">
+	    SELECT c.post_id,
+	           c.user_id,
+	           c.title,
+	           c.content,
+	           c.category,
+	           c.view_count,
+	           c.like_count,
+	           c.status,
+	           c.created_at,
+	           c.updated_at,
+	           img.image_id          AS rep_image_id,
+	           img.target_id         AS rep_target_id,
+	           img.target_type       AS rep_target_type,
+	           img.image_url         AS rep_image_url,
+	           img.is_representative AS rep_is_representative,
+	           img.sort_order        AS rep_sort_order,
+	           img.created_at        AS rep_created_at
+	      FROM COMMUNITY c
+	      LEFT JOIN IMAGE_STORE img
+	        ON c.post_id = img.target_id
+	       AND img.target_type = 'COMMUNITY'
+	       AND img.is_representative = 'Y'
+	     WHERE c.post_id = #{post_id}
+	</select>
+
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount" parameterType="int">
+        UPDATE COMMUNITY
+           SET view_count = view_count + 1
+         WHERE post_id = #{post_id}
+    </update>
+
+    <!-- 게시글 작성 -->
+    <insert id="insertBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
+    	<!-- selectKey : INSERT 시 기본키(PK) 값을 직접 쿼리로 가져올 때 사용하는 태그 -->
+	    <selectKey keyProperty="post_id" resultType="int" order="BEFORE"> 
+	        SELECT SEQ_POST.NEXTVAL FROM DUAL
+	    </selectKey>
+	
+	    INSERT INTO COMMUNITY (
+	        post_id,
+            user_id,
+            title,
+            content,
+            category
+	    ) VALUES (
+	        #{post_id},
+	        #{user_id},
+            #{title},
+            #{content},
+            #{category}
+	    )
+	</insert>
+	
+	<!-- 게시글 작성 - 이미지 추가 -->
+	<insert id="insertCommunityImage" parameterType="spring.ict06team1.midpj.dto.ImageStoreDTO">
+	    INSERT INTO IMAGE_STORE (
+	        image_id,
+	        target_id,
+	        target_type,
+	        image_url,
+	        is_representative,
+	        sort_order,
+	        created_at
+	    ) VALUES (
+	        SEQ_IMAGE.NEXTVAL,
+	        #{target_id},
+	        #{target_type},
+	        #{image_url},
+	        #{is_representative},
+	        #{sort_order},
+	        SYSTIMESTAMP
+	    )
+	</insert>
+
+    <!-- 게시글 삭제 -->
+    <update id="deleteBoard" parameterType="int">
+        UPDATE COMMUNITY
+           SET status = 'HIDDEN',
+               updated_at = SYSTIMESTAMP
+         WHERE post_id = #{post_id}
+    </update>
+    
+    <!-- 게시글 수정 -->
+	<update id="updateBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
+	    UPDATE COMMUNITY
+	       SET title = #{title},
+	           content = #{content},
+	           category = #{category},
+	           updated_at = SYSTIMESTAMP
+	     WHERE post_id = #{post_id}
+	</update>
+	
+	<!-- 게시글 수정 시 기존 COMMUNITY 대표 이미지 전체 삭제 -->
+    <delete id="deleteCommunityImagesByPostId" parameterType="int">
+	    DELETE FROM IMAGE_STORE
+	     WHERE target_type = 'COMMUNITY'
+	       AND target_id = #{value}
+	</delete>
+	
+	<!-- 검색 게시글 갯수 -->
+	<select id="searchFreeBoardCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	      FROM COMMUNITY
+	     WHERE status = 'DISPLAY'
+	    <if test="category != null and category != '' and category != '전체'">
+	        AND category = #{category}
+	    </if>
+	    <if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchType == 'title'">
+	                AND title LIKE '%' || #{searchKeyword} || '%'
+	            </when>
+	            <when test="searchType == 'content'">
+	                AND content LIKE '%' || #{searchKeyword} || '%'
+	            </when>
+	            <when test="searchType == 'title_content'">
+	                AND (
+	                    title LIKE '%' || #{searchKeyword} || '%'
+	                    OR content LIKE '%' || #{searchKeyword} || '%'
+	                )
+	            </when>
+	            <when test="searchType == 'writer'">
+	                AND user_id LIKE '%' || #{searchKeyword} || '%'
+	            </when>
+	        </choose>
+	    </if>
+	</select>
+	
+	<!-- 자유게시판 검색 목록(카테고리 필터 + 페이징) -->
+	<select id="searchFreeBoardPage" parameterType="map" resultMap="communityMap">
+	    SELECT post_id,
+	           user_id,
+	           title,
+	           content,
+	           category,
+	           view_count,
+	           like_count,
+	           status,
+	           created_at,
+	           updated_at
+	      FROM (
+	            SELECT ROW_NUMBER() OVER (ORDER BY post_id DESC) AS rn,
+	                   post_id,
+	                   user_id,
+	                   title,
+	                   content,
+	                   category,
+	                   view_count,
+	                   like_count,
+	                   status,
+	                   created_at,
+	                   updated_at
+	              FROM COMMUNITY
+	             WHERE status = 'DISPLAY'
+	            <if test="category != null and category != '' and category != '전체'">
+	                AND category = #{category}
+	            </if>
+	            <if test="searchKeyword != null and searchKeyword != ''">
+	                <choose>
+	                    <when test="searchType == 'title'">
+	                        AND title LIKE '%' || #{searchKeyword} || '%'
+	                    </when>
+	                    <when test="searchType == 'content'">
+	                        AND content LIKE '%' || #{searchKeyword} || '%'
+	                    </when>
+	                    <when test="searchType == 'title_content'">
+	                        AND (
+	                            title LIKE '%' || #{searchKeyword} || '%'
+	                            OR content LIKE '%' || #{searchKeyword} || '%'
+	                        )
+	                    </when>
+	                    <when test="searchType == 'writer'">
+	                        AND user_id LIKE '%' || #{searchKeyword} || '%'
+	                    </when>
+	                </choose>
+	            </if>
+	           )
+	     WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 공지사항 목록 -->
     <select id="getNoticeList" resultMap="communityMap">
         SELECT post_id,
                user_id,
@@ -95,75 +322,49 @@
            AND status = 'DISPLAY'
          ORDER BY post_id DESC
     </select>
-
-    <!-- 게시글 상세 -->
-    <select id="getBoardDetail" parameterType="int" resultMap="communityMap">
-        SELECT post_id,
-               user_id,
-               title,
-               content,
-               category,
-               view_count,
-               like_count,
-               status,
-               created_at,
-               updated_at
-          FROM COMMUNITY
-         WHERE post_id = #{post_id}
-    </select>
-
-    <!-- 조회수 증가 -->
-    <update id="increaseViewCount" parameterType="int">
-        UPDATE COMMUNITY
-           SET view_count = view_count + 1
-         WHERE post_id = #{post_id}
-    </update>
-
-    <!-- 게시글 작성 -->
-    <insert id="insertBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
-        INSERT INTO COMMUNITY
-        (
-            post_id,
-            user_id,
-            title,
-            content,
-            category,
-            view_count,
-            like_count,
-            status,
-            created_at
-        )
-        VALUES
-        (
-            SEQ_POST.NEXTVAL,
-            #{user_id},
-            #{title},
-            #{content},
-            #{category},
-            0,
-            0,
-            'DISPLAY',
-            SYSTIMESTAMP
-        )
-    </insert>
-
-    <!-- 게시글 삭제 -->
-    <update id="deleteBoard" parameterType="int">
-        UPDATE COMMUNITY
-           SET status = 'HIDDEN',
-               updated_at = SYSTIMESTAMP
-         WHERE post_id = #{post_id}
-    </update>
     
-    <!-- 게시글 수정 -->
-    <update id="updateBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
+    <!-- 게시글 좋아요 여부 체크 -->
+    <select id="checkCommunityLike" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM COMMUNITY_LIKE
+	    WHERE user_id = #{user_id}
+	      AND post_id = #{post_id}
+	</select>
+	
+	<!-- 게시글 좋아요 추가 -->
+	<insert id="insertCommunityLike" parameterType="map">
+	    INSERT INTO COMMUNITY_LIKE (
+	        like_id, user_id, post_id, created_at
+	    ) VALUES (
+	        SEQ_COMMUNITY_LIKE.NEXTVAL,
+	        #{user_id},
+	        #{post_id},
+	        SYSTIMESTAMP
+	    )
+	</insert>
+	
+	<!-- 게시글 좋아요 삭제 -->
+	<delete id="deleteCommunityLike" parameterType="map">
+	    DELETE FROM COMMUNITY_LIKE
+	    WHERE user_id = #{user_id}
+	      AND post_id = #{post_id}
+	</delete>
+	
+	<!-- 게시글 좋아요 증가 -->
+	<update id="increaseLikeCount" parameterType="int">
 	    UPDATE COMMUNITY
-	       SET title = #{title},
-	           content = #{content},
-	           category = #{category},
-	           updated_at = SYSTIMESTAMP
-	     WHERE post_id = #{post_id}
+	    SET like_count = NVL(like_count, 0) + 1
+	    WHERE post_id = #{post_id}
+	</update>
+	
+	<!-- 게시글 좋아요 감소 -->
+	<update id="decreaseLikeCount" parameterType="int">
+	    UPDATE COMMUNITY
+	    SET like_count = CASE
+	                        WHEN NVL(like_count, 0) > 0 THEN like_count - 1
+	                        ELSE 0
+	                     END
+	    WHERE post_id = #{post_id}
 	</update>
     
-
 </mapper>

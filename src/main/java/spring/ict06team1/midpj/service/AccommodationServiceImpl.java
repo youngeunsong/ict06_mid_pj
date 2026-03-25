@@ -38,6 +38,8 @@ public class AccommodationServiceImpl implements AccommodationService {
         String keyword = request.getParameter("keyword");
         String sortType = request.getParameter("sortType");
         String category = request.getParameter("category");
+        String province = request.getParameter("province"); // 시/도
+        String district = request.getParameter("district"); // 구/시
 
         // 2. 초기 위치 및 반경 설정
         double lat = (strLat != null && !strLat.isEmpty()) ? Double.parseDouble(strLat) : 37.525; 
@@ -57,9 +59,18 @@ public class AccommodationServiceImpl implements AccommodationService {
         countMap.put("keyword", keyword);
         countMap.put("minRating", minRating);
         countMap.put("category", category);
-        
+        countMap.put("province", province != null ? province : "");
+        countMap.put("district", district != null ? district : "");
+	    // 2. 핵심 로직: province가 존재하면 radius를 null로 설정
+	    // (만약 MyBatis 등에서 null 체크를 한다면 유용합니다)
+	    if(province != null && !province.isEmpty()) {
+	        countMap.put("radius", 400); 
+	    } else {
+	        countMap.put("radius", radius);
+	    }
         int totalCount = dao.selectNearbyAccommodationCount(countMap);
-        
+        logger.info("프로방스 :"+province);
+        logger.info("디스트릭트 :"+district);
         // setTotalCount 호출 시 내부에서 startRow, endRow가 6개 기준으로 자동 계산됨
         paging.setTotalCount(totalCount);
 
@@ -68,7 +79,8 @@ public class AccommodationServiceImpl implements AccommodationService {
         listMap.put("sortType", (sortType != null && !sortType.isEmpty()) ? sortType : "distance");
         listMap.put("start", paging.getStartRow()); // 6개 기준 시작 번호 (예: 1, 7, 13...)
         listMap.put("end", paging.getEndRow());     // 6개 기준 끝 번호 (예: 6, 12, 18...)
-
+        listMap.put("province", province != null ? province : "");
+        listMap.put("district", district != null ? district : "");
         // 5. DB 데이터 조회 (RestaurantDTO + PlaceDTO 조인)
         List<AccommodationDTO> accommodationList = dao.selectNearbyAccommodationList(listMap);
 
@@ -88,12 +100,22 @@ public class AccommodationServiceImpl implements AccommodationService {
         
     	// 1. 파라미터 수집 및 검색용 Map 생성
         Map<String, Object> listMap = new HashMap<>();
+        String province = request.getParameter("province");
+        String district = request.getParameter("district");
+        double radius = Double.parseDouble(request.getParameter("radius"));
+        if(province != null && !province.isEmpty()) {
+	        listMap.put("radius", 400); 
+	    } else {
+	        listMap.put("radius", radius);
+	    }
+        listMap.put("province", province != null ? province : "");
+        listMap.put("district", district != null ? district : "");
         listMap.put("lat", Double.parseDouble(request.getParameter("lat")));
         listMap.put("lng", Double.parseDouble(request.getParameter("lng")));
-        listMap.put("radius", Double.parseDouble(request.getParameter("radius")));
         listMap.put("keyword", request.getParameter("keyword"));
         listMap.put("category", request.getParameter("category"));
         String strMinRating = request.getParameter("minRating");
+        
         double minRating = (strMinRating != null && !strMinRating.isEmpty()) ? Double.parseDouble(strMinRating) : 0.0;
         listMap.put("minRating", minRating);
         // 2. DAO 호출 (전체 마커용 데이터 조회)

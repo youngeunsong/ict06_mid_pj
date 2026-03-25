@@ -23,14 +23,17 @@ public interface AdSupportDAO {
 
     // ===== [FAQ 관리] =====
     // 5. FAQ 목록 조회
-    public List<FaqDTO> getFaqList();
+    public List<FaqDTO> getFaqList(Map<String, Object> map);
 
     // 6. 신규 FAQ 등록 
     public int insertFaq(FaqDTO dto);
     
-    // 7. 수정
+    // 7. 특정 FAQ 상세 조회 (수정 폼 데이터 불러오기용)
+    public FaqDTO getFaqDetail(int faq_id);
+    
+    // 8. 수정
     public int updateFaq(FaqDTO dto);
     
-    // 8. 삭제
+    // 9. 삭제
     public int deleteFaq(int faq_id);
 }

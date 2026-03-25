@@ -1,3 +1,13 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-16
+ * 최종수정일: 2026-03-20
+ * 적용 외부 API : Kakao 공유 API
+ (PC : 정상 작동/ 모바일 : URL 올바르게 들어가나 페이지 못 불러옴 <= 정상)
+  ㄴ localhost 링크 대상 서버가 모바일에서 접근 불가
+  
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
 
@@ -8,20 +18,67 @@
 
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>게시글 상세</title>
+<title>커뮤니티 > 자유게시판 > 게시글</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
-<link rel="stylesheet" href="${path}/resources/css/user/community/commuity_detail.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
+<link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 
 <script src="${path}/resources/js/community/community_detail.js" defer></script>
+
+<!-- 카카오 공유 API -->
+<c:set var="shareUrl"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}${path}/community_detail.co?post_id=${dto.post_id}" />
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+        crossorigin="anonymous"></script>
+
+<script>
+	window.kakaoShareData = {
+	    title: '${dto.title}',
+	    description: '맛침내 커뮤니티 자유 게시판',
+	    imageUrl: '${not empty dto.repImage and not empty dto.repImage.image_url ? dto.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
+	    webUrl: '${shareUrl}',
+	    mobileWebUrl: '${shareUrl}'
+	};
+</script>
+
+<script src="${path}/resources/js/common/kakaoShare.js"></script>
+<!-- 카카오 공유 API -->
 
 </head>
 <body>
 <div class="wrap">
 
+	<c:if test="${param.msg == 'delete'}">
+	    <script>
+	        alert("게시글이 삭제되었습니다.");
+	    </script>
+	</c:if>
+	
+	<c:if test="${param.msg == 'write'}">
+	    <script>
+	        alert("게시글이 등록되었습니다.");
+	    </script>
+	</c:if>
+	
+	<c:if test="${param.msg == 'update'}">
+	    <script>
+	        alert("게시글이 수정되었습니다.");
+	    </script>
+	</c:if>
+
 	<!-- header -->
     <%@ include file="../../common/header.jsp" %>
+    
+    <div class="comm-tabs">
+	    <div class="container">
+	        <a href="${path}/community_free.co" class="tab on">자유게시판</a>
+	        <a href="${path}/community_notice.co" class="tab">공지사항</a>
+	        <a href="${path}/community_event.co" class="tab">이벤트</a>
+	    </div>
+	</div>
 
 	<!-- 숨김/삭제된 게시글 접근 차단:시작 -->
 	<c:if test="${not empty errorMsg}">
@@ -50,11 +107,13 @@
 	<!-- 숨김/삭제된 게시글 접근 차단:끝 -->
 	
     <div class="page-body">
-        <div class="container detail-container">
+        <div class="container">
 
             <!-- breadcrumb -->
             <div class="breadcrumb-area">
                 <a href="${path}/community_free.co">커뮤니티</a>
+                <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
+                <a href="${path}/community_free.co">자유게시판</a>
                 <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
                 <span class="cur">자유게시판 상세</span>
             </div>
@@ -66,7 +125,7 @@
                     <span class="post-cat">${dto.category}</span>
 
                     <h3 class="post-title">${dto.title}</h3>
-
+                    
                     <div class="post-meta">
                         <div class="post-author">
                             <div class="avatar">
@@ -86,22 +145,30 @@
                         </div>
                     </div>
                 </div>
+                
+                <c:if test="${not empty dto.repImage and not empty dto.repImage.image_url}">
+				    <div class="post-cover">
+				        <img src="${dto.repImage.image_url}" alt="${dto.title}" class="post-cover-img">
+				    </div>
+				</c:if>
 
                 <div class="post-body">
                     ${dto.content}
                 </div>
 
-                <div class="like-area">
-                    <button type="button" class="btn-like">
-                        <i class="bi bi-heart"></i>
-                        좋아요 ${dto.like_count}
-                    </button>
-                </div>
+                <button type="button" class="btn-like" id="likeBtn" data-post-id="${dto.post_id}">
+				    <i class="bi bi-heart"></i>
+				    좋아요 <span id="likeCount">${dto.like_count}</span>
+				</button>
 
                 <div class="post-footer">
 				    <a href="${path}/community_free.co" class="btn-list">
 				        <i class="bi bi-list-ul"></i> 목록
 				    </a>
+				    
+				    <button type="button" id="kakaoShareBtn" class="btn btn-warning btn-sm">
+				        카카오톡 공유
+				    </button>
 				
 				    <c:if test="${sessionScope.sessionID == dto.user_id}">
 				        <div class="post-footer-right">

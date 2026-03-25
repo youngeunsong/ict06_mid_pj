@@ -1,6 +1,8 @@
 package spring.ict06team1.midpj.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.AdCommentDAO;
 import spring.ict06team1.midpj.dto.CommunityCommentDTO;
 
@@ -23,8 +26,30 @@ public class AdCommentServiceImpl implements AdCommentService {
 	public void getAdCommentList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommentServiceImpl - getAdCommentList()]");
 		
-		List<CommunityCommentDTO> commentList = adCmtDao.getAdCommentList();
+		String pageNum = request.getParameter("pageNum");
+		String searchType = request.getParameter("searchType");
+		String keyword = request.getParameter("keyword");
+		
+		Paging paging = new Paging(pageNum);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchType", searchType);
+		map.put("keyword", keyword);
+
+		//전체 댓글 수 카운트
+		int totalCount = adCmtDao.getAdCommentCount(map);
+		paging.setTotalCount(totalCount);
+		
+		map.put("startRow", paging.getStartRow());
+		map.put("endRow", paging.getEndRow());
+		
+		List<CommunityCommentDTO> commentList = adCmtDao.getAdCommentList(map);
+		
 		model.addAttribute("commentList", commentList);
+		model.addAttribute("paging", paging);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("keyword", keyword);
 	}
 
 	//2. 댓글 숨김

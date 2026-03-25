@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author 김다솜/ 송혜진 -->
+<!-- 최초작성일: 2026-03-23 -->
+<!-- 최종수정일: 2026-03-23 -->
+<!-- 참고 코드: None -->
+<!-- ========================= -->
+<!-- v260323 -->
+<!-- 1:1문의 미처리 목록 출력 sql문 추가 -->
+
+<!-- v260325 -->
+<!--  -->
+<!-- ========================= -->
+
+<!-- 
+	[ 관리자 홈 전용 매퍼 ]
+	- 일반 CRUD 매퍼 아님
+	- 관리자 홈 대시보드 집계 전용 매퍼
+	- DB 데이터만 담당
+	- GA API / 워드클라우드 API는 서비스에서 별도 처리
+
+ -->
+
+<mapper namespace="spring.ict06team1.midpj.dao.AdDashboardDAO">
+
+	<!-- ======= Survey DTO 매핑 (created_at -> surveyDate) ======= -->
+    <resultMap id="surveyResultMap" type="spring.ict06team1.midpj.dto.SurveyDTO">
+        <id property="survey_id" column="survey_id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="nps_score" column="nps_score"/>
+        <result property="satisfaction_score" column="satisfaction_score"/>
+        <result property="inconvenience" column="inconvenience"/>
+        <result property="info_reliability_score" column="info_reliability_score"/>
+        <result property="improvements" column="improvements"/>
+        <result property="surveyDate" column="surveyDate"/>
+    </resultMap>
+
+    <!-- ======= Inquiry DTO 매핑 (created_at -> inquiryDate/ answered_at -> answerDate) ======= -->
+    <resultMap id="inquiryResultMap" type="spring.ict06team1.midpj.dto.InquiryDTO">
+        <id property="inquiry_id" column="inquiry_id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="category" column="category"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="admin_reply" column="admin_reply"/>
+        <result property="inquiryDate" column="inquiryDate"/>
+        <result property="answerDate" column="answerDate"/>
+    </resultMap>
+
+    <!-- ==============================
+         1. 금일 KPI 카드	
+    ============================== -->
+    <select id="getTodayKpiSummary" parameterType="map" resultType="map">
+        SELECT
+            <!-- 금일 신규 회원 -->
+            (SELECT COUNT(*)
+               FROM MEMBER
+              WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS "newMemberCount",
+
+            <!-- 금일 맛집 등록 -->
+            (SELECT COUNT(*)
+               FROM PLACE
+              WHERE place_type = 'REST'
+                AND TRUNC(created_at) = TRUNC(SYSDATE)) AS "newRestaurantCount",
+
+            <!-- 금일 예약 -->
+            (SELECT COUNT(*)
+               FROM RESERVATION
+              WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS "reservationCount",
+
+            <!-- 금일 댓글 -->
+            (SELECT COUNT(*)
+               FROM COMMUNITY_COMMENT
+              WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS "commentCount",
+
+            <!-- 금일 결제 완료 -->
+            (SELECT COUNT(*)
+               FROM PAYMENT
+              WHERE payment_status = 'COMPLETED'
+                AND TRUNC(created_at) = TRUNC(SYSDATE)) AS "paymentCount",
+
+            <!-- 금일 만족도 조사 참여자 -->
+            (SELECT COUNT(*)
+               FROM SURVEY
+              WHERE TRUNC(created_at) = TRUNC(SYSDATE)) AS "surveyParticipantCount"
+        FROM DUAL
+    </select>
+
+    <!-- ==============================
+         2. 기간별 KPI 카드
+         startDate, endDate 사용
+    ============================== -->
+    <select id="getPeriodKpiSummary" parameterType="map" resultType="map">
+        SELECT
+            (SELECT COUNT(*)
+               FROM MEMBER
+              WHERE created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "newMemberCount",
+
+            (SELECT COUNT(*)
+               FROM PLACE
+              WHERE place_type = 'REST'
+                AND created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "newRestaurantCount",
+
+            (SELECT COUNT(*)
+               FROM RESERVATION
+              WHERE created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "reservationCount",
+
+            (SELECT COUNT(*)
+               FROM COMMUNITY_COMMENT
+              WHERE created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "commentCount",
+
+            (SELECT COUNT(*)
+               FROM PAYMENT
+              WHERE payment_status = 'COMPLETED'
+                AND created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "paymentCount",
+
+            (SELECT COUNT(*)
+               FROM SURVEY
+              WHERE created_at &gt;= #{startDate}
+                AND created_at &lt; #{endDate}) AS "surveyParticipantCount"
+        FROM DUAL
+    </select>
+
+    <!-- ==============================
+         3. 만족도 시계열
+         statDate / satisfactionAvg / infoReliabilityAvg / npsAvg
+    ============================== -->
+    <select id="getSatisfactionTrend" parameterType="map" resultType="map">
+        SELECT
+            TO_CHAR(TRUNC(created_at), 'YYYY-MM-DD') AS "statDate",
+            ROUND(AVG(satisfaction_score), 2) AS "satisfactionAvg",
+            ROUND(AVG(info_reliability_score), 2) AS "infoReliabilityAvg",
+            ROUND(AVG(nps_score), 2) AS "npsAvg"
+        FROM SURVEY
+        WHERE created_at &gt;= #{startDate}
+          AND created_at &lt; #{endDate}
+        GROUP BY TRUNC(created_at)
+        ORDER BY TRUNC(created_at)
+    </select>
+
+    <!-- ==============================
+         4. NPS 분포
+         bucketName / scoreCount / ratio
+    ============================== -->
+    <select id="getNpsDistribution" parameterType="map" resultType="map">
+	    SELECT
+	        bucketName AS "bucketName",
+	        scoreCount AS "scoreCount",
+	        ROUND(scoreCount * 100 / totalCount, 2) AS "ratio"
+	    FROM (
+	        SELECT
+	            CASE
+	                WHEN nps_score BETWEEN 0 AND 6 THEN 'Detractor'
+	                WHEN nps_score BETWEEN 7 AND 8 THEN 'Passive'
+	                WHEN nps_score BETWEEN 9 AND 10 THEN 'Promoter'
+	            END AS bucketName,
+	            COUNT(*) AS scoreCount,
+	            SUM(COUNT(*)) OVER() AS totalCount
+	        FROM SURVEY
+	        WHERE created_at &gt;= #{startDate}
+	          AND created_at &lt; #{endDate}
+	          AND nps_score IS NOT NULL
+	        GROUP BY CASE
+	                    WHEN nps_score BETWEEN 0 AND 6 THEN 'Detractor'
+	                    WHEN nps_score BETWEEN 7 AND 8 THEN 'Passive'
+	                    WHEN nps_score BETWEEN 9 AND 10 THEN 'Promoter'
+	                 END
+	    )
+	    ORDER BY
+	        CASE bucketName
+	            WHEN 'Detractor' THEN 1
+	            WHEN 'Passive' THEN 2
+	            WHEN 'Promoter' THEN 3
+	        END
+	</select>
+
+    <!-- ==============================
+         5. 만족도 핵심 통계
+         metricName / avgValue / stddevValue / minValue / maxValue
+    ============================== -->
+    <select id="getSatisfactionStats" parameterType="map" resultType="map">
+        SELECT
+            'SATISFACTION' AS "metricName",
+            ROUND(AVG(satisfaction_score), 2) AS "avgValue",
+            ROUND(STDDEV(satisfaction_score), 2) AS "stddevValue",
+            MIN(satisfaction_score) AS "minValue",
+            MAX(satisfaction_score) AS "maxValue"
+        FROM SURVEY
+        WHERE created_at &gt;= #{startDate}
+          AND created_at &lt; #{endDate}
+
+        UNION ALL
+
+        SELECT
+            'INFO_RELIABILITY' AS "metricName",
+            ROUND(AVG(info_reliability_score), 2) AS "avgValue",
+            ROUND(STDDEV(info_reliability_score), 2) AS "stddevValue",
+            MIN(info_reliability_score) AS "minValue",
+            MAX(info_reliability_score) AS "maxValue"
+        FROM SURVEY
+        WHERE created_at &gt;= #{startDate}
+          AND created_at &lt; #{endDate}
+
+        UNION ALL
+
+        SELECT
+            'NPS' AS "metricName",
+            ROUND(AVG(nps_score), 2) AS "avgValue",
+            ROUND(STDDEV(nps_score), 2) AS "stddevValue",
+            MIN(nps_score) AS "minValue",
+            MAX(nps_score) AS "maxValue"
+        FROM SURVEY
+        WHERE created_at &gt;= #{startDate}
+          AND created_at &lt; #{endDate}
+    </select>
+
+    <!-- ==============================
+         6. 워드클라우드용 서술형 원문
+         inconvenience + improvements 합쳐서 문자열 목록 반환
+    ============================== -->
+    <select id="getSubjectiveSurveyAnswers" parameterType="map" resultType="string">
+        SELECT answerText
+        FROM (
+            SELECT inconvenience AS answerText
+                 , created_at
+            FROM SURVEY
+            WHERE inconvenience IS NOT NULL
+              AND created_at &gt;= #{startDate}
+              AND created_at &lt; #{endDate}
+
+            UNION ALL
+
+            SELECT improvements AS answerText
+                 , created_at
+            FROM SURVEY
+            WHERE improvements IS NOT NULL
+              AND created_at &gt;= #{startDate}
+              AND created_at &lt; #{endDate}
+        )
+        WHERE answerText IS NOT NULL
+    </select>
+
+    <!-- ==============================
+         7. 금일 만족도 표 목록
+         Oracle 11g paging
+         start, end 사용
+         현 매퍼 미사용/ 추후 작업 중 필요 시 사용하기 위해 파일만 유지
+    ============================== -->
+    <select id="getTodaySurveyList" parameterType="map" resultMap="surveyResultMap">
+        SELECT *
+        FROM (
+            SELECT inner1.*, ROWNUM AS "rn"
+            FROM (
+                SELECT
+                    survey_id,
+                    user_id,
+                    nps_score,
+                    satisfaction_score,
+                    inconvenience,
+                    info_reliability_score,
+                    improvements,
+                    created_at AS surveyDate
+                FROM SURVEY
+                WHERE TRUNC(created_at) = TRUNC(SYSDATE)
+                ORDER BY created_at DESC, survey_id DESC
+            ) inner1
+            WHERE ROWNUM &lt;= #{end}
+        )
+        WHERE rn &gt;= #{start}
+    </select>
+
+    <!-- ==============================
+         8. 금일 만족도 표 총 개수
+         현 매퍼 미사용/ 추후 작업 중 필요 시 사용하기 위해 파일만 유지
+    ============================== -->
+    <select id="getTodaySurveyCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM SURVEY
+        WHERE TRUNC(created_at) = TRUNC(SYSDATE)
+    </select>
+
+    <!-- ==============================
+         9. 미답변 문의 최근 10건
+    ============================== -->
+    <select id="getPendingInquiryTop10" resultMap="inquiryResultMap">
+		SELECT *
+	    FROM (
+	        SELECT
+	            inquiry_id,
+	            user_id,
+	            title,
+	            content,
+	            status,
+	            admin_reply,
+	            created_at AS inquiryDate,
+	            answered_at AS answerDate
+	        FROM INQUIRY
+	        WHERE status = 'PENDING'
+	        ORDER BY created_at DESC, inquiry_id DESC
+	    )
+        WHERE ROWNUM &lt;= 10
+    </select>
+
+</mapper>

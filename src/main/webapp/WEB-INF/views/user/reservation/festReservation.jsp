@@ -1,7 +1,7 @@
 <!-- 
  * @author 김다솜
  * 최초작성일: 2026-03-22
- * 최종수정일: 2026-03-
+ * 최종수정일: 2026-03-23
  * 참고 코드: festivalDetail.jsp
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -16,7 +16,7 @@
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>예약 정보 입력</title>
+<title>축제 예약 정보 입력</title>
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -260,8 +260,8 @@
 
 				<!-- ===== 상단 헤더 ===== -->
 				<div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded-3">
-					<img src="${festival.placeDTO.image_url}" style="width:80px; height:80px;
-						object-fit:cover; border-radius:12px;">
+					<img src="${festival.placeDTO.image_url}"
+						style="width:80px; height:80px; object-fit:cover; border-radius:12px;">
 					<div>
 						<h4 class="mb-1 fw-bold">${festival.placeDTO.name}</h4>
 						<p class="text-muted mb-0 small"><i class="fa-solid fa-calendar-days me-1"></i>
@@ -272,6 +272,7 @@
 				
 				<h3 class="fw-bold mb-4">예약 정보 입력</h3>
 				
+				<!-- 방문일 -->
 				<div class="card shadow-sm border-0 p-4" style="border-radius: 20px;">
 					<div class="mb-3">
 						<label class="form-label fw-bold">방문 예정일</label>
@@ -279,6 +280,7 @@
 								min="${festival.start_date}" max="${festival.end_date}">
 					</div>
 					
+					<!-- 티켓 종류 -->
 					<div class="mb-3">
 						<label class="form-label fw-bold">티켓 종류</label>
 						<div>
@@ -302,6 +304,7 @@
 						</div>
 					</div>
 					
+					<!-- 인원수 -->
 					<div class="mb-4">
 						<label class="form-label fw-bold">인원 수</label>
 						<div class="input-group input-group-lg">
@@ -310,6 +313,7 @@
 						</div>
 					</div>
 					
+					<!-- 요청사항 -->
 					<div class="mb-4">
 						<label class="form-label fw-bold">요청사항</label>
 						<textarea id="request_note" class="form-control" rows="3" placeholder="전달할 메시지를 적어주세요."></textarea>
@@ -317,11 +321,13 @@
 					
 					<hr class="my-4">
 					
+					<!-- 최종 결제 금액 -->
 					<div class="d-flex justify-content-between align-items-center mb-4">
 						<span class="fs-5 fw-bold">최종 결제 금액</span>
 						<span id="total_price" class="fs-3 fw-bold text-success"></span>
 					</div>
 					
+					<!-- 결제/예약 버튼 -->
 					<button id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
 							onclick="submitReservation()" style="border-radius:15px;">
 						결제 및 예약하기
@@ -334,6 +340,7 @@
 <script>
 	const CTX = '${path}';
 	const PLACE_ID = '${festival.placeDTO.place_id}';
+	const PLACE_TYPE = 'FEST';
 </script>
 
 <script src="${pageContext.request.contextPath}/resources/js/user/festReservation.js"></script>

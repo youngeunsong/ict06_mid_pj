@@ -40,14 +40,46 @@
 			
 			<section class="content">
 				<div class="container-fluid">
+					<%--필터 영역--%>
+					<div class="filter-box mb-3 p-3 bg-white shadow-sm rounded">
+						<div class="d-flex align-items-center justify-content-end flex-wrap" style="gap:15px;">
+							
+							<%-- 검색 영역 --%>
+							<form action="${path}/commentList.adco" method="get" class="d-flex align-items-center" style="gap:10px;">
+								<div class="input-group input-group-sm" style="width:400px;">
+
+									<%--검색 종류 선택--%>
+									<select name="searchType" class="form-control col-4" style="border-radius: 4px 0 0 4px;">
+										<option value="user_id" ${searchType == 'user_id' ? 'selected' : ''}>작성자 ID</option>
+										<option value="content" ${searchType == 'content' ? 'selected' : ''}>댓글 내용</option>
+									</select>
+									
+									<%--키워드 검색 영역--%>
+									<input type="text" id="keyword" name="keyword" class="form-control form-control-sm"
+										placeholder="검색어 입력" value="${keyword}">
+									<div class="input-group-append">
+										<button class="btn btn-dark btn-sm" type="submit">
+											<i class="bi bi-search"></i>
+										</button>
+									</div>
+								</div>
+								
+								<a href="${path}/commentList.adco" class="btn btn-outline-secondary btn-sm">
+									<i class="bi bi-arrow-clockwise"></i>
+								</a>
+							</form>
+						</div>
+					</div>
 				
-					<!-- 게시글 정보 카드 -->
 					<div class="card">
 						<div class="card-header">
-							<button type="button" class="tag tag-warning active" onclick="bulkCommentAction('hide')">선택 숨김</button>
-							<button type="button" class="tag tag-success active" onclick="bulkCommentAction('show')">선택 숨김해제</button>
-							<button type="button" class="tag tag-danger active" onclick="bulkCommentAction('delete')">선택 삭제</button>
+							<!-- 일괄처리 tag 버튼 -->
+							<button type="button" class="tag tag-warning active" onclick="bulkCommentAction('hide')">숨김</button>
+							<button type="button" class="tag tag-success active" onclick="bulkCommentAction('show')">숨김 해제</button>
+							<button type="button" class="tag tag-danger active" onclick="bulkCommentAction('delete')">삭제</button>
 						</div>
+					
+						<!--begin::card-body-->
 						<div class="card-body table-responsive p-0">
 							<table class="table table-hover text-nowrap text-center">
 								<thead>
@@ -115,6 +147,29 @@
 								</tbody>
 							</table>
 						</div>
+						<!--end::card-body-->
+						
+						<!--begin::card-footer-->
+						<div class="card-footer clearfix">
+							<ul class="pagination pagination-sm m-0 float-right">
+								<c:if test="${paging.prev > 0}">
+									<li class="page-item">
+										<a class="page-link" href="${path}/commentList.adco?pageNum=${paging.prev}&searchType=${searchType}&keyword=${keyword}">«</a>
+									</li>
+								</c:if>
+								<c:forEach begin="${paging.startPage}" end="${paging.endPage}" var="i">
+									<li class="page-item ${paging.currentPage == i ? 'active' : ''}">
+										<a class="page-link" href="${path}/commentList.adco?pageNum=${i}&searchType=${searchType}&keyword=${keyword}">${i}</a>
+									</li>
+								</c:forEach>
+								<c:if test="${paging.next > 0}">
+									<li class="page-item">
+										<a class="page-link" href="${path}/commentList.adco?pageNum=${paging.next}&searchType=${searchType}&keyword=${keyword}">»</a>
+									</li>
+								</c:if>
+							</ul>
+						</div>
+						<!--end::card-footer-->
 					</div>
 				</div>
 			</section>

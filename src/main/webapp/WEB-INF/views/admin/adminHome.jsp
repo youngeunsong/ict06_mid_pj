@@ -1,156 +1,419 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-23
+ * 최종수정일: 2026-03-24
+ 
+ 
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%> <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 
-<link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
-
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자 페이지</title>
 
+<title>관리자 Home</title>
+
+<link rel="stylesheet" href="${path}/resources/css/admin/ad_home.css">
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="${path}/resources/js/admin/adHome.js" defer></script>
 </head>
-<!--end::Head-->
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
-	<div class="wrapper">
+<!--begin::div wrapper-->
+<div class="wrapper">
+	<!-- Preloader -->
+	<div
+		class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png"
+			height="60" width="60" alt="AdminLTE Logo">
+	</div>
 
-		<!-- Preloader -->
-		<div
-			class="preloader flex-column justify-content-center align-items-center">
-			<img src="${path}/resources/admin/dist/img/AdminLTELogo.png"
-				height="60" width="60">
-		</div>
+	<!-- ================= HEADER ================= -->
+	<%@ include file="/WEB-INF/views/common/adminHeader.jsp"%>
 
-		<!-- ================= HEADER ================= -->
-		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
+	<!-- ================= SIDEBAR ================= -->
+	<%@ include file="/WEB-INF/views/common/adminSidebar.jsp"%>
 
-		<!-- ================= SIDEBAR ================= -->
-		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
+	<!-- ================= CONTENT ================= -->
+	<div class="content-wrapper">
+		<section class="content pt-3">
+			<div class="container-fluid">
+				<!-- ===== 기간 조회 필터S ===== -->
+				<div class="card dashboard-card filter-card mb-4">
+					<div class="card-body">
+						<div class="period-shortcuts mb-3">
+							<button type="button" class="btn btn-outline-primary range-btn"
+								data-range="7">7일</button>
+							<button type="button" class="btn btn-outline-primary range-btn"
+								data-range="30">30일</button>
+							<button type="button" class="btn btn-outline-primary range-btn"
+								data-range="90">90일</button>
+							<button type="button" class="btn btn-outline-primary range-btn"
+								data-range="180">6개월</button>
+							<button type="button" class="btn btn-outline-primary range-btn"
+								data-range="365">1년</button>
+						</div>
 
-		<!-- ================= CONTENT ================= -->
-		<!--begin::content-wrapper-->
-		<div class="content-wrapper">
-			<!-- 페이지 헤더 -->
-			<div class="content-header">
-				<!--begin::container-fluid-->
-				<div class="container-fluid">
-					<h1 class="m-0">Dashboard</h1>
+						<form action="${path}/adminHome.ad" method="get"
+							class="row g-3 align-items-end">
+							<div class="col-lg-4 col-md-6">
+								<label for="startDate" class="form-label">시작일</label> <input
+									type="date" id="startDate" name="startDate"
+									value="${startDate}" class="form-control">
+							</div>
+
+							<div class="col-lg-4 col-md-6">
+								<label for="endDate" class="form-label">종료일</label> <input
+									type="date" id="endDate" name="endDate" value="${endDate}"
+									class="form-control">
+							</div>
+
+							<div class="col-lg-4 col-md-12">
+								<button type="submit" class="btn btn-primary w-100">조회</button>
+							</div>
+						</form>
+					</div>
 				</div>
-			</div>
-		
-			<!--begin::content-->
-			<div class="app-content">
-				<div class="container-fluid">
-					
-					<!-- KPI 요약 -->
-					<div class="row mb-4">
-						<div class="col-12">
-							<div class="card card-primary shadow-sm">
-								<div class="card-header">
-									<h3 class="card-title font-weight-bold">기간별 KPI 요약</h3>
-								</div>
-								<div class="card-body text-center">
-									<div class="row">
-										<div class="col-3 border-right"><h6>전체 방문자</h6></div>
-										<div class="col-3 border-right"><h6>예약 전환율</h6></div>
-										<div class="col-3 border-right"><h6>평균 평점</h6></div>
-										<div class="col-3"><h6>신규 회원</h6></div>
-									</div>
-								</div>
+				<!-- ===== 기간 조회 필터E ===== -->
+
+				<!-- ===== 기간별 트래픽 분석S ===== -->
+				<div class="row g-4 mb-4">
+					<div class="col-lg-8 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div
+								class="card-header d-flex justify-content-between align-items-center">
+								<h5 class="mb-0">기간별 트래픽 추이</h5>
+								<small class="text-muted">${startDate} ~ ${endDate}</small>
+							</div>
+							<div class="card-body">
+								<div id="trafficTrendChart"></div>
 							</div>
 						</div>
 					</div>
-					<!-- Wordcloud + 1:1 문의 미처리 -->
-					<div class="row mb-4">
-						<div class="col-md-6">
-							<div class="card h-100 shadow-sm">
-								<div class="card-header">
-									<h3 class="card-title font-weight-bold">만족도 설문 wordcloud</h3>
-								</div>
-								<div class="card-body d-flex align-items-center justify-content-center" style="min-height:300px;">
-									<div id="wordcloud-canvas">
-										<p class="text-muted">서술형 데이터 분석 영역</p>
-									</div>
-								</div>
+
+					<div class="col-lg-4 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div class="card-header">
+								<h5 class="mb-0">기간 요약</h5>
+							</div>
+							<div class="card-body p-0">
+								<ul class="summary-list mb-0">
+									<li><span>기간 방문자 수</span> <strong>${empty periodKpi.visitorCount ? 0 : periodKpi.visitorCount}명</strong>
+									</li>
+									<li><span>기간 페이지뷰</span> <strong>${empty periodKpi.viewCount ? 0 : periodKpi.viewCount}회</strong>
+									</li>
+									<li><span>기간 신규 회원</span> <strong>${empty periodKpi.newMemberCount ? 0 : periodKpi.newMemberCount}명</strong>
+									</li>
+									<li><span>기간 맛집 등록</span> <strong>${empty periodKpi.newRestaurantCount ? 0 : periodKpi.newRestaurantCount}건</strong>
+									</li>
+									<li><span>기간 예약</span> <strong>${empty periodKpi.reservationCount ? 0 : periodKpi.reservationCount}건</strong>
+									</li>
+									<li><span>기간 댓글</span> <strong>${empty periodKpi.commentCount ? 0 : periodKpi.commentCount}건</strong>
+									</li>
+									<li><span>기간 결제</span> <strong>${empty periodKpi.paymentCount ? 0 : periodKpi.paymentCount}건</strong>
+									</li>
+									<li><span>기간 만족도조사 참여자</span> <strong>${empty periodKpi.surveyParticipantCount ? 0 : periodKpi.surveyParticipantCount}명</strong>
+									</li>
+								</ul>
 							</div>
 						</div>
-						
-						<div class="col-md-6">
-							<div class="card h-100 shadow-sm">
-								<div class="card-header">
-									<h3 class="card-title font-weight-bold text-danger">1:1문의 미처리</h3>
-								</div>
-								<div class="card-body p-0">
-									<table class="table align-middle m-0">
-										<thead class="table-light text-center">
+					</div>
+				</div>
+				<!-- ===== 기간별 트래픽 분석E ===== -->
+
+				<!-- ===== 금일 KPI S ===== -->
+				<div class="row g-3 mb-4">
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-blue">
+							<div class="card-body">
+								<h6>금일 신규 가입</h6>
+								<h3>${empty todayKpi.newMemberCount ? 0 : todayKpi.newMemberCount}명</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-green">
+							<div class="card-body">
+								<h6>금일 신규 맛집 등록</h6>
+								<h3>${empty todayKpi.newRestaurantCount ? 0 : todayKpi.newRestaurantCount}건</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-yellow">
+							<div class="card-body">
+								<h6>금일 신규 예약</h6>
+								<h3>${empty todayKpi.reservationCount ? 0 : todayKpi.reservationCount}건</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-purple">
+							<div class="card-body">
+								<h6>금일 신규 댓글</h6>
+								<h3>${empty todayKpi.commentCount ? 0 : todayKpi.commentCount}건</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-pink">
+							<div class="card-body">
+								<h6>금일 신규 결제</h6>
+								<h3>${empty todayKpi.paymentCount ? 0 : todayKpi.paymentCount}건</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-orange">
+							<div class="card-body">
+								<h6>금일 만족도조사 참여자 수</h6>
+								<h3>${empty todayKpi.surveyParticipantCount ? 0 : todayKpi.surveyParticipantCount}명</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-teal">
+							<div class="card-body">
+								<h6>금일 방문자 수</h6>
+								<h3>${empty todayKpi.visitorCount ? 0 : todayKpi.visitorCount}명</h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<div class="card kpi-card accent-cyan">
+							<div class="card-body">
+								<h6>금일 페이지뷰</h6>
+								<h3>${empty todayKpi.viewCount ? 0 : todayKpi.viewCount}회</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- ===== 금일 KPI E ===== -->
+
+				<!-- ===== 만족도 분석S ===== -->
+				<div class="row g-4 mb-4">
+					<div class="col-lg-8 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div class="card-header">
+								<h5 class="mb-0">최근 만족도</h5>
+							</div>
+							<div class="card-body">
+								<div id="trendChart"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-4 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div class="card-header">
+								<h5 class="mb-0">NPS 평점 분포</h5>
+							</div>
+							<div class="card-body">
+								<div id="npsChart"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- ===== 만족도 분석E ===== -->
+
+				<!-- ===== 만족도 핵심 통계 표S ===== -->
+				<div class="row mb-4">
+					<div class="col-12">
+						<div class="card dashboard-card">
+							<div class="card-header">
+								<h5 class="mb-0">맛집만족도 / 정보신뢰도 / NPS 핵심 통계</h5>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table dashboard-table mb-0">
+										<thead>
 											<tr>
-												<th>작성자</th>
-												<th>제목</th>
-												<th>날짜</th>
+												<th>지표</th>
+												<th>평균</th>
+												<th>표준편차</th>
+												<th>최솟값</th>
+												<th>최댓값</th>
 											</tr>
 										</thead>
-										<tbody class="text-center">
-											<tr>
-												<td colspan="3" class="py-5 text-muted">미처리 내역이 없습니다.</td>
-											</tr>
+										<tbody>
+											<c:forEach var="row" items="${statsList}">
+												<tr>
+													<td>${row.metricName}</td>
+													<td>${row.avgValue}</td>
+													<td>${row.stddevValue}</td>
+													<td>${row.minValue}</td>
+													<td>${row.maxValue}</td>
+												</tr>
+											</c:forEach>
 										</tbody>
 									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-						
-						<!--사용자 만족도 설문 결과-->
-						<div class="row mb-4">
-							<div class="col-12">
-								<div class="card shadow-sm border-0">
-									<div class="card-header bg-white">
-										<h3 class="card-title font-weight-bold">사용자 만족도 설문 결과</h3>
-									</div>
-									<div class="card-body p-0">
-										<div id="survey-result-table" style="min-height:350px;" class="bg-light d-flex align-items-center justify-content-center">
-											<p class="text-muted">데이터 테이블 로딩 영역</p>
-										</div>
-									</div>
-								</div>
+				</div>
+				<!-- ===== 만족도 핵심 통계 표E ===== -->
+
+				<!-- ===== 문의S ===== -->
+				<div class="row g-4 mb-4">
+					<div class="col-lg-6 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div
+								class="card-header d-flex justify-content-between align-items-center">
+								<h5 class="mb-0">1:1 문의 미처리</h5>
+								<a href="${path}/adInquiryList.adsp"
+									class="btn btn-sm btn-outline-primary">전체보기</a>
+							</div>
+
+							<div class="card-body table-responsive">
+								<table
+									class="table table-hover text-center align-middle dashboard-table mb-0">
+									<thead>
+										<tr>
+											<th>문의번호</th>
+											<th>작성자</th>
+											<th>제목</th>
+											<th>작성일</th>
+											<th>상태</th>
+											<th>답변하기</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="inquiry" items="${pendingInquiryList}">
+											<tr>
+												<td>${inquiry.inquiry_id}</td>
+												<td>${inquiry.user_id}</td>
+												<td class="text-start">${inquiry.title}</td>
+												<td>
+													<c:choose>
+														<c:when test="${not empty inquiry.inquiryDate}">
+															<fmt:formatDate value="${inquiry.inquiryDate}"
+																pattern="yyyy-MM-dd" />
+														</c:when>
+														<c:otherwise>
+					                                        ${inquiry.regDate}
+					                                    </c:otherwise>
+													</c:choose></td>
+												<td>${inquiry.status}</td>
+												<td><a
+													href="${path}/adInquiryDetail.adsp?inquiry_id=${inquiry.inquiry_id}"
+													class="btn btn-sm btn-primary"> 답변하기 </a></td>
+											</tr>
+										</c:forEach>
+
+										<c:if test="${empty pendingInquiryList}">
+											<tr>
+												<td colspan="6" class="text-center text-muted">미처리
+													문의가 없습니다.</td>
+											</tr>
+										</c:if>
+									</tbody>
+								</table>
 							</div>
 						</div>
-						
 					</div>
-					<!--end::Container-fluid-->
+					<!-- ===== 문의E ===== -->
+
+					<!-- ===== 사용자 만족도 워드클라우드S ===== -->
+					<div class="col-lg-6 col-md-12">
+						<div class="card dashboard-card h-100">
+							<div class="card-header">
+								<h5 class="mb-0">사용자 만족도 워드클라우드</h5>
+							</div>
+							<div class="card-body">
+								<div id="wordcloudBox" class="wordcloud-box">
+									<p class="text-muted mb-0">워드클라우드 API / 라이브러리 연동 영역</p>
+								</div>
+
+								<c:forEach var="word" items="${subjectiveAnswers}">
+									<input type="hidden" class="subjective-word-source"
+										value="${word}" />
+								</c:forEach>
+							</div>
+						</div>
+					</div>
+					<!-- ===== 사용자 만족도 워드클라우드E ===== -->
 				</div>
 			</div>
-		<!--end::content-->
-				
-		<!-- ================= FOOTER ================= -->
-		<footer class="main-footer">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
+		</section>
 	</div>
-	<!--end::content-wrapper-->
 
-	<!-- ================= JS ================= -->
-	<!-- OverlayScrollbars 사이드바 설정 -->
-	<script>
-		const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-		document.addEventListener('DOMContentLoaded', function () {
-			const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-			if (sidebarWrapper && typeof OverlayScrollbarsGlobal !== 'undefined'
-					&& OverlayScrollbarsGlobal.OverlayScrollbars !== undefined) {
-				OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-					scrollbars: {
-						theme: 'os-theme-light',
-						autoHide: 'leave',
-						clickScroll: true,
-					},
-				});
-			}
-		});
-	</script>
+	<!-- ================= FOOTER ================= -->
+	<footer class="main-footer">
+		<strong>Copyright &copy; 2026</strong>
+	</footer>
+</div>
+
+<!-- 서버 데이터를 JS로 넘기기 위해 jsp에 유지 -->
+<script>
+   window.adminHomeData = {
+       trendList: [
+           <c:forEach var="trend" items="${trendList}" varStatus="st">
+               {
+                   statDate: '${trend.statDate}',
+                   satisfactionAvg: ${empty trend.satisfactionAvg ? 0 : trend.satisfactionAvg},
+                   infoReliabilityAvg: ${empty trend.infoReliabilityAvg ? 0 : trend.infoReliabilityAvg},
+                   npsAvg: ${empty trend.npsAvg ? 0 : trend.npsAvg}
+               }<c:if test="${!st.last}">,</c:if>
+           </c:forEach>
+       ],
+       npsDistribution: [
+           <c:forEach var="nps" items="${npsDistribution}" varStatus="st">
+               {
+                   scoreCount: ${empty nps.scoreCount ? 0 : nps.scoreCount},
+                   bucketName: '${nps.bucketName}'
+               }<c:if test="${!st.last}">,</c:if>
+           </c:forEach>
+       ],
+       trafficTrendList: [
+    	    <c:forEach var="row" items="${trafficTrendList}" varStatus="st">
+    	    {
+    	        date: "${row.date}",
+    	        visitorCount: ${empty row.visitorCount ? 0 : row.visitorCount},
+    	        viewCount: ${empty row.viewCount ? 0 : row.viewCount}
+    	    }<c:if test="${!st.last}">,</c:if>
+    	    </c:forEach>
+    	],
+       today: '${today}'
+   };
+</script>
+
+<!-- OverlayScrollbars -->
+<script>
+   const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+
+   document.addEventListener('DOMContentLoaded', function () {
+       const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+
+       if (sidebarWrapper && typeof OverlayScrollbarsGlobal !== 'undefined'
+               && OverlayScrollbarsGlobal.OverlayScrollbars !== undefined) {
+           OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+               scrollbars: {
+                   theme: 'os-theme-light',
+                   autoHide: 'leave',
+                   clickScroll: true
+               }
+           });
+       }
+   });
+</script>
+
+
+<script>const path = "${path}";</script>
+<script src="${path}/resources/js/admin/adHomeDashboard.js"></script>
 
 </body>
 </html>

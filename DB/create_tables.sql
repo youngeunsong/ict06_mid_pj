@@ -1,6 +1,11 @@
+--Ver.260324
+--변경사항
+--1) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
+--------------------------------------------------
 --Ver.260320
 --변경사항
---1) FAQ 테이블: view_count 필드 추가
+--1) FAQ 테이블: view_count 필드 추가(자료형 NUMBER)
 --------------------------------------------------
 --Ver.260319
 --변경사항
@@ -250,24 +255,44 @@ CREATE TABLE FAQ (
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
     order_no	NUMBER,
     visible     CHAR(1) DEFAULT 'Y',
+    view_count	NUMBER DEFAULT 0,
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
+
+--Ver.260320 변경사항 적용 쿼리
+--FAQ 테이블: view_count 필드 추가
+-- 1. 트리거 비활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK DISABLE;
+
+-- 2. 컬럼 추가
+ALTER TABLE FAQ ADD view_count NUMBER DEFAULT 0;
+
+-- 3. 트리거 다시 활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK ENABLE;
+----------------------------------------------
+
 SELECT * FROM FAQ;
+ALTER TABLE FAQ ADD(
+	view_count	NUMBER DEFAULT 0
+);
 
 -- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (
     survey_id       NUMBER PRIMARY KEY,
-    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id), -- 자료형 수정
+    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id),
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id),
     nps_score       NUMBER(2),
     satisfaction_score NUMBER(2),
     inconvenience	CLOB,
     info_reliability_score	NUMBER(2),
     improvements	CLOB,
-    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 surveyDate
+    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP,    --DTO는 surveyDate
+    UNIQUE(reservation_id)
 );
 SELECT * FROM SURVEY;
+DROP TABLE SURVEY; --후 테이블 새로 생성
 
 -- 15. POINT_POLICY (포인트 지급 기준)
 CREATE TABLE POINT_POLICY (
@@ -306,6 +331,8 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+-- INQUIRY > category 추가 쿼리
+ALTER TABLE INQUIRY ADD (category VARCHAR2(200));
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (

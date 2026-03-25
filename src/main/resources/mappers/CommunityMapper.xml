@@ -29,7 +29,7 @@
 	    </association>
 	</resultMap>
 	
-	<!-- 자유게시판 목록 총 갯수 -->
+	<!-- 자유게시판 목록 갯수 -->
     <select id="freeBoardCount" parameterType="string" resultType="int">
 	    SELECT COUNT(*)
 	      FROM COMMUNITY
@@ -104,7 +104,7 @@
 	     WHERE ROWNUM <![CDATA[<=]]> 3
     </select>
 
-    <!-- 게시글 상세 -->
+    <!-- 게시글 1건 조회 -->
     <select id="boardDetail" parameterType="int" resultMap="communityMap">
 	    SELECT c.post_id,
 	           c.user_id,
@@ -138,7 +138,7 @@
          WHERE post_id = #{post_id}
     </update>
 
-    <!-- 게시글 작성 -->
+    <!-- 게시글 작성(본문) -->
     <insert id="insertBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
     	<!-- selectKey : INSERT 시 기본키(PK) 값을 직접 쿼리로 가져올 때 사용하는 태그 -->
 	    <selectKey keyProperty="post_id" resultType="int" order="BEFORE"> 
@@ -160,7 +160,7 @@
 	    )
 	</insert>
 	
-	<!-- 게시글 작성 - 이미지 추가 -->
+	<!-- 게시글 대표 이미지 등록 -->
 	<insert id="insertCommunityImage" parameterType="spring.ict06team1.midpj.dto.ImageStoreDTO">
 	    INSERT INTO IMAGE_STORE (
 	        image_id,
@@ -189,7 +189,7 @@
          WHERE post_id = #{post_id}
     </update>
     
-    <!-- 게시글 수정 -->
+    <!-- 게시글 수정(본문) -->
 	<update id="updateBoard" parameterType="spring.ict06team1.midpj.dto.CommunityDTO">
 	    UPDATE COMMUNITY
 	       SET title = #{title},
@@ -199,14 +199,14 @@
 	     WHERE post_id = #{post_id}
 	</update>
 	
-	<!-- 게시글 수정 시 기존 COMMUNITY 대표 이미지 전체 삭제 -->
+	<!-- 게시글 수정(기존 대표 이미지 삭제) -->
     <delete id="deleteCommunityImagesByPostId" parameterType="int">
 	    DELETE FROM IMAGE_STORE
 	     WHERE target_type = 'COMMUNITY'
 	       AND target_id = #{value}
 	</delete>
 	
-	<!-- 검색 게시글 갯수 -->
+	<!-- 자유게시판 검색 목록 갯수 -->
 	<select id="searchFreeBoardCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	      FROM COMMUNITY
@@ -286,42 +286,6 @@
 	           )
 	     WHERE rn BETWEEN #{startRow} AND #{endRow}
 	</select>
-	
-	<!-- 공지사항 목록 -->
-    <select id="getNoticeList" resultMap="communityMap">
-        SELECT post_id,
-               user_id,
-               title,
-               content,
-               category,
-               view_count,
-               like_count,
-               status,
-               created_at,
-               updated_at
-          FROM COMMUNITY
-         WHERE category = 'NOTICE'
-           AND status = 'DISPLAY'
-         ORDER BY post_id DESC
-    </select>
-
-    <!-- 이벤트 목록 -->
-    <select id="getEventList" resultMap="communityMap">
-        SELECT post_id,
-               user_id,
-               title,
-               content,
-               category,
-               view_count,
-               like_count,
-               status,
-               created_at,
-               updated_at
-          FROM COMMUNITY
-         WHERE category = 'EVENT'
-           AND status = 'DISPLAY'
-         ORDER BY post_id DESC
-    </select>
     
     <!-- 게시글 좋아요 여부 체크 -->
     <select id="checkCommunityLike" parameterType="map" resultType="int">

@@ -95,10 +95,11 @@ $(document).ready(function() {
 function submitReservation() {
 	const data = {
 		place_id: PLACE_ID,
+		place_type: PLACE_TYPE,
 		ticket_id: $('input[name="ticket_id"]:checked').val(),
 		visit_date: $('#visit_date').val(),
 		guest_count: $('#guest_count').val(),
-		request_note: $('#request_note').val(),
+		request_note: $('#request_note').val()
 	};
 	
 	//날짜 범위 검사
@@ -112,17 +113,17 @@ function submitReservation() {
 	
 	//유효성 검사
 	if(!data.ticket_id) {
-		alert("티켓을 선택하세요");
+		alert("티켓을 선택하세요.");
 		return;
 	}
 	
 	if(!data.visit_date) {
-		alert("방문일을 선택하세요");
+		alert("방문일을 선택하세요.");
 		return;
 	}
 	
 	if(!data.guest_count || data.guest_count <= 0) {
-		alert("인원 수를 확인하세요");
+		alert("인원 수를 확인하세요.");
 		return;
 	}
 	
@@ -135,15 +136,14 @@ function submitReservation() {
 		type: "post",
 		data: data,
 		success: function(res) {
-			alert("예약 완료!");
-			location.href = CTX + "viewReservations.do";
-			
+			alert("확인 페이지 이동");
+			location.href = CTX + "/reservationConfirm.rv?reservation_id=" + res.reservation_id;
 		},
 		error: function() {
-			alert("예약 실패");
+			alert("예약 실패. 다시 시도해주세요.");
 		},
 		complete: function() {
-			btn.prop('disabled', false).text('예약하기');
+			btn.prop('disabled', false).text('결제 및 예약하기');
 		}
 	});
 }

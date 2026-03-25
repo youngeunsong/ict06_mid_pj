@@ -18,8 +18,11 @@ public class SearchDAOImpl implements SearchDAO {
 	@Autowired
 	private SqlSession sqlSession;
 
-	// [검색 결과] -----------------------------------------------------------
-	// 1. 검색어 기준 식당 목록
+    /* ==========================================
+		검색 키워드 결과 가져오기
+		키워드(맛집/ 숙소/ 축제) 별 리스트 | 리뷰 갯수 + 리뷰 통계 조회
+	========================================== */
+	//키워드(맛집) 리스트
 	@Override
 	public List<RestaurantDTO> getRestList(String keyword) {
 		System.out.println("[SearchDAOImpl - getRestList()]");
@@ -30,7 +33,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return restList;
 	}
 	
-	// 1. 검색어 기준 숙소 목록
+	//키워드(숙소) 리스트
 	@Override
 	public List<AccommodationDTO> getAccList(String keyword) {
 		System.out.println("[SearchDAOImpl - getAccList()]");
@@ -41,7 +44,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return accList;
 	}
 
-	// 3. 검색어 기준 축제 목록
+	//키워드(축제) 리스트
 	@Override
 	public List<FestivalDTO> getFestList(String keyword) {
 		System.out.println("[SearchDAOImpl - getFestList()]");
@@ -52,7 +55,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return festList;
 	}
 
-	// 4. 검색어 기준 장소별 리뷰 통계
+	//리뷰 갯수 + 리뷰 통계 조회
 	@Override
 	public List<Map<String, Object>> getPlaceReviewStats(String keyword) {
 		System.out.println("[SearchDAOImpl - getPlaceReviewStats()]");
@@ -63,8 +66,10 @@ public class SearchDAOImpl implements SearchDAO {
 		return reviewStatsList;
 	}
 
-	// [즐겨찾기] -----------------------------------------------------------
-	// 1. 즐겨찾기 여부 확인
+	/* ==========================================
+		즐겨찾기(여부체크/ 삭제/ 추가/ 조회)
+	========================================== */
+	//즐겨찾기 여부체크
 	@Override
 	public int checkFavorite(Map<String, Object> checkFavorite) {
 		System.out.println("[SearchDAOImpl - checkFavorite()]");
@@ -75,7 +80,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return exist;
 	}
 
-	// 2. 즐겨찾기 추가
+	//즐겨찾기 추가
 	@Override
 	public int addFavorite(Map<String, Object> addFavorite) {
 		System.out.println("[SearchDAOImpl - addFavorite()]");
@@ -86,7 +91,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return addCnt;
 	}
 
-	// 3. 즐겨찾기 삭제
+	//즐겨찾기 삭제
 	@Override
 	public int deleteFavorite(Map<String, Object> deleteFavorite) {
 		System.out.println("[SearchDAOImpl - deleteFavorite()]");
@@ -97,7 +102,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return delectCnt;
 	}
 
-	// 4. 즐겨찾기 한 정보 끌고오기
+	//즐겨찾기 조회
 	@Override
 	public List<Integer> getFavoritePlaceIds(String user_id) {
 		System.out.println("[SearchDAOImpl - getFavoritePlaceIds()]");
@@ -108,8 +113,11 @@ public class SearchDAOImpl implements SearchDAO {
 		return favoritePlaceIds;
 	}
 
-	// [AJAX] -----------------------------------------------------------
-	// AJAX맛집 카드 목록 + 카드 건수
+    /* ==========================================
+		AJAX 화면
+		키워드(맛집/ 숙소/ 축제) 별 리스트+페이징 | 리뷰 갯수 + 리뷰 통계 조회
+	========================================== */
+	//AJAX 맛집 리스트+페이징
 	@Override
 	public List<RestaurantDTO> getRestAjaxList(Map<String, Object> param){
 		System.out.println("[SearchDAOImpl - getRestAjaxList()]");
@@ -120,6 +128,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return restAjaxList;
 	};
 	
+	//AJAX 맛집 건수
 	@Override
 	public int getRestAjaxCount(Map<String, Object> param) {
 		System.out.println("[SearchDAOImpl - getRestAjaxCount()]");
@@ -130,7 +139,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return restAjaxCount;
 	};
 
-	// AJAX숙소 카드 목록 + 카드 건수
+	//AJAX 숙소 리스트+페이징
 	@Override
 	public List<AccommodationDTO> getAccAjaxList(Map<String, Object> param){
 		System.out.println("[SearchDAOImpl - getAccAjaxList()]");
@@ -141,6 +150,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return accAjaxList;
 	};
 	
+	//AJAX 숙소 건수
 	@Override
 	public int getAccAjaxCount(Map<String, Object> param) {
 		System.out.println("[SearchDAOImpl - getAccAjaxCount()]");
@@ -151,7 +161,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return accAjaxCount;
 	};
 
-	// AJAX축제 카드 목록 + 카드 건수
+	//AJAX 축제 리스트+페이징
 	@Override
 	public List<FestivalDTO> getFestAjaxList(Map<String, Object> param){
 		System.out.println("[SearchDAOImpl - getFestAjaxList()]");
@@ -162,6 +172,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return festAjaxList;
 	};
 	
+	//AJAX 축제 건수
 	@Override
 	public int getFestAjaxCount(Map<String, Object> param) {
 		System.out.println("[SearchDAOImpl - getFestAjaxCount()]");
@@ -172,7 +183,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return festAjaxCount;
 	};
 	
-	// AJAX리뷰 통계
+	// AJAX 리뷰 갯수 + 리뷰 통계 조회
 	public List<Map<String, Object>> getPlaceReviewStatsByIds(List<Integer> placeIds){
 		System.out.println("[SearchDAOImpl - getPlaceReviewStatsByIds()]");
 		
@@ -182,6 +193,10 @@ public class SearchDAOImpl implements SearchDAO {
 		return statsList;
 	};
 
+	/* ================================================== 
+	   검색바
+	   자동완성 10개 + 최근 검색어 5개 조회/ 추가
+	================================================== */
 	// 자동완성 10개
 	@Override
 	public List<String> getAutoComplete(String keyword) {
@@ -193,7 +208,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return resultList;
 	}
 
-	//1. 최근 검색어 5~10개 조회
+	//최근 검색어 5개 조회
 	@Override
 	public List<SearchHistoryDTO> getRecentKeywords(String login_userId) {
 		System.out.println("[SearchDAOImpl - getRecentKeywords()]");
@@ -204,7 +219,7 @@ public class SearchDAOImpl implements SearchDAO {
 		return RecentKeywordList;
 	}
 
-	//2. 최근 검색어 추가 전, 이미 db에 있다면 중복 방지를 위한 삭제
+	//중복 된다면 최근 검색어 삭제
 	@Override
 	public int deleteSameKeyword(Map<String, Object> searchMap) {
 		System.out.println("[SearchDAOImpl - deleteSameKeyword()]");
@@ -216,7 +231,7 @@ public class SearchDAOImpl implements SearchDAO {
 	}
 	
 	
-	//3. 최근 검색어 추가
+	//최근 검색어 추가
 	@Override
 	public int insertSearchHistory(Map<String, Object> searchMap) {
 		System.out.println("[SearchDAOImpl - insertSearchHistory()]");

@@ -27,15 +27,20 @@
 		<%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
 		<!-- ================= CONTENT ================= -->
-		<!--begin::content 헤더-->
+		<!--begin::content-wrapper-->
 		<div class="content-wrapper">
+			<!--begin::content-header-->
 			<div class="content-header">
+				<!--begin::container-fluid-->
 				<div class="container-fluid">
 					<h3 class="mb-0 font-weight-bold">예약 관리</h3>
 				</div>
 			</div>
+			<!--end::content-header-->
 			
-			<div class="app-content">
+			<!--begin::content-->
+			<section class="content">
+				<!--begin::container-fluid-->
 				<div class="container-fluid">
 				
 					<%--필터 영역--%>
@@ -45,10 +50,10 @@
 							<div class="d-flex align-items-center" style="gap:15px;">
 								<%--보기방식 선택 영역--%>
 								<div class="btn-group btn-group-sm" role="group">
-									<button type="button" class="btn btn-success" id="viewCalBtn">
+									<button type="button" class="btn btn-edit btn-sm" id="viewCalBtn">
 										<i class="bi bi-calendar3 mr-1"></i>캘린더
 									</button>
-									<button type="button" class="btn btn-outline-success" id="viewListBtn">
+									<button type="button" class="btn btn-outline-edit btn-sm" id="viewListBtn">
 										<i class="bi bi-list-ul mr-1"></i>리스트
 									</button>
 								</div>
@@ -189,13 +194,72 @@
 					</div>
 					
 				</div>
-			</div>
+				<!--end::container-fluid-->
+			</section>
+			<!--end::content-->
 		</div>
+		<!--end::content-wrapper-->
 		
 		<!-- ================= FOOTER ================= -->
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
+	</div>
+	<!--end::wrapper-->
+	
+	<%-- ===== 캘린더 더보기 Modal ===== --%>
+	<div class="modal fade" id="moreEventsModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header modal-header-success text-white">
+					<h5 class="modal-title"><i class="bi bi-calendar-date mr-2"></i>예약 목록</h5>
+					<button type="button" class="close text-white" onclick="$('#moreEventsModal').modal('hide')">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" style="max-height:400px; overflow-y:auto;">
+					<%-- 탭 --%>
+					<ul class="nav nav-tabs mb-3" id="moreEventTabs">
+						<li class="nav-item">
+							<a class="nav-link active" href="#" data-status="ALL">
+								전체
+								<span class="badge badge-secondary" id="tab-count-ALL">0</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" data-status="RESERVED">
+								예약확정
+								<span class="badge badge-success" id="tab-count-RESERVED">0</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" data-status="PENDING">
+								결제대기
+								<span class="badge badge-warning" id="tab-count-PENDING">0</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" data-status="CANCELLED">
+								취소
+								<span class="badge badge-danger" id="tab-count-CANCELLED">0</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" data-status="COMPLETED">
+								이용완료
+								<span class="badge badge-secondary" id="tab-count-COMPLETED">0</span>
+							</a>
+						</li>
+					</ul>
+					
+					<%-- 리스트 --%>
+					<ul class="list-group" id="moreEventList" style="max-height:400px; overflow-y:auto;"></ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" onclick="$('#moreEventsModal').modal('hide')">닫기</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<%-- ===== 예약 상세보기 Modal ===== --%>
@@ -206,7 +270,7 @@
 					<h5 class="modal-title">
 						<i class="bi bi-info-circle mr-2"></i>예약 상세 정보
 					</h5>
-					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close text-white" onclick="$('#resDetailModal').modal('hide')">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -242,7 +306,7 @@
 					<button type="button" class="btn btn-edit" onclick="$('#resDetailModal').modal('hide'); editReservation($('#modal_res_id').text());">
 						수정하기
 					</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#resDetailModal').modal('hide')">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -256,7 +320,7 @@
 					<h5 class="modal-title font-weight-bold">
 						<i class="bi bi-pencil-square mr-2"></i>예약 정보 수정
 					</h5>
-					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close text-white" onclick="$('#resUpdateModal').modal('hide')">
 						<span>&times;</span>
 					</button>
 				</div>
@@ -321,17 +385,18 @@
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-success" onclick="updateReservation()">변경사항 저장</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-edit" onclick="updateReservation()">변경사항 저장</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#resUpdateModal').modal('hide')">취소</button>
 				</div>
 			</div>
 		</div>
 	</div>
-
+	
 <!-- FullCalendar -->
 <script>
 const reservationData = [
-	<c:forEach var="res" items="${list}" varStatus="status">
+	<c:forEach var="res" items="${fullList}" varStatus="status">
+	<%--제목 설정--%>
 	<c:choose>
 		<c:when test="${res.placeDTO != null}">
 			<c:set var="resTitle" value="${res.user_id} | ${res.placeDTO.name}"/>
@@ -340,18 +405,29 @@ const reservationData = [
 			<c:set var="resTitle" value="${res.user_id}"/>
 		</c:otherwise>
 	</c:choose>
+	<%--배경색 설정--%>
 	<c:choose>
 		<c:when test="${res.status == 'RESERVED'}"><c:set var="bgColor" value="#01D281"/></c:when>
 		<c:when test="${res.status == 'PENDING'}"><c:set var="bgColor" value="#ffc107"/></c:when>
 		<c:when test="${res.status == 'COMPLETED'}"><c:set var="bgColor" value="#6c757d"/></c:when>
 		<c:otherwise><c:set var="bgColor" value="#dc3545"/></c:otherwise>
 	</c:choose>
+
+	<%--기본값 설정--%>
+	<c:set var="finalEnd">
+		<fmt:formatDate value="${res.check_out != null ? res.check_out : res.check_in}" pattern="yyyy-MM-dd" />
+	</c:set>
+	<c:set var="finalStart">
+		<fmt:formatDate value="${res.check_in}" pattern="yyyy-MM-dd" />
+	</c:set>
+	
 	{
 		id: '${res.reservation_id}',
 		title: '${resTitle}',
 		start: '<fmt:formatDate value="${res.check_in}" pattern="yyyy-MM-dd"/>',
 		end: '<fmt:formatDate value="${res.check_out}" pattern="yyyy-MM-dd"/>',
-		backgroundColor: '${bgColor}'
+		backgroundColor: '${bgColor}',
+		status: '${res.status}'
 	}${!status.last ? ',' : ''}
 	</c:forEach>
 ];
@@ -359,7 +435,6 @@ const reservationData = [
 
 <script>const path = "${path}";</script>
 <script src="${path}/resources/js/admin/reservation.js"></script>
-
 
 </body>
 </html>

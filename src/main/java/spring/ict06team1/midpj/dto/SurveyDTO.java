@@ -6,6 +6,7 @@ public class SurveyDTO {
 
 	private int survey_id;
 	private String user_id;
+	private String reservation_id;
 	private int nps_score;
 	private int satisfaction_score;
 	private String inconvenience;
@@ -17,11 +18,12 @@ public class SurveyDTO {
 		super();
 	}
 
-	public SurveyDTO(int survey_id, String user_id, int nps_score, int satisfaction_score, String inconvenience,
-			int info_reliability_score, String improvements, Timestamp surveyDate) {
+	public SurveyDTO(int survey_id, String user_id, String reservation_id, int nps_score, int satisfaction_score,
+			String inconvenience, int info_reliability_score, String improvements, Timestamp surveyDate) {
 		super();
 		this.survey_id = survey_id;
 		this.user_id = user_id;
+		this.reservation_id = reservation_id;
 		this.nps_score = nps_score;
 		this.satisfaction_score = satisfaction_score;
 		this.inconvenience = inconvenience;
@@ -44,6 +46,14 @@ public class SurveyDTO {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public String getReservation_id() {
+		return reservation_id;
+	}
+
+	public void setReservation_id(String reservation_id) {
+		this.reservation_id = reservation_id;
 	}
 
 	public int getNps_score() {
@@ -96,10 +106,10 @@ public class SurveyDTO {
 
 	@Override
 	public String toString() {
-		return "SurveyDTO [survey_id=" + survey_id + ", user_id=" + user_id + ", nps_score=" + nps_score
-				+ ", satisfaction_score=" + satisfaction_score + ", inconvenience=" + inconvenience
-				+ ", info_reliability_score=" + info_reliability_score + ", improvements=" + improvements
-				+ ", surveyDate=" + surveyDate + "]";
+		return "SurveyDTO [survey_id=" + survey_id + ", user_id=" + user_id + ", reservation_id=" + reservation_id
+				+ ", nps_score=" + nps_score + ", satisfaction_score=" + satisfaction_score + ", inconvenience="
+				+ inconvenience + ", info_reliability_score=" + info_reliability_score + ", improvements="
+				+ improvements + ", surveyDate=" + surveyDate + "]";
 	}
 
 }

@@ -10,13 +10,10 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>${restaurant.name} | 맛집 상세</title>
+  <title>${restaurant.placeDTO.name} | 맛집 상세</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-  <%-- [맛집 상세 페이지 전용 스타일]
-       상세 상단 정보, 이미지 갤러리, 탭, 리뷰, 우측 사이드 카드 UI를 한 페이지에서 제어하기 위해 사용
-  --%>
   <style>
     :root{
       --r-text:#111827;
@@ -27,7 +24,6 @@
       --r-pill:#f3f4f6;
     }
 
-    /* 공통 */
     .r-muted{ color: var(--r-muted); }
     .r-pill{
       font-size:12px;
@@ -41,7 +37,6 @@
       gap:6px;
     }
 
-    /* 상단 타이틀 */
     .r-placeName{
       font-size:34px;
       line-height:1.15;
@@ -52,7 +47,6 @@
     .r-stars i{ color:#22c55e; }
     .r-score{ font-weight:800; color:var(--r-text); }
 
-    /* 갤러리 */
     .r-hero{
       border-radius:18px;
       overflow:hidden;
@@ -80,14 +74,15 @@
       align-items:center;
       gap:8px;
     }
+
     .r-thumb{
       border:1px solid var(--r-line);
       border-radius:16px;
       overflow:hidden;
       background:#f9fafb;
-      height: 124px;
+      height:124px;
       display:grid;
-      grid-template-columns: 110px 1fr;
+      grid-template-columns:110px 1fr;
       cursor:pointer;
       transition:.15s;
     }
@@ -107,7 +102,6 @@
     .r-thumbTitle{ font-weight:800; font-size:14px; letter-spacing:-.01em; }
     .r-thumbSub{ color:var(--r-muted); font-size:12px; display:flex; gap:8px; align-items:center; }
 
-    /* 섹션 */
     .r-section{
       padding:18px 0;
       border-bottom:1px solid var(--r-line);
@@ -140,7 +134,6 @@
     }
     .r-chip i{ color:var(--r-brand); }
 
-    /* 지도 */
     .r-mapBox{
       border:1px solid var(--r-line);
       border-radius:18px;
@@ -149,7 +142,6 @@
       background:#f9fafb;
     }
 
-    /* 메뉴 */
     .r-menuItem{
       display:flex;
       align-items:flex-start;
@@ -163,17 +155,15 @@
     .r-menuDesc{ margin-top:4px; color:var(--r-muted); font-size:12px; line-height:1.5; }
     .r-menuPrice{ font-weight:900; white-space:nowrap; }
 
-    /* 오른쪽 예약 버튼 */
     .r-reserveBtn{
-      width: 220px;
-      height: 44px;
+      width:220px;
+      height:44px;
       border-radius:999px;
       font-weight:900;
     }
 
-    /* sticky 사이드 */
     @media (min-width: 992px){
-      .r-sticky{ position:sticky; top:14px; } /* PC 화면에서는 우측 카드 고정 */
+      .r-sticky{ position:sticky; top:14px; }
     }
 
     #btnFavorite.is-on,
@@ -184,8 +174,119 @@
 
     #btnFavorite.is-on i,
     #btnFavoriteSide.is-on i{
-      color:#ef4444; /* 즐겨찾기 활성 상태 색상 */
+      color:#ef4444;
     }
+    
+    .r-dateChip{
+	  min-width:72px;
+	  border:1px solid var(--r-line);
+	  background:#fff;
+	  color:var(--r-text);
+	  border-radius:14px;
+	  padding:10px 8px;
+	  text-align:center;
+	  cursor:pointer;
+	  transition:.15s;
+	  flex:0 0 auto;
+	}
+	.r-dateChip:hover{
+	  transform:translateY(-1px);
+	}
+	.r-dateChip.is-active{
+	  background:var(--r-brand);
+	  color:#fff;
+	  border-color:var(--r-brand);
+	}
+	
+	.r-dateTop{
+	  font-size:12px;
+	  font-weight:700;
+	  opacity:.9;
+	}
+	.r-dateBottom{
+	  font-size:15px;
+	  font-weight:900;
+	  margin-top:2px;
+	}
+	
+	/* 범례 */
+	.r-slotLegend{
+	  display:flex;
+	  gap:12px;
+	  flex-wrap:wrap;
+	  margin-bottom:12px;
+	}
+	.r-legendItem{
+	  display:flex;
+	  align-items:center;
+	  gap:6px;
+	  font-size:12px;
+	  font-weight:700;
+	  color:var(--r-muted);
+	}
+	.r-legendDot{
+	  width:10px;
+	  height:10px;
+	  border-radius:50%;
+	  display:inline-block;
+	}
+	.r-legendDot.is-available{
+	  background:#22c55e;
+	}
+	.r-legendDot.is-disabled{
+	  background:#9ca3af;
+	}
+	
+	/* 시간 슬롯 */
+	.r-timeSlot{
+	  display:flex;
+	  align-items:center;
+	  justify-content:space-between;
+	  gap:10px;
+	  border:1px solid var(--r-line);
+	  background:#fff;
+	  border-radius:14px;
+	  padding:12px 14px;
+	  font-weight:700;
+	  color:var(--r-text);
+	  transition:.15s;
+	}
+	
+	.r-timeSlot.is-available{
+	  background:#f0fdf4;
+	  border-color:#86efac;
+	  color:#166534;
+	}
+	
+	.r-timeSlot.is-disabled{
+	  background:#f3f4f6;
+	  color:#9ca3af;
+	  border-color:#d1d5db;
+	}
+	
+	.r-timeText{
+	  font-weight:800;
+	}
+	
+	.r-slotBadge{
+	  font-size:12px;
+	  font-weight:800;
+	  padding:5px 10px;
+	  border-radius:999px;
+	  white-space:nowrap;
+	  flex:0 0 auto;
+	}
+	
+	.r-slotBadge.is-available{
+	  background:#dcfce7;
+	  color:#166534;
+	}
+	
+	.r-slotBadge.is-disabled{
+	  background:#e5e7eb;
+	  color:#6b7280;
+	}
+	
   </style>
 </head>
 
@@ -194,27 +295,25 @@
 
   <div class="container py-4 pb-5">
 
-    <%-- [상단 헤더 영역]
-         맛집명, 주소, 평점, 저장 버튼 등 상세 페이지의 핵심 정보를 먼저 보여주기 위해 사용
-    --%>
+    <!-- 상단 헤더 -->
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
       <div>
         <div class="d-flex flex-wrap align-items-center gap-2">
-          <h1 class="r-placeName">${restaurant.name}</h1>
-          <span class="r-pill">${restaurant.place_type}</span>
-          <span class="r-pill">${restaurant.address}</span>
+          <h1 class="r-placeName">${restaurant.placeDTO.name}</h1>
+          <span class="r-pill">${restaurant.placeDTO.place_type}</span>
+          <span class="r-pill">${restaurant.category}</span>
         </div>
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-2 r-muted">
           <div class="d-flex align-items-center gap-2 r-stars">
             <i class="fa-solid fa-star"></i>
             <span class="r-score">
-              <fmt:formatNumber value="${restaurant.avg_rating}" pattern="0.0"/> <%-- 평균 별점을 소수점 1자리로 고정 --%>
+              <fmt:formatNumber value="${restaurant.placeDTO.avg_rating}" pattern="0.0"/>
             </span>
-            <span>(${restaurant.review_count}개)</span>
+            <span>(${restaurant.placeDTO.review_count}개)</span>
           </div>
           <span>·</span>
-          <span>${restaurant.address}</span>
+          <span>${restaurant.placeDTO.address}</span>
         </div>
       </div>
 
@@ -222,58 +321,63 @@
         <button
             id="btnFavorite"
             class="btn btn-outline-secondary rounded-pill px-3 fw-bold ${isFavorite ? 'is-on' : ''}"
-            type="button"> <%-- 즐겨찾기 상태에 따라 is-on 클래스 적용 --%>
+            type="button">
           <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
         </button>
       </div>
     </div>
 
-    <%-- [이미지 갤러리 영역]
-         대표 이미지를 크게 보여주고, 우측에는 썸네일 형태로 보조 이미지를 배치하기 위해 사용
-    --%>
+        <!-- 이미지 영역 -->
     <div class="row g-3 mb-3">
       <div class="col-lg-8">
         <div class="r-hero shadow-sm">
-          <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_food.jpg'/>" alt="대표 이미지"/>
+          <img src="<c:out value='${restaurant.placeDTO.image_url}' default='${pageContext.request.contextPath}/resources/img/sample_food.jpg'/>" alt="대표 이미지"/>
           <div class="r-heroCount">
             <i class="fa-regular fa-images"></i>
-            <span>0+</span> <%-- 현재는 임시값, 실제 이미지 수 연동 시 교체 가능 --%>
+            <span>대표</span>
           </div>
         </div>
       </div>
 
       <div class="col-lg-4">
-        <div class="d-flex flex-lg-column flex-row gap-3">
-          <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">인테리어</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
+        <div class="card shadow-sm border-0 h-100" style="border-radius:18px;">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="fw-bold" style="font-size:18px;">예약 가능 일정</div>
+              <span class="badge bg-light text-dark">+7일</span>
             </div>
-          </div>
 
-          <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">음식</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
+            <!-- 날짜 슬라이드 영역 -->
+            <div id="reserveDateSlider" class="d-flex gap-2 mb-2" style="overflow-x:auto; white-space:nowrap; padding-bottom:4px;">
+              <!-- JS로 날짜 버튼 들어갈 자리 -->
             </div>
-          </div>
 
-          <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${restaurant.image_url}' default='/resources/img/sample_thumb1.jpg'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">메뉴</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i> <span>0</span></div>
+            <!-- 범례 -->
+            <div class="r-slotLegend">
+              <span class="r-legendItem">
+                <span class="r-legendDot is-available"></span> 가능
+              </span>
+              <span class="r-legendItem">
+                <span class="r-legendDot is-disabled"></span> 마감
+              </span>
+            </div>
+
+            <!-- 시간 슬롯 영역 -->
+            <div id="reserveTimeSlots" class="d-grid gap-2">
+              <!-- JS로 시간 슬롯 들어갈 자리 -->
+            </div>
+
+            <input type="hidden" id="selectedReserveDate" value="">
+
+            <div class="r-muted mt-2" style="font-size:12px;">
+              날짜를 선택하면 예약 현황이 표시됩니다.
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <%-- [상세 탭 메뉴]
-         개요 / 시간 / 위치 / 메뉴 / 리뷰를 한 페이지 안에서 구분해서 보여주기 위해 Bootstrap 탭 사용
-    --%>
+    <!-- 탭 -->
     <ul class="nav nav-tabs mb-3" id="detailTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active fw-bold" id="tab-overview" data-bs-toggle="tab" data-bs-target="#pane-overview" type="button" role="tab">
@@ -282,7 +386,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link fw-bold" id="tab-time" data-bs-toggle="tab" data-bs-target="#pane-time" type="button" role="tab">
-          시간
+          운영 정보
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -307,39 +411,50 @@
       <div class="col-lg-8">
         <div class="tab-content">
 
-          <%-- [개요 탭]
-               맛집의 전반적인 소개와 분위기 정보를 간단히 보여주기 위한 영역
-          --%>
+          <!-- 개요 -->
           <div class="tab-pane fade show active" id="pane-overview" role="tabpanel" aria-labelledby="tab-overview">
             <section class="r-section">
               <h2 class="r-sectionTitle">한눈에 보기</h2>
               <p class="r-lead">
-                이곳은 따뜻한 분위기에서 식사를 즐길 수 있는 공간입니다.
+                <c:out value="${restaurant.description}" default="등록된 소개 정보가 없습니다."/>
               </p>
 
               <div class="mt-3">
-                <span class="r-chip"><i class="fa-solid fa-check"></i> 깔끔한 매장</span>
-                <span class="r-chip"><i class="fa-solid fa-check"></i> 친절한 서비스</span>
-                <span class="r-chip"><i class="fa-solid fa-check"></i> 인기 메뉴</span>
+                <span class="r-chip"><i class="fa-solid fa-utensils"></i> <c:out value="${restaurant.category}" default="카테고리 정보 없음"/></span>
+                <span class="r-chip"><i class="fa-solid fa-phone"></i> <c:out value="${restaurant.phone}" default="연락처 정보 없음"/></span>
+                <span class="r-chip"><i class="fa-solid fa-store"></i> <c:out value="${restaurant.status}" default="영업 상태 정보 없음"/></span>
               </div>
             </section>
           </div>
 
-          <%-- [시간 탭]
-               영업시간 정보를 따로 확인할 수 있도록 분리한 영역
-          --%>
+          <!-- 운영 정보 -->
           <div class="tab-pane fade" id="pane-time" role="tabpanel" aria-labelledby="tab-time">
             <section class="r-section">
-              <h2 class="r-sectionTitle">시간</h2>
-              <p class="r-lead">
-                월~일 10:00 ~ 22:00 (라스트오더 21:00)
-              </p>
+              <h2 class="r-sectionTitle">운영 정보</h2>
+
+              <div class="r-lead mb-2">
+                <b class="text-dark">영업 상태</b> :
+                <c:out value="${restaurant.status}" default="정보 없음"/>
+              </div>
+
+              <div class="r-lead mb-2">
+                <b class="text-dark">휴무/비고</b> :
+                <c:out value="${restaurant.restdate}" default="정보 없음"/>
+              </div>
+
+              <div class="r-lead mb-2">
+                <b class="text-dark">전화번호</b> :
+                <c:out value="${restaurant.phone}" default="정보 없음"/>
+              </div>
+
+              <div class="r-lead">
+                <b class="text-dark">지역 코드</b> :
+                <c:out value="${restaurant.areaCode}" default="정보 없음"/>
+              </div>
             </section>
           </div>
 
-          <%-- [위치 탭]
-               위도/경도를 기반으로 지도와 주소 정보를 함께 보여주기 위해 사용
-          --%>
+          <!-- 위치 -->
           <div class="tab-pane fade" id="pane-location" role="tabpanel" aria-labelledby="tab-location">
             <section class="r-section">
               <h2 class="r-sectionTitle">위치</h2>
@@ -352,27 +467,30 @@
                   style="border:0"
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}&hl=ko&z=16&output=embed">
-                </iframe> <%-- DB에 저장된 위도/경도로 지도 위치 표시 --%>
+                  src="https://www.google.com/maps?q=${restaurant.placeDTO.latitude},${restaurant.placeDTO.longitude}&hl=ko&z=16&output=embed">
+                </iframe>
               </div>
 
               <div class="d-flex justify-content-between align-items-start gap-3">
                 <div class="r-muted">
                   <div class="fw-bold text-dark mb-1">
                     <i class="fa-solid fa-location-dot" style="color:var(--r-brand);"></i>
-                    ${restaurant.address}
+                    ${restaurant.placeDTO.address}
                   </div>
-                  <div>-</div> <%-- 추후 상세 위치 설명/교통 정보 확장 가능 --%>
+                  <div>
+                    위도: ${restaurant.placeDTO.latitude} / 경도: ${restaurant.placeDTO.longitude}
+                  </div>
                 </div>
 
-                <button class="btn btn-outline-secondary fw-bold" type="button">길찾기</button>
+                <button class="btn btn-outline-secondary fw-bold" type="button"
+                        onclick="window.open('https://map.naver.com/v5/search/' + encodeURIComponent('${restaurant.placeDTO.address}'));">
+                  길찾기
+                </button>
               </div>
             </section>
           </div>
 
-          <%-- [메뉴 탭]
-               menuList가 있을 경우 2열로 나눠 출력하고, 없으면 안내 문구를 보여주기 위해 사용
-          --%>
+          <!-- 메뉴 -->
           <div class="tab-pane fade" id="pane-menu" role="tabpanel" aria-labelledby="tab-menu">
             <section class="r-section">
               <h2 class="r-sectionTitle">메뉴</h2>
@@ -386,7 +504,7 @@
                         <div class="r-menuDesc">${m.description}</div>
                       </div>
                       <div class="r-menuPrice">
-                        <fmt:formatNumber value="${m.price}" type="number"/>원 <%-- 가격 천 단위 콤마 처리 --%>
+                        <fmt:formatNumber value="${m.price}" type="number"/>원
                       </div>
                     </div>
                   </c:forEach>
@@ -417,9 +535,7 @@
             </section>
           </div>
 
-          <%-- [리뷰 탭]
-               첫 진입 시 일부 리뷰만 출력하고, 추가 리뷰는 더보기 버튼으로 AJAX 요청하기 위해 사용
-          --%>
+          <!-- 리뷰 -->
           <div class="tab-pane fade" id="pane-review" role="tabpanel" aria-labelledby="tab-review">
             <section class="r-section">
               <h2 class="r-sectionTitle">리뷰</h2>
@@ -434,7 +550,7 @@
                       </div>
                     </div>
                     <div class="text-muted" style="font-size:12px;">
-                      <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/> <%-- 리뷰 작성일 포맷 통일 --%>
+                      <fmt:formatDate value="${rv.reviewDate}" pattern="yyyy-MM-dd HH:mm"/>
                     </div>
                     <div class="mt-2">${rv.content}</div>
                   </div>
@@ -443,9 +559,9 @@
 
               <c:if test="${not empty reviews}">
                 <button id="btnMoreReviews" class="btn btn-outline-secondary w-100 mt-2"
-                        data-place-id="${place_id}"
+                        data-place-id="${restaurant.placeDTO.place_id}"
                         data-offset="${reviewNextOffset}"
-                        data-total="${reviewTotalCount}"> <%-- JS에서 다음 리뷰 요청 시 사용할 기준값 전달 --%>
+                        data-total="${reviewTotalCount}">
                   더보기
                 </button>
               </c:if>
@@ -453,20 +569,16 @@
               <c:if test="${empty reviews}">
                 <div class="r-muted">아직 등록된 리뷰가 없습니다.</div>
               </c:if>
-
             </section>
           </div>
 
-        </div> <!-- /.tab-content -->
-      </div>   <!-- /.col-lg-8 -->
+        </div>
+      </div>
 
-      <%-- [우측 사이드 영역]
-           예약, 저장, 영업시간 등 보조 정보를 별도 카드로 고정해서 보여주기 위해 사용
-      --%>
+      <!-- Right -->
       <div class="col-lg-4">
         <div class="r-sticky d-flex flex-column gap-3">
 
-          <%-- 예약 카드 --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -477,16 +589,15 @@
               </div>
 
               <div class="text-center mt-3">
-                <button class="btn btn-success r-reserveBtn">
-                  예약하기
-                </button>
+                <button class="btn btn-success r-reserveBtn"
+				        type="button"
+				        onclick="location.href='${pageContext.request.contextPath}/restReservation.rv?place_id=${restaurant.placeDTO.place_id}'">
+				  예약하기
+				</button>
               </div>
             </div>
           </div>
 
-          <%-- 저장 카드
-               상단 저장 버튼과 같은 기능을 우측 사이드에서도 사용할 수 있도록 중복 배치
-          --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
               <div class="fw-bold fs-5 mb-2">이 음식점 저장하기</div>
@@ -499,18 +610,14 @@
             </div>
           </div>
 
-          <%-- 영업시간 카드 --%>
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
-              <div class="fw-bold fs-5 mb-2">영업시간</div>
+              <div class="fw-bold fs-5 mb-2">운영 정보</div>
               <div class="r-muted" style="font-size:14px; line-height:1.8;">
-                <div><b class="text-dark">월요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">화요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">수요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">목요일</b> 10:00 - 22:00</div>
-                <div><b class="text-dark">금요일</b> 10:00 - 23:00</div>
-                <div><b class="text-dark">토요일</b> 10:00 - 23:00</div>
-                <div><b class="text-dark">일요일</b> 10:00 - 22:00</div>
+                <div><b class="text-dark">카테고리</b> <c:out value="${restaurant.category}" default="정보 없음"/></div>
+                <div><b class="text-dark">영업 상태</b> <c:out value="${restaurant.status}" default="정보 없음"/></div>
+                <div><b class="text-dark">휴무/비고</b> <c:out value="${restaurant.restdate}" default="정보 없음"/></div>
+                <div><b class="text-dark">연락처</b> <c:out value="${restaurant.phone}" default="정보 없음"/></div>
               </div>
             </div>
           </div>
@@ -522,15 +629,10 @@
   </div>
 
 <script>
-  // [JSP → JS 값 전달]
-  // JS 파일에서 contextPath와 현재 place_id를 공통으로 사용할 수 있도록 전역 상수로 전달
   const CTX = '<c:out value="${pageContext.request.contextPath}"/>';
-  const PLACE_ID = '<c:out value="${place_id}"/>';
+  const PLACE_ID = '<c:out value="${restaurant.placeDTO.place_id}"/>';
 </script>
 
-<%-- [맛집 상세 페이지 전용 JS]
-     즐겨찾기 토글, 리뷰 더보기 등 상세 페이지의 동적 기능을 처리
---%>
 <script src="${pageContext.request.contextPath}/resources/js/restaurant/restaurantDetail.js"></script>
 
 <%@ include file="../../common/footer.jsp" %>

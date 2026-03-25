@@ -1,51 +1,43 @@
-/* community_detail.js */
-
 document.addEventListener("DOMContentLoaded", function () {
     const likeBtn = document.getElementById("likeBtn");
-    const likeCount = document.getElementById("likeCount");
+    const likeCountEl = document.getElementById("likeCount");
+    const kakaoShareBtn = document.getElementById("kakaoShareBtn");
 
-    if (!likeBtn || !likeCount) return;
+    // 좋아요 버튼
+    if (likeBtn && likeCountEl) {
+        likeBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-    likeBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+            let count = parseInt(likeCountEl.textContent.trim(), 10) || 0;
+            const isActive = !likeBtn.classList.contains("active");
 
-        const postId = this.dataset.postId;
-        const path = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 1));
-
-        fetch(path + "/community_likeToggle.co", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "AJAX": "true"
-            },
-            body: "post_id=" + encodeURIComponent(postId)
-        })
-        .then(response => response.text())
-        .then(result => {
-            result = result.trim();
-
-            let currentCount = parseInt(likeCount.textContent, 10) || 0;
-
-            if (result === "logout") {
-                alert("로그인이 필요합니다.");
-                window.location.href = path + "/login.do";
-                return;
-            }
-
-            if (result === "insert") {
-                likeCount.textContent = currentCount + 1;
-                likeBtn.classList.add("liked");
-            } else if (result === "delete") {
-                likeCount.textContent = Math.max(0, currentCount - 1);
-                likeBtn.classList.remove("liked");
+            if (isActive) {
+                likeBtn.classList.add("active");
+                likeCountEl.textContent = count + 1;
             } else {
-                alert("좋아요 처리 중 오류가 발생했습니다.");
+                likeBtn.classList.remove("active");
+                likeCountEl.textContent = Math.max(count - 1, 0);
             }
-        })
-        .catch(error => {
-            console.error("좋아요 오류:", error);
-            alert("좋아요 처리 중 오류가 발생했습니다.");
+
+            const icon = likeBtn.querySelector("i");
+            if (icon) {
+                icon.className = isActive ? "bi bi-heart-fill" : "bi bi-heart";
+            }
         });
-    });
+    }
+
+    // 카카오톡 공유 버튼
+    if (kakaoShareBtn) {
+        kakaoShareBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (typeof shareKakao === "function") {
+                shareKakao();
+            } else {
+                console.warn("shareKakao 함수가 없습니다.");
+            }
+        });
+    }
 });

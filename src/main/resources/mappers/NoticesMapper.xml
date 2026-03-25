@@ -18,7 +18,7 @@
         <result property="noticeUpdateDate" column="updated_at"/>
     </resultMap>
 
-    <!-- 공지사항 - 상단 고정 공지 -->
+    <!-- 상단 고정 공지 -->
     <select id="getTopNoticeList" resultMap="noticeMap">
         SELECT notice_id,
                admin_id,
@@ -36,7 +36,7 @@
          ORDER BY notice_id DESC
     </select>
 
-    <!-- 공지사항 - 일반 공지 -->
+    <!-- 일반 공지 -->
     <select id="getNoticeList" parameterType="map" resultMap="noticeMap">
         SELECT *
           FROM (
@@ -78,7 +78,7 @@
          WHERE rn &gt;= #{start}
     </select>
 
-	<!-- 이벤트 - 페이징 -->
+	<!-- 공지 페이징 -->
     <select id="getNoticeCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
           FROM NOTICE
@@ -102,7 +102,7 @@
         </if>
     </select>
 
-    <!-- 이벤트 - 진행중인 이벤트 -->
+    <!-- 진행중인 이벤트 -->
     <select id="getOngoingEventList" resultMap="noticeMap">
         SELECT notice_id,
                admin_id,
@@ -120,7 +120,7 @@
          ORDER BY notice_id DESC
     </select>
 
-    <!-- 이벤트 - 종류 이벤트 -->
+    <!-- 종류 이벤트 -->
     <select id="getEndEventList" parameterType="map" resultMap="noticeMap">
         SELECT *
           FROM (
@@ -162,7 +162,7 @@
          WHERE rn &gt;= #{start}
     </select>
 
-	<!-- 이벤트 - 페이징 -->
+	<!-- 이벤트 페이징 -->
     <select id="getEndEventCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
           FROM NOTICE
@@ -186,7 +186,7 @@
         </if>
     </select>
 
-    <!-- 상세(공지/ 이벤트 공통 활용) -->
+    <!-- 공지/ 이벤트 상세 -->
     <select id="getNoticeDetail" parameterType="int" resultMap="noticeMap">
         SELECT notice_id,
                admin_id,

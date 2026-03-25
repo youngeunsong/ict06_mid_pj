@@ -20,7 +20,7 @@ public interface RestaurantDAO {
     public List<RestaurantDTO> selectNearbyMarkersAjax(Map<String, Object> map);
     
     // 맛집 상세
-    PlaceDTO getRestaurantDetail(int place_id);
+	RestaurantDTO getRestaurantDetail(int place_id);
 
     // 조회수 증가
     void increaseViewCount(int place_id);

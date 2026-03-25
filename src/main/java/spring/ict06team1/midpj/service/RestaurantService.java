@@ -25,7 +25,7 @@ public interface RestaurantService {
          throws ServletException, IOException;
 	
     // 맛집 상세
-    PlaceDTO getRestaurantDetail(int place_id);
+	RestaurantDTO getRestaurantDetail(int place_id);
 
     // 리뷰 페이징
     List<ReviewDTO> getReviewsPaged(int place_id, int offset, int limit);

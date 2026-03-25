@@ -8,7 +8,7 @@ function toggleBookmark(event, btn) {
     if (!placeId) return;
 
     const contextPath =
-        window.contextPath ||
+        CTX ||
         document.body.dataset.contextPath ||
         '';
 

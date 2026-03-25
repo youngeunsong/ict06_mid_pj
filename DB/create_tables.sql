@@ -1,3 +1,14 @@
+--Ver.260325
+--변경사항
+--1) REVIEW 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--필드 추가용 ALTER 쿼리 넣어두었습니다. 
+--2) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
+--------------------------------------------------
+--Ver.260320
+--변경사항
+--1) FAQ 테이블: view_count 필드 추가(자료형 NUMBER)
+--------------------------------------------------
 --Ver.260319
 --변경사항
 --1) IMAGE_STORE 테이블: target_type 필드 CHECK 제약 조건에 'COMMUNITY' 추가
@@ -121,6 +132,7 @@ CREATE TABLE FESTIVAL_TICKET (
     stock        NUMBER DEFAULT 0,       -- 티켓별 재고 (선택사항)
     description  VARCHAR2(500)           -- 티켓 상세 설명
 );
+SELECT * FROM FESTIVAL_TICKET;
 
 -- 7. 예약 테이블
 CREATE TABLE RESERVATION (
@@ -162,6 +174,7 @@ SELECT * FROM PAYMENT;
 CREATE TABLE REVIEW (
     review_id      NUMBER PRIMARY KEY,
     user_id        VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL,
     place_id       NUMBER REFERENCES PLACE(place_id),
     rating         NUMBER(1) CHECK(rating BETWEEN 1 AND 5),
     content        CLOB,
@@ -172,6 +185,10 @@ CREATE TABLE REVIEW (
     CONSTRAINT CHK_REVIEW_RATING CHECK(RATING BETWEEN 1 AND 5)
 );
 SELECT * FROM REVIEW;
+ALTER TABLE REVIEW ADD(
+	reservation_id VARCHAR2(50),
+	CONSTRAINT fk_review_reservation FOREIGN KEY(reservation_id) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL
+);
 
 -- 10. COMMUNITY(커뮤니티/사용자 게시판)
 CREATE TABLE COMMUNITY(
@@ -205,6 +222,14 @@ CREATE TABLE COMMUNITY_COMMENT(
 	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
 );
 SELECT * FROM COMMUNITY_COMMENT;
+SELECT 
+    constraint_name, 
+    search_condition 
+FROM 
+    user_constraints 
+WHERE 
+    table_name = 'COMMUNITY_COMMENT' 
+    AND constraint_name = 'CHK_COMMENT_STATUS';
 --제약조건 추가에 따른 테이블 속성 변경 쿼리('BANNED' 추가)
 ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
 ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
@@ -235,26 +260,47 @@ CREATE TABLE FAQ (
     question    VARCHAR2(500) NOT NULL,
     answer      CLOB NOT NULL,
     category    VARCHAR2(50), --분류에 따라 제약조건 추가 CHECK(CATEGORY IN ('분류1','분류2'))
-    order_no	CHAR(1),
+    order_no	NUMBER,
     visible     CHAR(1) DEFAULT 'Y',
+    view_count	NUMBER DEFAULT 0,
     created_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqRegDate
     updated_at  TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 faqUpdateDate
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
+
+--Ver.260320 변경사항 적용 쿼리
+--FAQ 테이블: view_count 필드 추가
+-- 1. 트리거 비활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK DISABLE;
+
+-- 2. 컬럼 추가
+ALTER TABLE FAQ ADD view_count NUMBER DEFAULT 0;
+
+-- 3. 트리거 다시 활성화
+ALTER TRIGGER TRG_FAQ_ADMIN_CHECK ENABLE;
+----------------------------------------------
+
 SELECT * FROM FAQ;
+ALTER TABLE FAQ ADD(
+	view_count	NUMBER DEFAULT 0
+);
 
 -- 14. SURVEY (설문조사)
 CREATE TABLE SURVEY (
     survey_id       NUMBER PRIMARY KEY,
-    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id), -- 자료형 수정
+    user_id         VARCHAR2(50) REFERENCES MEMBER(user_id),
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id),
     nps_score       NUMBER(2),
     satisfaction_score NUMBER(2),
     inconvenience	CLOB,
     info_reliability_score	NUMBER(2),
     improvements	CLOB,
-    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP		--DTO는 surveyDate
+    created_at      TIMESTAMP DEFAULT SYSTIMESTAMP,    --DTO는 surveyDate
+    UNIQUE(reservation_id)
 );
 SELECT * FROM SURVEY;
+DROP TABLE SURVEY; --후 테이블 새로 생성
+
 
 -- 15. POINT_POLICY (포인트 지급 기준)
 CREATE TABLE POINT_POLICY (
@@ -293,6 +339,8 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+-- INQUIRY > category 추가 쿼리
+ALTER TABLE INQUIRY ADD (category VARCHAR2(200));
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (
@@ -361,11 +409,11 @@ CREATE SEQUENCE SEQ_SEARCH START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_PAY START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
-
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함
 
---2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
+--예약/결제번호 생성용 트리거 미사용 예정!
+/*--2) 예약/결제번호 생성용 트리거(RYYMMDDXXX)
 CREATE OR REPLACE TRIGGER TRG_RESERVATION_ID
 BEFORE INSERT ON RESERVATION FOR EACH ROW
 BEGIN
@@ -380,7 +428,7 @@ BEGIN
   SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(SEQ_PAY.NEXTVAL, 3, '0')
   INTO :NEW.payment_id FROM DUAL;
 END;
-/
+/*/
 
 --3) 축제 status 자동계산 트리거
 CREATE OR REPLACE TRIGGER TRG_FESTIVAL_STATUS

@@ -342,10 +342,12 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	// 오픈API로 가져온 정보 DB에 넣기 
 	@Override
 	@Transactional
-	public void insertFestivalsFromApi(String json) 
+	public void insertFestivalsFromApi(String json, HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws Exception {
 		List<FestivalDTO> list = parseFestivalJson(json);
 
+		int successCnt = 0; 
+		
 		for(FestivalDTO dto : list){
 		    PlaceDTO place = dto.getPlaceDTO();
 		    Integer placeId = dao.checkDuplication(dto);
@@ -357,8 +359,15 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		    }
 		    
 		    dto.setFestival_id(placeId);
-		    dao.insertFestival(dto);
+		    int insertCnt = dao.insertFestival(dto);
+		    
+		    if(insertCnt > 0) {
+		    	successCnt++; 
+		    }
 		}
+		System.out.println("successCnt: " + successCnt);
+		
+		model.addAttribute("successCnt", successCnt); 
 	}
 	
 	// JSON 파싱 메서드 : 오픈 API 데이터 파싱

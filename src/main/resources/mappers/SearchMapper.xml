@@ -82,11 +82,10 @@
   	
   	
   	<!-- =====================================================
-	     [검색어 기준 카테고리 별 목록]
-	     검색 키워드 기준 뷰카운트 높은 순 정렬 카테고리 별 목록
-	     (맛집/ 숙소/ 축제/ 장소별 리뷰 통계)
+	     검색 키워드 결과 가져오기
+	     키워드(맛집/ 숙소/ 축제) 별 리스트 | 리뷰 갯수 + 리뷰 통계 조회
 	===================================================== -->
-    <!-- 1. 검색어 기준 식당 목록 -->
+    <!-- 키워드(맛집) 리스트 -->
     <select id="getRestList" parameterType="java.lang.String" resultMap="restResultMap">
 	    SELECT r.RESTAURANT_ID
 	         , TO_CHAR(r.DESCRIPTION) AS DESCRIPTION
@@ -111,7 +110,7 @@
 	     ORDER BY p.VIEW_COUNT DESC
 	</select>
 	
-	<!-- 2. 검색어 기준 숙소 목록 -->
+	<!-- 키워드(숙소) 리스트 -->
 	<select id="getAccList" parameterType="java.lang.String" resultMap="accResultMap">
 	    SELECT a.ACCOMMODATION_ID
 	         , TO_CHAR(a.DESCRIPTION) AS DESCRIPTION
@@ -133,7 +132,7 @@
 	     ORDER BY p.VIEW_COUNT DESC
 	</select>
 	
-    <!-- 3. 검색어 기준 축제 목록 -->
+    <!-- 키워드(축제) 리스트 -->
     <select id="getFestList" parameterType="java.lang.String" resultMap="festResultMap">
         SELECT f.FESTIVAL_ID
              , TO_CHAR(f.DESCRIPTION) AS DESCRIPTION
@@ -155,7 +154,7 @@
          ORDER BY p.VIEW_COUNT DESC
     </select>
 
-    <!-- 3. 검색어 기준 장소별 리뷰 통계 -->
+    <!-- 리뷰 갯수 + 리뷰 통계 조회 -->
     <select id="getPlaceReviewStats" parameterType="java.lang.String" resultType="java.util.HashMap">
         SELECT p.PLACE_ID AS PLACE_ID
              , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
@@ -171,10 +170,11 @@
 	
 	<!-- =====================================================
 	     [즐겨찾기]
+	     여부체크/ 삭제, 추가/ 조회
+	     
 	     FAVORITE 테이블에 user_id를 기준으로 place_id가 있는지 / favorite_id 자동 생성
-	     (즐겨찾기 여부 확인/ 즐겨찾기 추가 삭제)
 	===================================================== -->
-    <!-- [즐겨찾기] 1. 즐겨찾기 여부 확인 -->
+    <!-- 즐겨찾기 여부체크 -->
     <select id="checkFavorite" parameterType="java.util.Map" resultType="int">
         SELECT COUNT(*)
           FROM FAVORITE
@@ -182,7 +182,7 @@
            AND place_id = #{place_id}
     </select>
 
-    <!-- [즐겨찾기] 2. 즐겨찾기 추가 -->
+    <!-- 즐겨찾기 추가 -->
     <insert id="addFavorite" parameterType="java.util.Map">
         INSERT INTO FAVORITE (
             favorite_id,
@@ -196,14 +196,14 @@
         )
     </insert>
 
-    <!-- [즐겨찾기] 3. 즐겨찾기 삭제 -->
+    <!-- 즐겨찾기 삭제 -->
     <delete id="deleteFavorite" parameterType="java.util.Map">
         DELETE FROM FAVORITE
          WHERE user_id = #{user_id}
            AND place_id = #{place_id}
     </delete>
 	
-    <!-- [즐겨찾기] 4. 즐겨찾기 한 정보 끌고오기 -->
+    <!-- 즐겨찾기 조회 -->
     <select id="getFavoritePlaceIds" parameterType="java.lang.String" resultType="int">
         SELECT place_id
           FROM FAVORITE
@@ -211,12 +211,10 @@
     </select>
 
 	<!-- =====================================================
-	     [AJAX - 검색결과 페이지 내 카테고리 별 보기]
-	     카테고리 별 카드 목록/ 카테고리 별 전체 건수/ 리뷰 통계
-	     (카테고리 : 맛집/ 숙소/ 축제)
-	     (즐겨찾기 여부 확인/ 즐겨찾기 추가 삭제)
+	    AJAX 화면
+		키워드(맛집/ 숙소/ 축제) 별 리스트(최신/인기순)+페이징+건 수 | 리뷰 갯수 + 리뷰 통계 조회 | 즐겨찾기 조회
 	===================================================== -->
-	<!-- AJAX맛집 카드 목록 -->
+	<!-- 맛집 리스트+페이징 -->
 	<select id="getRestAjaxList" parameterType="map" resultMap="restResultMap">
 	    SELECT *
 	    FROM (
@@ -256,7 +254,7 @@
 	    WHERE rn <![CDATA[>]]> #{startRow}
 	</select>
 	
-	<!-- AJAX맛집 카드 건수 -->
+	<!--  맛집 건수 -->
 	<select id="getRestAjaxCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM RESTAURANT r
@@ -267,7 +265,7 @@
 	       OR  r.CATEGORY LIKE '%' || #{keyword} || '%')
 	</select>
 	
-	<!-- AJAX숙소 카드 목록 -->
+	<!-- 숙소 리스트+페이징 -->
 	<select id="getAccAjaxList" parameterType="map" resultMap="accResultMap">
 	    SELECT *
 	    FROM (
@@ -304,7 +302,7 @@
 	    WHERE rn <![CDATA[>]]> #{startRow}
 	</select>
 	
-	<!-- AJAX숙소 카드 건수 -->
+	<!--  숙소 건수 -->
 	<select id="getAccAjaxCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM ACCOMMODATION a
@@ -314,7 +312,7 @@
 	       OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
 	</select>
 	
-	<!-- AJAX축제 카드 목록 -->
+	<!-- 축제 리스트+페이징 -->
 	<select id="getFestAjaxList" parameterType="map" resultMap="festResultMap">
 	    SELECT *
 	    FROM (
@@ -351,7 +349,7 @@
 	    WHERE rn <![CDATA[>]]> #{startRow}
 	</select>
 	
-	<!-- AJAX축제 카드 건수 -->
+	<!--  축제 건수 -->
 	<select id="getFestAjaxCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM FESTIVAL f
@@ -361,7 +359,7 @@
 	       OR  p.ADDRESS LIKE '%' || #{keyword} || '%')
 	</select>
 	
-	<!-- AJAX리뷰 통계 -->
+	<!-- AJAX 리뷰 갯수 + 리뷰 통계 조회 -->
 	<select id="getPlaceReviewStatsByIds" parameterType="list" resultType="map">
 	    SELECT p.PLACE_ID
 	         , COUNT(rv.REVIEW_ID) AS REVIEW_COUNT
@@ -377,7 +375,11 @@
 	    GROUP BY p.PLACE_ID
 	</select>
 	
-	<!-- 자동완성 5개 -->
+	<!-- =====================================================
+	    검색바
+	   	자동완성 10개 + 최근 검색어 조회/ 추가
+	===================================================== -->
+	<!-- 자동완성 10개 -->
 	<select id="getAutoComplete" parameterType="String" resultType="String">
 	    SELECT keyword
 	    FROM (
@@ -401,7 +403,7 @@
 	</select>
 
 	
-	<!-- 최근 검색어 5~10개 -->
+	<!-- 최근 검색어 5개 조회 -->
 	<select id="getRecentKeywords" parameterType="String" resultType="spring.ict06team1.midpj.dto.SearchHistoryDTO">
 	    SELECT *
 	    FROM (
@@ -424,7 +426,7 @@
 	    WHERE ROWNUM &lt;= 5
 	</select>
 	
-	<!-- 검색어 저장 전, 중복 된다면 삭제 후 신규 저장 -->
+	<!-- 검색어 저장 전, 중복 된다면 최근 검색어 삭제 -->
 	<delete id="deleteSameKeyword" parameterType="map">
 	    DELETE FROM SEARCH_HISTORY
 	    WHERE user_id = #{user_id}
@@ -432,7 +434,7 @@
 	</delete>
 	
 	
-	<!-- 검색어 저장 -->
+	<!-- 최근 검색어 신규 저장 -->
 	<insert id="insertSearchHistory" parameterType="map">
 	    INSERT INTO SEARCH_HISTORY (
 	        history_id,

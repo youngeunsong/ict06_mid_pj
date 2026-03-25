@@ -50,7 +50,6 @@ body {
   background: var(--bg-page);
   color: var(--text-main);
   font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-  font-size: 14px;
 }
 
 /* =========================
@@ -195,143 +194,179 @@ body {
   color: #6f42c1;
 }
 
-.bdg-soft {
-  background: #f8f9fa;
-  color: #6c757d;
+/* =========================
+   9. board list item
+========================= */
+.board-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.bdg-new {
-  background: #dc3545;
-  color: #fff;
-  font-size: 0.62rem;
-  padding: 2px 6px;
-  border-radius: 999px;
+.board-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line-sub);
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  transition: background 0.15s ease;
+}
+
+.board-item:last-child {
+  border-bottom: none;
+}
+
+.board-item:hover {
+  background: #fcfcfc;
+}
+
+.board-item-left {
+  min-width: 0;
+  flex: 1;
+}
+
+.board-item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 6px;
+}
+
+.board-item-title strong {
+  min-width: 0;
+  font-size: 0.92rem;
+  color: var(--text-main);
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.board-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.76rem;
+  color: var(--text-meta);
+}
+
+.board-item-right {
+  flex-shrink: 0;
+  font-size: 0.76rem;
+  color: var(--text-meta);
+  text-align: right;
 }
 
 /* =========================
-   9. buttons
+   10. buttons
 ========================= */
 .btn-list,
 .btn-edit,
 .btn-del,
-.btn-outline-sm,
-.btn-primary-sm {
-  border-radius: 7px;
-  padding: 7px 14px;
-  font-size: 0.8rem;
-  text-decoration: none;
+.btn-write,
+.btn-more,
+.btn-back {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
-  transition: background 0.13s ease, color 0.13s ease, border-color 0.13s ease;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
 }
 
 .btn-list,
-.btn-edit,
-.btn-outline-sm {
-  border: 1px solid #dee2e6;
+.btn-back {
   background: #fff;
   color: #495057;
+  border-color: #dee2e6;
 }
 
 .btn-list:hover,
-.btn-edit:hover,
-.btn-outline-sm:hover {
+.btn-back:hover {
   background: #f8f9fa;
-  color: #343a40;
+  color: #212529;
+}
+
+.btn-edit {
+  background: #fff;
+  color: var(--primary);
+  border-color: #cfe7d8;
+}
+
+.btn-edit:hover {
+  background: #eef8f2;
 }
 
 .btn-del {
-  border: 1px solid #f1b0b7;
-  background: #fff5f5;
+  background: #fff;
   color: #dc3545;
+  border-color: #f5c2c7;
 }
 
 .btn-del:hover {
-  background: #ffe3e3;
+  background: #fff5f5;
 }
 
-.btn-primary-sm {
-  border: 1px solid var(--primary);
+.btn-write,
+.btn-more {
   background: var(--primary);
+  color: #fff;
+  border: none;
+}
+
+.btn-write:hover,
+.btn-more:hover {
+  background: var(--primary-dark);
   color: #fff;
 }
 
-.btn-primary-sm:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
-}
-
 /* =========================
-   10. pagination
+   11. pagination
 ========================= */
 .paging {
   display: flex;
   justify-content: center;
-  gap: 4px;
-  padding: 20px 0 4px;
+  gap: 6px;
+  margin-top: 18px;
 }
 
-.pg {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  background: #fff;
-  color: #495057;
-  font-size: 0.78rem;
-  cursor: pointer;
+.paging a,
+.paging span {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line-main);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: all 0.12s ease;
+  color: var(--text-sub);
+  background: #fff;
+  font-size: 0.82rem;
 }
 
-.pg.on,
-.pg:hover {
+.paging a:hover {
+  background: #f8f9fa;
+}
+
+.paging .on {
   background: var(--primary);
+  color: #fff;
   border-color: var(--primary);
-  color: #fff;
-  font-weight: 700;
-}
-
-/* =========================
-   11. search row
-========================= */
-.search-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 14px;
-}
-
-.search-box {
-  display: flex;
-  border: 1px solid #dee2e6;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  width: 100%;
-  max-width: 440px;
-  background: #fff;
-}
-
-.search-box input {
-  flex: 1;
-  border: none;
-  padding: 8px 13px;
-  font-size: 0.82rem;
-  outline: none;
-  background: #fff;
-}
-
-.search-box button {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 0.82rem;
 }
 
 /* =========================
@@ -391,6 +426,15 @@ body {
   gap: 10px;
 }
 
+/* 작성자 + 날짜 한 줄 정렬 */
+.meta-author > div,
+.post-author > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .avatar,
 .admin-avatar {
   width: 34px;
@@ -410,6 +454,8 @@ body {
   font-size: 0.875rem;
   font-weight: 700;
   color: #343a40;
+  margin: 0;
+  line-height: 1;
 }
 
 .author-role {
@@ -422,7 +468,9 @@ body {
 .author-date {
   font-size: 0.75rem;
   color: var(--text-meta);
-  margin-top: 2px;
+  margin-top: 0;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .meta-stats,
@@ -536,7 +584,103 @@ body {
 }
 
 /* =========================
-   15. responsive
+   15. community detail action buttons
+========================= */
+.detail-action-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+  padding: 0px 26px 24;
+  border-top: none;
+}
+
+.detail-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  height: 38px;
+  padding: 0 18px;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #fff;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-sizing: border-box;
+}
+
+.pill-btn:hover {
+  background: #fafafa;
+  color: #444;
+  text-decoration: none;
+}
+
+.pill-btn i {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.like-pill-btn {
+  min-width: 150px;
+  color: #f05a50;
+}
+
+.like-pill-btn i {
+  color: #f05a50;
+}
+
+.like-pill-btn.active {
+  background: #fff5f4;
+  border-color: #f3c7c3;
+  color: #e74c3c;
+}
+
+.like-pill-btn.active i {
+  color: #e74c3c;
+}
+
+.like-pill-btn .divider {
+  color: #d8d8d8;
+  margin: 0 2px;
+}
+
+.list-pill-btn {
+  min-width: 88px;
+  color: #555;
+}
+
+.kakao-pill-btn {
+  min-width: 140px;
+  color: #666;
+  background: #fff;
+}
+
+.kakao-pill-btn:hover {
+  background: #FEE500;
+  border-color: #FEE500;
+  color: #3A1D1D;
+}
+
+.kakao-dot {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* =========================
+   16. responsive
 ========================= */
 @media (max-width: 991px) {
   .community-container,
@@ -570,13 +714,36 @@ body {
   .notice-body,
   .event-body,
   .post-body,
-  .media-box {
+  .media-box,
+  .detail-action-wrap {
     padding-left: 18px;
     padding-right: 18px;
   }
 
   .search-box {
     max-width: 100%;
+  }
+
+  .detail-action-bar {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .pill-btn {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .like-pill-btn,
+  .kakao-pill-btn,
+  .list-pill-btn {
+    min-width: auto;
+  }
+
+  .meta-author > div,
+  .post-author > div {
+    gap: 6px;
   }
 }
 

@@ -2,7 +2,7 @@
 --변경사항
 --1) REVIEW 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
 --필드 추가용 ALTER 쿼리 넣어두었습니다. 
---2) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--2) 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
 --해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
 --------------------------------------------------
 --Ver.260320
@@ -268,6 +268,7 @@ CREATE TABLE FAQ (
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
 
+SELECT * FROM FAQ;
 --Ver.260320 변경사항 적용 쿼리
 --FAQ 테이블: view_count 필드 추가
 -- 1. 트리거 비활성화
@@ -331,7 +332,7 @@ CREATE TABLE INQUIRY (
     category	VARCHAR2(200),
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
-    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
+    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, PROGRESS, ANSWERED
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
@@ -339,8 +340,10 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+
 -- INQUIRY > category 추가 쿼리
 ALTER TABLE INQUIRY ADD (category VARCHAR2(200));
+
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (
@@ -358,6 +361,8 @@ CREATE TABLE NOTICE (
     CONSTRAINT CHK_NOTICE_CATEGORY CHECK(CATEGORY IN('NOTICE','EVENT'))
 );
 SELECT * FROM NOTICE;
+
+
 
 -- 19. FAVORITE (즐겨찾기 / 북마크)
 CREATE TABLE FAVORITE (

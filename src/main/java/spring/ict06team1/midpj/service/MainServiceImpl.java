@@ -22,6 +22,10 @@ public class MainServiceImpl implements MainService {
 	@Autowired
 	private MainDAO dao;
 
+	/* ================================================== 
+	   user 메인화면
+	   TOP10 + BEST 추천 초기 세팅 + 이달의 추천 국내 축제 + 즐겨찾기 + 최하단 공지 & 이벤트
+	================================================== */
 	//맛집 TOP10
 	@Override
 	public List<RestaurantDTO> getTop10ByREST() {

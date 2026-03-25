@@ -22,15 +22,14 @@ public interface CommunityService {
     // 좋아요(좋아요 여부 체크 + 게시글 좋아요/COMMUNITY_LIKE 테이블 +1 or -1)
     public String toggleLike(HttpServletRequest request);
     
-    // 게시글 작성(등록)(게시글 내 내용 + 대표 이미지 등록)
+    // 게시글 작성(등록)(게시글 본문 + 대표 이미지 등록)
     public void insertBoard(MultipartHttpServletRequest request);
     
     // 게시글 삭제
     public void deleteBoard(HttpServletRequest request);
     
-    // 게시글 수정(등록)
+    // 게시글 수정(등록)(게시글 본문 + 기존 대표 이미지 삭제, 수정 대표 이미지 신규 등록)
     public void updateBoard(MultipartHttpServletRequest request);
-    
 
     
 }

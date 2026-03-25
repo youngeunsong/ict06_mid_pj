@@ -327,7 +327,7 @@
 		       improvements, 
 		       created_at
 		  FROM (
-		        SELECT ROW_NUMBER() OVER (ORDER BY CREATED_AT, survey_id DESC) AS rn,
+		        SELECT ROW_NUMBER() OVER (ORDER BY CREATED_AT DESC, survey_id DESC) AS rn,
 		               survey_id,
 		               user_id, 
 		               reservation_id, 
@@ -342,6 +342,7 @@
 				   AND CREATED_AT &lt; #{endDate} 
 				 )
 		 WHERE rn BETWEEN #{start, jdbcType=INTEGER} AND #{end, jdbcType=INTEGER}
+		 ORDER BY CREATED_AT DESC
     </select>
     
     <!-- ==============================

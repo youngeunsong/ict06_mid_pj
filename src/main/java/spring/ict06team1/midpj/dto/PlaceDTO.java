@@ -11,7 +11,7 @@ public class PlaceDTO {
 	private String name;		// -- 장소/업체 이름
 	private String address;    // -- 지번/도로명 주소
 	private int view_count;    //-- 조회수 (인기순 정렬용)
-	private double latitude;
+	private double latitude;	
 	private double longitude;
 	private String image_url;  //-- 대표 이미지 경로
 	private ReviewDTO reviewDto;

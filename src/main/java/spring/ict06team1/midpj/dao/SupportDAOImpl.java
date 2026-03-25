@@ -68,9 +68,4 @@ public class SupportDAOImpl implements SupportDAO {
         return sqlSession.insert(NAMESPACE + ".insertInquiry", dto);
     }
 
-    // [사용자] 내가 쓴 문의 내역 리스트 가져오기
-    @Override
-    public List<InquiryDTO> getMyInquiryList(String user_id) {
-        return sqlSession.selectList(NAMESPACE + ".getMyInquiryList", user_id);
-    }
 }

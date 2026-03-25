@@ -1,3 +1,11 @@
+<!-- 
+ * @author 송혜진
+ * 최초작성일: 2026-03-08
+ * 최종수정일: 2026-03-10
+ * AJAX 활용 : search_fragment.jsp 
+ 
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %> <!-- ${path} 정의 -->
 
@@ -7,10 +15,10 @@
 <meta charset="UTF-8">
 <!-- 반응형 웹 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>단순 검색 결과 요약</title>
+<title>검색바 > 검색 페이지</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
-<%@ include file="bootstrapSettings.jsp" %>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/common/search.css">
 <link rel="stylesheet" href="${path}/resources/css/common/bookmark.css">
 
@@ -18,14 +26,14 @@
 
 <script src="${path}/resources/js/search/search.js" defer></script>
 <script src="${path}/resources/js/search/bookmark.js" defer></script>
-<script> window.contextPath = '${path}'; </script>
+<script> const CTX = '${path}'; </script>
 
 </head>
 <body>
 	<div class="wrap">
-		<!-- header 시작 -->
-		<%@ include file="header.jsp" %>
-		<!-- header 끝 -->
+	
+		<!-- header -->
+		<%@ include file="../../common/header.jsp" %>
 		
 		<!-- 컨텐츠 시작 -->
 		<div class="container py-4" style="max-width:1000px;">
@@ -184,7 +192,7 @@
 			        인기순
 			      </button>
 			      <ul class="dropdown-menu">
-			        <li><button class="dropdown-item" onclick="changeSort('popular')">인기순</button></li>
+			        <li><button class="dropdown-item" onclick="changeSort('popular')">조회순</button></li>
 			        <li><button class="dropdown-item" onclick="changeSort('latest')">최신순</button></li>
 			      </ul>
 			    </div>
@@ -211,10 +219,8 @@
 		</div>
 		<!-- 컨텐츠 끝 -->
 		
-		<!-- footer 시작 -->
-		<%@ include file="footer.jsp" %>
-		<!-- footer 끝 -->
-		
+		<!-- footer -->
+		<%@ include file="../../common/footer.jsp" %>
 		
 	</div>
 </body>

@@ -1,15 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="setting.jsp" %>
-
 <!-- 
-꼭 common/headerSearch.js 와 함께 사용해주세요!!
-- 자동검색 기능
+ * @author 송혜진
+ * 최초작성일: 2026-02-26
+ * 최종수정일: 2026-03-23
+ 
+ 참고) 
+ Google tag는 관리자> 메인대시보드에서 유저가 이용하는 값들을 파악하고 집계하기 위해 유저 HEADER에 넣었음
+ 
+-->
 
- -->
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script src="${path}/resources/js/common/header.js" defer></script>
 
 <header>
+
+
 	<!-- header 시작 -->
 	<!-- 요청 : url, 버튼, 링크 연결 -->
 	<nav class="navbar navbar-expand-lg bg-white border-bottom">
@@ -85,3 +93,5 @@
 	</nav>
 </header>
 <!-- header 끝 -->
+
+<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp" %>

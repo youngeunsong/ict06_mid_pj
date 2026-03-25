@@ -219,8 +219,8 @@
 				                    <span>내 회원정보수정</span>
 				                    <i class="fa-solid fa-chevron-right"></i>
 				                </a>
-				                <a href="${pageContext.request.contextPath}/pointHistory.sp" class="quick-link-item">
-				                    <span>포인트 내역 확인</span>
+				                <a href="${pageContext.request.contextPath}/myPageHome.do" class="quick-link-item">
+				                    <span>나의 포인트 조회</span>
 				                    <i class="fa-solid fa-chevron-right"></i>
 				                </a>
 				            </div>

@@ -30,6 +30,8 @@ public interface AdFestivalDAO {
 	// (3) 티켓 수정 
 	public int updateTicket(FestivalTicketDTO dto);
 	
+	// 신규 축제 등록 : 3단계 
+	
 	// 신규 축제 등록 : 4단계
 	// (0) 기존 테이블에 있는 데이터인지 확인
 	public Integer checkDuplication(FestivalDTO dto);
@@ -51,8 +53,6 @@ public interface AdFestivalDAO {
 	public int deleteFestival(int festival_id);
 	
 	// 공공축제 데이터 넣기
-	public void insertFestivalBatch(List<FestivalDTO> list); 
-	
-	
+	public int insertFestivalBatch(List<FestivalDTO> list); 
 	
 }

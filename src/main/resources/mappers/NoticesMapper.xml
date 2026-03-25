@@ -5,7 +5,6 @@
 
 <mapper namespace="spring.ict06team1.midpj.dao.NoticeDAO">
 
-	<!-- NOTICE DTO 매핑 -->
     <resultMap id="noticeMap" type="spring.ict06team1.midpj.dto.NoticeDTO">
         <id property="notice_id" column="notice_id"/>
         <result property="admin_id" column="admin_id"/>
@@ -15,48 +14,190 @@
         <result property="image_url" column="image_url"/>
         <result property="view_count" column="view_count"/>
         <result property="is_top" column="is_top"/>
-        <result property="regDate" column="created_at"/>
+        <result property="noticeRegDate" column="created_at"/>
+        <result property="noticeUpdateDate" column="updated_at"/>
     </resultMap>
 
-    <!-- 공지사항 상단 고정 -->
+    <!-- 상단 고정 공지 -->
     <select id="getTopNoticeList" resultMap="noticeMap">
-        SELECT notice_id, admin_id, category, title, content, image_url, view_count, is_top, created_at
+        SELECT notice_id,
+               admin_id,
+               category,
+               title,
+               content,
+               image_url,
+               view_count,
+               is_top,
+               created_at,
+               updated_at
           FROM NOTICE
          WHERE category = 'NOTICE'
            AND is_top = 'Y'
          ORDER BY notice_id DESC
     </select>
 
-    <!-- 공지사항 일반 목록 -->
-    <select id="getNoticeList" resultMap="noticeMap">
-        SELECT notice_id, admin_id, category, title, content, image_url, view_count, is_top, created_at
+    <!-- 일반 공지 -->
+    <select id="getNoticeList" parameterType="map" resultMap="noticeMap">
+        SELECT *
+          FROM (
+                SELECT ROWNUM AS rn, A.*
+                  FROM (
+                        SELECT notice_id,
+                               admin_id,
+                               category,
+                               title,
+                               content,
+                               image_url,
+                               view_count,
+                               is_top,
+                               created_at,
+                               updated_at
+                          FROM NOTICE
+                         WHERE category = 'NOTICE'
+                           AND is_top = 'N'
+                        <if test="searchKeyword != null and searchKeyword != ''">
+                            <choose>
+                                <when test="searchType == 'title'">
+                                    AND title LIKE '%' || #{searchKeyword} || '%'
+                                </when>
+                                <when test="searchType == 'content'">
+                                    AND content LIKE '%' || #{searchKeyword} || '%'
+                                </when>
+                                <otherwise>
+                                    AND (
+                                        title LIKE '%' || #{searchKeyword} || '%'
+                                        OR content LIKE '%' || #{searchKeyword} || '%'
+                                    )
+                                </otherwise>
+                            </choose>
+                        </if>
+                         ORDER BY notice_id DESC
+                       ) A
+                 WHERE ROWNUM &lt;= #{end}
+               )
+         WHERE rn &gt;= #{start}
+    </select>
+
+	<!-- 공지 페이징 -->
+    <select id="getNoticeCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
           FROM NOTICE
          WHERE category = 'NOTICE'
            AND is_top = 'N'
-         ORDER BY notice_id DESC
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND title LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <otherwise>
+                    AND (
+                        title LIKE '%' || #{searchKeyword} || '%'
+                        OR content LIKE '%' || #{searchKeyword} || '%'
+                    )
+                </otherwise>
+            </choose>
+        </if>
     </select>
 
-    <!-- 이벤트 상단 고정 -->
-    <select id="getTopEventList" resultMap="noticeMap">
-        SELECT notice_id, admin_id, category, title, content, image_url, view_count, is_top, created_at
+    <!-- 진행중인 이벤트 -->
+    <select id="getOngoingEventList" resultMap="noticeMap">
+        SELECT notice_id,
+               admin_id,
+               category,
+               title,
+               content,
+               image_url,
+               view_count,
+               is_top,
+               created_at,
+               updated_at
           FROM NOTICE
          WHERE category = 'EVENT'
            AND is_top = 'Y'
          ORDER BY notice_id DESC
     </select>
 
-    <!-- 이벤트 일반 목록 -->
-    <select id="getEventList" resultMap="noticeMap">
-        SELECT notice_id, admin_id, category, title, content, image_url, view_count, is_top, created_at
+    <!-- 종류 이벤트 -->
+    <select id="getEndEventList" parameterType="map" resultMap="noticeMap">
+        SELECT *
+          FROM (
+                SELECT ROWNUM AS rn, A.*
+                  FROM (
+                        SELECT notice_id,
+                               admin_id,
+                               category,
+                               title,
+                               content,
+                               image_url,
+                               view_count,
+                               is_top,
+                               created_at,
+                               updated_at
+                          FROM NOTICE
+                         WHERE category = 'EVENT'
+                           AND is_top = 'N'
+                        <if test="searchKeyword != null and searchKeyword != ''">
+                            <choose>
+                                <when test="searchType == 'title'">
+                                    AND title LIKE '%' || #{searchKeyword} || '%'
+                                </when>
+                                <when test="searchType == 'content'">
+                                    AND content LIKE '%' || #{searchKeyword} || '%'
+                                </when>
+                                <otherwise>
+                                    AND (
+                                        title LIKE '%' || #{searchKeyword} || '%'
+                                        OR content LIKE '%' || #{searchKeyword} || '%'
+                                    )
+                                </otherwise>
+                            </choose>
+                        </if>
+                         ORDER BY notice_id DESC
+                       ) A
+                 WHERE ROWNUM &lt;= #{end}
+               )
+         WHERE rn &gt;= #{start}
+    </select>
+
+	<!-- 이벤트 페이징 -->
+    <select id="getEndEventCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
           FROM NOTICE
          WHERE category = 'EVENT'
            AND is_top = 'N'
-         ORDER BY notice_id DESC
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND title LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <otherwise>
+                    AND (
+                        title LIKE '%' || #{searchKeyword} || '%'
+                        OR content LIKE '%' || #{searchKeyword} || '%'
+                    )
+                </otherwise>
+            </choose>
+        </if>
     </select>
 
-    <!-- 공지/이벤트 상세 -->
+    <!-- 공지/ 이벤트 상세 -->
     <select id="getNoticeDetail" parameterType="int" resultMap="noticeMap">
-        SELECT notice_id, admin_id, category, title, content, image_url, view_count, is_top, created_at
+        SELECT notice_id,
+               admin_id,
+               category,
+               title,
+               content,
+               image_url,
+               view_count,
+               is_top,
+               created_at,
+               updated_at
           FROM NOTICE
          WHERE notice_id = #{notice_id}
     </select>

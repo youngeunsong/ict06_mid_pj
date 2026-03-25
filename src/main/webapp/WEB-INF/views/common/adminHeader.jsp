@@ -4,49 +4,49 @@
 
 <!-- ================= header ================= -->
 <!--begin::Header-->
-<nav class="app-header navbar navbar-expand bg-body border-bottom">
+<nav class="main-header navbar navbar-expand border-bottom">
 	<!--begin::Container-->
 	<div class="container-fluid">
 		<!--begin::Left-->
 		<ul class="navbar-nav">
 			<li class="nav-item">
-				<a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+				<a class="nav-link" data-widget="pushmenu" href="#" role="button">
 					<i class="fas fa-bars"></i>
 				</a>
 			</li>
 			<li class="nav-item d-none d-md-block">
-				<a href="${path}/adminHome.ad" class="nav-link">ADMIN DASHBOARD</a>
+				<a href="${path}/adminHome.ad" class="nav-link" style="color:inherit;"></a>
 			</li>
 		</ul>
 		<!--end::Left-->
 		
 		<!--begin::Right-->
-		<ul class="navbar-nav ms-auto">
+		<ul class="navbar-nav ml-auto">
 			<!--User Home 버튼-->
-			<li class="nav-item me-2">
-				<a href="${path}/main.do" class="nav-link btn btn-outline-primary btn-sm px-3"
-					style="border-radius:20px; font-size:0.85rem; border-color:#01D281; color:#01D281;">
-					<i class="fas fa-external-link-alt me-1"></i>User Home
+			<li class="nav-item mr-2">
+				<a href="${path}/main.do" class="nav-link btn btn-sm px-3 btn-user-home"
+					style="border-radius:20px; font-size:0.85rem;">
+					<i class="fas fa-external-link-alt mr-1"></i>User Home
 				</a>
 			</li>
 			
 			<!--다크모드 토글-->
-			<li class="nav-item me-1">
+			<li class="nav-item mr-1">
 				<button id="darkModeToggle" class="nav-link btn btn-link"
-						style="font-size:1.2rem; color:#01D281;" title="다크모드 전환">
+						style="font-size:1.2rem;" title="다크모드 전환">
 					<i class="bi bi-moon-fill"></i>
 				</button>
 			</li>
 			
 			<!--알림 벨-->
-			<li class="nav-item dropdown me-1">
+			<li class="nav-item dropdown mr-1">
 				<a href="#" class="nav-link" data-toggle="dropdown" title="알림">
-					<i class="bi bi-bell-fill" style="font-size:1.2rem; color:#01D281;"></i>
+					<i class="bi bi-bell-fill" style="font-size:1.2rem;"></i>
 					<c:if test="${pendingCount > 0}">
 						<span class="badge badge-danger navbar-badge">${pendingCount}</span>
 					</c:if>
 				</a>
-				<div class="dropdown-menu dropdown-menu-end shadow" style="min-width:300px;">
+				<div class="dropdown-menu dropdown-menu-right shadow" style="min-width:300px;">
 					<div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
 						<span class="font-weight-bold">알림</span>
 						<small class="text-muted">${pendingCount}건</small>
@@ -54,8 +54,8 @@
 					<div id="alarmList">
 						<c:choose>
 							<c:when test="${pendingCount > 0}">
-								<a href="${path}/getReservationList.ad?status=PENDING" class="dropdown-item py-2">
-									<i class="bi bi-clock-history text-warning me-2"></i>
+								<a href="${path}/reservationList.ad?status=PENDING" class="dropdown-item py-2">
+									<i class="bi bi-clock-history text-warning mr-2"></i>
 									결제 대기 중인 예약이 <strong>${pendingCount}건</strong> 있습니다.
 								</a>
 							</c:when>
@@ -68,7 +68,7 @@
 						</c:choose>
 					</div>
 					<div class="border-top text-center py-2">
-						<a href="${path}/getReservationList.ad?status=PENDING" class="text-success" style="font-size:0.85rem;">
+						<a href="${path}/reservationList.ad?status=PENDING" class="text-success" style="font-size:0.85rem;">
 							결제대기 예약 전체보기
 						</a>
 					</div>
@@ -77,11 +77,11 @@
 			
 			<!--관리자 드롭다운-->
 			<li class="nav-item dropdown user-menu">
-			<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+			<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="color:inherit;">
 				<i class="bi bi-person-circle" style="font-size:1.4rem; color:#01D281;"></i>
 				<span class="d-none d-md-inline ml-1">${sessionScope.sessionID}</span>
 			</a>
-			<ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+			<ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 				<li class="user-header" style="background-color:#01D281">
                 	<i class="bi bi-person-circle" style="font-size:4rem; color:#fff;"></i>
                 	<p>
@@ -92,7 +92,7 @@
 				<li class="user-footer">
 					<div class="text-center py-2">
 						<a href="${path}/adminMyPage.ad" class="btn btn-outline-secondary btn-sm">
-							<i class="bi bi-person-gear me-1"></i>프로필/비밀번호 변경
+							<i class="bi bi-person-gear mr-1"></i>프로필/비밀번호 변경
 						</a>
 					</div>
 				</li>

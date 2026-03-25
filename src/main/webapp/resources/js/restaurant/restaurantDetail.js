@@ -202,4 +202,129 @@ document.addEventListener("DOMContentLoaded", function () {
       }[c];
     });
   }
+  
+    // =========================
+  // 3) 예약 가능 일정 UI
+  // =========================
+  const dateSlider = document.getElementById("reserveDateSlider");
+  const timeSlotsWrap = document.getElementById("reserveTimeSlots");
+  const selectedReserveDateInput = document.getElementById("selectedReserveDate");
+
+  if (dateSlider && timeSlotsWrap && selectedReserveDateInput) {
+    const DAYS_TO_SHOW = 7;
+
+    // 예시 시간 슬롯
+    const baseSlots = [
+      { start: "10:00", end: "11:50" },
+      { start: "12:00", end: "13:50" },
+      { start: "14:00", end: "15:50" },
+      { start: "17:00", end: "18:50" },
+      { start: "19:00", end: "20:50" }
+    ];
+
+    const dayLabels = ["일", "월", "화", "수", "목", "금", "토"];
+
+    // 오늘부터 +7일 생성
+    const reserveDates = [];
+    const today = new Date();
+
+    for (let i = 0; i < DAYS_TO_SHOW; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const day = dayLabels[d.getDay()];
+
+      reserveDates.push({
+        value: yyyy + "-" + mm + "-" + dd,
+        labelTop: mm + "/" + dd,
+        labelBottom: "(" + day + ")"
+      });
+    }
+
+    let activeDate = reserveDates[0].value;
+
+    renderDateButtons();
+    renderTimeSlots(activeDate);
+
+    function renderDateButtons() {
+      dateSlider.innerHTML = "";
+
+      reserveDates.forEach(function (item) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "r-dateChip" + (item.value === activeDate ? " is-active" : "");
+        btn.innerHTML =
+            '<div class="r-dateTop">' + item.labelTop + '</div>'
+          + '<div class="r-dateBottom">' + item.labelBottom + '</div>';
+
+        btn.addEventListener("click", function () {
+          if (activeDate === item.value) {
+            activeDate = "";
+            selectedReserveDateInput.value = "";
+            renderDateButtons();
+            renderTimeSlots("");
+            return;
+          }
+
+          activeDate = item.value;
+          selectedReserveDateInput.value = item.value;
+
+          renderDateButtons();
+          renderTimeSlots(item.value);
+        });
+
+        dateSlider.appendChild(btn);
+      });
+
+      selectedReserveDateInput.value = activeDate;
+    }
+
+    function renderTimeSlots(dateValue) {
+      timeSlotsWrap.innerHTML = "";
+
+      if (!dateValue) {
+        return;
+      }
+
+      // 임시 예시 비활성화 규칙
+      // 나중에는 서버 예약 데이터 기준으로 회색 처리하면 됨
+      const dateIndex = reserveDates.findIndex(function (d) {
+        return d.value === dateValue;
+      });
+
+      baseSlots.forEach(function (slot, idx) {
+        const slotBox = document.createElement("div");
+        const badge = document.createElement("span");
+        const timeText = document.createElement("span");
+
+        timeText.className = "r-timeText";
+        timeText.textContent = slot.start + " ~ " + slot.end;
+
+        badge.className = "r-slotBadge";
+
+        const isDisabled =
+          (dateIndex === 0 && idx === 1) ||
+          (dateIndex === 2 && idx === 3) ||
+          (dateIndex === 4 && idx === 0) ||
+          (dateIndex === 6 && idx === 4);
+
+        if (isDisabled) {
+          slotBox.className = "r-timeSlot is-disabled";
+          badge.className += " is-disabled";
+          badge.textContent = "예약 마감";
+        } else {
+          slotBox.className = "r-timeSlot is-available";
+          badge.className += " is-available";
+          badge.textContent = "예약 가능";
+        }
+
+        slotBox.appendChild(timeText);
+        slotBox.appendChild(badge);
+        timeSlotsWrap.appendChild(slotBox);
+      });
+    }
+  }
 });

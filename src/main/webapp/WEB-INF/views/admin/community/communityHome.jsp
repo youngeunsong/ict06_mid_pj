@@ -40,14 +40,47 @@
 			
 			<section class="content">
 				<div class="container-fluid">
+					<%--필터 영역--%>
+					<div class="filter-box mb-3 p-3 bg-white shadow-sm rounded">
+						<div class="d-flex align-items-center justify-content-end flex-wrap" style="gap:15px;">
+							
+							<%-- 검색 영역 --%>
+							<form action="${path}/communityHome.adco" method="get" class="d-flex align-items-center" style="gap:10px;">
+								<div class="input-group input-group-sm" style="width:400px;">
+
+									<%--검색 종류 선택--%>
+									<select name="searchType" class="form-control col-4" style="border-radius: 4px 0 0 4px;">
+										<option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
+										<option value="user_id" ${searchType == 'user_id' ? 'selected' : ''}>작성자 ID</option>
+										<option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
+									</select>
+									
+									<%--키워드 검색 영역--%>
+									<input type="text" id="keyword" name="keyword" class="form-control"	placeholder="검색어 입력" value="${keyword}">
+									<div class="input-group-append">
+										<button class="btn btn-dark btn-sm" type="submit">
+											<i class="bi bi-search"></i>
+										</button>
+									</div>
+								</div>
+								
+								<a href="${path}/communityHome.adco" class="btn btn-outline-secondary btn-sm" title="초기화">
+									<i class="bi bi-arrow-clockwise"></i>
+								</a>
+							</form>
+						</div>
+					</div>
+					
+					
 					<div class="card">
 						<div class="card-header">
-							<!-- 일괄처리 버튼 -->
+							<!-- 일괄처리 tag 버튼 -->
 							<button type="button" class="tag tag-warning active" onclick="bulkAction('hide')">숨김</button>
-							<button type="button" class="tag tag-success active" onclick="bulkAction('show')">숨김해제</button>
+							<button type="button" class="tag tag-success active" onclick="bulkAction('show')">숨김 해제</button>
 							<button type="button" class="tag tag-danger active" onclick="bulkAction('delete')">삭제</button>
 						</div>
-						
+					
+						<!--begin::card-body-->
 						<div class="card-body table-responsive p-0">
 							<table class="table table-hover text-nowrap text-center">
 								<thead>
@@ -91,10 +124,10 @@
 																<span class="badge badge-success">정상</span>
 															</c:when>
 															<c:when test="${post.status eq 'HIDDEN'}">
-																<span class="badge badge-warning">숨김</span>
+																<span class="badge badge-warning">삭제</span>
 															</c:when>
-															<c:when test="${post.status eq 'DELETED'}">
-																<span class="badge badge-danger">삭제</span>
+															<c:when test="${post.status eq 'BANNED'}">
+																<span class="badge badge-danger">숨김</span>
 															</c:when>
 														</c:choose>
 													</td>
@@ -104,11 +137,11 @@
 															<c:when test="${post.status eq 'DISPLAY'}">
 																<button type="button" class="tag tag-warning" onclick="hidePost(${post.post_id})">숨김</button>
 															</c:when>
-															<c:when test="${post.status eq 'HIDDEN'}">
+															<c:when test="${post.status eq 'BANNED'}">
 																<button type="button" class="tag tag-success" onclick="showPost(${post.post_id})">숨김해제</button>
 															</c:when>
 														</c:choose>
-														<c:if test="${post.status ne 'DELETED'}">
+														<c:if test="${post.status ne 'HIDDEN'}">
 															<button type="button" class="tag tag-danger" onclick="deletePost(${post.post_id})">삭제</button>
 														</c:if>
 														<button type="button" class="tag tag-info" onclick="location.href='${path}/communityDetail.adco?post_id=${post.post_id}'">상세보기</button>
@@ -120,6 +153,30 @@
 								</tbody>
 							</table>
 						</div>
+						<!--end::card-body-->
+
+						<!--begin::card-footer-->
+						<div class="card-footer clearfix">
+							<ul class="pagination pagination-sm m-0 float-right">
+								<c:if test="${paging.prev > 0}">
+									<li class="page-item">
+										<a class="page-link" href="${path}/communityHome.adco?pageNum=${paging.prev}&searchType=${searchType}&keyword=${keyword}">«</a>
+									</li>
+								</c:if>
+								<c:forEach begin="${paging.startPage}" end="${paging.endPage}" var="i">
+									<li class="page-item ${paging.currentPage == i ? 'active' : ''}">
+										<a class="page-link" href="${path}/communityHome.adco?pageNum=${i}&searchType=${searchType}&keyword=${keyword}">${i}</a>
+									</li>
+								</c:forEach>
+								<c:if test="${paging.next > 0}">
+									<li class="page-item">
+										<a class="page-link" href="${path}/communityHome.adco?pageNum=${paging.next}&searchType=${searchType}&keyword=${keyword}">»</a>
+									</li>
+								</c:if>
+							</ul>
+						</div>
+						<!--end::card-footer-->
+						
 					</div>
 				</div>
 			</section>

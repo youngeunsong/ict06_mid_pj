@@ -114,7 +114,7 @@ public class SupportController {
     	service.inquiryInsert(request, response, model);
         
         // 등록 후 나의 문의 내역 리스트로 이동 (또는 결과 알림 페이지)
-        return "redirect:/myInquiryList.sp?user_id=" + request.getParameter("user_id");
+        return "redirect:/viewInquiries.do?user_id=" + request.getParameter("user_id");
     }
     
     // 7. 불편사항 등록 
@@ -126,21 +126,6 @@ public class SupportController {
         int result = service.inquiryInsert(dto); 
         
         return (result > 0) ? "success" : "fail";
-    }
-
-	// 8. 나의 1:1 문의 내역 리스트 (개수 조회 포함)
-    @RequestMapping("/myInquiryList.sp")
-    public String myInquiryList(HttpServletRequest request, HttpServletResponse response, Model model) 
-        throws ServletException, IOException {
-    	logger.info("[url => /myInquiryList.sp]");
-       
-    	// 1. 전체 개수 조회 (서비스의 getInquiryCount 호출)
-        service.getInquiryCount(request, response, model); // model에 "totalCount" 담김
-        
-        // 2. 내 문의 리스트 조회
-        service.getMyInquiryList(request, response, model); // model에 "myInquiryList" 담김
-        
-        return "user/inquiry/myInquiryList";
     }
 
 }

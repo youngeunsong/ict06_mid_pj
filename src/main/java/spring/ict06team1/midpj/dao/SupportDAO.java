@@ -40,7 +40,4 @@ public interface SupportDAO {
     // 1:1 문의글 신규 등록
     public int insertInquiry(InquiryDTO dto);
 
-    // 특정 사용자의 문의 내역 리스트 조회
-    public List<InquiryDTO> getMyInquiryList(String user_id);
-
 }

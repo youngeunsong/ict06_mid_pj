@@ -43,10 +43,6 @@ public interface SupportService {
     // report 때문에 추가할 메서드
     public int inquiryInsert(InquiryDTO dto);
     
-    // 나의 1:1 문의 내역 리스트 조회
-    public void getMyInquiryList(HttpServletRequest request, HttpServletResponse response, Model model) 
-           throws ServletException, IOException;
-
     // 페이징 처리를 위한 전체 문의글 개수 조회 (관리자/사용자 공통)
     public void getInquiryCount(HttpServletRequest request, HttpServletResponse response, Model model) 
            throws ServletException, IOException;

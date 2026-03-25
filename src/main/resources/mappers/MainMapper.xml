@@ -409,6 +409,48 @@
 	    )
 	    WHERE ROWNUM <![CDATA[<=]]> 5
 	</select>
-    
-
+	
+	<!-- 최하단 공지 리스트 -->
+	<select id="getMainNoticeList" resultType="spring.ict06team1.midpj.dto.NoticeDTO">
+	    SELECT *
+	    FROM (
+	        SELECT notice_id,
+	               admin_id,
+	               category,
+	               title,
+	               content,
+	               image_url,
+	               view_count,
+	               is_top,
+	               created_at AS noticeRegDate,
+               	   updated_at AS noticeUpdateDate
+	          FROM NOTICE
+	         WHERE category = 'NOTICE'
+	           AND is_top = 'Y'
+	         ORDER BY notice_id DESC
+	    )
+	    WHERE ROWNUM <![CDATA[ <= ]]> 5
+	</select>
+	
+	<!-- 최하단 이벤트 리스트 -->
+	<select id="getMainEventList" resultType="spring.ict06team1.midpj.dto.NoticeDTO">
+	    SELECT *
+	    FROM (
+	        SELECT notice_id,
+	               admin_id,
+	               category,
+	               title,
+	               content,
+	               image_url,
+	               view_count,
+	               is_top,
+	               created_at AS noticeRegDate,
+                   updated_at AS noticeUpdateDate
+	          FROM NOTICE
+	         WHERE category = 'EVENT'
+	           AND is_top = 'Y'
+	         ORDER BY notice_id DESC
+	    )
+	    WHERE ROWNUM <![CDATA[ <= ]]> 5
+	</select>
 </mapper>

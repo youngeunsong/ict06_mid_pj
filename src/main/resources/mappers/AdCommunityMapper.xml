@@ -19,13 +19,53 @@
 	</resultMap>
   	
 	<!-- 1. 전체 게시글 목록(숨김 포함) -->
-	<select id="getAdPostList" resultMap="adCommunityMap">
-		SELECT post_id, user_id, title, category,
-			   view_count, like_count, status, created_at
-		  FROM COMMUNITY
-		 ORDER BY post_id DESC
+	<select id="getAdPostList" parameterType="map" resultMap="adCommunityMap">
+		SELECT * FROM (
+			SELECT ROWNUM AS rnum, A.* FROM (
+				SELECT post_id, user_id, title, category,
+					   view_count, like_count, status, created_at
+				FROM COMMUNITY
+				<where>
+					<if test="keyword != null and keyword != ''">
+						<choose>
+							<when test="searchType == 'title'">
+								AND title LIKE '%' || #{keyword} || '%'
+							</when>
+							<when test="searchType == 'user_id'">
+								AND user_id LIKE '%' || #{keyword} || '%'
+							</when>
+							<when test="searchType == 'content'">
+								AND content LIKE '%' || #{keyword} || '%'
+							</when>
+						</choose>
+					</if>
+				</where>
+				ORDER BY post_id DESC
+			) A
+		)
+		WHERE rnum BETWEEN #{startRow, jdbcType=INTEGER} AND #{endRow, jdbcType=INTEGER}
 	</select>
-  	
+	
+	<!-- 1-1. 전체 게시글 수 -->
+	<select id="getAdPostCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM COMMUNITY
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'title'">
+						AND title LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="searchType == 'user_id'">
+						AND user_id LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="searchType == 'content'">
+						AND content LIKE '%' || #{keyword} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>
+	</select>
+	
 	<!-- 2. 게시글 상세보기 -->
 	<select id="getAdPostDetail" parameterType="int" resultMap="adCommunityMap">
 		SELECT post_id, user_id, title, content, category,
@@ -34,10 +74,10 @@
 		 WHERE post_id = #{post_id}
 	</select>
   	
-	<!-- 3. 게시글 숨김 -->
+	<!-- 3. 게시글 숨김/제재 -->
 	<update id="hidePost" parameterType="int">
 		UPDATE COMMUNITY
-		   SET status='HIDDEN',
+		   SET status='BANNED',
 			   updated_at=SYSTIMESTAMP
 		 WHERE post_id = #{post_id}
 		   AND status = 'DISPLAY'
@@ -49,16 +89,16 @@
 		   SET status='DISPLAY',
 			   updated_at=SYSTIMESTAMP
 		 WHERE post_id=#{post_id}
-		   AND status = 'HIDDEN'
+		   AND status = 'BANNED'
 	</update>
   	
 	<!-- 5. 게시글 삭제 -->
 	<update id="deletePost" parameterType="int">
 		UPDATE COMMUNITY
-		   SET status='DELETED',
+		   SET status='HIDDEN',
 			   updated_at=SYSTIMESTAMP
 		 WHERE post_id = #{post_id}
-		   AND status != 'DELETED'
+		   AND status != 'HIDDEN'
 	</update>
   	
 </mapper>

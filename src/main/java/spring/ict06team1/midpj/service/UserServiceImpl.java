@@ -2,6 +2,7 @@ package spring.ict06team1.midpj.service;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,8 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.UserDAO;
+import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.ReservationDTO;
 
 
 
@@ -352,6 +357,200 @@ public class UserServiceImpl implements UserService {
 	    return updateCnt;
 	}
 	
+	// 7. 나의 즐겨찾기 목록 조회
+	@Override
+	public void viewBookmarksAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    System.out.println("UserServiceImpl - viewBookmarksAction()");
+
+	    // 1. 세션에서 아이디 꺼내기
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    // 2. 필터값(category) 받기
+	    String category = request.getParameter("category");
+
+	    // 3. 기본값 처리
+	    if (category == null || category.trim().equals("")) {
+	        category = "all";
+	    }
+
+	    // 4. 페이지 번호 받기
+	    String pageNum = request.getParameter("pageNum");
+
+	    // 5. 페이징 객체 생성
+	    Paging paging = new Paging(pageNum);
+	    paging.setPageSize(8);   // 한 페이지당 카드 8개
+
+	    // 6. DAO 전달용 map
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("user_id", sessionID);
+	    map.put("category", category);
+
+	    // 7. 전체 개수 조회
+	    int count = dao.getFavoriteListCount(map);
+
+	    // 8. 페이징 계산
+	    paging.setTotalCount(count);
+
+	    // 9. startRow, endRow 추가
+	    map.put("start", paging.getStartRow());
+	    map.put("end", paging.getEndRow());
+
+	    // 10. 목록 조회
+	    List<PlaceDTO> list = dao.getFavoriteList(map);
+
+	    // 11. jsp 전달
+	    model.addAttribute("list", list);
+	    model.addAttribute("paging", paging);
+	    model.addAttribute("category", category);
+	}
+	
+	// 마이페이지 홈 카운트
+	@Override
+	public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    System.out.println("UserServiceImpl - myPageHomeAction()");
+
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    // 각 활동 수 조회
+	    int bookmarkCount = dao.getFavoriteCount(sessionID);
+	    int inquiryCount = dao.getInquiryCount(sessionID);
+	    int reservationCount = dao.getReservationCount(sessionID);
+
+	    model.addAttribute("bookmarkCount", bookmarkCount);
+	    model.addAttribute("inquiryCount", inquiryCount);
+	    model.addAttribute("reservationCount", reservationCount);
+	}
+	
+	// 나의 문의 목록 조회
+	@Override
+	public void viewInquiriesAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - viewInquiriesAction()");
+		
+		// 1. 세션에서 아이디 꺼내기
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		
+		// 2. 파라미터 받기 (현재 페이지 번호, 필터링할 상태값)
+		String pageNum = request.getParameter("pageNum");
+		String status = request.getParameter("status");
+		
+		// 3. 상태값이 없을 경우 기본값 'all'로 설정(에러방지)
+		if (status == null || status.equals("")) {
+			status = "all";
+		}
+		
+		// 4. 페이징 객체 생성 및 전체 문의글 개수 조회
+		spring.ict06team1.midpj.SearchCriteria.Paging paging = new spring.ict06team1.midpj.SearchCriteria.Paging(pageNum);
+		
+		// DAO에 던질 파라미터 묶기 (아이디와 필터링 상태)
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", sessionID);
+		map.put("status", status);
+		
+		// 내 조건에 맞는 전체 글 개수 가져오기
+		int totalCount = dao.selectMyInquiryCount(map);
+		System.out.println("전체 문의 개수 => " + totalCount);
+		
+		// 5. 페이징 계산 실행 (이걸 호출해야 startRow, endRow가 계산됨)
+		paging.setTotalCount(totalCount);
+		
+		// 6. 계산된 시작번호와 끝번호를 다시 map에 담기
+		map.put("start", paging.getStartRow());
+		map.put("end", paging.getEndRow());
+		
+		// 7. 실제 목록 조회 실행
+		List<InquiryDTO> list = dao.selectMyInquiryList(map);
+		
+		// 8. JSP로 보낼 데이터들 모델에 담기
+		model.addAttribute("MyInquiryList", list);         // 문의 목록 리스트
+		model.addAttribute("paging", paging);     // 페이징 계산 객체
+		model.addAttribute("status", status);     // 선택한 필터 상태 유지용
+		model.addAttribute("totalCount", totalCount); // 전체 개수 표시용
+		
+		System.out.println("조회된 총 개수: " + totalCount);
+		System.out.println("시작 번호(start): " + paging.getStartRow());
+		System.out.println("끝 번호(end): " + paging.getEndRow());
+		
+	}
+	
+	// 나의 문의 상세
+	@Override
+	public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - inquiryDetailAction()");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		int inquiry_id = Integer.parseInt(request.getParameter("inquiryId"));
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", sessionID);
+		map.put("inquiry_id", inquiry_id);
+		
+		InquiryDTO dto = dao.selectMyInquiryDetail(map);
+		System.out.println("sessionID => [" + sessionID + "]");
+		
+		model.addAttribute("dto", dto);
+	}
+	// 나의 예약 목록
+	@Override
+	public void viewMyReservationsAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    System.out.println("UserServiceImpl - viewMyReservationsAction()");
+
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+	    String pageNum = request.getParameter("pageNum");
+	    String status = request.getParameter("status");
+
+	    // 상태값 기본 처리
+	    if (status == null || status.trim().equals("")) {
+	        status = "all";
+	    }
+	    
+	    Paging paging = new Paging(pageNum);
+	    paging.setPageSize(5);   // 카드형이라 5개
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("user_id", sessionID);
+	    map.put("status", status);
+
+	    int totalCount = dao.selectMyReservationCount(map);
+	    paging.setTotalCount(totalCount);
+
+	    map.put("start", paging.getStartRow());
+	    map.put("end", paging.getEndRow());
+
+	    List<ReservationDTO> list = dao.selectMyReservationList(map);
+
+	    model.addAttribute("list", list);
+	    model.addAttribute("paging", paging);
+	    model.addAttribute("reservationCount", totalCount);
+	    model.addAttribute("status", status);
+
+	    System.out.println("예약 총 개수: " + totalCount);
+	    System.out.println("start: " + paging.getStartRow());
+	    System.out.println("end: " + paging.getEndRow());
+	    System.out.println("status : " + status);
+	}
+	// 나의 예약 상세
+	@Override
+	public void myReservationDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("UserServiceImpl - myReservationDetailAction()");
+		
+		String sessionID = (String)request.getSession().getAttribute("sessionID");
+		String reservation_id = request.getParameter("reservation_id");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", sessionID);
+		map.put("reservation_id", reservation_id);
+		
+		ReservationDTO dto = dao.selectMyReservationDetail(map);
+		
+		model.addAttribute("dto", dto);
+	}
+	
 	//------------------------------
 	//관리자 상세 정보 조회
 	@Override
@@ -399,5 +598,6 @@ public class UserServiceImpl implements UserService {
 		}
 		return dao.updateAdmin(dto);
 	}
-
+	
+	
 }

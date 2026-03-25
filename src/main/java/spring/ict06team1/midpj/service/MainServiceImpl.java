@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import spring.ict06team1.midpj.dao.MainDAO;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.NoticeDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 @Service
@@ -22,6 +22,10 @@ public class MainServiceImpl implements MainService {
 	@Autowired
 	private MainDAO dao;
 
+	/* ================================================== 
+	   user 메인화면
+	   TOP10 + BEST 추천 초기 세팅 + 이달의 추천 국내 축제 + 즐겨찾기 + 최하단 공지 & 이벤트
+	================================================== */
 	//맛집 TOP10
 	@Override
 	public List<RestaurantDTO> getTop10ByREST() {
@@ -155,5 +159,25 @@ public class MainServiceImpl implements MainService {
 		
 		List<FestivalDTO> BestFestTop5 = dao.bestFestTop5();
 	    return BestFestTop5;
+	}
+	
+	//최하단 공지 리스트
+	@Override
+	public List<NoticeDTO> getMainNoticeList() {
+	    System.out.println("[MainServiceImpl - getMainNoticeList()]");
+	    
+	    List<NoticeDTO> mainNoticeList = dao.getMainNoticeList();
+	    
+	    return mainNoticeList;
+	}
+
+	//최하단 이벤트 리스트
+	@Override
+	public List<NoticeDTO> getMainEventList() {
+	    System.out.println("[MainServiceImpl - getMainEventList()]");
+	    
+	    List<NoticeDTO> mainEventList = dao.getMainEventList();
+	    
+	    return mainEventList;
 	}
 }

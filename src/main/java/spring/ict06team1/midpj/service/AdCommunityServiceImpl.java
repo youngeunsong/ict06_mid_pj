@@ -1,6 +1,8 @@
 package spring.ict06team1.midpj.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import spring.ict06team1.midpj.SearchCriteria.Paging;
 import spring.ict06team1.midpj.dao.AdCommunityDAO;
 import spring.ict06team1.midpj.dao.AdMemberDAO;
 import spring.ict06team1.midpj.dto.CommunityDTO;
@@ -27,8 +30,30 @@ public class AdCommunityServiceImpl implements AdCommunityService {
 	public void getAdPostList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommunityServiceImpl - getAdPostList()]");
 		
-		List<CommunityDTO> postList = adComDao.getAdPostList();
+		String pageNum = request.getParameter("pageNum");
+		String searchType = request.getParameter("searchType");
+		String keyword = request.getParameter("keyword");
+		
+		Paging paging = new Paging(pageNum);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchType", searchType);
+		map.put("keyword", keyword);
+		
+		//전체 댓글 수 카운트
+		int totalCount = adComDao.getAdPostCount(map);
+		paging.setTotalCount(totalCount);
+
+		map.put("startRow", paging.getStartRow());
+		map.put("endRow", paging.getEndRow());
+
+		List<CommunityDTO> postList = adComDao.getAdPostList(map);
+		
 		model.addAttribute("postList", postList);
+		model.addAttribute("paging", paging);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("keyword", keyword);
 	}
 
 	//2. 게시글 상세보기
@@ -45,7 +70,7 @@ public class AdCommunityServiceImpl implements AdCommunityService {
 		model.addAttribute("member", member);
 	}
 
-	//3. 게시글 숨김(status='HIDDEN')
+	//3. 게시글 숨김/제재(status='BANNED')
 	@Override
 	public void hidePost(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommunityServiceImpl - hidePost()]");
@@ -65,7 +90,7 @@ public class AdCommunityServiceImpl implements AdCommunityService {
 		request.setAttribute("result", result);
 	}
 
-	//5. 게시글 삭제(status='DELETED')
+	//5. 게시글 삭제(status='HIDDEN')
 	@Override
 	public void deletePost(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("[AdCommunityServiceImpl - deletePost()]");

@@ -6,10 +6,10 @@ public class InquiryDTO {
 
 	private int inquiry_id;
 	private String user_id;
+	private String category;
 	private String title;
 	private String content;
 	private String status;
-	private String category;
 	private String admin_reply;
 	private Timestamp inquiryDate;
 	private Timestamp answerDate;
@@ -19,7 +19,7 @@ public class InquiryDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public InquiryDTO(int inquiry_id, String user_id, String title, String content, String status, String category,
+	public InquiryDTO(int inquiry_id, String user_id, String category, String title, String content, String status,
 			String admin_reply, Timestamp inquiryDate, Timestamp answerDate) {
 		super();
 		this.inquiry_id = inquiry_id;
@@ -27,7 +27,6 @@ public class InquiryDTO {
 		this.title = title;
 		this.content = content;
 		this.status = status;
-		this.category = category;
 		this.admin_reply = admin_reply;
 		this.inquiryDate = inquiryDate;
 		this.answerDate = answerDate;
@@ -47,6 +46,14 @@ public class InquiryDTO {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getTitle() {
@@ -71,14 +78,6 @@ public class InquiryDTO {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 
 	public String getAdmin_reply() {
@@ -107,8 +106,8 @@ public class InquiryDTO {
 
 	@Override
 	public String toString() {
-		return "InquiryDTO [inquiry_id=" + inquiry_id + ", user_id=" + user_id + ", title=" + title + ", content="
-				+ content + ", status=" + status + ", category=" + category + ", admin_reply=" + admin_reply
+		return "InquiryDTO [inquiry_id=" + inquiry_id + ", user_id=" + user_id + ", category=" + category + ", title="
+				+ title + ", content=" + content + ", status=" + status + ", admin_reply=" + admin_reply
 				+ ", inquiryDate=" + inquiryDate + ", answerDate=" + answerDate + "]";
 	}
 

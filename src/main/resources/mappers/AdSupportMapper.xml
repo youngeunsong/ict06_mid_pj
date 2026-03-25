@@ -49,7 +49,7 @@
     <![CDATA[
 	    SELECT * FROM (
 	        SELECT a.*, rownum rnum FROM (
-	            SELECT * FROM INQUIRY 
+	            SELECT * FROM INQUIRY
 	    ]]>
 	            <where>
 	                <if test="category != null and category != ''">

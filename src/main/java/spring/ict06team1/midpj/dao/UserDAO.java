@@ -1,9 +1,12 @@
 package spring.ict06team1.midpj.dao;
 
+import java.util.List;
 import java.util.Map;
 
-
+import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.ReservationDTO;
 
 public interface UserDAO {
 
@@ -29,6 +32,32 @@ public interface UserDAO {
 
     // 6. 회원 정보 수정
     public int updateUser(MemberDTO dto);
+    
+    // 7. 즐겨찾기 목록 조회
+    public List<PlaceDTO> getFavoriteList(Map<String, Object> map);
+    // 즐겨찾기 목록 카운트
+    public int getFavoriteListCount(Map<String, Object> map);
+    
+    // 나의 문의 목록 조회
+    public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map);
+    
+    // 나의 문의 총 개수 조회
+    public int selectMyInquiryCount(Map<String, Object> map);
+    
+    // 나의 문의 상세
+    public InquiryDTO selectMyInquiryDetail(Map<String, Object> map);
+    
+    // 마이페이지 홈 활동현황 카운트
+    public int getFavoriteCount(String user_id);
+    public int getInquiryCount(String user_id);
+    public int getReservationCount(String user_id);
+    
+    // 나의 예약 목록
+    public int selectMyReservationCount(Map<String, Object> map);
+    public List<ReservationDTO> selectMyReservationList(Map<String, Object> map);
+    
+    // 나의 예약 상세
+    public ReservationDTO selectMyReservationDetail(Map<String, Object> map);
     
     //------------------------------
     //관리자 정보 수정

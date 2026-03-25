@@ -20,9 +20,13 @@
 </head>
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
-	<!--begin::div wrapper-->
-	<div class="wrapper">
-
+<!--begin::div wrapper-->
+<div class="wrapper">
+	<!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
+	
 		<!-- ================= HEADER ================= -->
 		<%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
 
@@ -32,23 +36,23 @@
 		<!-- ================= CONTENT ================= -->
 		<div class="content-wrapper">	
 			<!--begin::App Content Header-->
-			<div class="app-content-header py-4 bg-white border-bottom mb-4">
+			<div class="content-header">
 				<div class="container-fluid">
-					<h3 class="font-weight-bold text-dark"><i class="bi bi-bar-chart-fill me-2"></i>Reservation Dashboard</h3>
+					<h3 class="mb-0 font-weight-bold"><i class="bi bi-bar-chart-fill mr-2"></i>Reservation Dashboard</h3>
 				</div>
 			</div>
 			<!--end::App Content Header-->
 			
 			<!--begin::App Content-->
-			<div class="app-content">
+			<div class="content">
 				<!--begin::Container-->
 				<div class="container-fluid">
-					<div class="app-content-header py-3">
+					<div class="content-header py-3">
 						<h3 class="mb-0 font-weight-bold">예약 통계 대시보드</h3>
 					</div>
 				</div>
 				
-				<section class="app-content">
+				<section class="content">
 					<div class="container-fluid">
 						<%--=====KPI 카드=====--%>
 						<div class="row mb-4">
@@ -173,7 +177,7 @@
 									</div>
 									<div class="card-body p-0">
 										<table class="table table-hover m-0">
-											<thead class="thead-light">
+											<thead>
 												<tr>
 													<th>예약번호</th>
 													<th>사용자</th>
@@ -198,7 +202,7 @@
 											</tbody>
 										</table>
 									</div>
-									<div class="card-footer bg-white">
+									<div class="card-footer">
 										<%--페이징--%>
 										<div class="d-flex justify-content-center mt-2">
 											<%--이전 버튼--%>
@@ -223,7 +227,7 @@
 										</div>
 										
 										<div class="mt-2 p-2 bg-light rounded" style="font-size:0.85rem; color:#666">
-											<i class="bi bi-info-circle me-1"></i>미처리 예약은 목록 클릭 시 상세 관리 페이지로 이동합니다.
+											<i class="bi bi-info-circle mr-1"></i>미처리 예약은 목록 클릭 시 상세 관리 페이지로 이동합니다.
 										</div>
 									</div>
 								</div>
@@ -239,7 +243,7 @@
 									</div>
 									<div class="card-body p-0">
 										<table class="table table-hover m-0">
-											<thead class="thead-light">
+											<thead>
 												<tr>
 													<th>예약번호</th>
 													<th>사용자</th>
@@ -354,7 +358,7 @@
 			}
 		};
 	</script>
-	<script src="${path}/resources/js/admin/dashboard.js"></script>
+	<script src="${path}/resources/js/admin/adResDashboard.js"></script>
 </body>
 <!--end::Body-->
 </html>

@@ -13,13 +13,13 @@ public interface AdCommunityService{
 	//2. 게시글 상세보기
 	public void getAdPostDetail(HttpServletRequest request, HttpServletResponse response, Model model);
 
-	//3. 게시글 숨김(status='HIDDEN')
+	//3. 게시글 숨김/제재(status='BANNED')
 	public void hidePost(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 	//4. 게시글 숨김 해제(status='DISPLAY')
 	public void showPost(HttpServletRequest request, HttpServletResponse response, Model model);
 	
-	//5. 게시글 삭제(status='DELETED')
+	//5. 게시글 삭제(status='HIDDEN')
 	public void deletePost(HttpServletRequest request, HttpServletResponse response, Model model);
 
 	//6. 일괄 처리

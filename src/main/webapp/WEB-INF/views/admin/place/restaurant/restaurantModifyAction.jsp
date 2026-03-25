@@ -10,6 +10,7 @@
 	href="${path}/resources/css/admin/ad_restaurantModify.css">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
+
 <c:if test="${updateCnt == 1}">
     <script type="text/javascript">
         setTimeout(function(){
@@ -31,12 +32,13 @@
 <c:if test="${updateCnt != 1}">
     <script type="text/javascript">
         setTimeout(function(){
-            alert("맛집 수정 실패!!");
+            alert("맛집수정 실패!!");
             <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
             window.location="${path}/restaurantModify.ad?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
         }, 1000);
     </script>
 </c:if>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">

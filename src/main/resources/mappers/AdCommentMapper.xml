@@ -17,27 +17,62 @@
 		<!-- CommunityDTO 매핑 -->
 		<association property="communityDTO" javaType="spring.ict06team1.midpj.dto.CommunityDTO">
 			<id property="post_id" column="post_id" />
-			<result property="title" column="title" />
+			<result property="title" column="post_title" />
 		</association>
 	</resultMap>
   	
 	<!-- 1. 전체 댓글 목록(숨김 포함) -->
-	<select id="getAdCommentList" resultMap="adCommentMap">
-		SELECT c.comment_id, c.post_id,
-			   p.title AS post_title,
-			   c.user_id, c.content, c.status,
-			   c.created_at, c.updated_at
-		  FROM COMMUNITY_COMMENT c
-		  JOIN COMMUNITY p ON c.post_id = p.post_id
-		 ORDER BY c.comment_id DESC
+	<select id="getAdCommentList" parameterType="map" resultMap="adCommentMap">
+		SELECT * FROM (
+			SELECT ROWNUM AS rnum, A.* FROM (
+				SELECT c.comment_id, c.post_id,
+					   p.title AS post_title,
+					   c.user_id, c.content, c.status,
+					   c.created_at, c.updated_at
+				FROM COMMUNITY_COMMENT c
+				LEFT OUTER JOIN COMMUNITY p ON c.post_id = p.post_id
+				<where>
+					<if test="keyword != null and keyword != ''">
+						<choose>
+							<when test="searchType == 'user_id'">
+								AND c.user_id LIKE '%' || #{keyword} || '%'
+							</when>
+							<when test="searchType == 'content'">
+								AND c.content LIKE '%' || #{keyword} || '%'
+							</when>
+						</choose>
+					</if>
+				</where>
+				ORDER BY c.comment_id DESC
+			) A
+		)
+		WHERE rnum BETWEEN #{startRow, jdbcType=INTEGER} AND #{endRow, jdbcType=INTEGER}
 	</select>
 	
-	<!-- 2. 댓글 숨김 -->
+	<!-- 1-1. 전체 댓글 수 -->
+	<select id="getAdCommentCount" resultType="int">
+		SELECT COUNT(*) FROM COMMUNITY_COMMENT c
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<when test="searchType == 'user_id'">
+						AND c.user_id LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="searchType == 'content'">
+						AND c.content LIKE '%' || #{keyword} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 2. 댓글 숨김/제재 -->
 	<update id="hideComment" parameterType="int">
 		UPDATE COMMUNITY_COMMENT
-		   SET status = 'HIDDEN',
+		   SET status = 'BANNED',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status = 'DISPLAY'
 	</update>
 	
 	<!-- 3. 댓글 숨김 해제 -->
@@ -46,13 +81,15 @@
 		   SET status = 'DISPLAY',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status = 'BANNED'
 	</update>
 	
 	<!-- 4. 댓글 삭제 -->
 	<update id="deleteComment" parameterType="int">
 		UPDATE COMMUNITY_COMMENT
-		   SET status = 'DELETED',
+		   SET status = 'HIDDEN',
 			   updated_at = SYSTIMESTAMP
 		 WHERE comment_id = #{comment_id}
+		   AND status != 'HIDDEN'
 	</update>
 </mapper>

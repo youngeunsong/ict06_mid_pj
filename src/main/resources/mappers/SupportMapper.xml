@@ -94,14 +94,7 @@
 	    )
 	</insert>
 
-	<!-- 7. 내가 쓴 문의 내역 리스트 가져오기 -->
-    <select id="getMyInquiryList" parameterType="string" resultMap="inquiryMap">
-        SELECT * FROM INQUIRY 
-        WHERE user_id = #{user_id}
-        ORDER BY created_at DESC
-    </select>
-
-	<!-- 8. 조건에 맞는 문의글 개수 세기 -->
+	<!-- 7. 조건에 맞는 문의글 개수 세기 -->
     <select id="getInquiryCount" parameterType="map" resultType="int">
         SELECT COUNT(*) FROM INQUIRY
         <where>

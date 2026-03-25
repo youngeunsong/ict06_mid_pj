@@ -9,13 +9,16 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
+	<!-- application.properties 읽기 -->
+	<context:property-placeholder location="classpath:application.properties"/>
+	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 	
 	<!-- admin계정 interceptor -->
 	<interceptors>
 		<interceptor>
-			<mapping path="/**/*.ad" />
+			<mapping path="/**/" />
 			<beans:ref bean="adminInterceptor" />
 		</interceptor>
 	</interceptors>

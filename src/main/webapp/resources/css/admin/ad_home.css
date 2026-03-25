@@ -1,0 +1,303 @@
+@charset "UTF-8";
+
+/* =========================================================
+[ad_home.css]
+- 관리자 홈 전용 스타일
+- KPI / 기간별 트래픽 분석 / 만족도 차트 / 표 / 문의 / 워드클라우드 정리
+- 예약 대시보드처럼 2열 모듈형 느낌으로 구성
+========================================================= */
+
+/* =========================
+   기본 레이아웃
+========================= */
+.admin-home-wrap {
+    padding: 20px 18px 28px;
+}
+
+.admin-home-title {
+    font-weight: 700;
+    margin-bottom: 0;
+    color: #111827;
+}
+
+.section-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #1f2937;
+}
+
+/* =========================
+   공통 카드 스타일
+========================= */
+.filter-card,
+.chart-card,
+.plain-kpi-card,
+.kpi-card,
+.traffic-analysis-card,
+.traffic-summary-card {
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    background: #fff;
+    overflow: hidden;
+}
+
+.chart-card .card-header,
+.traffic-analysis-card .card-header,
+.traffic-summary-card .card-header {
+    background: #fff;
+    border-bottom: 1px solid #eef1f5;
+    padding: 14px 18px;
+}
+
+.chart-card .card-header h5,
+.traffic-analysis-card .card-header h5,
+.traffic-summary-card .card-header h5 {
+    margin: 0;
+    font-weight: 700;
+    color: #1f2d3d;
+}
+
+.chart-card .card-body,
+.traffic-analysis-card .card-body,
+.traffic-summary-card .card-body {
+    padding: 16px 18px;
+    background: #fff;
+}
+
+/* =========================
+   기간 버튼 / shortcut
+========================= */
+.shortcut-wrap,
+.period-shortcuts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.shortcut-btn.active,
+.range-btn.active {
+    background-color: #01D281;
+    border-color: #01D281;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #01D281 !important;
+    border-color: #01D281 !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #00b86f !important;
+    border-color: #00b86f !important;
+}
+
+.btn-outline-primary {
+    color: #01D281 !important;
+    border-color: #01D281 !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+    background-color: #01D281 !important;
+    border-color: #01D281 !important;
+    color: #fff !important;
+}
+
+/* =========================
+   KPI 카드
+========================= */
+.kpi-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 108px;
+}
+
+.kpi-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+}
+
+.accent-blue::before { background: #01D281; }
+.accent-green::before { background: #01D281; }
+.accent-yellow::before { background: #f59e0b; }
+.accent-purple::before { background: #8b5cf6; }
+.accent-cyan::before { background: #01D281; }
+.accent-pink::before { background: #ec4899; }
+.accent-orange::before { background: #f97316; }
+.accent-teal::before { background: #01D281; }
+
+.kpi-card .card-body,
+.plain-kpi-card .card-body {
+    padding: 16px 18px;
+}
+
+.kpi-card .card-body h6,
+.plain-kpi-card .card-body h6 {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.kpi-card .card-body h3,
+.plain-kpi-card .card-body h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0;
+}
+
+/* =========================
+   차트 박스
+========================= */
+.chart-box {
+    width: 100%;
+    height: 320px;
+}
+
+.small-chart-box {
+    width: 100%;
+    height: 300px;
+}
+
+/* 실제 차트 ID에도 높이 보강 */
+#trafficTrendChart,
+#trendChart,
+#npsChart {
+    width: 100%;
+    height: 320px !important;
+}
+
+/* =========================
+   기간별 트래픽 분석
+========================= */
+.traffic-analysis-card .card-body {
+    padding: 16px 18px 12px 18px;
+}
+
+.traffic-summary-card .card-body {
+    padding: 0;
+}
+
+.traffic-summary-list,
+.summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.traffic-summary-list li,
+.summary-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 15px 18px;
+    border-bottom: 1px solid #f1f3f7;
+}
+
+.traffic-summary-list li:last-child,
+.summary-list li:last-child {
+    border-bottom: none;
+}
+
+.traffic-summary-list .label,
+.summary-list span {
+    font-size: 14px;
+    color: #5c6b7a;
+    font-weight: 500;
+}
+
+.traffic-summary-list .value,
+.summary-list strong {
+    font-size: 16px;
+    font-weight: 800;
+    color: #14213d;
+    white-space: nowrap;
+}
+
+/* =========================
+   안내 / 텍스트
+========================= */
+.nps-guide {
+    font-size: 0.92rem;
+    color: #374151;
+}
+
+/* =========================
+   표
+========================= */
+.table thead th,
+.dashboard-table thead th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #334155;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.table tbody td,
+.dashboard-table tbody td {
+    vertical-align: middle;
+    color: #1f2937;
+}
+
+/* =========================
+   워드클라우드 영역
+========================= */
+.wordcloud-box {
+    min-height: 260px;
+    border: 1px dashed #d7dee7;
+    border-radius: 12px;
+    padding: 18px;
+    background: #fafbfc;
+}
+
+/* =========================
+   반응형
+========================= */
+@media (max-width: 991.98px) {
+    .admin-home-wrap {
+        padding: 16px 14px 24px;
+    }
+
+    .chart-box {
+        height: 300px;
+    }
+
+    .small-chart-box {
+        height: 280px;
+    }
+
+    #trafficTrendChart,
+    #trendChart,
+    #npsChart {
+        height: 300px !important;
+    }
+
+    .traffic-summary-card {
+        margin-top: 20px;
+    }
+
+    .traffic-summary-list .value,
+    .summary-list strong {
+        font-size: 15px;
+    }
+}

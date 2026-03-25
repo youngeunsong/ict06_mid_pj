@@ -92,20 +92,11 @@ public class SupportServiceImpl implements SupportService {
         int result = supportDAO.insertInquiry(dto);
         model.addAttribute("result", result);
     }
-    
+    // 6. 1:1 문의 신규 등록 처리
     @Override
     public int inquiryInsert(InquiryDTO dto) {
         // 이미 서비스 안에 주입된 supportDAO를 사용해서 DB에 넣고 결과(1 or 0)를 리턴
         return supportDAO.insertInquiry(dto);
-    }
-
-    // 6. 나의 1:1 문의 내역 리스트 조회
-    @Override
-    public void getMyInquiryList(HttpServletRequest request, HttpServletResponse response, Model model) 
-            throws ServletException, IOException {
-        String user_id = request.getParameter("user_id");
-        List<InquiryDTO> list = supportDAO.getMyInquiryList(user_id);
-        model.addAttribute("myInquiryList", list);
     }
 
     // 7. 페이징 처리를 위한 전체 문의글 개수 조회 (관리자/사용자 공통)

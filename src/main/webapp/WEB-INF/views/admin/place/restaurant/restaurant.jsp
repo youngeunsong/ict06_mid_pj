@@ -128,7 +128,7 @@
 							                    <td class="col-addr text-truncate">${dto.address}</td>
 							                    <td class="text-center">${dto.view_count}</td>
 							                    <td class="text-center">
-							                        <img src="${dto.image_url}" style="width:80px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='${path}/resources/images/no-image.png'">
+							                        <img src="${dto.image_url}" style="width:80px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='${path}/resources/images/common/no-image.png'">
 							                    </td>
 							                    <td class="text-muted small text-center">${fn:substring(dto.placeUpdateDate, 0, 10)}</td>
 							                    <td class="text-center">

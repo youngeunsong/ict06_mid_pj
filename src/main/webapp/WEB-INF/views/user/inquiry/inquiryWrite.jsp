@@ -11,7 +11,7 @@
 <script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
 <script>
     var contextPath = "${pageContext.request.contextPath}";
-    var sessionUserId = "${sessionScope.user_id}";
+    var sessionUserId = "${sessionScope.sessionID}"; 
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/support/faqMain.js" defer></script>
 <style>

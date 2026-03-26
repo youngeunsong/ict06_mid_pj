@@ -64,25 +64,25 @@
 	<!-- ========================= -->
 	<!-- 내 주변 축제 조회 관련 쿼리 -->
 	<!-- ========================= -->
-	<!-- 주변 맛집의 총 개수를 조회 (페이징 계산용) -->
+	<!-- 주변 축제의 총 개수를 조회 (페이징 계산용) -->
 	<select id="selectNearbyFestivalCount" parameterType="map" resultType="int">
 		 SELECT COUNT(*)
 		   FROM festival f
 		   JOIN place p ON f.festival_id = p.place_id
 		   WHERE (
 		       6371 * acos(
-		           cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
-		           * cos((p.longitude * 3.14159 / 180)-(#{lng} * 3.14159 / 180))+ 
-		           sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		           cos(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
+		           * cos((p.longitude * 3.14159 / 180)-(#{lng, jdbcType=DOUBLE} * 3.14159 / 180))+ 
+		           sin(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
 		       )
-		   ) &lt;= #{radius}
+		   ) &lt;= #{radius, jdbcType=DOUBLE}
 		   
 		   <if test="minRating != null and minRating > 0">
 		       AND (
 		           SELECT NVL(ROUND(AVG(rating),1),0) 
 		           FROM review 
 		           WHERE place_id = p.place_id AND status = 'display'
-		       ) &gt;= #{minRating}
+		       ) &gt;= #{minRating, jdbcType=DOUBLE}
 		   </if>
 		
 		   <if test="keyword != null and keyword != ''">
@@ -102,7 +102,6 @@
 		 SELECT 
 		        festival_id, 
 		        description, 
-		        category,
 		        place_id, 
 		        name, 
 		        address, 
@@ -117,7 +116,7 @@
 		        SELECT a.*, ROWNUM AS rnum 
 		        FROM (
 		            SELECT 
-		                f.festiva_id, 
+		                f.festival_id, 
 		                f.description, 
 		                p.place_id, 
 		                p.name, 
@@ -129,8 +128,8 @@
 		                (SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
 		                (SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
 		                (6371 * acos(
-		                    cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-		                    sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		                    cos(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng, jdbcType=DOUBLE} * 3.14159 / 180)) + 
+		                    sin(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
 		                )) AS distance
 		            FROM festival f
 		            JOIN place p ON f.festival_id = p.place_id
@@ -140,12 +139,12 @@
 		              </if>
 		            ORDER BY distance ASC 
 		        ) a 
-		        WHERE a.distance &lt;= #{radius}
+		        WHERE a.distance &lt;= #{radius, jdbcType=DOUBLE}
 		        <if test="minRating != null and minRating > 0">
-		            AND a.avg_rating &gt;= #{minRating}
+		            AND a.avg_rating &gt;= #{minRating, jdbcType=DOUBLE}
 		        </if>
 		        <if test="end != null">
-		            AND ROWNUM &lt;= #{end}
+		            AND ROWNUM &lt;= #{end, jdbcType=INTEGER}
 		        </if>
 		        <if test="province != null and province != ''">
 				    AND p.address LIKE '%' || #{province} || '%'
@@ -154,7 +153,7 @@
 				    AND p.address LIKE '%' || #{district} || '%'
 				</if>
 		    ) 
-		    WHERE rnum &gt;= #{start}
+		    WHERE rnum &gt;= #{start, jdbcType=INTEGER}
 	</select>
 	
 	<!-- 조건에 맞는 맛집 마커 불러오기 (전부 가져오기) -->
@@ -168,7 +167,7 @@
 		        image_url,  
 		        avg_rating,
 		        review_count,
-		        view_count,
+		        view_count
 		    FROM (
 		        SELECT 
 		            f.festival_id, 
@@ -184,8 +183,8 @@
 		             FROM review 
 		             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
 		            (6371 * acos(
-		                cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-		                sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		                cos(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng, jdbcType=DOUBLE} * 3.14159 / 180)) + 
+		                sin(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
 		            )) AS distance 
 		        FROM festival f
 		        JOIN place p ON f.festival_id = p.place_id
@@ -202,9 +201,9 @@
 				</if>
 		    ) a
 		    <where>
-		        a.distance &lt;= #{radius}
+		        a.distance &lt;= #{radius, jdbcType=DOUBLE}
 		        <if test="minRating != null and minRating > 0">
-		            AND a.avg_rating &gt;= #{minRating}
+		            AND a.avg_rating &gt;= #{minRating, jdbcType=DOUBLE}
 		        </if>
 		    </where>
 		    ORDER BY a.distance ASC
@@ -387,8 +386,8 @@
 			    WHERE p.place_type = 'FEST'
 			      AND f.status != 'ENDED'
 			)
-			WHERE rn &gt; #{start}
-      		  AND rn &lt;= #{end} -- start 초과 ~ end 이하 구간만 조회
+			WHERE rn &gt; #{start, jdbcType=INTEGER}
+      		  AND rn &lt;= #{end, jdbcType=INTEGER} -- start 초과 ~ end 이하 구간만 조회
 	</select>
 
 	<!-- 축제 랭킹 top5 -->

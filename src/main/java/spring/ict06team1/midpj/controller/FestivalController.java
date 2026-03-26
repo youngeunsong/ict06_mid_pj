@@ -54,19 +54,20 @@ public class FestivalController {
     @RequestMapping("/festivalAjax.fe")
     public String festivalAjax(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
-        logger.info("<<< url => festivalAjax.rs>>>");
+        logger.info("<<< url => festivalAjax.fe>>>");
         service.getNearbyFestivalAjax(request, response, model);
-        return "user/festival/festivalCard";
+        // return "user/festival/festivalCard";
+        return "user/festival/festivalCard_map";
     }
     
     // JSP로 이동하지 않고 데이터를 직접 리턴함
     @ResponseBody
     // 축제 페이지로 이동
     @RequestMapping("/getNearbyFeMarkersAjax.fe")
-    public List<PlaceDTO> getNearbyFeMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+    public List<FestivalDTO> getNearbyFeMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
-        logger.info("<<< url => getNearbyFeMarkersAjax.rs>>>");
-        List list = service.getNearbyFeMarkersAjax(request, response);
+        logger.info("<<< url => getNearbyFeMarkersAjax.fe>>>");
+        List<FestivalDTO> list = service.getNearbyFeMarkersAjax(request, response);
         return list;
     }
     

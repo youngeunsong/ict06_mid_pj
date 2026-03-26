@@ -1,3 +1,23 @@
+-- 내 주변 축제 조회 페이지 필요 쿼리
+SELECT 
+    p.place_id,
+    p.name,
+    f.status,
+    p.latitude,
+    p.longitude,
+    6371 * acos(
+        cos(37.5665 * 3.14159 / 180)
+        * cos(p.latitude * 3.14159 / 180)
+        * cos((p.longitude * 3.14159 / 180) - (126.9780 * 3.14159 / 180))
+        + sin(37.5665 * 3.14159 / 180)
+        * sin(p.latitude * 3.14159 / 180)
+    ) AS distance
+FROM festival f
+JOIN place p ON f.festival_id = p.place_id
+WHERE f.status != 'ENDED'
+ORDER BY distance;
+
+
 -- 축제 상세 페이지 필요 쿼리 ---------------------------------------
 -- 축제 상세 조회
 SELECT * 

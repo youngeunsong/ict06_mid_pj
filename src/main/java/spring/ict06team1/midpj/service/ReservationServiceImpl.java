@@ -208,8 +208,7 @@ public class ReservationServiceImpl implements ReservationService {
 	        }
 
 	        // 이미 승인 완료된 예약인지 확인
-	        // 현재 상태값 구조상 RESERVED로 바꾸는 게 더 자연스러움
-	        if ("CONFIRMED".equals(reservation.getStatus())) {
+	        if ("RESERVED".equals(reservation.getStatus())) {
 	            result.put("success", true);
 	            result.put("msg", "이미 승인 완료된 예약입니다.");
 	            result.put("reservationId", reservationId);

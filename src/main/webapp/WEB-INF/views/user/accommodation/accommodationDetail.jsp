@@ -465,7 +465,7 @@
               <div class="text-center mt-3">
                 <button class="btn btn-success r-reserveBtn"
                         type="button"
-                        onclick="location.href='${pageContext.request.contextPath}/accommodationReserve.ac?place_id=${accommodation.placeDTO.place_id}'">
+                        onclick="location.href='${pageContext.request.contextPath}/accReservation.rv?place_id=${accommodation.placeDTO.place_id}'">
                   예약하기
                 </button>
               </div>

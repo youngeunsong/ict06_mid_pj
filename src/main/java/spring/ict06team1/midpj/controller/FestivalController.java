@@ -21,15 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
-import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.service.FestivalServiceImpl;
 
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-22
+ * 최종수정일: 2026-03-25
  * 참고 코드: RestaurantController.java
+ * 변경 사항
+ * v260326 : 축제 내 주변 지도 기능 구현
  */
 
 @Controller

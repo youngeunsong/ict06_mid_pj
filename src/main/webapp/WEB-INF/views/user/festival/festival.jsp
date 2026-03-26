@@ -1,15 +1,15 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-23
- * 참고 코드: bestRestaurants.jsp의 css
+ * 최종수정일: 2026-03-26
+ * 참고 코드: bestRestaurants.jsp의 css, restaurant.jsp
 지도를 이용해 내 위치 주변 축제 위주로 조회   
 -->
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp"%>
-<!-- ${path} 정의 -->
+<!-- 부트스트랩 선언 + 헤더/푸터 -->
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -18,15 +18,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>맛침내-축제 지도 탐색</title>
 
-<!-- 부트스트랩 선언 + 헤더/푸터 -->
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="stylesheet" href="${path}/resources/css/user/festival/festival.css"/>
 <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
 
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
 <!-- [JS에서 사용할 공통 path 설정] -->
+<c:set var="path" value="${pageContext.request.contextPath}" />
+
+<!-- 카카오지도 API 처리 JS 코드 -->
 <script type="text/javascript">
 // 전역 변수 설정: 지도 객체, 마커 배열, 오버레이 상태 등 관리
 var map;
@@ -104,7 +104,7 @@ $(document).ready(function() {
         const icon = btn.find('i');
 
         $.ajax({
-            url: "${path}/favoriteToggle.rs",
+            url: "${path}/favoriteToggle.fe",
             type: "POST",
             data: { "place_id": placeId },
             success: function(res) {
@@ -233,8 +233,8 @@ function updateMarkers(data) {
             
             // 이미지 경로 처리 (기본 이미지 대응)
             var imgPath = p.image_url && p.image_url !== 'null' ? 
-                          (p.image_url.startsWith('http') ? p.image_url :  path +'/resources/images/common/' + p.image_url) : 
-                           path +'/resources/images/common/no-image.png';
+                          (p.image_url.startsWith('http') ? p.image_url : '${path}/resources/images/common/' + p.image_url) : 
+                           '${path}/resources/images/common/no-image.png';
 
             var isFav = favoritePlaceIds.includes(String(p.place_id));
 
@@ -352,7 +352,7 @@ function changePage(page) {
 </script>
 
 <!-- 지도용 js -->
-<script src="${path}/resources/js/festival/festivalMap.js"></script>
+<%-- <script src="${path}/resources/js/festival/festivalMap.js"></script> --%>
 
 </head>
 <body>

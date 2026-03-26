@@ -6,16 +6,17 @@ import java.util.Map;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
-import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-19
+ * 최종수정일: 2026-03-26
  * 참고 코드: RestaurantDAO
  * ----------------------------------
  * v260319
  * 랭킹 기능 구현을 위한 메써드 추가 (getBestFestivalCount, getBestFestivalList, getBestFestivalPageList, getBestFestivalTop5)
+ * v260326 
+ * 축제 내 주변 지도 기능 구현
  * ----------------------------------
  */
 public interface FestivalDAO {

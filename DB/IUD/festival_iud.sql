@@ -1,21 +1,21 @@
 -- 내 주변 축제 조회 페이지 필요 쿼리
-SELECT 
-    p.place_id,
-    p.name,
-    f.status,
-    p.latitude,
-    p.longitude,
-    6371 * acos(
-        cos(37.5665 * 3.14159 / 180)
-        * cos(p.latitude * 3.14159 / 180)
-        * cos((p.longitude * 3.14159 / 180) - (126.9780 * 3.14159 / 180))
-        + sin(37.5665 * 3.14159 / 180)
-        * sin(p.latitude * 3.14159 / 180)
-    ) AS distance
-FROM festival f
-JOIN place p ON f.festival_id = p.place_id
-WHERE f.status != 'ENDED'
-ORDER BY distance;
+SELECT COUNT(*)
+   FROM festival f
+   JOIN place p ON f.festival_id = p.place_id
+   WHERE (
+       6371 * acos(
+           cos(36.409470343681704 * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
+           * cos((p.longitude * 3.14159 / 180)-(128.1147310951585 * 3.14159 / 180))+ 
+           sin(36.409470343681704 * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+       )
+   ) <= 100
+    AND f.status != 'ENDED'
+       AND (
+           SELECT NVL(ROUND(AVG(rating),1),0) 
+           FROM review 
+           WHERE place_id = p.place_id 
+           AND status = 'display'
+       ) >= 0;
 
 
 -- 축제 상세 페이지 필요 쿼리 ---------------------------------------

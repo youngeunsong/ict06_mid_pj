@@ -14,11 +14,13 @@ import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-19
+ * 최종수정일: 2026-03-26
  * 참고 코드: RestaurantDAOImpl
  * ----------------------------------
  * v260319
  * 랭킹 기능 구현을 위한 메써드 추가 (getBestFestivalCount, getBestFestivalList, getBestFestivalPageList, getBestFestivalTop5)
+ * v260326 
+ * 축제 내 주변 지도 기능 구현
  * ----------------------------------
  */
 @Repository
@@ -34,21 +36,21 @@ public class FestivalDAOImpl implements FestivalDAO {
 	@Override
 	public int selectNearbyFestivalCount(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFestivalCount()");
-		return session.selectOne(NAMESPACE + "selectNearbyFestivalCount");
+		return session.selectOne(NAMESPACE + "selectNearbyFestivalCount", map);
 	}
 	
 	// 조건에 맞는 맛집 리스트 조회 (6개씩 끊어서 가져오기)
 	@Override
 	public List<FestivalDTO> selectNearbyFestivalList(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFestivalList()");
-		return session.selectList(NAMESPACE + "selectNearbyFestivalList");
+		return session.selectList(NAMESPACE + "selectNearbyFestivalList", map);
 	}
 
 	// 조건에 맞는 맛집 마커 불러오기 (전부 가져오기)
 	@Override
 	public List<FestivalDTO> selectNearbyFeMarkersAjax(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFeMarkersAjax()");
-		return session.selectList(NAMESPACE + "selectNearbyFeMarkersAjax");
+		return session.selectList(NAMESPACE + "selectNearbyFeMarkersAjax", map);
 	}
 	
 	// 축제 상세 페이지용 메서드 ---------------------------------------

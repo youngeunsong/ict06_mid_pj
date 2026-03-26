@@ -23,16 +23,17 @@ import spring.ict06team1.midpj.dao.FestivalDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
-import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-19
+ * 최종수정일: 2026-03-26
  * 참고 코드: RestaurantServiceImpl
  * ----------------------------------
  * v260319
  * 랭킹 기능 구현을 위한 메써드 추가 (getBestFestivalCount, getBestFestivalList, getBestFestivalPageList, getBestFestivalTop5)
+ * v260326 
+ * 축제 내 주변 지도 기능 구현
  * ----------------------------------
  */
 @Service
@@ -63,13 +64,17 @@ public class FestivalServiceImpl implements FestivalService {
         double lng = (strLng != null && !strLng.isEmpty()) ? Double.parseDouble(strLng) : 126.864;
         double radius = (strRadius != null && !strRadius.isEmpty()) ? Double.parseDouble(strRadius) : 5.0;
         double minRating = (strMinRating != null && !strMinRating.isEmpty()) ? Double.parseDouble(strMinRating) : 0.0;
+        System.out.println("lat : " + lat);
+        System.out.println("lng : " + lng);
+        System.out.println("radius : " + radius);
+        System.out.println("minRating : " + minRating);
         
         // 3. Paging 객체 생성 및 6개 단위 설정
         Paging paging = new Paging(pageNum); // 생성자에서 pageNum null 체크 및 1페이지 설정 수행
         paging.setPageSize(6);               // [중요] 한 페이지당 게시글 수를 6개로 강제 변경
         
         // 전체 축제 개수 조회를 위한 Map
-        Map<String, Object> countMap = new HashMap<>();
+        Map<String, Object> countMap = new HashMap<String, Object>();
         countMap.put("lat", lat);
         countMap.put("lng", lng);
         countMap.put("radius", radius);
@@ -78,12 +83,13 @@ public class FestivalServiceImpl implements FestivalService {
 //        countMap.put("category", category); // 축제에 필요없을 것으로 예상
         
         int totalCount = dao.selectNearbyFestivalCount(countMap);
+        System.out.println("totalCount: " + totalCount);
         
         // setTotalCount 호출 시 내부에서 startRow, endRow가 6개 기준으로 자동 계산됨
         paging.setTotalCount(totalCount);
 
         // 4. 리스트 조회를 위한 최종 Map 구성
-        Map<String, Object> listMap = new HashMap<>(countMap);
+        Map<String, Object> listMap = new HashMap<String, Object>(countMap);
         listMap.put("sortType", (sortType != null && !sortType.isEmpty()) ? sortType : "distance");
         listMap.put("start", paging.getStartRow()); // 6개 기준 시작 번호 (예: 1, 7, 13...)
         listMap.put("end", paging.getEndRow());     // 6개 기준 끝 번호 (예: 6, 12, 18...)

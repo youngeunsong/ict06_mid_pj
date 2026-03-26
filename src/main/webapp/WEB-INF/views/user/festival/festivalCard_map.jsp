@@ -1,3 +1,11 @@
+<!-- 
+ * @author 송영은
+ * 최초작성일: 2026-03-23
+ * 최종수정일: 2026-03-26
+ * 참고 코드: user/restaurant/restaurantCard.jsp
+지도를 이용해 내 위치 주변 축제 위주로 조회   
+-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="request" />

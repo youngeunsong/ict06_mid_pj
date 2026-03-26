@@ -26,6 +26,25 @@
     .pagination {
         justify-content: flex-end; /* 버튼들을 오른쪽으로 밀기 */
     }
+    
+   	/* 불편사항 강조 스타일 추가 */
+	.urgent-row {
+	    background-color: #fff5f5 !important; /* 아주 연한 빨간 배경 */
+	}
+	.urgent-row:hover {
+	    background-color: #ffebeb !important; /* 호버 시 약간 더 진하게 */
+	}
+	.text-danger-strong {
+	    color: #dc3545 !important; /* 진한 빨간색 */
+	    font-weight: 800 !important;
+	}
+	.badge-danger-custom {
+	    background-color: #dc3545;
+	    color: white;
+	    padding: 3px 8px;
+	    border-radius: 4px;
+	    font-size: 0.75rem;
+	}
 </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -114,34 +133,57 @@
                             </thead>
                             <%-- 페이징부분 --%>
 							<tbody>
-							    <c:forEach var="dto" items="${list}">
-							        <%-- .adsp 확장자 추가 및 id -> inquiry_id로 변경 --%>
-							        <tr onclick="location.href='${path}/adInquiryDetail.adsp?inquiry_id=${dto.inquiry_id}'" 
-							            class="align-middle" style="cursor:pointer;">
-							            <td class="text-center">${dto.inquiry_id}</td>
-							            <td class="text-center"><span class="badge badge-outline-secondary">${dto.category}</span></td>
-							            <td class="text-truncate-custom font-weight-bold">${dto.title}</td>
-							            <td class="text-center">${dto.user_id}</td>
-							            <td class="text-center"><fmt:formatDate value="${dto.inquiryDate}" pattern="yyyy-MM-dd HH:mm"/></td>
-							            <td class="text-center">
-							                <c:choose>
-											    <c:when test="${dto.status == 'ANSWERED'}">
-											        <span class="badge badge-success" style="background-color: #01D281;">답변완료</span>
-											    </c:when>
-											    <c:when test="${dto.status == 'PROGRESS'}">
-											        <span class="badge badge-info">답변중</span>
-											    </c:when>
-											    <c:otherwise>
-											        <span class="badge badge-warning">대기중</span>
-											    </c:otherwise>
-											</c:choose>
-							            </td>
-							            <td class="text-center">
-							                <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i></button>
-							            </td>
-							        </tr>
-							    </c:forEach>	
-							</tbody>
+						    <c:forEach var="dto" items="${list}">
+						        <%-- 카테고리가 '불편사항'이면 urgent-row 클래스(빨간 배경)를 추가합니다 --%>
+						        <tr onclick="location.href='${path}/adInquiryDetail.adsp?inquiry_id=${dto.inquiry_id}'" 
+						            class="align-middle ${dto.category == '불편사항' ? 'urgent-row' : ''}" 
+						            style="cursor:pointer;">
+						            
+						            <%-- 번호도 빨간색으로 강조 --%>
+						            <td class="text-center ${dto.category == '불편사항' ? 'text-danger-strong' : ''}">${dto.inquiry_id}</td>
+						            
+						            <td class="text-center">
+						                <c:choose>
+						                    <c:when test="${dto.category == '불편사항'}">
+						                        <span class="badge badge-danger-custom">🚨 불편사항</span>
+						                    </c:when>
+						                    <c:otherwise>
+						                        <span class="badge badge-outline-secondary">${dto.category}</span>
+						                    </c:otherwise>
+						                </c:choose>
+						            </td>
+						            
+						            <%-- 제목을 빨간색+굵게 강조 --%>
+						            <td class="text-truncate-custom font-weight-bold ${dto.category == '불편사항' ? 'text-danger-strong' : ''}">
+						                ${dto.title}
+						            </td>
+						            
+						            <td class="text-center">${dto.user_id}</td>
+						            <td class="text-center"><fmt:formatDate value="${dto.inquiryDate}" pattern="yyyy-MM-dd HH:mm"/></td>
+						            
+						            <td class="text-center">
+						                <c:choose>
+						                    <c:when test="${dto.status == 'ANSWERED'}">
+						                        <span class="badge badge-success" style="background-color: #01D281;">답변완료</span>
+						                    </c:when>
+						                    <c:when test="${dto.status == 'PROGRESS'}">
+						                        <span class="badge badge-info">답변중</span>
+						                    </c:when>
+						                    <c:otherwise>
+						                        <span class="badge badge-warning">대기중</span>
+						                    </c:otherwise>
+						                </c:choose>
+						            </td>
+						            
+						            <td class="text-center">
+						                <%-- 불편사항이면 버튼도 빨간색으로 채워진 버튼 사용 --%>
+						                <button class="btn btn-sm ${dto.category == '불편사항' ? 'btn-danger' : 'btn-outline-success'}">
+						                    <i class="bi bi-chat-dots"></i>
+						                </button>
+						            </td>
+						        </tr>
+						    </c:forEach>    
+						</tbody>
                         </table>
 						<div class="card-footer bg-white border-0 py-3">
 					        <div class="d-flex justify-content-between align-items-center">

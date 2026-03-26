@@ -4,11 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
 public interface RestaurantDAO {
-
+	
+	// 주변 맛집의 총 개수를 조회 (페이징 계산용)
+	public int selectNearbyRestaurantCount(Map<String, Object> map); 
+	
+	// 조건에 맞는 맛집 리스트 조회 (6개씩 끊어서 가져오기)
+    public List<RestaurantDTO> selectNearbyRestaurantList(Map<String, Object> map);
+    
+    // 조건에 맞는 맛집 마커 불러오기 (전부 가져오기)
+    public List<RestaurantDTO> selectNearbyMarkersAjax(Map<String, Object> map);
+    
     // 맛집 상세
 	RestaurantDTO getRestaurantDetail(int place_id);
 

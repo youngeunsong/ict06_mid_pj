@@ -201,5 +201,12 @@
           FROM NOTICE
          WHERE notice_id = #{notice_id}
     </select>
+    
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount" parameterType="int">
+    UPDATE NOTICE
+       SET view_count = view_count + 1
+     WHERE notice_id = #{notice_id}
+    </update>
 
 </mapper>

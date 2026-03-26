@@ -27,7 +27,10 @@
 			    <p>오신 것을 환영합니다!</p>
 			
 			    <form name="loginform" action="${path}/loginAction.do" method="post" onsubmit="return loginCheck()">
-
+					
+					<!-- 비로그인 상태로 북마크 클릭 시 원래 있던 페이지로 돌아오기 위한 코드 추가 -->
+					<input type="hidden" name="next" value="${param.next}">
+					
 			        <div class="login_input_container"> <div class="login_group">
 			                <i class="fa-regular fa-user"></i>
 			                <input type="text" name="user_id" id="user_id" placeholder="아이디" required>

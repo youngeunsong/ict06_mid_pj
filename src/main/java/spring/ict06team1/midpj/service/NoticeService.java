@@ -14,4 +14,6 @@ public interface NoticeService {
 
 	// 상세(공지/ 이벤트 공통 활용)
 	public void getNoticeDetail(HttpServletRequest request, Model model);
+	
+	// 
 }

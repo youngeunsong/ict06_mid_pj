@@ -64,7 +64,7 @@
     </select>
 
 	<!-- 4. FAQ 상세 내용 보기 -->
-    <select id="getFaqDetail" parameterType="int" resultMap="faqMap">
+    <select id="getFaqDetail	" parameterType="int" resultMap="faqMap">
         SELECT * FROM FAQ WHERE faq_id = #{faq_id}
     </select>
 

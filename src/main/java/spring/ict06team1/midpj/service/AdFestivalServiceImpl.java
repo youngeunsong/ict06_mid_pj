@@ -355,6 +355,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		    if(placeId == null){
 		        // 새로운 장소
 		    	dao.insertPlace(place);
+		    	
+		    	// 새로 추가한 장소의 place_id 받아오기 
 		    	placeId = place.getPlace_id();
 		    }
 		    

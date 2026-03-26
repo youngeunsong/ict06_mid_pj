@@ -85,4 +85,13 @@ public class AdminController {
 	 * model) throws ServletException, IOException {
 	 * logger.info("[url => /adminSample.ad]"); return "admin/adminSample"; }
 	 */
+	
+	// 대시보드 - 사용자 만족도 조사 결과 표 표시
+	@RequestMapping("/userSatisfactionTable.ad")
+	public String userSatisfactionTable(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("[url => /userSatisfactionTable.ad]");
+		
+		return "admin/userSatisfactionTable";
+	}
 }

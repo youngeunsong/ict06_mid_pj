@@ -19,13 +19,13 @@ import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.SurveyDTO;
 
 /*
- * @author 김다솜/ 송혜진
+ * @author 김다솜/ 송혜진 / 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-24
+ * 최종수정일: 2026-03-25
  * 참고 코드: None
  * ----------------------------------
  * v260325
- * 
+ * 기간내 사용자 만족도 표 조회 기능 추가 (송영은)
  * ----------------------------------
  */
 
@@ -138,7 +138,7 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         /* 6. 기간 기준 차트 / 통계 / 보조 데이터 조회
 
         [DB 전용] - 6개
-        만족도 시계열/ NPS 분포/ 만족도 핵심 통계/ 워드클라우드용 서술형 응답/ 미답변 문의 최근 10건 */
+        만족도 시계열/ NPS 분포/ 만족도 핵심 통계/ 워드클라우드용 서술형 응답/ 미답변 문의 최근 10건 / 만족도 조사 결과 표 (서술형 응답 제외) */
         List<Map<String, Object>> trendList = dao.getSatisfactionTrend(periodMap);
         List<Map<String, Object>> npsDistribution = dao.getNpsDistribution(periodMap);
         List<Map<String, Object>> statsList = dao.getSatisfactionStats(periodMap);
@@ -184,7 +184,6 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         model.addAttribute("endDate", endDate.toString());
         model.addAttribute("today", today.toString());
         
-        
         // =========================================================
         // 8-1. GA 기간별 트래픽 추이 조회
         // - 관리자 홈 line chart 용
@@ -194,7 +193,47 @@ public class AdDashboardServiceImpl implements AdDashboardService {
      	System.out.println("GA trafficTrendList => " + trafficTrendList);
      	
      	model.addAttribute("trafficTrendList", trafficTrendList);
-        
+     	
+     	// 10. 기간 내 사용자 만족도 조사 표 조회 위한 함수 호출
+     	getSatisfactionList(periodMap, request, response, model); 
+    }
+    
+    // 기간 내 설문 조사 결과 표 조회 : getAdminHomeDashboard 에서 호출하여 사용
+    public void getSatisfactionList(Map<String, Object> periodMap, HttpServletRequest request, HttpServletResponse response, Model model) {
+    	System.out.println("[AdDashboardServiceImpl - getSatisfactionList()]");
+
+        // =========================================================
+        // 기간내 만족도 상세 페이지 페이징 처리
+        // =========================================================
+        int pageSize = 5;
+        int pageBlock = 5;
+
+        String pageNum = request.getParameter("pageNum");
+        if (pageNum == null || pageNum.trim().isEmpty()) {
+            pageNum = "1";
+        }
+
+        int currentPage = Integer.parseInt(pageNum);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        int totalCount = dao.getSurveyCount(periodMap);
+        // System.out.println("totalCount : " + totalCount);
+
+        Paging paging = new Paging(pageNum);
+        paging.setCurrentPage(currentPage);
+        paging.setPageSize(pageSize);
+        paging.setPageBlock(pageBlock);
+        paging.setTotalCount(totalCount);
+
+        periodMap.put("start", paging.getStartRow());
+        periodMap.put("end", paging.getEndRow());
+
+        List<Map<String, Object>> satisfactionList = dao.getSatisfactionList(periodMap); // 기간 내 만족도 조사 결과 표
+
+        model.addAttribute("satisfactionList", satisfactionList); // 기간 내 사용자 만족도 조사 결과 표
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("paging", paging);
     }
 
     // 해당 메서드 미사용/ 추후 작업 중 필요 시 사용하기 위해 파일만 유지

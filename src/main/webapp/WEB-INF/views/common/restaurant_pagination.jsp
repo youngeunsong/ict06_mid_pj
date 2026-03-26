@@ -36,7 +36,7 @@
                         </a>
                     </li>
                 </c:forEach>
-
+                
                 <c:choose>
                     <c:when test="${paging.endPage < paging.pageCount}">
                         <li class="page-item">
@@ -54,7 +54,6 @@
                         </li>
                     </c:otherwise>
                 </c:choose>
-
             </ul>
         </nav>
     </div>

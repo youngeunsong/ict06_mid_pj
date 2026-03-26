@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.ict06team1.midpj.dao.SupportDAO">
+
+    <resultMap id="faqMap" type="spring.ict06team1.midpj.dto.FaqDTO">
+        <id property="faq_id" column="faq_id" />
+        <result property="admin_id" column="admin_id" />
+        <result property="question" column="question" />
+        <result property="answer" column="answer" />
+        <result property="category" column="category" />
+        <result property="order_no" column="order_no" />
+        <result property="visible" column="visible" />
+        <result property="view_count" column="view_count" />
+        <result property="faqRegDate" column="created_at" />  
+        <result property="faqUpdateDate" column="updated_at" /> 
+    </resultMap>
+
+    <resultMap id="inquiryMap" type="spring.ict06team1.midpj.dto.InquiryDTO">
+        <id property="inquiry_id" column="inquiry_id" />
+        <result property="user_id" column="user_id" />
+        <result property="category" column="category" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="status" column="status" />
+        <result property="admin_reply" column="admin_reply" />
+        <result property="inquiryDate" column="created_at" />
+        <result property="answerDate" column="answered_at" />
+    </resultMap>
+
+	<!-- 1. 검색어로 FAQ 리스트 찾기 -->
+    <select id="searchFaqList" parameterType="string" resultMap="faqMap">
+	    SELECT * FROM (
+	        SELECT * FROM FAQ
+	        WHERE question LIKE '%' || #{keyword} || '%'
+	          AND visible = 'Y'
+	        ORDER BY order_no DESC, faq_id DESC
+	    ) WHERE ROWNUM &lt;= 10
+	</select>
+
+	<!-- 2. 카테고리별 조회수 Top 5 가져오기 -->
+	<select id="getFaqTop5ByCtg" parameterType="string" resultMap="faqMap">
+	    SELECT * FROM (
+	        SELECT * FROM FAQ 
+	        WHERE visible = 'Y'
+	        
+	        <if test="value != null and value != ''">
+	            AND category = #{value}
+	        </if>
+	        ORDER BY order_no DESC, view_count DESC, faq_id DESC
+	    ) 
+	    WHERE ROWNUM &lt;= 5
+	</select>
+	
+	<!-- 3. 전체 FAQ 중 조회수 Top 10 가져오기 -->
+    <select id="getFaqTop10Global" resultMap="faqMap">
+        <![CDATA[
+        SELECT * FROM (
+            SELECT * FROM FAQ 
+            WHERE visible = 'Y'
+            ORDER BY order_no DESC, faq_id DESC
+        ) WHERE ROWNUM <= 10
+        ]]>
+    </select>
+
+	<!-- 4. FAQ 상세 내용 보기 -->
+    <select id="getFaqDetail" parameterType="int" resultMap="faqMap">
+        SELECT * FROM FAQ WHERE faq_id = #{faq_id}
+    </select>
+
+	<!-- 5. FAQ 조회수 증가 로직 -->
+    <update id="updateFaqViewCount" parameterType="int">
+        UPDATE FAQ SET view_count = view_count + 1 WHERE faq_id = #{faq_id}
+    </update>
+
+	<!-- 6. 1:1 문의글 등록하기 -->
+    <insert id="insertInquiry" parameterType="spring.ict06team1.midpj.dto.InquiryDTO">
+	    INSERT INTO INQUIRY (
+	        inquiry_id, 
+	        user_id, 
+	        category, 
+	        title, 
+	        content, 
+	        status, 
+	        created_at
+	    ) VALUES (
+	        SEQ_INQUIRY.NEXTVAL, 
+	        #{user_id}, 
+	        #{category, jdbcType=VARCHAR}, 
+	        #{title}, 
+	        #{content}, 
+	        'PENDING', 
+	        SYSTIMESTAMP
+	    )
+	</insert>
+
+	<!-- 7. 조건에 맞는 문의글 개수 세기 -->
+    <select id="getInquiryCount" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM INQUIRY
+        <where>
+            <if test="user_id != null">AND user_id = #{user_id}</if>
+            <if test="category != null and category != ''">AND category = #{category}</if>
+            <if test="status != null and status != ''">AND status = #{status}</if>
+            <if test="keyword != null and keyword != ''">
+                AND (title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

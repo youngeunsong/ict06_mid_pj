@@ -1,6 +1,8 @@
---Ver.260324
+--Ver.260325
 --변경사항
---1) SURVEY 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--1) REVIEW 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
+--필드 추가용 ALTER 쿼리 넣어두었습니다. 
+--2) 테이블: reservation_id 필드 추가(RESERVATION 테이블 참조 fk, 자료형 VARCHAR(50))
 --해당 테이블에 데이터 없으므로 DROP 후 하단 수정해둔 CREATE 쿼리로 새로 생성 요청드립니다.
 --------------------------------------------------
 --Ver.260320
@@ -172,6 +174,7 @@ SELECT * FROM PAYMENT;
 CREATE TABLE REVIEW (
     review_id      NUMBER PRIMARY KEY,
     user_id        VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
+    reservation_id	VARCHAR2(50) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL,
     place_id       NUMBER REFERENCES PLACE(place_id),
     rating         NUMBER(1) CHECK(rating BETWEEN 1 AND 5),
     content        CLOB,
@@ -182,6 +185,10 @@ CREATE TABLE REVIEW (
     CONSTRAINT CHK_REVIEW_RATING CHECK(RATING BETWEEN 1 AND 5)
 );
 SELECT * FROM REVIEW;
+ALTER TABLE REVIEW ADD(
+	reservation_id VARCHAR2(50),
+	CONSTRAINT fk_review_reservation FOREIGN KEY(reservation_id) REFERENCES RESERVATION(reservation_id) ON DELETE SET NULL
+);
 
 -- 10. COMMUNITY(커뮤니티/사용자 게시판)
 CREATE TABLE COMMUNITY(
@@ -261,6 +268,7 @@ CREATE TABLE FAQ (
     CONSTRAINT CHK_FAQ_VISIBLE CHECK(VISIBLE IN('Y','N'))
 );
 
+SELECT * FROM FAQ;
 --Ver.260320 변경사항 적용 쿼리
 --FAQ 테이블: view_count 필드 추가
 -- 1. 트리거 비활성화
@@ -294,6 +302,7 @@ CREATE TABLE SURVEY (
 SELECT * FROM SURVEY;
 DROP TABLE SURVEY; --후 테이블 새로 생성
 
+
 -- 15. POINT_POLICY (포인트 지급 기준)
 CREATE TABLE POINT_POLICY (
 	POLICY_KEY VARCHAR2(50) PRIMARY KEY,
@@ -323,7 +332,7 @@ CREATE TABLE INQUIRY (
     category	VARCHAR2(200),
     title        VARCHAR2(200) NOT NULL,
     content      CLOB NOT NULL,
-    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, ANSWERED
+    status       VARCHAR2(20) DEFAULT 'PENDING', -- PENDING, PROGRESS, ANSWERED
     admin_reply  CLOB, -- 관리자 답변 내용
     created_at	TIMESTAMP DEFAULT SYSTIMESTAMP, -- 문의 일시		--DTO는 inquiryDate
     answered_at   TIMESTAMP, 					-- 답변 일시		--DTO는 answerDate
@@ -331,8 +340,10 @@ CREATE TABLE INQUIRY (
 );
 SELECT * FROM INQUIRY;
 
+
 -- INQUIRY > category 추가 쿼리
 ALTER TABLE INQUIRY ADD (category VARCHAR2(200));
+
 
 -- 18. NOTICE (공지사항 및 이벤트) 
 CREATE TABLE NOTICE (
@@ -350,6 +361,8 @@ CREATE TABLE NOTICE (
     CONSTRAINT CHK_NOTICE_CATEGORY CHECK(CATEGORY IN('NOTICE','EVENT'))
 );
 SELECT * FROM NOTICE;
+
+
 
 -- 19. FAVORITE (즐겨찾기 / 북마크)
 CREATE TABLE FAVORITE (
@@ -401,7 +414,6 @@ CREATE SEQUENCE SEQ_SEARCH START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_RES START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_PAY START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE SEQ_COMMUNITY_LIKE START WITH 1 INCREMENT BY 1;
-
 --=====프로시저 및 트리거 생성=====
 --프로시저, 트리거 생성 시에는 '/' 단위로 끊어서 한번에 실행해야 함
 

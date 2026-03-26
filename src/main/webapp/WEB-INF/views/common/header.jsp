@@ -64,19 +64,8 @@
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/accommodation.ac">숙소</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/festival.fe">축제</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/community_free.co">커뮤니티</a></li>
-			
-	        <!-- 더보기 드롭다운 -->
-	        <li class="nav-item dropdown">
-	          <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
-	            고객지원
-	          </a>
-	          <ul class="dropdown-menu">
-	            <li><a class="dropdown-item" href="${path}/FAQ.do">FAQ</a></li>
-	            <li><a class="dropdown-item" href="${path}/inquiry.do">1:1 문의</a></li>
-	          </ul>
-	        </li>
-	      </ul>
-	
+			<li class="nav-item"><a class="nav-link fw-semibold" href="${path}/faqMain.sp">고객지원</a></li>
+	        
 		  <!-- 우측 버튼 -->
 	      <div class="d-flex align-items-center gap-2">
 	      	<c:choose>
@@ -104,3 +93,5 @@
 	</nav>
 </header>
 <!-- header 끝 -->
+
+<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp" %>

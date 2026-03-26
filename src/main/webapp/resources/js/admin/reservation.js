@@ -467,13 +467,14 @@ function updateReservation() {
 		$('#update_guest_count').focus();
 		return;
 	}
+
 	
 	//필수값 체크
 	if(!checkIn) {
 		alert('방문일을 입력해주세요.');
 		return;
 	}
-	
+
 	//날짜 유효성 체크
 	if(checkIn && checkOut && checkIn > checkOut) {
 		alert('퇴실일은 방문일 이후로만 설정할 수 있습니다.');
@@ -486,6 +487,13 @@ function updateReservation() {
 		url: path + '/updateReservation.ad',
 		type: 'post',
 		data: {
+			reservation_id: reservationId,
+			status: $('#update_status').val(),
+			check_in: checkIn,
+			check_out: checkOut,
+			visit_time: visitTime,
+			guest_count: guestCount,
+			request_note: $('#update_request_note').val(),
 			res_id: $('#update_res_id').text(),
 			status: $('#update_status').val(),
 			check_in: checkIn,

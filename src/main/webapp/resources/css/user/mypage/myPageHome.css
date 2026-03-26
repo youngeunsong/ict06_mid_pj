@@ -120,3 +120,199 @@ body {
 	font-size: 16px;
 	font-weight: 800;
 }
+
+/* == 캘린더 영역 == */
+/* 캘린더 최소 높이 설정 */
+#miniCalendar {
+	min-height: 470px;
+}
+
+.fc .fc-toolbar-title {
+	font-size: 16px;
+	font-weight: 800;
+	color: #222;
+}
+
+.fc .fc-button {
+	background-color: #0CB574 !important;
+	border-color: #0CB574 !important;
+	box-shadow: none !important;
+}
+
+.fc .fc-button:hover {
+	opacity: 0.92;
+}
+
+.fc .fc-button:focus {
+	box-shadow: none !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+	font-size: 12px;
+	color: #666;
+	text-decoration: none;
+}
+
+.fc .fc-daygrid-day-number {
+	font-size: 13px;
+	color: #333;
+	text-decoration: none;
+}
+
+/* 캘린더 장소별 이벤트 색 */
+/* 맛집 */
+.fc-type-rest {
+	background-color: #ff7a59 !important;
+	border-color: #ff7a59 !important;
+	color: #fff !important;
+}
+
+/* 숙소 */
+.fc-type-acc {
+	background-color: #4b7bec !important;
+	border-color: #4b7bec !important;
+	color: #fff !important;
+}
+
+/* 축제 */
+.fc-type-fest {
+	background-color: #a55eea !important;
+	border-color: #a55eea !important;
+	color: #fff !important;
+}
+
+/* 기타 */
+.fc-type-etc {
+	background-color: #7f8c8d !important;
+	border-color: #7f8c8d !important;
+	color: #fff !important;
+}
+
+/* 예약 이벤트 스타일 */
+.fc .fc-event {
+	border: none !important;
+	border-radius: 8px !important;
+	padding: 2px 5px !important;
+	font-size: 11px !important;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+/* 캘린더 아이콘 버튼 */
+.calendar_icon_btn {
+	border: none;
+	background: transparent;
+	color: #6c757d;
+	font-size: 20px;
+	cursor: pointer;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.2s;
+}
+
+.calendar_icon_btn:hover {
+	color: var(--point-color);
+	transform: scale(1.08);
+}
+
+/* 큰 캘린더 모달 */
+.calendar_modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+}
+
+.calendar_modal.show {
+	display: block;
+}
+
+.calendar_modal_overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.calendar_modal_content {
+	position: relative;
+	width: 90%;
+	max-width: 1100px;
+	margin: 40px auto;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+	overflow: hidden;
+	animation: modalFadeUp 0.25s ease;
+}
+
+@keyframes modalFadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.calendar_modal_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 24px;
+	border-bottom: 1px solid #eee;
+}
+
+.calendar_modal_body {
+	padding: 20px 24px 28px;
+}
+
+.calendar_modal_close {
+	border: none;
+	background: transparent;
+	font-size: 30px;
+	line-height: 1;
+	cursor: pointer;
+	color: #666;
+}
+
+.calendar_modal_close:hover {
+	color: #111;
+}
+
+#bigCalendar {
+	min-height: 650px;
+}
+
+/* 월간 뷰 이벤트 호버 */
+.fc .fc-event:hover {
+	background-color: #0CB574 !important;
+	border-color: #0CB574 !important;
+	color: #fff !important;
+}
+
+/* 목록 뷰 행 전체 hover */
+.fc .fc-list-event:hover td {
+	background-color: #0CB574 !important;
+	color: #fff !important;
+}
+
+/* 목록 뷰 안의 링크/텍스트 hover 시 글자색 유지 */
+.fc .fc-list-event:hover a {
+	color: #fff !important;
+}
+
+/* 목록 뷰 시간/점/제목 셀 글자색 흰색 */
+.fc .fc-list-event:hover .fc-list-event-time,
+.fc .fc-list-event:hover .fc-list-event-title,
+.fc .fc-list-event:hover .fc-list-event-title a {
+	color: #fff !important;
+}
+
+/* 목록 뷰 점(marker)도 흰색 계열로 */
+.fc .fc-list-event:hover .fc-list-event-dot {
+	border-color: #fff !important;
+}

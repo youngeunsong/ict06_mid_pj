@@ -41,6 +41,9 @@ public interface UserDAO {
     // 마이페이지 홈 즐겨찾기 카테고리별 탑3
     public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map);
     
+    // 마에피이지 홈 캘린더 예약 목록
+    public List<Map<String, Object>> getMyCalendarReservations(String user_id);
+    
     // 나의 문의 목록 조회
     public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map);
     

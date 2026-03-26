@@ -121,6 +121,16 @@ public class UserDAOImpl implements UserDAO {
 		
 		return list;
 	}
+	
+	// 마이페이지 홈 캘린더 예약 목록 조회
+	@Override
+	public List<Map<String, Object>> getMyCalendarReservations(String user_id) {
+		System.out.println("UserDAOImpl - getMyCalendarReservations()");
+		
+		List<Map<String, Object>> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.getMyCalendarReservations",user_id);
+		
+		return list;
+	}
 
 	// 나의 문의 목록 조회
 	@Override

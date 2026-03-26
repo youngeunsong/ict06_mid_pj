@@ -406,7 +406,7 @@ public class UserServiceImpl implements UserService {
 	    model.addAttribute("category", category);
 	}
 	
-	// 마이페이지 홈 카운트
+	// 마이페이지 홈 카운트, top3, calendar
 	@Override
 	public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
 	        throws ServletException, IOException {
@@ -425,6 +425,11 @@ public class UserServiceImpl implements UserService {
 	    model.addAttribute("bookmarkCount", bookmarkCount);
 	    model.addAttribute("inquiryCount", inquiryCount);
 	    model.addAttribute("reservationCount", reservationCount);
+	    
+	    // 마이페이지 캘린더 예약 목록 조회
+		List<Map<String, Object>> calendarList = dao.getMyCalendarReservations(sessionID);
+		model.addAttribute("calendarList", calendarList);
+		System.out.println("calendarList : " + calendarList);
 	    
 	    // =================================================
 	    // 마이페이지 홈 하단 카테고리별 top3

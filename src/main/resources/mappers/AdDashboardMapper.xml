@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- @author 김다솜/ 송혜진 / 송영은 -->
+<!-- @author 김다솜/ 송혜진/ 송영은 -->
 <!-- 최초작성일: 2026-03-23 -->
 <!-- 최종수정일: 2026-03-25 -->
 <!-- 참고 코드: None -->
@@ -290,7 +290,7 @@
     </select>
 
     <!-- ==============================
-         9. 미답변 문의 최근 10건
+         9. 미처리 문의 최근 10건
     ============================== -->
     <select id="getPendingInquiryTop10" resultMap="inquiryResultMap">
 		SELECT *

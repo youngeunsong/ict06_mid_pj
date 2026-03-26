@@ -22,8 +22,6 @@ import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
-
-
 @Service
 public class UserServiceImpl implements UserService {
 

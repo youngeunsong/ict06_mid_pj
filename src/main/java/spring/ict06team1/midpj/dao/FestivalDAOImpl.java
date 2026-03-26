@@ -29,6 +29,29 @@ public class FestivalDAOImpl implements FestivalDAO {
 	
 	private static final String NAMESPACE = "FestivalMapper.";
 
+	// 축제 지도 페이지용 메서드 ---------------------------------------
+	// 주변 맛집의 총 개수를 조회 (페이징 계산용)
+	@Override
+	public int selectNearbyFestivalCount(Map<String, Object> map) {
+		System.out.println("FestivalDAOImpl-selectNearbyFestivalCount()");
+		return 0;
+	}
+	
+	// 조건에 맞는 맛집 리스트 조회 (6개씩 끊어서 가져오기)
+	@Override
+	public List<FestivalDTO> selectNearbyFestivalList(Map<String, Object> map) {
+		System.out.println("FestivalDAOImpl-selectNearbyFestivalList()");
+		return null;
+	}
+
+	// 조건에 맞는 맛집 마커 불러오기 (전부 가져오기)
+	@Override
+	public List<FestivalDTO> selectNearbyFeMarkersAjax(Map<String, Object> map) {
+		System.out.println("FestivalDAOImpl-selectNearbyFeMarkersAjax()");
+		return null;
+	}
+	
+	// 축제 상세 페이지용 메서드 ---------------------------------------
 	// 축제 상세
 	// 1단계: Place, Review 함께 조회
 	@Override
@@ -93,6 +116,7 @@ public class FestivalDAOImpl implements FestivalDAO {
 		return session.delete(NAMESPACE + "deleteFavorite", map);
 	}
 
+	// 축제 랭킹 페이지용 메서드 ---------------------------------------
 	// 축제 랭킹 목록 조회
 	@Override
 	public List<FestivalDTO> getBestFestivalList() {
@@ -121,5 +145,9 @@ public class FestivalDAOImpl implements FestivalDAO {
 		System.out.println("FestivalDAOImpl-getBestFestivalTop5()");
 		return session.selectList(NAMESPACE + "getBestFestivalTop5");
 	}
+
+
+
+
 
 }

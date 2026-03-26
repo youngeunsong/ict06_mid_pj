@@ -1,8 +1,16 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
+
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
@@ -15,8 +23,18 @@ import spring.ict06team1.midpj.dto.ReviewDTO;
  * ----------------------------------
  */
 public interface FestivalService {
+	
+	// 축제 지도 페이지용 메서드 ---------------------------------------
+	// 내 위치 기준 근방 축제 리스트 조회  
+	public void getNearbyFestivalAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
+	// 축제 리스트를 JSON 형태로 응답
+    public List<FestivalDTO> getNearbyFeMarkersAjax(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException;
 
-	 // 축제 상세
+	// 축제 상세 페이지용 메서드 ---------------------------------------
+	// 축제 상세
 	FestivalDTO getFestivalDetail(int place_id);
 
     // 리뷰 페이징
@@ -31,6 +49,7 @@ public interface FestivalService {
     // 즐겨찾기 토글
     boolean toggleFavorite(String userId, int place_id);
     
+    // 축제 랭킹 페이지용 메서드 ---------------------------------------
     // 축제 총 갯수
     int getBestFestivalCount();
     

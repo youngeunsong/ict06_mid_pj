@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.service.FestivalServiceImpl;
 
@@ -48,6 +49,29 @@ public class FestivalController {
 		return "user/festival/festival";
 	}
 	
+	// [festival] 지도 페이지 ---------------------------------------
+	// [festival] 축제 리스트 보여주기
+    @RequestMapping("/festivalAjax.fe")
+    public String festivalAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => festivalAjax.rs>>>");
+        service.getNearbyFestivalAjax(request, response, model);
+        return "user/festival/festivalCard";
+    }
+    
+    // JSP로 이동하지 않고 데이터를 직접 리턴함
+    @ResponseBody
+    // 축제 페이지로 이동
+    @RequestMapping("/getNearbyFeMarkersAjax.fe")
+    public List<PlaceDTO> getNearbyFeMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => getNearbyFeMarkersAjax.rs>>>");
+        List list = service.getNearbyFeMarkersAjax(request, response);
+        return list;
+    }
+    
+    
+    // [festival] 랭킹 페이지 ---------------------------------------
 	// [festival] 축제 랭킹 - 상위 5개 축제 강조 
 	@RequestMapping("/bestFestivals.fe")
 	public String bestFestivals(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -88,6 +112,7 @@ public class FestivalController {
         return service.getBestFestivalPageList(start, end);
     }
 	
+    // [festival] 축제 상세 페이지 --------------------------------------------------------------
 	// [festival] 축제 상세 & 예약 페이지로 이동
 	@RequestMapping("/festivalDetail.fe")	
 	public String festivalDetail(@RequestParam("place_id") int place_id, HttpSession session, Model model) 

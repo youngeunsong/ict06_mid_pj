@@ -9,7 +9,10 @@ public interface AdDashboardService {
 
     // 관리자 홈 메인 대시보드
     public void getAdminHomeDashboard(HttpServletRequest request, HttpServletResponse response, Model model);
-
+    
     // 금일 사용자 만족도 표
     public void getTodaySurveyStatus(HttpServletRequest request, HttpServletResponse response, Model model);
+
+    // 사용자 만족도 워드클라우드 이미지 생성
+    public String generateWordCloud(String text);
 }

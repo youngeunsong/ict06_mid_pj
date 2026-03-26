@@ -263,11 +263,46 @@
    워드클라우드 영역
 ========================= */
 .wordcloud-box {
-    min-height: 260px;
-    border: 1px dashed #d7dee7;
-    border-radius: 12px;
-    padding: 18px;
-    background: #fafbfc;
+    min-height: 360px;
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.wordcloud-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    line-height: 1.25;
+}
+
+.wordcloud-item {
+    display: inline-block;
+    font-weight: 700;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    cursor: default;
+    user-select: none;
+}
+
+.wordcloud-item:hover {
+    transform: scale(1.08);
+    opacity: 1 !important;
+}
+
+.wordcloud-image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
 }
 
 /* =========================

@@ -21,7 +21,7 @@
 	<!-- header 시작 -->
 	<!-- 요청 : url, 버튼, 링크 연결 -->
 	<nav class="navbar navbar-expand-lg bg-white border-bottom">
-	  <div class="container-fluid px-4">
+	  <div class="container px-lg-0">
 	
 	    <!-- 로고 -->
 	    <a class="navbar-brand font-weight-bold me-3" href="${path}/main.do">

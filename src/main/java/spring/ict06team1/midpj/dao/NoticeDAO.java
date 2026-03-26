@@ -35,4 +35,7 @@ public interface NoticeDAO {
 		공지/ 이벤트 상세
 	========================================== */
 	public NoticeDTO getNoticeDetail(int notice_id);
+	
+	// 조회수 증가
+	public void increaseViewCount(int notice_id);
 }

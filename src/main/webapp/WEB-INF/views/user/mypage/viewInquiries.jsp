@@ -33,7 +33,7 @@
 						onclick="filterInquiry('ANSWERED')">답변 완료</button>
 				</div>
 
-				<a href="${path}/inquiryWrite.do" class="btn-sig">
+				<a href="${path}/inquiryWrite.sp" class="btn-sig">
 					<i class="bi bi-pencil-square"></i> 새 문의 작성하기
 				</a>
 			</div>

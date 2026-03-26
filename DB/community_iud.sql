@@ -91,7 +91,7 @@ SELECT c.post_id,
     ON c.post_id = img.target_id
    AND img.target_type = 'COMMUNITY'
    AND img.is_representative = 'Y'
- WHERE c.post_id = 167;
+ WHERE c.post_id = 1;
 
 -- 조회수 증가
 UPDATE COMMUNITY
@@ -142,7 +142,7 @@ INSERT INTO IMAGE_STORE (
 	    )
 
 -- 게시글 1건 확인 쿼리	   
-SELECT * FROM COMMUNITY WHERE post_id = 57;
+SELECT * FROM COMMUNITY WHERE post_id = 1;
 -- 대표 이미지 확인 쿼리
 SELECT * FROM IMAGE_STORE WHERE TARGET_ID = 57;
 -- 본문 이미지 확인 쿼리
@@ -151,8 +151,8 @@ SELECT content FROM COMMUNITY WHERE post_id = 167;
 
 -- 대표 이미지 테스트를 위한 업데이트 쿼리
 UPDATE IMAGE_STORE
-SET image_url = 'https://contents.creators.mypetlife.co.kr/content/uploads/2021/10/09095442/img-751.jpg'
-WHERE TARGET_ID = 150
+SET image_url = 'https://substackcdn.com/image/fetch/$s_!KsAZ!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3a8d8ed3-7f51-41a8-ae12-81ec59bae0ec_4032x3024.jpeg'
+WHERE TARGET_ID = 20
 
 
 -- 게시글 삭제
@@ -210,21 +210,22 @@ SELECT post_id,
            AND title LIKE '%리%'
        )
  WHERE rn BETWEEN 1 AND 10
- 
+
+-------------------------------------------------------------
 -- 게시글 좋아요 여부 체크
 -- 좋아요 있으면 1/ 없으면 0
 SELECT COUNT(*)
   FROM COMMUNITY_LIKE
- WHERE user_id = 'user01'
-   AND post_id = 57;
+ WHERE user_id = 'user09'
+   AND post_id = 1;
 
 -- 게시글 좋아요 추가
 INSERT INTO COMMUNITY_LIKE (
     like_id, user_id, post_id, created_at
 ) VALUES (
     SEQ_COMMUNITY_LIKE.NEXTVAL,
-    'user01',
-    57,
+    'user09',
+    1,
     SYSTIMESTAMP
 )
 
@@ -236,7 +237,7 @@ WHERE user_id = 'user01'
 -- 게시글 좋아요 증가
  UPDATE COMMUNITY
     SET like_count = NVL(like_count, 0) + 1
-  WHERE post_id = 57;
+  WHERE post_id = 1;
 
 -- 게시글 좋아요 감소
 UPDATE COMMUNITY
@@ -245,7 +246,20 @@ SET like_count = CASE
                     ELSE 0
                  END
 WHERE post_id = 57;
- 
+
+
+SELECT LIKE_COUNT
+FROM COMMUNITY
+WHERE POST_ID = 55;
+
+SELECT LIKE_ID 
+     , USER_ID 
+FROM COMMUNITY_LIKE
+WHERE POST_ID = 55;
+
+
+
+
 --------------------------------------
 -- 커뮤니티 > 댓글 목록
 --------------------------------------

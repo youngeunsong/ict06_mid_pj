@@ -53,6 +53,7 @@
 		   SET password = #{password}
 		 WHERE user_id = #{user_id}
 	</update>
+	
 	<!-- 회원정보 삭제 (탈퇴) -->
 	<update id="deleteUser" parameterType="String">
     UPDATE MEMBER 

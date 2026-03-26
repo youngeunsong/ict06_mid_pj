@@ -243,6 +243,13 @@
 
 		<%@ include file="../../common/footer.jsp"%>
 	</div>
+	
+	<!-- 설문 모달, js -->
+	<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp"%>
+	<script>
+		const path = "${pageContext.request.contextPath}"
+	</script>
+	<script src="${path}/resources/js/user/survey.js"></script>
 
 	<script>
 		function filterReservation(status) {

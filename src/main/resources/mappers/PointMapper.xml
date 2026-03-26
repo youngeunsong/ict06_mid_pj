@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.ict06team1.midpj.dao.PointDAO">
+
+    <!-- 현재 보유 포인트 조회 -->
+    <select id="getPointBalance" parameterType="string" resultType="int">
+        SELECT NVL(point_balance, 0)
+        FROM MEMBER
+        WHERE user_id = #{value}
+    </select>
+
+    <!-- 포인트 차감 -->
+   <update id="usePoint" parameterType="map">
+	    UPDATE MEMBER
+	    SET point_balance = point_balance - #{usedPoint}
+	    WHERE user_id = #{user_id}
+	      AND point_balance >= #{usedPoint}
+	</update>
+
+    <!-- 포인트 사용 로그 저장 -->
+    <insert id="insertPointLog" parameterType="spring.ict06team1.midpj.dto.PointDTO">
+        <selectKey keyProperty="point_id" resultType="int" order="BEFORE">
+            SELECT SEQ_POINT.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO POINT (
+            point_id,
+            user_id,
+            policy_key,
+            amount,
+            type,
+            description,
+            created_at
+        ) VALUES (
+            #{point_id},
+            #{user_id},
+            #{policy_key},
+            #{amount},
+            #{type},
+            #{description},
+            SYSTIMESTAMP
+        )
+    </insert>
+
+</mapper>

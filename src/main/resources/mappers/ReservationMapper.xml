@@ -223,4 +223,18 @@
 	    SET status = 'RESERVED'
 	    WHERE reservation_id = #{reservationId}
 	</update>
+	
+	<!-- 11. 결제 금액 수정 -->
+	<update id="updatePaymentAmount" parameterType="map">
+	    UPDATE PAYMENT
+	    SET amount = #{amount}
+	    WHERE reservation_id = #{reservation_id}
+	</update>
+	
+	<!-- 12. 예약에 payment_id 연결 -->
+	<update id="updateReservationPaymentId" parameterType="map">
+	    UPDATE RESERVATION
+	    SET payment_id = #{payment_id}
+	    WHERE reservation_id = #{reservation_id}
+	</update>
 </mapper>

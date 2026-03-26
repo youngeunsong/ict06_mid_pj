@@ -111,8 +111,6 @@
 											<th>축제명</th>
 											<th>주소</th>
 											<th>조회수</th>
-											<th>위도</th>
-											<th>경도</th>
 											<th>대표 이미지</th>
 											<th>축제 시작일</th>
 											<th>축제 종료일</th>
@@ -129,17 +127,16 @@
 												<td>${dto.placeDTO.name}</td>
 												<td>${dto.placeDTO.address}</td>
 												<td>${dto.placeDTO.view_count}</td>
-												<td>${dto.placeDTO.latitude}</td>
-												<td>${dto.placeDTO.longitude}</td>
 												<td>
 													<!-- 이미지 url 없을 경우 no-image.png로 대체하여 보여주기 -->
 													<c:choose>
 													    <c:when test="${not empty dto.placeDTO.image_url}">
-													        <img src="${dto.placeDTO.image_url}" style="width: 80%; height: auto;">
+													        <img src="${dto.placeDTO.image_url}" style="width: auto; height: 50px;">
 													    </c:when>
 													    <c:otherwise>
 													        <img src="${path}/resources/images/common/no-image.png" 
-													             style="width: 80%; height: auto;">
+													         style="width: auto; height: 50px;">
+													            <!--  style="width: 80%; height: auto;"> -->
 													    </c:otherwise>
 													</c:choose>
 												</td>

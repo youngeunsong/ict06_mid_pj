@@ -142,7 +142,7 @@ INSERT INTO IMAGE_STORE (
 	    )
 
 -- 게시글 1건 확인 쿼리	   
-SELECT * FROM COMMUNITY WHERE post_id = 57;
+SELECT * FROM COMMUNITY WHERE post_id = 1;
 -- 대표 이미지 확인 쿼리
 SELECT * FROM IMAGE_STORE WHERE TARGET_ID = 57;
 -- 본문 이미지 확인 쿼리
@@ -151,8 +151,8 @@ SELECT content FROM COMMUNITY WHERE post_id = 167;
 
 -- 대표 이미지 테스트를 위한 업데이트 쿼리
 UPDATE IMAGE_STORE
-SET image_url = 'https://contents.creators.mypetlife.co.kr/content/uploads/2021/10/09095442/img-751.jpg'
-WHERE TARGET_ID = 150
+SET image_url = 'https://substackcdn.com/image/fetch/$s_!KsAZ!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3a8d8ed3-7f51-41a8-ae12-81ec59bae0ec_4032x3024.jpeg'
+WHERE TARGET_ID = 20
 
 
 -- 게시글 삭제

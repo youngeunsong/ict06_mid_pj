@@ -1,3 +1,5 @@
+/* community_detail.js */
+
 document.addEventListener("DOMContentLoaded", function () {
     const likeBtn = document.getElementById("likeBtn");
     const likeCountEl = document.getElementById("likeCount");

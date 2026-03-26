@@ -186,11 +186,18 @@
 		    <version>0.98.0</version>
 		</dependency>
 		
-		<!--추가) 사진업로드를 위한 거  --> 
+		<!--추가) SUMMERNOTE 사진 업로드 사용  --> 
 		<dependency>
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.4</version>
+		</dependency>
+		
+		<!-- 추가) 워드클라우드 Kumo 라이브러리 사용 -->
+		<dependency>
+		    <groupId>com.kennycason</groupId>
+		    <artifactId>kumo-core</artifactId>
+		    <version>1.28</version>
 		</dependency>
 	
 		<dependency>

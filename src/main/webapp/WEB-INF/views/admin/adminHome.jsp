@@ -22,6 +22,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <script src="${path}/resources/js/admin/adHome.js" defer></script>
+<script>const path = "${path}";</script>
 </head>
 <!--begin::Body-->
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -379,13 +380,10 @@
 								<h5 class="mb-0">사용자 만족도 워드클라우드</h5>
 							</div>
 							<div class="card-body">
-								<div id="wordcloudBox" class="wordcloud-box">
-									<p class="text-muted mb-0">워드클라우드 API / 라이브러리 연동 영역</p>
-								</div>
-
+								<div id="wordcloudBox" class="wordcloud-box"></div>
+					
 								<c:forEach var="word" items="${subjectiveAnswers}">
-									<input type="hidden" class="subjective-word-source"
-										value="${word}" />
+								    <input type="hidden" class="subjective-word-source" value="<c:out value='${word}' />" />
 								</c:forEach>
 							</div>
 						</div>
@@ -457,8 +455,7 @@
 </script>
 
 
-<script>const path = "${path}";</script>
-<script src="${path}/resources/js/admin/adHomeDashboard.js"></script>
+
 
 </body>
 </html>

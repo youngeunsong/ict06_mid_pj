@@ -29,8 +29,10 @@
 <div class="${cardWrapClass}">
     <div class="place-card-wrap position-relative">
 
+		<!-- 북마크 -->
         <button type="button"
         class="bookmark-btn"
+        onclick="toggleBookmark(event, this)"
         data-place-id="${rest.placeDTO.place_id}">
 		    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(rest.placeDTO.place_id) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
 		</button>

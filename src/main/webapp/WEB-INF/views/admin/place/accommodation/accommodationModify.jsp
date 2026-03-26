@@ -10,11 +10,13 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
 <link rel="stylesheet"
 	href="${path}/resources/css/admin/ad_accommodationModify.css">
-
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
+    <!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
         <%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
@@ -28,7 +30,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="${path}/admin/home">Home</a></li>
-                                <li class="breadcrumb-item"><a href="${path}/accommodation.acc">숙소 목록</a></li>
+                                <li class="breadcrumb-item"><a href="${path}/accommodation.adac">숙소 목록</a></li>
                                 <li class="breadcrumb-item active">정보 수정</li>
                             </ol>
                         </div>
@@ -45,7 +47,7 @@
                             </h3>
                         </div>
                         
-                        <form action="${path}/accommodationModifyAction.acc" method="post" enctype="multipart/form-data" name="updateForm">
+                        <form action="${path}/accommodationModifyAction.adac" method="post" enctype="multipart/form-data" name="updateForm">
                             <input type="hidden" name="oldImg" value="${pDto.image_url}">
                             <input type="hidden" name="pageNum" value="${pageNum}">
                             <input type="hidden" name="category1" value="${category}">
@@ -76,15 +78,15 @@
                                         <label class="form-label">지역 선택</label>
                                         <select name="areaCode" id="areaCodeSelect" class="form-select" required onchange="updateAddressGuide()">
 									        <option value="" ${empty (aDto.areaCode) ? 'selected' : ''}>지역을 선택하세요</option>
-									        <option value="1" ${(aDto.areaCode == '1') ? 'selected' : ''}>서울</option>
-									        <option value="31" ${(aDto.areaCode == '31') ? 'selected' : ''}>경기</option>
-									        <option value="2" ${(aDto.areaCode == '2') ? 'selected' : ''}>인천</option>
-									        <option value="6" ${(aDto.areaCode == '6') ? 'selected' : ''}>부산</option>
-									        <option value="4" ${(aDto.areaCode == '4') ? 'selected' : ''}>대구</option>
-									        <option value="3" ${(aDto.areaCode == '3') ? 'selected' : ''}>대전</option>
-									        <option value="5" ${(aDto.areaCode == '5') ? 'selected' : ''}>광주</option>
-									        <option value="7" ${(aDto.areaCode == '7') ? 'selected' : ''}>울산</option>
-									        <option value="39" ${(aDto.areaCode == '39') ? 'selected' : ''}>제주</option>
+									        <option value="서울" ${(aDto.areaCode == '서울') ? 'selected' : ''}>서울</option>
+									        <option value="경기" ${(aDto.areaCode == '경기') ? 'selected' : ''}>경기</option>
+									        <option value="인천" ${(aDto.areaCode == '인천') ? 'selected' : ''}>인천</option>
+									        <option value="부산" ${(aDto.areaCode == '부산') ? 'selected' : ''}>부산</option>
+									        <option value="대구" ${(aDto.areaCode == '대구') ? 'selected' : ''}>대구</option>
+									        <option value="대전" ${(aDto.areaCode == '대전') ? 'selected' : ''}>대전</option>
+									        <option value="광주" ${(aDto.areaCode == '광주') ? 'selected' : ''}>광주</option>
+									        <option value="울산" ${(aDto.areaCode == '울산') ? 'selected' : ''}>울산</option>
+									        <option value="제주" ${(aDto.areaCode == '제주') ? 'selected' : ''}>제주</option>
 									    </select>
                                     </div>
 
@@ -107,18 +109,18 @@
                                     <div class="col-md-4">
                                         <label class="form-label">숙소 유형</label>
                                         <select name="category" class="form-select" required>
-                                            <option value="B02010100" ${aDto.category == 'B02010100' ? 'selected' : ''}>일반호텔</option>
-                                            <option value="B02011100" ${aDto.category == 'B02011100' ? 'selected' : ''}>호스텔</option>
-                                            <option value="B02010700" ${aDto.category == 'B02010700' ? 'selected' : ''}>펜션</option>
-											<option value="B02011200" ${aDto.category == 'B02011200' ? 'selected' : ''}>서비스드레지던스</option>
-											<option value="B02011600" ${aDto.category == 'B02011600' ? 'selected' : ''}>한옥스테이</option>
-										    <option value="B02010900" ${aDto.category == 'B02010900' ? 'selected' : ''}>홈스테이</option>                    
-								            <option value="B02011400" ${aDto.category == 'B02011400' ? 'selected' : ''}>휴양펜션</option>        
-							                <option value="B02011000" ${aDto.category == 'B02011000' ? 'selected' : ''}>유스호스텔</option> 
-							                <option value="B02010600" ${aDto.category == 'B02010600' ? 'selected' : ''}>가족호텔</option>
-							                <option value="B02010500" ${aDto.category == 'B02010500' ? 'selected' : ''}>한국전통호텔</option>
-							                <option value="B02010300" ${aDto.category == 'B02010300' ? 'selected' : ''}>수상관광호텔</option>
-							                <option value="B02011300" ${aDto.category == 'B02011300' ? 'selected' : ''}>콘도미니엄</option>
+                                            <option value="일반호텔" ${aDto.category == '일반호텔' ? 'selected' : ''}>일반호텔</option>
+                                            <option value="호스텔" ${aDto.category == '호스텔' ? 'selected' : ''}>호스텔</option>
+                                            <option value="펜션" ${aDto.category == '펜션' ? 'selected' : ''}>펜션</option>
+											<option value="서비스드레지던스" ${aDto.category == '서비스드레지던스' ? 'selected' : ''}>서비스드레지던스</option>
+											<option value="한옥스테이" ${aDto.category == '한옥스테이' ? 'selected' : ''}>한옥스테이</option>
+										    <option value="홈스테이" ${aDto.category == '홈스테이' ? 'selected' : ''}>홈스테이</option>                    
+								            <option value="휴양펜션" ${aDto.category == '휴양펜션' ? 'selected' : ''}>휴양펜션</option>        
+							                <option value="유스호스텔" ${aDto.category == '유스호스텔' ? 'selected' : ''}>유스호스텔</option> 
+							                <option value="가족호텔" ${aDto.category == '가족호텔' ? 'selected' : ''}>가족호텔</option>
+							                <option value="한국전통호텔" ${aDto.category == '한국전통호텔' ? 'selected' : ''}>한국전통호텔</option>
+							                <option value="수상관광호텔" ${aDto.category == '수상관광호텔' ? 'selected' : ''}>수상관광호텔</option>
+							                <option value="콘도미니엄" ${aDto.category == '콘도미니엄' ? 'selected' : ''}>콘도미니엄</option>
                                         </select>
                                     </div>
 
@@ -153,9 +155,6 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2026</strong>
-        </footer>
     </div>
 <script>
 var geocoder;
@@ -232,4 +231,7 @@ function updateAddressGuide() {
 }
 </script>
 </body>
+<footer class="main-footer">
+    <strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

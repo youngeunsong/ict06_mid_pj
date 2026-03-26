@@ -223,7 +223,7 @@ function uploadSummernoteImage(file, editor) {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch(window.contextPath + "/uploadImage.co", {
+    fetch(CTX + "/uploadImage.co", {
         method: "POST",
         body: formData
     })

@@ -49,4 +49,7 @@ public interface AdRestaurantDAO {
 	
 	// 공공데이터 활용 데이터 중복 확인  
 	public int checkDuplicate(String test_id);
+	
+	// 이미지 저장 (Map 담기: targetId, targetType, imageUrl, isRepresentative, sortOrder)
+    int insertImageStore(Map<String, Object> imgMap);
 }

@@ -190,6 +190,59 @@ FROM TempData;
 SELECT * FROM RESERVATION;
 COMMIT;
 
+
+-- SYS_C007450가 어느 테이블에 있는지 전체 검색
+SELECT c.constraint_name, c.constraint_type, c.table_name, cc.column_name
+FROM all_constraints c
+JOIN all_cons_columns cc ON c.constraint_name = cc.constraint_name
+WHERE c.constraint_name = 'SYS_C007450'
+AND c.owner = 'ICT06_TEAM1_MIDPJ';
+
+MERGE INTO RESERVATION r
+USING (
+    WITH TempData AS (
+        SELECT
+            LEVEL AS lvl,
+            TRUNC(DBMS_RANDOM.VALUE(0, 5)) AS status_idx,
+            TRUNC(SYSDATE + (DBMS_RANDOM.NORMAL * 20) - 30) AS rand_created_at,
+            FLOOR(DBMS_RANDOM.VALUE(0, 11)) AS check_in_offset
+        FROM DUAL
+        CONNECT BY LEVEL <= 1200
+    ),
+    Generated AS (
+        SELECT
+            'user0' || (MOD(lvl - 1, 7) + 1) AS user_id,
+            100 + MOD(lvl, 100) AS place_id,
+            TRUNC(rand_created_at + check_in_offset) AS check_in,
+            TRUNC(rand_created_at + check_in_offset + FLOOR(DBMS_RANDOM.VALUE(1, 4))) AS check_out,
+            CEIL(DBMS_RANDOM.VALUE(1, 5)) AS guest_count,
+            CASE status_idx
+                WHEN 0 THEN 'PENDING'
+                WHEN 1 THEN 'RESERVED'
+                WHEN 2 THEN 'COMPLETED'
+                WHEN 3 THEN 'CANCELLED'
+                ELSE 'NOSHOW'
+            END AS status,
+            rand_created_at AS created_at,
+            ROW_NUMBER() OVER (
+                PARTITION BY 'user0' || (MOD(lvl - 1, 7) + 1),
+                             100 + MOD(lvl, 100),
+                             TRUNC(rand_created_at + check_in_offset)
+                ORDER BY lvl
+            ) AS rn
+        FROM TempData
+    )
+    SELECT user_id, place_id, check_in, check_out, guest_count, status, created_at
+    FROM Generated
+    WHERE rn = 1
+) src
+ON (r.user_id = src.user_id AND r.place_id = src.place_id AND r.check_in = src.check_in)
+WHEN NOT MATCHED THEN
+    INSERT (user_id, place_id, check_in, check_out, guest_count, status, created_at)
+    VALUES (src.user_id, src.place_id, src.check_in, src.check_out, src.guest_count, src.status, src.created_at);
+
+
+
 --테이블에 이미 데이터가 있는 상태라면 SEQ가 작동하지 않아 데이터 자동 생성 시 오류 발생할 수 있음.
 --이런 경우 아래 쿼리 실행하여 시퀀스 삭제, 새로 생성 후 다시 데이터 생성하기
 -- 1. 기존 시퀀스 삭제

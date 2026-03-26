@@ -1,0 +1,166 @@
+@charset "UTF-8";
+/* =========================================================
+   survey.css
+========================================================= */
+
+:root {
+  --primary: #00c473;
+  --primary-dark: #00a85e;
+  --accent: #ff6b35;
+  --text-main: #1a1a2e;
+  --text-sub: #555;
+  --bg-light: #f8f9fa;
+  --card-radius: 12px;
+}
+
+#surveyModal .modal-dialog {
+	max-width: 500px;
+}
+
+/* 안내 카드 */
+#surveyGuide {
+	animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+	from {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+/* === 점수 영역 === */
+.score-group {
+	margin-bottom: 24px;
+}
+
+.score-group label {
+	font-weight: 600;
+	margin-bottom: 6px;
+	display: block;
+}
+
+/* 좌우 설명 */
+.score-desc {
+	display: flex;
+	justify-content: space-between;
+	font-size: 13px;
+	color: #888;
+	margin-bottom: 8px;
+	width: fit-content;
+	min-width: 100%;
+}
+
+/* 버튼 */
+.score-wrap {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+/* 기본 버튼 */
+.score-item {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: 1px solid #ddd;
+	background: #fff;
+	font-size: 13px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+/* hover */
+.score-item:hover {
+	transform: scale(1.1);
+	border-color: var(--primary);
+}
+
+/* 선택 상태 */
+.score-item.active {
+	color: #fff;
+	font-weight: 600;
+	transform: scale(1.15);
+}
+
+.selected-value {
+	margin-top: 6px;
+	font-size: 13px;
+	color: var(--primary);
+	font-weight: 500;
+}
+
+/* 만족도 / 신뢰도 (초록) */
+.score-group[data-type="satisfaction"] .score-item.active, .score-group[data-type="reliability"] .score-item.active {
+	background: var(--primary);
+	border-color: var(--primary);
+}
+
+/* NPS */
+.score-group[data-type="nps"] .score-item[data-value="1"].active,
+.score-group[data-type="nps"] .score-item[data-value="2"].active,
+.score-group[data-type="nps"] .score-item[data-value="3"].active {
+	background: #ff4d4f;
+}
+
+.score-group[data-type="nps"] .score-item[data-value="4"].active,
+.score-group[data-type="nps"] .score-item[data-value="5"].active,
+.score-group[data-type="nps"] .score-item[data-value="6"].active {
+	background: #faad14;
+}
+
+.score-group[data-type="nps"] .score-item[data-value="7"].active,
+.score-group[data-type="nps"] .score-item[data-value="8"].active,
+.score-group[data-type="nps"] .score-item[data-value="9"].active,
+.score-group[data-type="nps"] .score-item[data-value="10"].active {
+	background: #52c41a;
+}
+
+/* 별점 */
+.star-item {
+	font-size: 28px;
+	border: none;
+	background: none;
+	color: #ddd;
+	cursor: pointer;
+	transition: color 0.15s, transform 0.15s;
+	padding: 0;
+}
+
+.star-item:hover,
+.star-item.active {
+	color: #faad14;
+	transform: scale(1.2);
+}
+
+/* toast UI */
+.toast-box {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	background: #333;
+	color: #fff;
+	padding: 12px 20px;
+	border-radius: 10px;
+	display: none;
+	z-index: 9999;
+}
+
+#doneEffect {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	font-size: 80px;
+	transform: translate(-50%, -50%);
+	animation: pop 1.5s ease;
+}
+
+@keyframes pop {
+	0% {transform: scale(0) translate(-50%, -50%); opacity: 0;}
+	50% {transform: scale(1.5) translate(-50%, -50%); opacity: 1;}
+	100% {transform: scale(1) translate(-50%, -50%);}
+}

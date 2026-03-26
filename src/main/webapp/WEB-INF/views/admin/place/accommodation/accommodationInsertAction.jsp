@@ -17,10 +17,10 @@
                 alert("맛집등록 성공!!");
                 <%-- 키워드 유무에 따라 서블릿 주소 결정 --%>
                 <c:if test="${not empty keyword}">
-                    window.location="${path}/accommodationSearch.acc?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+                    window.location="${path}/accommodationSearch.adac?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
                 </c:if>
                 <c:if test="${empty keyword}">
-                    window.location="${path}/accommodation.acc?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
+                    window.location="${path}/accommodation.adac?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
                 </c:if>
             }, 1000);
         </script>
@@ -31,7 +31,7 @@
             setTimeout(function(){
                 alert("맛집등록 실패!!");
                 <%-- 실패 시 다시 등록 폼으로 돌아갈 때도 검색어 유지 --%>
-                window.location="${path}/accommodationInsert.acc?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+                window.location="${path}/accommodationInsert.adac?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
             }, 1000);
         </script>
     </c:otherwise>
@@ -138,7 +138,6 @@
             </section>
         </div>
     </div>
-
 <script>
 var geocoder;
 if (window.kakao && kakao.maps) {
@@ -208,4 +207,7 @@ function execPostcode() {
 }
 </script>
 </body>
+<footer class="main-footer text-center py-3">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

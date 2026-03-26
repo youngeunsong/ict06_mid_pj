@@ -11,61 +11,70 @@ import spring.ict06team1.midpj.dto.SearchHistoryDTO;
 
 public interface SearchDAO {
 	
-	
-	// [검색 결과] -----------------------------------------------------------
-	// 1. 검색어 기준 식당 목록
+    /* ==========================================
+		검색 키워드 결과 가져오기
+		키워드(맛집/ 숙소/ 축제) 별 리스트 | 리뷰 갯수 + 리뷰 통계 조회
+	========================================== */
+	//키워드(맛집) 리스트
 	public List<RestaurantDTO> getRestList(String keyword);
 	
-	// 2. 검색어 기준 숙소 목록
+	//키워드(숙소) 리스트
 	List<AccommodationDTO> getAccList(String keyword);
 	
-	// 3. 검색어 기준 축제 목록
+	//키워드(축제) 리스트
 	public List<FestivalDTO> getFestList(String keyword);
 
-	// 4. 검색어 기준 장소별 리뷰 통계
+	//리뷰 갯수 + 리뷰 통계 조회
 	public List<Map<String,Object>> getPlaceReviewStats(String keyword);
 	
-	// [즐겨찾기] -----------------------------------------------------------
-	// 1. 즐겨찾기 여부 확인
+	/* ==========================================
+		즐겨찾기(여부체크/ 삭제/ 추가/ 조회)
+	========================================== */
+	//즐겨찾기 여부체크
 	public int checkFavorite (Map<String, Object> checkFavorite);
 	
-	// 2. 즐겨찾기 추가
+	//즐겨찾기 추가
 	public int addFavorite (Map<String, Object> addFavorite);
 
-	// 3. 즐겨찾기 삭제
+	//즐겨찾기 삭제
 	public int deleteFavorite (Map<String, Object> deleteFavorite);
 	
-	// 4. 즐겨찾기 한 정보 끌고오기
+	//즐겨찾기 조회
 	public List<Integer> getFavoritePlaceIds(String user_id);
 	
-	// [AJAX] -----------------------------------------------------------
-	// AJAX맛집 카드 목록 + 카드 건수
+    /* ==========================================
+		AJAX 화면
+		키워드(맛집/ 숙소/ 축제) 별 리스트+페이징 | 리뷰 갯수 + 리뷰 통계 조회
+	========================================== */
+	//AJAX 맛집 리스트+페이징/ 건수
 	public List<RestaurantDTO> getRestAjaxList(Map<String, Object> param);
 	public int getRestAjaxCount(Map<String, Object> param);
 
-	// AJAX숙소 카드 목록 + 카드 건수
+	// AJAX 숙소 리스트+페이징/ 건수
 	public List<AccommodationDTO> getAccAjaxList(Map<String, Object> param);
 	public int getAccAjaxCount(Map<String, Object> param);
 
-	// AJAX축제 카드 목록 + 카드 건수
+	// AJAX 축제 리스트+페이징/ 건수
 	public List<FestivalDTO> getFestAjaxList(Map<String, Object> param);
 	public int getFestAjaxCount(Map<String, Object> param);
 	
-	// AJAX리뷰 통계
+	// AJAX 리뷰 갯수 + 리뷰 통계 조회
 	public List<Map<String, Object>> getPlaceReviewStatsByIds(List<Integer> placeIds);
 	
-	// [자동완성] -----------------------------------------------------------
+	/* ================================================== 
+	   검색바
+	   자동완성 10개 + 최근 검색어 5개 조회/ 추가
+	================================================== */
 	//자동완성 10개
 	public List<String> getAutoComplete(String keyword);
-	
-	// [최근 검색어] -----------------------------------------------------------
-	// 1. 최근 검색어 5~10개 조회
+
+	//최근 검색어 5개 조회
 	public List<SearchHistoryDTO> getRecentKeywords(String login_userId);
 	
-	// 2. 최근 검색어 추가 전, 이미 db에 있다면 중복 방지를 위한 삭제
+	//중복 된다면 최근 검색어 삭제
 	public int deleteSameKeyword(Map<String, Object> searchMap);
 	
-	// 3. 최근 검색어 추가
+	//최근 검색어 추가
 	public int insertSearchHistory(Map<String, Object> searchMap);
 	
 }

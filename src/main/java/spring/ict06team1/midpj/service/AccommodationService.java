@@ -1,11 +1,23 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.util.List;
-
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.ui.Model;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 
 public interface AccommodationService {
+	
+	// 내 위치 기준 근방 숙소 리스트 조회  
+	public void getNearbyAccommodationAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
+	// 숙소 리스트를 JSON 형태로 응답
+    public List<AccommodationDTO> getNearbyMarkersAjaxAcc(HttpServletRequest request, HttpServletResponse response)
+    		throws ServletException, IOException;
 
     // 숙소 상세
     AccommodationDTO getAccommodationDetail(int place_id);
@@ -22,24 +34,24 @@ public interface AccommodationService {
     // 즐겨찾기 토글
     boolean toggleFavorite(String userId, int place_id);
     
- // 숙소 총 갯수
+    // 숙소 총 갯수
  	int getAccommodationCount();
  	
  	// [랭킹 관련 메서드] -----------------------------
  	// 숙소 랭킹 목록 조회
-     List<AccommodationDTO> getBestAccommodationList();
+    List<AccommodationDTO> getBestAccommodationList();
      
-     // 별점 평균
-     double getAvgRating(int place_id);
-     
-     // 숙소 총 갯수
-     int getBestAccommodationCount(String region);
-     
-     // 숙소 페이지 리스트
-     List<AccommodationDTO> getBestAccommodationPageList(int start, int end, String region);
-     
-     // 숙소 top 5
-     List<AccommodationDTO> getBestAccommodationTop5(String region);
+	// 별점 평균
+	double getAvgRating(int place_id);
+	 
+	// 숙소 총 갯수
+    int getBestAccommodationCount(String region);
+	 
+	// 숙소 페이지 리스트
+	List<AccommodationDTO> getBestAccommodationPageList(int start, int end, String region);
+	 
+	// 숙소 top 5
+	List<AccommodationDTO> getBestAccommodationTop5(String region);
 }
 
 /*

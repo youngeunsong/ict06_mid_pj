@@ -17,10 +17,10 @@
                 alert("맛집등록 성공!!");
                 <%-- 키워드 유무에 따라 서블릿 주소 결정 --%>
                 <c:if test="${not empty keyword}">
-                    window.location="${path}/restaurantSearch.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+                    window.location="${path}/restaurantSearch.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
                 </c:if>
                 <c:if test="${empty keyword}">
-                    window.location="${path}/restaurant.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
+                    window.location="${path}/restaurant.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
                 </c:if>
             }, 1000);
         </script>
@@ -31,7 +31,7 @@
             setTimeout(function(){
                 alert("맛집등록 실패!!");
                 <%-- 실패 시 다시 등록 폼으로 돌아갈 때도 검색어 유지 --%>
-                window.location="${path}/restaurantInsert.ad?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
+                window.location="${path}/restaurantInsert.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
             }, 1000);
         </script>
     </c:otherwise>
@@ -70,7 +70,7 @@
                             </h3>
                         </div>
                         
-                        <form action="${path}/restaurantInsertAction.ad" method="post" enctype="multipart/form-data" name="insertForm">
+                        <form action="${path}/restaurantInsertAction.adre" method="post" enctype="multipart/form-data" name="insertForm">
                         	<input type="hidden" name="areaCode" value="${param.areaCode}">
     						<input type="hidden" name="pageNum" value="${param.pageNum}">
     						<input type="hidden" name="category" value="${category}">
@@ -83,11 +83,15 @@
                                     <div class="col-md-6">
                                         <label class="form-label">지역 선택</label>
                                         <select name="areaCode" class="form-select" required>
-                                            <option value="1">서울</option>
-                                            <option value="2">인천</option>
-                                            <option value="31">경기</option>
-                                            <option value="4">대구</option>
-                                            <option value="6">부산</option>
+                                            <option value="서울">서울</option>
+                                            <option value="인천">인천</option>
+                                            <option value="경기">경기</option>
+                                            <option value="대구">대구</option>
+                                            <option value="부산">부산</option>
+                                            <option value="대전">대전</option>
+                                            <option value="광주">광주</option>
+                                            <option value="울산">울산</option>
+                                            <option value="제주">제주</option>
                                         </select>
                                     </div>
 
@@ -115,7 +119,10 @@
                                             <option value="양식">양식</option>
                                             <option value="일식">일식</option>
                                             <option value="중식">중식</option>
-                                            <option value="카페">카페/찻집</option>
+                                            <option value="기타">기타</option>
+                                            <option value="카페">카페</option>
+                                            <option value="이색음식">이색음식</option>
+                                            <option value="식음료">식음료</option>
                                         </select>
                                     </div>
 
@@ -144,9 +151,7 @@
                 </div>
             </section>
         </div>
-         <footer class="main-footer">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
+         
     </div>
 <script>
     // 주소 검색 및 좌표 변환 (기존 로직 유지)
@@ -169,4 +174,7 @@
     }
 </script>
 </body>
+<footer class="main-footer">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

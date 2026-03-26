@@ -47,4 +47,7 @@ public interface AdRestaurantService {
 	
 	//맛집 정보 등록-공공데이터를 통해서(restaurant 테이블쪽)
 	public void testRegisterDetail(String contentId, RestaurantDTO rdto); 
+	
+	//맛집 여러 이미지 추가-공공데이터를 통해서 
+	public void testRegisterImages(String contentId);
 }

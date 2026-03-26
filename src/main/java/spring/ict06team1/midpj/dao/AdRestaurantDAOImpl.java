@@ -141,4 +141,12 @@ public class AdRestaurantDAOImpl implements AdRestaurantDAO {
         System.out.println("[AdRestaurantDAOImpl - checkDuplicate()]");
         return sqlSession.selectOne("spring.ict06team1.midpj.dao.AdRestaurantDAO.checkDuplicate", test_id);
     }
+    
+    // 다수 이미지 저장하기
+	@Override
+	public int insertImageStore(Map<String, Object> imgMap) {
+		System.out.println("[AdRestaurantDAOImpl - insertImageStore()]");
+		int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.AdRestaurantDAO.insertImageStore", imgMap);
+		return insertCnt;
+	}
 }

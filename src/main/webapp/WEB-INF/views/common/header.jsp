@@ -1,9 +1,14 @@
 <!-- 
  * @author 송혜진
  * 최초작성일: 2026-02-26
- * 최종수정일: 2026-03-02
+ * 최종수정일: 2026-03-23
+ 
+ 참고) 
+ Google tag는 관리자> 메인대시보드에서 유저가 이용하는 값들을 파악하고 집계하기 위해 유저 HEADER에 넣었음
  
 -->
+
+
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -11,6 +16,8 @@
 <script src="${path}/resources/js/common/header.js" defer></script>
 
 <header>
+
+
 	<!-- header 시작 -->
 	<!-- 요청 : url, 버튼, 링크 연결 -->
 	<nav class="navbar navbar-expand-lg bg-white border-bottom">
@@ -57,19 +64,8 @@
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/accommodation.ac">숙소</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/festival.fe">축제</a></li>
 	        <li class="nav-item"><a class="nav-link fw-semibold" href="${path}/community_free.co">커뮤니티</a></li>
-			
-	        <!-- 더보기 드롭다운 -->
-	        <li class="nav-item dropdown">
-	          <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
-	            고객지원
-	          </a>
-	          <ul class="dropdown-menu">
-	            <li><a class="dropdown-item" href="${path}/FAQ.do">FAQ</a></li>
-	            <li><a class="dropdown-item" href="${path}/inquiry.do">1:1 문의</a></li>
-	          </ul>
-	        </li>
-	      </ul>
-	
+			<li class="nav-item"><a class="nav-link fw-semibold" href="${path}/faqMain.sp">고객지원</a></li>
+	        
 		  <!-- 우측 버튼 -->
 	      <div class="d-flex align-items-center gap-2">
 	      	<c:choose>
@@ -97,3 +93,5 @@
 	</nav>
 </header>
 <!-- header 끝 -->
+
+<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp" %>

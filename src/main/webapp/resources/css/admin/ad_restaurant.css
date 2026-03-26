@@ -13,7 +13,7 @@
 .filter-right {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	
 	gap: 8px;
 	padding-left: 20px;
 	border-left: 1px solid #eee;
@@ -92,6 +92,28 @@
 }
 
 .add-btn-area {
-	padding: 15px 20px;
-	border-top: none !important;
+	padding: 0; /* 내부 여백 없애서 테두리와 딱 붙도록 */
+    border-top: none !important;
+    display: flex;
+    flex-direction: column; /* 세로 방향 배치 */
+    gap: 8px; /* 버튼 사이 간격 */
+}
+.add-btn-area button {
+    width: 10%; /* 버튼 가로를 컨테이너 꽉 채우기 */
+    border-radius: 0; /* 필요하면 버튼 모서리 없애서 딱 붙도록 */
+    margin: 0; /* 여백 제거 */
+}
+html, body {
+    height: 100%;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex: 1;
+    min-height: auto !important;  
 }

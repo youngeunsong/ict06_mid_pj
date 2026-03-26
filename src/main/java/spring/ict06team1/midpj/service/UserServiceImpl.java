@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.SearchCriteria.Paging;
+import spring.ict06team1.midpj.dao.SurveyDAO;
 import spring.ict06team1.midpj.dao.UserDAO;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDAO dao;
+	
+	@Autowired
+	private SurveyDAO surveyDAO;
 	
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -566,6 +570,17 @@ public class UserServiceImpl implements UserService {
 	    System.out.println("start: " + paging.getStartRow());
 	    System.out.println("end: " + paging.getEndRow());
 	    System.out.println("status : " + status);
+	    
+	    // 리뷰 작성 여부 체크
+	    Map<String, Integer> reviewCheckMap = new HashMap<String, Integer>();
+
+	    for (ReservationDTO dto : list) {
+	    	int reviewCnt = surveyDAO.checkSurveyWritten(dto.getReservation_id());
+	    	reviewCheckMap.put(dto.getReservation_id(), reviewCnt);
+	    }
+
+	    // JSP로 전달
+	    model.addAttribute("reviewCheckMap", reviewCheckMap);
 	}
 	// 나의 예약 상세
 	@Override
@@ -583,6 +598,9 @@ public class UserServiceImpl implements UserService {
 		ReservationDTO dto = dao.selectMyReservationDetail(map);
 		
 		model.addAttribute("dto", dto);
+		
+		int surveyWrittenCnt = surveyDAO.checkSurveyWritten(dto.getReservation_id());
+		model.addAttribute("surveyWrittenCnt", surveyWrittenCnt);
 	}
 	
 	//------------------------------

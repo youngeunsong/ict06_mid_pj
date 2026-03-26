@@ -3,11 +3,30 @@ package spring.ict06team1.midpj.dao;
 import java.util.List;
 import java.util.Map;
 
-
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 
+/*
+ * @author 김다솜, 송영은 , 송창범
+ * 최초작성일: 2026-03-24
+ * 최종수정일: 2026-03-24
+ * 참고 코드: RestaurantsDAO, FestivalDAO
+ * 변경사항: 
+ * v260324
+ * ----------------------------------
+ */
+
 public interface AccommodationDAO {
+	
+	// 주변 숙소의 총 개수를 조회 (페이징 계산용)
+	public int selectNearbyAccommodationCount(Map<String, Object> map); 
+	
+	// 조건에 맞는 숙소 리스트 조회 (6개씩 끊어서 가져오기)
+    public List<AccommodationDTO> selectNearbyAccommodationList(Map<String, Object> map);
+    
+    // 조건에 맞는 숙소 마커 불러오기 (전부 가져오기)
+    public List<AccommodationDTO> selectNearbyMarkersAjaxAcc(Map<String, Object> map);
+    
 
     // 숙소 상세
     AccommodationDTO getAccommodationDetail(int place_id);
@@ -52,14 +71,5 @@ public interface AccommodationDAO {
      // 숙소 랭킹 top5
      List<AccommodationDTO> getBestAccommodationTop5(Map<String, Object> map);
  }
-/*
- * @author 김다솜, 송영은 , 송창범
- * 최초작성일: 2026-03-24
- * 최종수정일: 2026-03-24
- * 참고 코드: RestaurantsDAO, FestivalDAO
- * 변경사항: 
- * v260324
-<<<<<<< HEAD
- * ----------------------------------
- */
+
 

@@ -32,61 +32,61 @@ public class AdRestaurantController {
 	@GetMapping("/restaurantList.adre")
 	public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurant.ad>>>");
+		logger.info("<<< url => /restaurant.adre>>>");
 		adResService.getRestaurant_list(request, response, model);
 		return "admin/place/restaurant/restaurant";
 	}
 	
 	//관리자 맛집명 또는 place_id 검색
-	@GetMapping("/restaurantSearch.ad") 
+	@GetMapping("/restaurantSearch.adre") 
 	public String restaurantSearch(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurantSearch>>>");
+		logger.info("<<< url => /restaurantSearch.adre>>>");
 		adResService.getRestaurantSearch(request, response, model);
 		return "admin/place/restaurant/restaurant";
 	}
 	
 	//관리자 맛집 등록페이지로 가기
-	@GetMapping("/restaurantInsert.ad")
+	@GetMapping("/restaurantInsert.adre")
 	public String restaurantInsert(HttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurantInsert.ad >>>");
+		logger.info("<<< url => /restaurantInsert.adre >>>");
 		return "admin/place/restaurant/restaurantInsert";
 	}
 	
 	//관리자 맛집 등록 -> DB저장
-	@PostMapping("/restaurantInsertAction.ad")
+	@PostMapping("/restaurantInsertAction.adre")
 	public String restaurantInsertAction(MultipartHttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurantInsertAction.ad >>>");
+		logger.info("<<< url => /restaurantInsertAction.adre >>>");
 		adResService.getRestaurantInsert(request, response, model);
 		return "admin/place/restaurant/restaurantInsertAction";
 	}
 	
 	//관리자 맛집 수정페이지로 가기
-	@GetMapping("/restaurantModify.ad")
+	@GetMapping("/restaurantModify.adre")
 	public String restaurantModify(HttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurantModify.ad >>>");
+		logger.info("<<< url => /restaurantModify.adre >>>");
 		adResService.getRestaurantDetail(request, response, model);
 		return "admin/place/restaurant/restaurantModify";
 	}
 	
 	//관리자 맛집 수정 -> DB저장
-	@PostMapping("/restaurantModifyAction.ad")
+	@PostMapping("/restaurantModifyAction.adre")
 	public String restaurantModifyAction(MultipartHttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => /restaurantModifyAction.ad >>>");
+		logger.info("<<< url => /restaurantModifyAction.adre >>>");
 		adResService.getRestaurantUpdateAction(request, response, model);
 		adResService.getRestaurantDetail(request, response, model);
 		return "admin/place/restaurant/restaurantModifyAction";
 	}
 	
 	//관리자 맛집 삭제
-	@GetMapping("/restaurantDeleteAction.ad")
+	@GetMapping("/restaurantDeleteAction.adre")
 	public String restaurantDeleteAction(HttpServletRequest request, Model model) 
 	        throws ServletException, IOException {
-	    logger.info("<<< url => /restaurantDeleteAction.ad >>>");
+	    logger.info("<<< url => /restaurantDeleteAction.adre >>>");
 	    
 	    // 1. 삭제 서비스 호출 (여기서 model에 담아준 값을 나중에 꺼내 씁니다)
 	    adResService.getRestaurantDeleteAction(request, null, model);
@@ -98,32 +98,33 @@ public class AdRestaurantController {
 	    // 3. 키워드 유무에 따른 리다이렉트 분기
 	    if (keyword != null && !keyword.trim().isEmpty()) {
 	        // 검색 중이었을 경우 -> 검색 컨트롤러로 이동
-	        return "redirect:/restaurantSearch.ad?pageNum=" + pageNum 
+	        return "redirect:/restaurantSearch.adre?pageNum=" + pageNum 
 	             + "&areaCode=" + areaCode 
 	             + "&category=" + category 
 	             + "&keyword=" + URLEncoder.encode(keyword, "UTF-8"); 
 	             // ※ 한글 키워드일 경우 URLEncoder 사용 권장 (java.net.URLEncoder)
 	    } else {
 	        // 일반 목록이었을 경우 -> 전체 목록 컨트롤러로 이동
-	        return "redirect:/restaurant.ad?pageNum=" + pageNum 
+	        return "redirect:/restaurant.adre?pageNum=" + pageNum 
 	             + "&areaCode=" + areaCode; 
 	    }
 	}
 	//-----------------------------------------------------------------------------------------------------------------
 	//관리자 맛집 정보 입력 - 공공 데이터 활용
 	//관리자 맛집 정보 입력 하는곳
-	@RequestMapping("/start_1.ad")
+	@RequestMapping("/start_1.adre")
 	public String start_1(HttpServletRequest request, HttpServletResponse response,Model model)
 			throws ServletException, IOException {
-		logger.info("<<< url => mapTest >>> ");
+		logger.info("<<< url => mapTest.adre >>> ");
 		return"admin/place/restaurant/restaurant_publicdata";
 	}
 	
 	//관리자 맛집 정보 입력 실행
 	@ResponseBody
-	@RequestMapping("/start_1_test.ad")
+	@RequestMapping("/start_1_test.adre")
 	public String start_1_test(HttpServletRequest request, HttpServletResponse response, Model model) 
 	        throws ServletException, IOException {
+		logger.info("<<< url => start_1_test.adre >>> ");
 	    // 서비스 하나가 목록 저장 + 이미지 저장까지 다 하도록 시킵니다.
 		adResService.testRegister(request, response, model);
 	    return String.valueOf(model.asMap().get("countPlace"));

@@ -19,10 +19,10 @@
             <%-- 키워드가 있을 때는 restaurantSearch.ad로, 없을 때는 restaurant.ad로 분기 --%>
             <c:choose>
                 <c:when test="${not empty keyword}">
-                    window.location="${path}/restaurantSearch.ad?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+                    window.location="${path}/restaurantSearch.adre?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
                 </c:when>
                 <c:otherwise>
-                    window.location="${path}/restaurant.ad?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}";
+                    window.location="${path}/restaurantList.adre?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}";
                 </c:otherwise>
             </c:choose>
         }, 1000);
@@ -34,7 +34,7 @@
         setTimeout(function(){
             alert("맛집수정 실패!!");
             <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
-            window.location="${path}/restaurantModify.ad?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+            window.location="${path}/restaurantModify.adre?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
         }, 1000);
     </script>
 </c:if>
@@ -169,11 +169,7 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-			<strong>Copyright &copy; 2026</strong>
-		</footer>
     </div>
-
 <script>
 var geocoder;
 kakao.maps.load(function () {
@@ -200,4 +196,7 @@ function execPostcode() {
 }
 </script>
 </body>
+<footer class="main-footer">
+	<strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

@@ -11,9 +11,11 @@
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <link rel="stylesheet"
 	href="${path}/resources/css/user/mypage/myPageHome.css">
+<!-- 풀캘린더 css -->
 <link
 	href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/main.min.css"
 	rel="stylesheet" />
+<!-- 풀캘린더 js -->
 <script
 	src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
 </head>
@@ -233,29 +235,84 @@
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {
 	
-	    // calendarList를 FullCalendar 이벤트 배열로 변환
-	    var events = [
+	    /* 미니 캘린더 타입/상태 2줄 표시용 */
+	    var miniEvents = [
 	        <c:forEach var="item" items="${calendarList}" varStatus="st">
 	        {
-	            // 예약 고유번호 (클릭 시 예약상세 이동에 사용)
+	        	/* 예약 고유번호(클릭 상세이동) */
 	            id: '${item.RESERVATIONID}',
-	
-	            // 캘린더에 표시할 제목
-	            title: '${item.PLACENAME}',
-	
-	            // 예약 날짜
+	            /* 예약 날짜 */
 	            start: '${item.STARTDATE}',
-	
-	            // 종일 이벤트로 처리
+	            /* 종일 일정처리 */
 	            allDay: true,
-	
-	            // 장소 타입별 클래스 지정 (맛집/숙소/축제 색상 구분용)
+
+	            /* 미니 캘린더 표시용 텍스트 */
+	            extendedProps: {
+	                placeTypeText:
+	                    <c:choose>
+	                        <c:when test="${item.PLACETYPE eq 'REST'}">'맛집'</c:when>
+	                        <c:when test="${item.PLACETYPE eq 'ACC'}">'숙소'</c:when>
+	                        <c:when test="${item.PLACETYPE eq 'FEST'}">'축제'</c:when>
+	                        <c:otherwise>'기타'</c:otherwise>
+	                    </c:choose>,
+	                statusText:
+	                    <c:choose>
+	                        <c:when test="${item.STATUS eq 'COMPLETED'}">'완료'</c:when>
+	                        <c:when test="${item.STATUS eq 'PENDING'}">'대기'</c:when>
+	                        <c:when test="${item.STATUS eq 'RESERVED'}">'확정'</c:when>
+	                        <c:when test="${item.STATUS eq 'CANCELLED'}">'취소'</c:when>
+	                        <c:when test="${item.STATUS eq 'NOSHOW'}">'미방'</c:when>
+	                        <c:otherwise>'기타'</c:otherwise>
+	                    </c:choose>
+	            },
+				/* 타입/상태 색상 구분 */
 	            classNames: [
 	                <c:choose>
 	                    <c:when test="${item.PLACETYPE eq 'REST'}">'fc-type-rest'</c:when>
 	                    <c:when test="${item.PLACETYPE eq 'ACC'}">'fc-type-acc'</c:when>
 	                    <c:when test="${item.PLACETYPE eq 'FEST'}">'fc-type-fest'</c:when>
 	                    <c:otherwise>'fc-type-etc'</c:otherwise>
+	                </c:choose>,
+	                <c:choose>
+	                    <c:when test="${item.STATUS eq 'COMPLETED'}">'fc-status-completed'</c:when>
+	                    <c:when test="${item.STATUS eq 'PENDING'}">'fc-status-pending'</c:when>
+	                    <c:when test="${item.STATUS eq 'RESERVED'}">'fc-status-reserved'</c:when>
+	                    <c:when test="${item.STATUS eq 'CANCELLED'}">'fc-status-cancelled'</c:when>
+	                    <c:when test="${item.STATUS eq 'NOSHOW'}">'fc-status-noshow'</c:when>
+	                    <c:otherwise>'fc-status-etc'</c:otherwise>
+	                </c:choose>
+	            ]
+	        }<c:if test="${!st.last}">,</c:if>
+	        </c:forEach>
+	    ];
+
+	    /* 모달 캘린더용 이벤트 */
+	    var modalEvents = [
+	        <c:forEach var="item" items="${calendarList}" varStatus="st">
+	        {
+	        	/* 예약 고유번호 */
+	            id: '${item.RESERVATIONID}',
+	            /* 모달 캘린더 장소명 */
+	            title: '${item.PLACENAME}',
+	            /* 예약 날자 */
+	            start: '${item.STARTDATE}',
+	            /* 종일 일정 */
+	            allDay: true,
+	            /* 타입/상태 색상 구분 클래스 */
+	            classNames: [
+	                <c:choose>
+	                    <c:when test="${item.PLACETYPE eq 'REST'}">'fc-type-rest'</c:when>
+	                    <c:when test="${item.PLACETYPE eq 'ACC'}">'fc-type-acc'</c:when>
+	                    <c:when test="${item.PLACETYPE eq 'FEST'}">'fc-type-fest'</c:when>
+	                    <c:otherwise>'fc-type-etc'</c:otherwise>
+	                </c:choose>,
+	                <c:choose>
+	                    <c:when test="${item.STATUS eq 'COMPLETED'}">'fc-status-completed'</c:when>
+	                    <c:when test="${item.STATUS eq 'PENDING'}">'fc-status-pending'</c:when>
+	                    <c:when test="${item.STATUS eq 'RESERVED'}">'fc-status-reserved'</c:when>
+	                    <c:when test="${item.STATUS eq 'CANCELLED'}">'fc-status-cancelled'</c:when>
+	                    <c:when test="${item.STATUS eq 'NOSHOW'}">'fc-status-noshow'</c:when>
+	                    <c:otherwise>'fc-status-etc'</c:otherwise>
 	                </c:choose>
 	            ]
 	        }<c:if test="${!st.last}">,</c:if>
@@ -269,7 +326,7 @@
 	        initialView: 'dayGridMonth',
 	
 	        // 캘린더 높이
-	        height: 470,
+	        height: 480,
 	
 	        // 상단 헤더 구성
 	        headerToolbar: {
@@ -277,30 +334,83 @@
 	            center: 'title',
 	            right: 'next'
 	        },
-	
-	        // 하루에 이벤트 1개만 보이고 나머지는 +more 처리
+	        /* 하루한개 이벤트 표시, 나머지 +more */
 	        dayMaxEvents: 1,
-	
-	        // 현재 달이 아닌 날짜는 숨김
+	        /* 현재 달이 아닌 날짜 숨김 */
 	        showNonCurrentDates: false,
-	
-	        // 이벤트 데이터 연결
-	        events: events,
-	
-	        // 예약 클릭 시 예약상세 페이지로 이동
+	        /* 미니캘린더용 이벤트 데이터 연결 */
+	        events: miniEvents,
+
+	        /* 미니 캘린더 이벤트를 2줄 띠 구조로 커스텀 */
+	        eventContent: function(arg) {
+	            var placeTypeText = arg.event.extendedProps.placeTypeText;
+	            var statusText = arg.event.extendedProps.statusText;
+
+	            var wrap = document.createElement('div');
+	            wrap.className = 'mini_event_wrap';
+
+	            var typeBadge = document.createElement('div');
+	            typeBadge.className = 'mini_event_type ' + getTypeClass(arg.event.classNames);
+	            typeBadge.textContent = placeTypeText;
+
+	            var statusBadge = document.createElement('div');
+	            statusBadge.className = 'mini_event_status ' + getStatusClass(arg.event.classNames);
+	            statusBadge.textContent = statusText;
+
+	            wrap.appendChild(typeBadge);
+	            wrap.appendChild(statusBadge);
+
+	            return { domNodes: [wrap] };
+	        },
+			/* 예약 클릭 시 예약상세 페이지 이동 */
 	        eventClick: function(info) {
 	            location.href = '${path}/reservationDetail.do?reservation_id=' + info.event.id;
 	        }
 	    });
-	
 	    miniCalendar.render();
-	
+		
+	    /* 보조함수 */
+	    /* 미니캘린더 장소 타입 클래스 반환 */
+	    function getTypeClass(classNames) {
+	        if (classNames.includes('fc-type-rest')) return 'mini_type_rest';
+	        if (classNames.includes('fc-type-acc')) return 'mini_type_acc';
+	        if (classNames.includes('fc-type-fest')) return 'mini_type_fest';
+	        return 'mini_type_etc';
+	    }
+		/* 미니캘린더 상태 클래스 반환 */
+	    function getStatusClass(classNames) {
+	        if (classNames.includes('fc-status-completed')) return 'mini_status_completed';
+	        if (classNames.includes('fc-status-pending')) return 'mini_status_pending';
+	        if (classNames.includes('fc-status-reserved')) return 'mini_status_reserved';
+	        if (classNames.includes('fc-status-cancelled')) return 'mini_status_cancelled';
+	        if (classNames.includes('fc-status-noshow')) return 'mini_status_noshow';
+	        return 'mini_status_etc';
+	    }
+	    /* 모달캘린더 상태 배지용 클래스 반환 */
+	    function getModalStatusClass(classNames) {
+	        if (classNames.includes('fc-status-completed')) return 'modal_status_completed';
+	        if (classNames.includes('fc-status-pending')) return 'modal_status_pending';
+	        if (classNames.includes('fc-status-reserved')) return 'modal_status_reserved';
+	        if (classNames.includes('fc-status-cancelled')) return 'modal_status_cancelled';
+	        if (classNames.includes('fc-status-noshow')) return 'modal_status_noshow';
+	        return 'modal_status_etc';
+	    }
+		/* 모달캘린더 상태 텍스트 반환 */
+	    function getModalStatusText(classNames) {
+	        if (classNames.includes('fc-status-completed')) return '완료';
+	        if (classNames.includes('fc-status-pending')) return '대기';
+	        if (classNames.includes('fc-status-reserved')) return '확정';
+	        if (classNames.includes('fc-status-cancelled')) return '취소';
+	        if (classNames.includes('fc-status-noshow')) return '미방';
+	        return '기타';
+	    }
+	    
 	    /* 큰 캘린더 모달 관련 */
 	    var calendarModal = document.getElementById('calendarModal');
 	    var openCalendarModalBtn = document.getElementById('openCalendarModal');
 	    var closeCalendarModalBtn = document.getElementById('closeCalendarModal');
 	    var modalOverlay = document.querySelector('.calendar_modal_overlay');
-	
+	    
 	    // 큰 캘린더는 모달이 처음 열릴 때 1번만 생성
 	    var bigCalendar = null;
 	
@@ -328,9 +438,35 @@
 	                },
 	
 	                dayMaxEvents: true,
-	                events: events,
+	                events: modalEvents,
 	
-	                // 큰 캘린더에서도 예약 클릭 시 상세 이동
+	                /* 모달 캘린더 이벤트 커스텀 */
+	                eventContent: function(arg) {
+
+	                    /* 목록 뷰는 기본 구조 */
+	                    if (arg.view.type === 'listMonth') {
+	                        return true;
+	                    }
+
+	                    /* 월뷰 장소명 (상태) */
+	                    var wrap = document.createElement('div');
+	                    wrap.className = 'modal_event_inline';
+
+	                    var titleText = document.createElement('span');
+	                    titleText.className = 'modal_event_title_text';
+	                    titleText.textContent = arg.event.title;
+
+	                    var statusBadge = document.createElement('span');
+	                    statusBadge.className = 'modal_event_badge ' + getModalStatusClass(arg.event.classNames);
+	                    statusBadge.textContent = getModalStatusText(arg.event.classNames);
+
+	                    wrap.appendChild(titleText);
+	                    wrap.appendChild(statusBadge);
+
+	                    return { domNodes: [wrap] };
+	                },
+	                
+	                // 모달캘린더 예약 클릭 시 상세 이동
 	                eventClick: function(info) {
 	                    location.href = '${path}/reservationDetail.do?reservation_id=' + info.event.id;
 	                }

@@ -32,4 +32,8 @@ public interface SurveyDAO {
     
     //리뷰 중복 체크
     int checkReviewExists(String reservation_id);
+    
+	// 설문 작성 완료 여부 확인(예약목록 버튼 전환용)
+	int checkSurveyWritten(String reservation_id);
+    
 }

@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class SurveyDAOImpl implements SurveyDAO {
 		System.out.println("[SurveyDAOImpl - getSurveyTargetList()]");
 		return sqlSession.getMapper(SurveyDAO.class).getSurveyTargetList(user_id);
 	}
+	
 	//리뷰 등록
 	@Override
 	public int insertReview(ReviewDTO dto) {
@@ -59,6 +61,15 @@ public class SurveyDAOImpl implements SurveyDAO {
 		System.out.println("[SurveyDAOImpl - checkReviewExists()]");
 		return sqlSession.getMapper(SurveyDAO.class).checkReviewExists(reservation_id);
 	}
-    
-
+	
+	// ===============================
+	// 추가: 김재원 2026-03-26
+	// 설문 조사와 리뷰 참여 시 포인트 지급 
+	// 포인트 등록
+	@Override
+	public int insertPoint(Map<String, Object> map) {
+		System.out.println("SurveyDAOImpl - insertPoint()");
+		return sqlSession.insert("PointMapper.insertPoint", map);
+	}
+	// ================================
 }

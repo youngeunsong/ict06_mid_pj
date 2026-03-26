@@ -84,7 +84,7 @@ public class UserController {
 	        if ("ADMIN".equals(userRole)) {
 	            return "redirect:/adminHome.ad"; // 관리자면 여기로!
 	        } else {
-	            return "redirect:/main.do";      // 일반인이면 여기로!
+	            return "user/login/loginAction";      // 일반인이면 여기로!
 	        }
 	    } else {
 	        // 로그인 실패하면 원래 가던 jsp로

@@ -60,7 +60,13 @@ public interface UserDAO {
     public ReservationDTO selectMyReservationDetail(Map<String, Object> map);
     
     //------------------------------
-    //관리자 정보 수정
+    // 관리자 정보 수정
     public int updateAdmin(MemberDTO dto);
-
+    
+    // ----------------------------------------------------
+    // 신규 회원가입시 포인트 지급
+    public int insertPoint(Map<String, Object> map);
+    
+    // 신규 가입후 첫 로그인 시 포인 처리
+    public int countPointForPolicy(Map<String, Object> map1);
 }    

@@ -200,9 +200,17 @@ public class UserDAOImpl implements UserDAO {
 
 		return sqlSession.getMapper(UserDAO.class).updateAdmin(dto);
 	}
-
+	//--------------------------------------------------------------
+	// 포인트 DB에 입력
+	@Override
+	public int insertPoint(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - insertPoint()");
+		return sqlSession.insert("PointMapper.insertPoint", map);
+	}
 	
-
-	
-
+	// 세션 기반 첫 로그인 포인트 처리
+	public int countPointForPolicy(Map<String, Object> map1) {
+		System.out.println("UserDAOImpl - countPointForPolicy()");      
+	    return sqlSession.selectOne("PointMapper.countPointForPolicy", map1); 
+	}
 }

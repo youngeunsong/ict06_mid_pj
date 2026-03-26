@@ -3,15 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- @author 김다솜/ 송혜진 -->
+<!-- @author 김다솜/ 송혜진 / 송영은 -->
 <!-- 최초작성일: 2026-03-23 -->
-<!-- 최종수정일: 2026-03-23 -->
+<!-- 최종수정일: 2026-03-25 -->
 <!-- 참고 코드: None -->
 <!-- ========================= -->
 <!-- v260323 -->
 <!-- 1:1문의 미처리 목록 출력 sql문 추가 -->
 
 <!-- v260325 -->
+<!-- 기간내 사용자 만족도 표 조회 sql문 추가 (송영은)-->
 <!--  -->
 <!-- ========================= -->
 
@@ -21,7 +22,6 @@
 	- 관리자 홈 대시보드 집계 전용 매퍼
 	- DB 데이터만 담당
 	- GA API / 워드클라우드 API는 서비스에서 별도 처리
-
  -->
 
 <mapper namespace="spring.ict06team1.midpj.dao.AdDashboardDAO">
@@ -30,12 +30,13 @@
     <resultMap id="surveyResultMap" type="spring.ict06team1.midpj.dto.SurveyDTO">
         <id property="survey_id" column="survey_id"/>
         <result property="user_id" column="user_id"/>
+        <result property="reservation_id" column="reservation_id"/>
         <result property="nps_score" column="nps_score"/>
         <result property="satisfaction_score" column="satisfaction_score"/>
         <result property="inconvenience" column="inconvenience"/>
         <result property="info_reliability_score" column="info_reliability_score"/>
         <result property="improvements" column="improvements"/>
-        <result property="surveyDate" column="surveyDate"/>
+        <result property="surveyDate" column="created_at"/>
     </resultMap>
 
     <!-- ======= Inquiry DTO 매핑 (created_at -> inquiryDate/ answered_at -> answerDate) ======= -->
@@ -308,6 +309,50 @@
 	        ORDER BY created_at DESC, inquiry_id DESC
 	    )
         WHERE ROWNUM &lt;= 10
+    </select>
+    
+    <!-- ==============================
+         10. 기간내 만족도 조회 표 목록
+         Oracle 11g paging
+         start, end 사용
+    ============================== -->
+    <select id="getSatisfactionList" parameterType="map" resultMap="surveyResultMap">
+        SELECT survey_id, 
+ 			   user_id, 
+		       reservation_id, 
+		       nps_score, 
+		       satisfaction_score, 
+		       inconvenience, 
+		       info_reliability_score, 
+		       improvements, 
+		       created_at
+		  FROM (
+		        SELECT ROW_NUMBER() OVER (ORDER BY CREATED_AT DESC, survey_id DESC) AS rn,
+		               survey_id,
+		               user_id, 
+		               reservation_id, 
+		               nps_score, 
+		               satisfaction_score, 
+		               inconvenience, 
+		               info_reliability_score, 
+		               improvements, 
+		               created_at      
+				  FROM SURVEY
+				 WHERE CREATED_AT &gt;= #{startDate}
+				   AND CREATED_AT &lt; #{endDate} 
+				 )
+		 WHERE rn BETWEEN #{start, jdbcType=INTEGER} AND #{end, jdbcType=INTEGER}
+		 ORDER BY CREATED_AT DESC
+    </select>
+    
+    <!-- ==============================
+         11. 금일 만족도 표 총 개수
+    ============================== -->
+    <select id="getSurveyCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM SURVEY
+         WHERE CREATED_AT &gt;= #{startDate, jdbcType=TIMESTAMP}
+	       AND CREATED_AT &lt; #{endDate, jdbcType=TIMESTAMP} 
     </select>
 
 </mapper>

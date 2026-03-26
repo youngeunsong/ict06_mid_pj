@@ -7,13 +7,13 @@ import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.SurveyDTO;
 
 /*
- * @author 김다솜/ 송혜진
+ * @author 김다솜/ 송혜진 / 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-24
+ * 최종수정일: 2026-03-25
  * 참고 코드: None
  * ----------------------------------
  * v260325
- * 
+ * 기간내 사용자 만족도 표 조회 기능 추가 (송영은)
  * ----------------------------------
  */
 
@@ -36,6 +36,12 @@ public interface AdDashboardDAO {
 
     // 워드클라우드용 서술형 원문
 	public List<String> getSubjectiveSurveyAnswers(Map<String, Object> map);
+	
+	// 기간내 만족도 표 
+	public List<Map<String, Object>> getSatisfactionList(Map<String, Object> map);
+	
+	// 기간내 만족도 표 총 개수 
+	public int getSurveyCount(Map<String, Object> map);
 
     // 금일 만족도 표 | 현 메서드 미사용/ 추후 작업 중 필요 시 사용하기 위해 파일만 유지
 	public List<SurveyDTO> getTodaySurveyList(Map<String, Object> map);

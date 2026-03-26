@@ -230,4 +230,29 @@
         FROM RESTAURANT 
         WHERE Restaurant_ID = #{restaurant_id}
     </select>
+    
+    <!--여러 이미지 저장하기  -->
+    <insert id="insertImageStore" parameterType="map">
+        <selectKey keyProperty="imageId" resultType="int" order="BEFORE">
+	        SELECT NVL(MAX(image_id), 0) + 1 FROM IMAGE_STORE
+	    </selectKey>
+	
+	    INSERT INTO IMAGE_STORE (
+	        image_id,           
+	        target_id,          
+	        target_type, 
+	        image_url,
+	        is_representative, 
+	        sort_order,
+	        created_at
+	    ) VALUES (
+	        #{imageId},         
+	        #{targetId},
+	        #{targetType},
+	        #{imageUrl},
+	        #{isRepresentative},
+	        #{sortOrder},
+	        SYSTIMESTAMP
+	    )
+	</insert>
  </mapper> 

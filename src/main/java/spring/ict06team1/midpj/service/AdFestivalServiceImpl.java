@@ -12,6 +12,7 @@
 
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -343,7 +345,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	@Override
 	@Transactional
 	public void insertFestivalsFromApi(String json, HttpServletRequest request, HttpServletResponse response, Model model) 
-			throws Exception {
+			throws ServletException, IOException  {
 		List<FestivalDTO> list = parseFestivalJson(json);
 
 		int successCnt = 0; 
@@ -358,13 +360,13 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		    	
 		    	// 새로 추가한 장소의 place_id 받아오기 
 		    	placeId = place.getPlace_id();
-		    }
-		    
-		    dto.setFestival_id(placeId);
-		    int insertCnt = dao.insertFestival(dto);
-		    
-		    if(insertCnt > 0) {
-		    	successCnt++; 
+		    	
+		    	dto.setFestival_id(placeId);
+			    int insertCnt = dao.insertFestival(dto);
+			    
+			    if(insertCnt > 0) {
+			    	successCnt++; 
+			    }
 		    }
 		}
 		System.out.println("successCnt: " + successCnt);

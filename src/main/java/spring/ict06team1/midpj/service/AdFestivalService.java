@@ -1,7 +1,9 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +36,6 @@ public interface AdFestivalService {
 	
 	// 오픈API로 가져온 정보 DB에 넣기 
 	public void insertFestivalsFromApi(String json, HttpServletRequest request, HttpServletResponse response, Model model)
-			throws Exception;
+			throws ServletException, IOException;
 
 }

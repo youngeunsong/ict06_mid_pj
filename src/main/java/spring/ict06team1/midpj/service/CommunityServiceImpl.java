@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -112,7 +113,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	    // 증가된 조회수 반영 다시 조회
 	    dto = dao.boardDetail(post_id);
-
+	    
 	    // 댓글 목록 조회
 	    List<CommunityCommentDTO> commentList = commentDao.getCommentList(post_id);
 
@@ -162,6 +163,7 @@ public class CommunityServiceImpl implements CommunityService {
 	/* ==========================================
 		좋아요(좋아요 여부 체크 + 게시글 좋아요/COMMUNITY_LIKE 테이블 +1 or -1)
 	========================================== */
+	@Transactional
 	@Override
 	public String toggleLike(HttpServletRequest request) {
 	    System.out.println("[CommunityServiceImpl - toggleLike()]");
@@ -177,6 +179,8 @@ public class CommunityServiceImpl implements CommunityService {
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("user_id", sessionID);
 	    map.put("post_id", post_id);
+	    
+	    System.out.println("sessionID=>" + sessionID);
 	    
 	    // 좋아요 여부 체크 (0 좋아요 클릭 상태/ 1 좋아요 미클릭 상태)
 	    int checkCnt = dao.checkCommunityLike(map);

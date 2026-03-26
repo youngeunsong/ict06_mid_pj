@@ -166,14 +166,23 @@
 	<select id="checkDuplication"
         parameterType="spring.ict06team1.midpj.dto.FestivalDTO"
         resultType="int">
-		SELECT p.place_id
-		  FROM PLACE p
-		  JOIN FESTIVAL f
-		    ON f.FESTIVAL_ID = p.PLACE_ID
-		 WHERE name = #{placeDTO.name}
-		   AND address = #{placeDTO.address}
-		   AND f.START_DATE = #{start_date}
+	    SELECT MIN(p.place_id)
+	      FROM PLACE p
+	      JOIN FESTIVAL f
+	        ON f.festival_id = p.place_id
+	     WHERE p.name = #{placeDTO.name}
+	       AND NVL(p.address, ' ') = NVL(#{placeDTO.address}, ' ')
+	       AND TRUNC(f.start_date) = TRUNC(#{start_date})
 	</select>
+	<!-- 
+	구버전
+	SELECT p.place_id
+  FROM PLACE p
+  JOIN FESTIVAL f
+    ON f.FESTIVAL_ID = p.PLACE_ID
+ WHERE name = #{placeDTO.name}
+   AND address = #{placeDTO.address}
+   AND f.START_DATE = #{start_date} -->
 	
 	<!-- (1) 신규 장소 등록 -->
 	<insert id="insertPlace" parameterType="spring.ict06team1.midpj.dto.PlaceDTO">
@@ -214,6 +223,12 @@
 		    #{end_date, jdbcType=DATE}
 		)
 	</insert>
+	 <!-- VALUES (
+		    #{festival_id},
+		    #{description, jdbcType=CLOB},
+		    #{start_date, jdbcType=DATE},
+		    #{end_date, jdbcType=DATE}
+		) -->
 	
 	<!-- (3) 신규 티켓 정보 등록 -->
 	<insert id="insertTicket" parameterType="spring.ict06team1.midpj.dto.FestivalTicketDTO">

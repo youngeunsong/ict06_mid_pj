@@ -20,6 +20,14 @@ SELECT p.place_id
   FROM PLACE p
   JOIN FESTIVAL f
     ON f.FESTIVAL_ID = p.PLACE_ID
+ WHERE name LIKE '그랜드 민트 페스티벌 2025'
+   AND address LIKE '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원'
+   AND f.START_DATE = '2025-10-18'; 
+
+SELECT * 
+  FROM PLACE p
+  JOIN FESTIVAL f
+    ON f.FESTIVAL_ID = p.PLACE_ID
  WHERE name = '그랜드 민트 페스티벌 2025'
    AND address = '서울특별시 송파구 올림픽로 424 (방이동 88-2) 올림픽 공원'
    AND f.START_DATE = '2025-10-18'; 
@@ -187,43 +195,31 @@ INTO MEMBER VALUES ('user09','1234','user09@test.com','강도윤',TO_DATE('1996-
 SELECT * FROM DUAL;
 
 --
--- 임시 : 커뮤니티 테이블 업데이트
-DROP TABLE COMMUNITY_COMMENT; 
-DROP TABLE COMMUNITY; 
+-- 임시 : 1:1 문의 내용 추가
+-- 임시 : 1:1 문의 내용 새로 추가하기
+INSERT INTO INQUIRY (inquiry_id, user_id, title, content)
+VALUES (1, 'user611', '그민페 언제 개최되나요?', '올해 그랜드민트페스티벌 개최 시점 및 장소 등 상세 정보 문의드려요~');
 
--- 10. COMMUNITY(커뮤니티/사용자 게시판)
-CREATE TABLE COMMUNITY(
-	post_id			NUMBER PRIMARY KEY,
-	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE CASCADE,
-	title			VARCHAR2(200) NOT NULL,
-	content			CLOB NOT NULL,
-	category		VARCHAR2(50),
-	view_count		NUMBER DEFAULT 0,
-	like_count		NUMBER DEFAULT 0,
-	status			VARCHAR2(20) DEFAULT 'DISPLAY',
-	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postDate
-	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 postUpdateDate
-	CONSTRAINT CHK_POST_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
-);
-SELECT * FROM COMMUNITY;
---제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
-ALTER TABLE COMMUNITY DROP CONSTRAINT CHK_POST_STATUS;
-ALTER TABLE COMMUNITY ADD CONSTRAINT CHK_POST_STATUS
-CHECK(status IN('DISPLAY','HIDDEN','BANNED'));
+-- 임시 : faq 테이블 속성 변경
+-- 아래 코드는 테이블이 비어있을 때만 작동
+--ALTER TABLE FAQ
+--MODIFY order_no NUMBER;
 
--- 11. COMMUNITY_COMMENT(커뮤니티 댓글)
-CREATE TABLE COMMUNITY_COMMENT(
-	comment_id		NUMBER PRIMARY KEY,
-	post_id			NUMBER REFERENCES COMMUNITY(post_id) ON DELETE CASCADE,
-	user_id			VARCHAR2(50) REFERENCES MEMBER(user_id) ON DELETE SET NULL,
-	content			CLOB NOT NULL,
-	status			VARCHAR2(20) DEFAULT 'DISPLAY',
-	created_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentDate
-	updated_at		TIMESTAMP DEFAULT SYSTIMESTAMP,		--DTO는 commentUpdateDate
-	CONSTRAINT CHK_COMMENT_STATUS CHECK(status IN('DISPLAY','HIDDEN','BANNED'))
-);
-SELECT * FROM COMMUNITY_COMMENT;
---제약조건 추가에 따른 테이블 속성 변경 쿼리('DELETED' 추가)
-ALTER TABLE COMMUNITY_COMMENT DROP CONSTRAINT CHK_COMMENT_STATUS;
-ALTER TABLE COMMUNITY_COMMENT ADD CONSTRAINT CHK_COMMENT_STATUS
-CHECK(status IN('DISPLAY','HIDDEN','BANNED'));
+-- [빈 테이블이 아닐 때엔 형 변환하여 컬럼 복사 -> 기존 컬럼 제거 -> 새 컬럼 이름을 기존 컬럼 이름으로 변경]
+-- 새 컬럼 추가
+ALTER TABLE FAQ ADD order_no_new NUMBER;
+
+-- 데이터 복사
+UPDATE FAQ
+SET order_no_new =
+    CASE
+        WHEN REGEXP_LIKE(order_no, '^[0-9]+$')
+        THEN TO_NUMBER(order_no)
+        ELSE NULL
+    END;
+
+-- 기존 컬럼 삭제
+ALTER TABLE FAQ DROP COLUMN order_no;
+
+-- 컬럼명 변경
+ALTER TABLE FAQ RENAME COLUMN order_no_new TO order_no;

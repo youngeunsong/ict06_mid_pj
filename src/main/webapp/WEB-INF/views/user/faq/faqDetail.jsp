@@ -172,7 +172,11 @@
                             <a href="javascript:void(0);" onclick="changeCategory('이벤트/공지', this)" class="tag">이벤트/공지</a>
                             <a href="javascript:void(0);" onclick="changeCategory('기타', this)" class="tag">기타</a>
                         </div>
-                      
+                        <div class="ms-auto">
+                            <a href="${pageContext.request.contextPath}/faqAllList.sp" class="text-secondary text-decoration-none small view-all-link">
+                                질문 전체보기 <i class="fa-solid fa-circle-chevron-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                     
                     <div id="category-notice-area" class="pt-2 pb-2"> 
@@ -186,19 +190,14 @@
                     <c:forEach var="faq" items="${faqList}">
                         <div class="faq-item border-bottom">
                             <div class="faq-question p-3 d-flex justify-content-between align-items-center" 
-							     onclick="toggleAnswer(this)" style="cursor:pointer;">
-							    <div>
-							        <span class="text-primary fw-bold me-2">Q.</span>
-							        <span class="fw-medium">${faq.question}</span>
-							    </div>
-							    
-							    <div class="d-flex align-items-center">
-							        <span class="text-muted small me-3" style="font-size: 0.8rem;">
-							            <i class="fa-regular fa-eye me-1"></i> ${faq.view_count}
-							        </span>
-							        <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
-							    </div>
-							</div>
+                                 onclick="toggleAnswer(this)" style="cursor:pointer;">
+                                <div>
+                                    <span class="text-primary fw-bold me-2">Q.</span>
+                                    <span class="fw-medium">${faq.question}</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
+                            </div>
+                            
                             <div class="faq-answer bg-light" style="display: none; overflow: hidden; padding: 0;">
                                 <div class="p-4 d-flex">
                                     <span class="text-danger fw-bold me-2">A.</span>
@@ -257,7 +256,7 @@
                     <div class="card-body p-0">
                         <div class="list-group list-group-flush">
                             <c:forEach var="top" items="${top10Global}" varStatus="status">
-                                <a href="faqMain.sp?faq_id=${top.faq_id}" 
+                                <a href="faqDetail.sp?faq_id=${top.faq_id}" 
                                    class="list-group-item list-group-item-action border-0 py-2 px-3">
                                     <div class="d-flex w-100 align-items-center">
                                         <span class="me-2 text-primary fw-bold" style="font-size: 0.85rem;">${status.count}.</span> 

@@ -3,11 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FestivalMapper">
-	<!-- ========================= -->
-	<!-- 축제 상세 조회 -->
-	<!-- * @author 송영은 * 최초작성일: 2026-03-17 * 최종수정일: 2026-03-17 * 참고 코드: PlaceMapper.xml, 
-		AdFestivalMapper.xml -->
-	<!-- ========================= -->
+	<!-- 
+	* @author 송영은 
+	* 최초작성일: 2026-03-17 
+	* 최종수정일: 2026-03-26 
+	* 참고 코드: PlaceMapper.xml, 
+		AdFestivalMapper.xml 
+	* 변경 사항
+	* v260326 
+ 	* 축제 내 주변 지도 기능 구현	
+	-->
 	<!-- 축제에 필요한 변수 매핑 -->
 	<resultMap id="festivalMap"
 		type="spring.ict06team1.midpj.dto.FestivalDTO">
@@ -30,7 +35,186 @@
 			<result property="placeRegDate" column="created_at"></result>
 		</association>
 	</resultMap>
-
+	
+	<!-- [축제용 resultMap]
+     PLACE + FESTIVAL 조인 결과를 FestivalDTO 안의 placeDTO 구조에 맞게 매핑
+     프론트에서 fest.placeDTO.xxx 형태로 접근 가능
+	-->
+	<resultMap id="festivalRankResultMap" type="spring.ict06team1.midpj.dto.FestivalDTO">
+	    <id property="festival_id" column="festival_id" />
+	    <result property="description" column="description" />
+	    <result property="start_date" column="start_date" />
+	    <result property="end_date" column="end_date" />
+	    <result property="status" column="festival_status" />
+	
+	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+	        <id property="place_id" column="place_id" />
+	        <result property="place_type" column="place_type" />
+	        <result property="name" column="name" />
+	        <result property="address" column="address" />
+	        <result property="view_count" column="view_count" />
+	        <result property="latitude" column="latitude" />
+	        <result property="longitude" column="longitude" />
+	        <result property="image_url" column="image_url" />
+	        <result property="placeRegDate" column="placeRegDate" />
+	
+	        <!-- 리뷰 정보 -->
+	        <result property="review_count" column="review_count" />
+	        <result property="avg_rating" column="avg_rating" />
+	    </association>
+	</resultMap>
+	
+	<!-- ========================= -->
+	<!-- 내 주변 축제 조회 관련 쿼리 -->
+	<!-- ========================= -->
+	<!-- 주변 축제의 총 개수를 조회 (페이징 계산용) -->
+	<select id="selectNearbyFestivalCount" parameterType="map" resultType="int">
+		 SELECT COUNT(*)
+		   FROM festival f
+		   JOIN place p ON f.festival_id = p.place_id
+		   WHERE (
+		       6371 * acos(
+		           cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
+		           * cos((p.longitude * 3.14159 / 180)-(#{lng} * 3.14159 / 180))+ 
+		           sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		       )
+		   ) &lt;= #{radius}
+		     AND f.status != 'ENDED'
+		   
+		   <if test="minRating != null and minRating > 0">
+		       AND (
+		           SELECT NVL(ROUND(AVG(rating),1),0) 
+		           FROM review 
+		           WHERE place_id = p.place_id AND status = 'display'
+		       ) &gt;= #{minRating}
+		   </if>
+		
+		   <if test="keyword != null and keyword != ''">
+		       AND (p.name LIKE '%' || #{keyword} || '%')
+		   </if>
+		   <if test="province != null and province != ''">
+			   AND p.address LIKE '%' || #{province} || '%'
+		   </if>
+		   <if test="district != null and district != ''">
+			   AND p.address LIKE '%' || #{district} || '%'
+		   </if>
+	</select>
+	
+	<!-- 조건에 맞는 맛집 리스트 조회 (6개씩 끊어서 가져오기) -->
+	<select id="selectNearbyFestivalList" parameterType="map" resultMap="festivalRankResultMap">
+		 SELECT 
+		        festival_id, 
+		        description, 
+		        place_id, 
+		        name, 
+		        address, 
+		        latitude, 
+		        longitude, 
+		        image_url,
+		        view_count, 
+		        review_count, 
+		        avg_rating, 
+		        rnum
+		    FROM (
+		        SELECT a.*, ROWNUM AS rnum 
+		        FROM (
+		            SELECT 
+		                f.festival_id, 
+		                f.description, 
+		                p.place_id, 
+		                p.name, 
+		                p.address, 
+		                p.latitude, 
+		                p.longitude, 
+		                p.image_url,
+		                p.view_count,
+		                (SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
+		                (SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		                (6371 * acos(
+		                    cos(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng, jdbcType=DOUBLE} * 3.14159 / 180)) + 
+		                    sin(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		                )) AS distance
+		            FROM festival f
+		            JOIN place p ON f.festival_id = p.place_id
+		            WHERE f.status != 'ENDED'
+		              <if test="keyword != null and keyword != ''">
+		                AND p.name LIKE '%' || #{keyword} || '%'
+		              </if>
+		            ORDER BY distance ASC 
+		        ) a 
+		        WHERE a.distance &lt;= #{radius, jdbcType=DOUBLE}
+		        <if test="minRating != null and minRating > 0">
+		            AND a.avg_rating &gt;= #{minRating, jdbcType=DOUBLE}
+		        </if>
+		        <if test="end != null">
+		            AND ROWNUM &lt;= #{end, jdbcType=INTEGER}
+		        </if>
+		        <if test="province != null and province != ''">
+				    AND p.address LIKE '%' || #{province} || '%'
+				</if>
+				<if test="district != null and district != ''">
+				    AND p.address LIKE '%' || #{district} || '%'
+				</if>
+		    ) 
+		    WHERE rnum &gt;= #{start, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 조건에 맞는 맛집 마커 불러오기 (전부 가져오기) -->
+	<select id="selectNearbyFeMarkersAjax" parameterType="map" resultMap="festivalRankResultMap">
+		 SELECT 
+		        festival_id, 
+		        place_id,      
+		        name, 
+		        latitude, 
+		        longitude, 
+		        image_url,  
+		        avg_rating,
+		        review_count,
+		        view_count
+		    FROM (
+		        SELECT 
+		            f.festival_id, 
+		            p.place_id, p.name, 
+		            p.latitude, 
+		            p.longitude,
+		            p.image_url, 
+		            p.view_count,
+		            (SELECT COUNT(*) 
+		             FROM review 
+		             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
+		            (SELECT NVL(ROUND(AVG(rating), 1), 0) 
+		             FROM review 
+		             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		            (6371 * acos(
+		                cos(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng, jdbcType=DOUBLE} * 3.14159 / 180)) + 
+		                sin(#{lat, jdbcType=DOUBLE} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		            )) AS distance 
+		        FROM festival f
+		        JOIN place p ON f.festival_id = p.place_id
+		        WHERE f.status != 'ENDED'
+		        
+		        <if test="keyword != null and keyword != ''">
+		            AND (p.name LIKE '%' || #{keyword} || '%')
+		        </if>
+		        <if test="province != null and province != ''">
+				    AND p.address LIKE '%' || #{province} || '%'
+				</if>
+				<if test="district != null and district != ''">
+				    AND p.address LIKE '%' || #{district} || '%'
+				</if>
+		    ) a
+		    <where>
+		        a.distance &lt;= #{radius, jdbcType=DOUBLE}
+		        <if test="minRating != null and minRating > 0">
+		            AND a.avg_rating &gt;= #{minRating, jdbcType=DOUBLE}
+		        </if>
+		    </where>
+		    ORDER BY a.distance ASC
+	</select>
+	
+	<!-- ========================= -->
+	<!-- 축제 상세 조회 관련 쿼리 -->
+	<!-- ========================= -->
 	<!-- 축제 상세 정보 조회 -->
 	<!-- 1단계: Place, Review 함께 조회 -->
 	<select id="selectPlaceDetail" parameterType="int"
@@ -170,33 +354,7 @@
 	</delete>
 
 	<!-- ===================랭킹 관련 쿼리=============== -->
-	<!-- [축제 랭킹용 resultMap]
-     PLACE + FESTIVAL 조인 결과를 FestivalDTO 안의 placeDTO 구조에 맞게 매핑
-     프론트에서 fest.placeDTO.xxx 형태로 접근 가능
-	-->
-	<resultMap id="festivalRankResultMap" type="spring.ict06team1.midpj.dto.FestivalDTO">
-	    <id property="festival_id" column="festival_id" />
-	    <result property="description" column="description" />
-	    <result property="start_date" column="start_date" />
-	    <result property="end_date" column="end_date" />
-	    <result property="status" column="festival_status" />
 	
-	    <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	        <id property="place_id" column="place_id" />
-	        <result property="place_type" column="place_type" />
-	        <result property="name" column="name" />
-	        <result property="address" column="address" />
-	        <result property="view_count" column="view_count" />
-	        <result property="latitude" column="latitude" />
-	        <result property="longitude" column="longitude" />
-	        <result property="image_url" column="image_url" />
-	        <result property="placeRegDate" column="placeRegDate" />
-	
-	        <!-- 리뷰 정보 -->
-	        <result property="review_count" column="review_count" />
-	        <result property="avg_rating" column="avg_rating" />
-	    </association>
-	</resultMap>
 	
 	<!-- 축제 총 갯수 -->
 	<select id="getBestFestivalCount" resultType="int">
@@ -231,8 +389,8 @@
 			    WHERE p.place_type = 'FEST'
 			      AND f.status != 'ENDED'
 			)
-			WHERE rn &gt; #{start}
-      		  AND rn &lt;= #{end} -- start 초과 ~ end 이하 구간만 조회
+			WHERE rn &gt; #{start, jdbcType=INTEGER}
+      		  AND rn &lt;= #{end, jdbcType=INTEGER} -- start 초과 ~ end 이하 구간만 조회
 	</select>
 
 	<!-- 축제 랭킹 top5 -->

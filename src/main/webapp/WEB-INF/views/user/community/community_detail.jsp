@@ -160,12 +160,17 @@
 				<div class="detail-action-wrap">
 				    <div class="detail-action-bar">
 				
-				        <button type="button" class="pill-btn like-pill-btn" id="likeBtn" data-post-id="${dto.post_id}">
-				            <i class="bi bi-heart"></i>
-				            <span>좋아요</span>
-				            <span class="divider">|</span>
-				            <span id="likeCount">${dto.like_count}</span><span>명</span>
-				        </button>
+						<button type="button"
+						        class="pill-btn like-pill-btn"
+						        id="likeBtn"
+						        data-post-id="${dto.post_id}"
+						        data-path="${path}"
+						        data-session-id="${sessionScope.sessionID}">
+						    <i class="bi bi-heart"></i>
+						    <span>좋아요</span>
+						    <span class="divider">|</span>
+						    <span id="likeCount">${dto.like_count}</span><span>명</span>
+						</button>
 				
 				        <a href="${path}/community_free.co" class="pill-btn list-pill-btn">
 				            <i class="bi bi-list"></i>

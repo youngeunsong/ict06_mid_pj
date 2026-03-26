@@ -97,4 +97,12 @@ public class NoticeDAOImpl implements NoticeDAO {
     	
         return noticeDTO;
     }
+    
+    // 조회수 증가
+    public void increaseViewCount(int notice_id) {
+    	System.out.println("[NoticeDAOImpl - increaseViewCount()]");
+    	
+    	NoticeDAO dao = sqlSession.getMapper(NoticeDAO.class);
+    	dao.increaseViewCount(notice_id);
+    }
 }

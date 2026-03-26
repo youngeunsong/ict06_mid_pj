@@ -62,6 +62,11 @@ public class UserController {
 		throws ServletException, IOException {
 		logger.info("<<< url => login.do>>>");
 		
+		/* 비로그인 상태로 북마크 클릭 시 원래 있던 페이지로 돌아오기 위한 코드 작성 */
+		// 북마크) 주소창에 붙어온 next 값 파싱
+	    String next = request.getParameter("next");
+	    model.addAttribute("next", next);
+		
 		return "user/login/login";
 	}
 	
@@ -75,13 +80,29 @@ public class UserController {
 	    int selectCnt = (Integer) request.getAttribute("selectCnt");
 	    
 	    if (selectCnt == 1) {
+	    	// 북마크) hidden input으로 넘어온 next 값 파싱
+	    	String next = request.getParameter("next");
+	    	
 	        // 세션에서 권한 확인
 	        String userRole = (String) request.getSession().getAttribute("userRole");
 
 	        if ("ADMIN".equals(userRole)) {
 	            return "redirect:/adminHome.ad"; // 관리자면 여기로!
 	        } else {
-	            return "redirect:/main.do";      // 일반인이면 여기로!
+	        	// 북마크) next값이 있으면 그곳으로, 없으면 메인으로!
+	        	if (next != null && !next.isEmpty()) {
+	                
+	        		String cp = request.getContextPath(); // cp = "/midpj"
+	                
+	        		// next 값에서 "/midpj" 삭제
+	                if (next.startsWith(cp)) {
+	                    next = next.substring(cp.length()); // 결과: "/search.do?keyword=노을"
+	                }
+	                
+	                logger.info("<<< 중복 제거 후 리다이렉트 경로: " + next + " >>>");
+	                return "redirect:" + next; // Spring이 다시 "/midpj"를 붙여서 올바른 주소가 됨
+	            }
+	            return "redirect:/main.do";
 	        }
 	    } else {
 	        // 로그인 실패하면 원래 가던 jsp로

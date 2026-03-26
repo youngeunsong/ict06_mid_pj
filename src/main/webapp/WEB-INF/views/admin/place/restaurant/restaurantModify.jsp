@@ -13,6 +13,10 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
+    <!-- Preloader -->
+	<div class="preloader flex-column justify-content-center align-items-center">
+		<img src="${path}/resources/admin/dist/img/AdminLTELogo.png" height="60" width="60">
+	</div>
         <%@ include file="/WEB-INF/views/common/adminHeader.jsp" %>
         <%@ include file="/WEB-INF/views/common/adminSidebar.jsp" %>
 
@@ -26,7 +30,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="${path}/admin/home">Home</a></li>
-                                <li class="breadcrumb-item"><a href="${path}/restaurant.ad">맛집 목록</a></li>
+                                <li class="breadcrumb-item"><a href="${path}/restaurant.adre">맛집 목록</a></li>
                                 <li class="breadcrumb-item active">정보 수정</li>
                             </ol>
                         </div>
@@ -43,7 +47,7 @@
                             </h3>
                         </div>
                         
-                        <form action="${path}/restaurantModifyAction.ad" method="post" enctype="multipart/form-data" name="updateForm">
+                        <form action="${path}/restaurantModifyAction.adre" method="post" enctype="multipart/form-data" name="updateForm">
                             <input type="hidden" name="oldImg" value="${pDto.image_url}">
                             <input type="hidden" name="pageNum" value="${pageNum}">
                             <input type="hidden" name="category1" value="${category}">
@@ -73,15 +77,15 @@
                                         <label class="form-label">지역 선택</label>
                                         <select name="areaCode" id="areaCodeSelect" class="form-select" required onchange="updateAddressGuide()">
 									        <option value="" ${empty (rDto.areaCode) ? 'selected' : ''}>지역을 선택하세요</option>
-									        <option value="1" ${(rDto.areaCode == '1') ? 'selected' : ''}>서울</option>
-									        <option value="31" ${(rDto.areaCode == '31') ? 'selected' : ''}>경기</option>
-									        <option value="2" ${(rDto.areaCode == '2') ? 'selected' : ''}>인천</option>
-									        <option value="6" ${(rDto.areaCode == '6') ? 'selected' : ''}>부산</option>
-									        <option value="4" ${(rDto.areaCode == '4') ? 'selected' : ''}>대구</option>
-									        <option value="3" ${(rDto.areaCode == '3') ? 'selected' : ''}>대전</option>
-									        <option value="5" ${(rDto.areaCode == '5') ? 'selected' : ''}>광주</option>
-									        <option value="7" ${(rDto.areaCode == '7') ? 'selected' : ''}>울산</option>
-									        <option value="39" ${(rDto.areaCode == '39') ? 'selected' : ''}>제주</option>
+									        <option value="서울" ${(rDto.areaCode == '서울') ? 'selected' : ''}>서울</option>
+									        <option value="경기" ${(rDto.areaCode == '경기') ? 'selected' : ''}>경기</option>
+									        <option value="인천" ${(rDto.areaCode == '인천') ? 'selected' : ''}>인천</option>
+									        <option value="부산" ${(rDto.areaCode == '부산') ? 'selected' : ''}>부산</option>
+									        <option value="대구" ${(rDto.areaCode == '대구') ? 'selected' : ''}>대구</option>
+									        <option value="대전" ${(rDto.areaCode == '대전') ? 'selected' : ''}>대전</option>
+									        <option value="광주" ${(rDto.areaCode == '광주') ? 'selected' : ''}>광주</option>
+									        <option value="울산" ${(rDto.areaCode == '울산') ? 'selected' : ''}>울산</option>
+									        <option value="제주" ${(rDto.areaCode == '제주') ? 'selected' : ''}>제주</option>
 									    </select>
                                     </div>
 
@@ -104,14 +108,14 @@
                                     <div class="col-md-4">
                                         <label class="form-label">음식점 카테고리</label>
                                         <select name="category" class="form-select" required>
-                                            <option value="A05020100" ${rDto.category == 'A05020100' ? 'selected' : ''}>한식</option>
-                                            <option value="A05020200" ${rDto.category == 'A05020200' ? 'selected' : ''}>양식</option>
-                                            <option value="A05020300" ${rDto.category == 'A05020300' ? 'selected' : ''}>일식</option>
-											<option value="A05020400" ${rDto.category == 'A05020400' ? 'selected' : ''}>중식</option>
-											<option value="A05020500" ${rDto.category == 'A05020500' ? 'selected' : ''}>기타</option>
-										    <option value="A05020600" ${rDto.category == 'A05020600' ? 'selected' : ''}>카페</option>                    
-								            <option value="A05020700" ${rDto.category == 'A05020700' ? 'selected' : ''}>이색음식</option>        
-							                <option value="A05020900" ${rDto.category == 'A05020900' ? 'selected' : ''}>식음료</option>           
+                                            <option value="한식" ${rDto.category == '한식' ? 'selected' : ''}>한식</option>
+                                            <option value="양식" ${rDto.category == '양식' ? 'selected' : ''}>양식</option>
+                                            <option value="일식" ${rDto.category == '일식' ? 'selected' : ''}>일식</option>
+											<option value="중식" ${rDto.category == '중식' ? 'selected' : ''}>중식</option>
+											<option value="기타" ${rDto.category == '기타' ? 'selected' : ''}>기타</option>
+										    <option value="카페" ${rDto.category == '카페' ? 'selected' : ''}>카페</option>                    
+								            <option value="이색음식" ${rDto.category == '이색음식' ? 'selected' : ''}>이색음식</option>        
+							                <option value="식음료" ${rDto.category == '식음료' ? 'selected' : ''}>식음료</option>           
                                         </select>
                                     </div>
 
@@ -146,9 +150,6 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2026</strong>
-        </footer>
     </div>
 <script>
 var geocoder;
@@ -225,4 +226,7 @@ function updateAddressGuide() {
 }
 </script>
 </body>
+<footer class="main-footer">
+    <strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

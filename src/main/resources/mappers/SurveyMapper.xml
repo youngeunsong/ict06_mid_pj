@@ -65,7 +65,7 @@
 		LEFT JOIN PLACE p ON r.place_id = p.place_id
 		WHERE r.user_id = #{user_id}
 		AND r.status = 'COMPLETED'
-		AND r.reservation_id NOT IN (
+		AND r.reservation_id NOT IN(
 			SELECT reservation_id FROM SURVEY
 		)
 		ORDER BY r.created_at DESC

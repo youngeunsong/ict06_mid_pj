@@ -18,10 +18,10 @@
             <%-- 키워드가 있을 때는 accommodationSearch.acc로, 없을 때는 accommodation.acc로 분기 --%>
             <c:choose>
                 <c:when test="${not empty keyword}">
-                    window.location="${path}/accommodationSearch.acc?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+                    window.location="${path}/accommodationSearch.adac?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
                 </c:when>
                 <c:otherwise>
-                    window.location="${path}/accommodation.acc?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}";
+                    window.location="${path}/accommodation.adac?pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}";
                 </c:otherwise>
             </c:choose>
         }, 1000);
@@ -33,7 +33,7 @@
         setTimeout(function(){
             alert("숙소 수정 실패!!");
             <%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
-            window.location="${path}/accommodation.acc?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
+            window.location="${path}/accommodation.adac?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
         }, 1000);
     </script>
 </c:if>
@@ -71,7 +71,7 @@
                             </h3>
                         </div>
                         
-                        <form action="${path}/accommodationModifyAction.acc" method="post" enctype="multipart/form-data" name="updateForm">
+                        <form action="${path}/accommodationModifyAction.adac" method="post" enctype="multipart/form-data" name="updateForm">
                             <input type="hidden" name="oldImg" value="${pDto.image_url}">
                             <input type="hidden" name="pageNum" value="${pageNum}">
                             <input type="hidden" name="category1" value="${category}">
@@ -176,9 +176,6 @@
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2026</strong>
-        </footer>
     </div>
 <script>
 var geocoder;
@@ -248,11 +245,13 @@ window.onload = function() {
         };
     }
 };
-
 // 지역 변경 시 안내 (필요 시 로직 추가 가능)
 function updateAddressGuide() {
     console.log("지역 코드가 변경되었습니다.");
 }
 </script>
 </body>
+<footer class="main-footer">
+    <strong>Copyright &copy; 2026</strong>
+</footer>
 </html>

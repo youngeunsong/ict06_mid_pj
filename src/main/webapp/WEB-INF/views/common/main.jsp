@@ -693,6 +693,9 @@
 
 		<!-- 설문 모달 -->
 		<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp"%>
+		<script>
+			const path = "${pageContext.request.contextPath}";
+		</script>
 		<script src="${path}/resources/js/user/survey.js"></script>
 	</div>
 </body>

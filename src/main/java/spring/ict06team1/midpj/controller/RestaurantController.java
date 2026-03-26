@@ -19,11 +19,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.service.RestaurantService;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
-import spring.ict06team1.midpj.service.RestaurantServiceImpl;
+
 
 @Controller
 public class RestaurantController {
@@ -31,15 +31,34 @@ public class RestaurantController {
     private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
     @Autowired
-    private RestaurantServiceImpl service;
+    private RestaurantService service;
 
-    // [맛집 메인 페이지 이동]
-    // 맛집 관련 메인 화면으로 이동할 때 사용하는 기본 요청
+    // 맛집 페이지로 이동
     @RequestMapping("/restaurant.rs")
     public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
         logger.info("<<< url => restaurant.rs>>>");
         return "user/restaurant/restaurant";
+    }
+    
+    // 맛집 리스트 보여주기
+    @RequestMapping("/restaurantAjax.rs")
+    public String restaurantAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => restaurantAjax.rs>>>");
+        service.getNearbyRestaurantAjax(request, response, model);
+        return "user/restaurant/restaurantCard";
+    }
+    
+    // JSP로 이동하지 않고 데이터를 직접 리턴함
+    @ResponseBody
+    // 맛집 페이지로 이동
+    @RequestMapping("/getNearbyMarkersAjax.rs")
+    public List<PlaceDTO> getNearbyMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => getNearbyMarkersAjax.rs>>>");
+        List list = service.getNearbyMarkersAjax(request, response);
+        return list;
     }
 
     // [맛집 랭킹 페이지 첫 진입]

@@ -13,7 +13,6 @@ import spring.ict06team1.midpj.dto.AccommodationDTO;
 
 public interface AdAccommodationService {
 	
-	
 	// 숙소 목록 조회
 	public void getAccommodation_list(HttpServletRequest request, HttpServletResponse response, Model model);
 	
@@ -36,7 +35,6 @@ public interface AdAccommodationService {
 	public void getAccommodationDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	
 	//공공데이터 open API 활용 숙소 정보 내려받기
 	//---------------------------------------------------------------------------------------------------------------------
 		
@@ -46,4 +44,8 @@ public interface AdAccommodationService {
 		
 	//숙소 정보 등록-공공데이터를 통해서(accommodation 테이블쪽)
 	public void registerDetail(String contentId, AccommodationDTO aDto);
+	
+	//숙소 여러 이미지 불러오기
+	public void testRegisterImages(String contentId);
+	
 }

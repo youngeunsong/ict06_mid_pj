@@ -24,7 +24,6 @@ public class InquiryDTO {
 		super();
 		this.inquiry_id = inquiry_id;
 		this.user_id = user_id;
-		this.category = category;
 		this.title = title;
 		this.content = content;
 		this.status = status;

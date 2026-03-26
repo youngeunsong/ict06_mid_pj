@@ -213,57 +213,6 @@
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
-		
-		<!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : 등록 맛집 목록 조회</div>
-		
-		<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-		<!-- #${'{'} : #과 { 표시 -->
-		<!-- &lt; : < 표시 -->
-		<!-- &gt; : > 표시 -->
-		<div>
-			<pre><code>
-				<c:out value="
-					SELECT *
-					FROM (
-					    SELECT ROWNUM AS rnum, A.*
-					    FROM (
-					        SELECT 
-					            F.festival_id,
-					            F.description,
-					            F.start_date,
-					            F.end_date,
-					            F.status,
-					            P.name,
-					            P.address,
-					            P.view_count,
-					            P.latitude,
-					            P.longitude,
-					            P.image_url,
-					            P.created_at
-					        FROM FESTIVAL F
-					        LEFT JOIN PLACE P
-					            ON F.festival_id = P.place_id
-					        WHERE
-					            (
-					                :keyword IS NULL
-					                OR P.name LIKE '%' || :keyword || '%'
-					                OR P.address LIKE '%' || :keyword || '%'
-					                OR F.description LIKE '%' || :keyword || '%'
-					            )
-					        AND (
-					                :status IS NULL
-					                OR F.status IN (:status)
-					            )
-					        -- sortType에 따라 다르게 정렬: P.created_at ASC, F.start_date DESC, F.start_date DESC, F.end_date ASC, F.end_date DESC     
-					        ORDER BY P.created_at DESC
-					    ) A
-					)
-					WHERE rnum BETWEEN :startRow AND :endRow;
-				"/>
-			</code></pre>
-		</div>
-		<!-- 관련 SQL 끝 -->
 	</div>
 	<!--end::div Wrapper-->
 	

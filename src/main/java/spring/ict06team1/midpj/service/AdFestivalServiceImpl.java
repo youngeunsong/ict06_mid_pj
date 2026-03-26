@@ -37,6 +37,7 @@ import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.util.FestivalApiClient;
 
+
 @Service
 public class AdFestivalServiceImpl implements AdFestivalService{
 
@@ -354,6 +355,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		    if(placeId == null){
 		        // 새로운 장소
 		    	dao.insertPlace(place);
+		    	
+		    	// 새로 추가한 장소의 place_id 받아오기 
 		    	placeId = place.getPlace_id();
 		    }
 		    

@@ -8,15 +8,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/views/common/setting.jsp"%>
 
 <!-- CSS -->
 <link rel="stylesheet" href="${path}/resources/css/user/mypage/survey.css">
+
+<!-- begin::설문 진행률 표시 -->
+<div class="progress mt-2">
+	<div id="surveyProgressBar" class="progress-bar" style="width:0%"></div>
+</div>
+<div id="progressText" class="text-end small mt-1"></div>
+<!-- end::설문 진행률 표시 -->
 
 <!-- begin::설문 안내 카드 -->
 <div class="container mt-3">
 	<div id="surveyGuide" class="alert alert-info d-none d-flex justify-content-between align-items-center">
 		<div>
-			😊 최근 이용하신 장소에 대한 설문이 있습니다!
+			😊 최근 이용하신 '<span id="surveyGuideText"></span>'에 대한 설문이 있습니다!
 		</div>
 		<div>
 			<button class="btn btn-success btn-sm" id="openSurveyBtn">작성하기</button>
@@ -31,7 +39,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content p-4">
 			<h4 class="fw-bold mb-3">이용 완료 설문</h4>
-			<p><span id="survey_place_name"></span>이용은 어떠셨나요?</p>
+			<p><strong><span id="survey_place_name"></span></strong> 이용은 어떠셨나요?</p>
 			
 			<input type="hidden" id="survey_reservation_id">
 			
@@ -135,3 +143,7 @@
 	</div>
 </div>
 <!-- end::리뷰 Modal -->
+
+<!-- begin::알림 toast -->
+<div id="toast" class="toast-box"></div>
+<!-- end::알림 toast -->

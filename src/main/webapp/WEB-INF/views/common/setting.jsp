@@ -12,8 +12,6 @@
 - 화면 리소스를 이 파일에 추가하지 않는다.
 ========================================================= -->
 
-
-
 <%-- JSTL --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>

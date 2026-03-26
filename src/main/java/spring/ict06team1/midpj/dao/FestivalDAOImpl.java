@@ -34,21 +34,21 @@ public class FestivalDAOImpl implements FestivalDAO {
 	@Override
 	public int selectNearbyFestivalCount(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFestivalCount()");
-		return 0;
+		return session.selectOne(NAMESPACE + "selectNearbyFestivalCount");
 	}
 	
 	// 조건에 맞는 맛집 리스트 조회 (6개씩 끊어서 가져오기)
 	@Override
 	public List<FestivalDTO> selectNearbyFestivalList(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFestivalList()");
-		return null;
+		return session.selectList(NAMESPACE + "selectNearbyFestivalList");
 	}
 
 	// 조건에 맞는 맛집 마커 불러오기 (전부 가져오기)
 	@Override
 	public List<FestivalDTO> selectNearbyFeMarkersAjax(Map<String, Object> map) {
 		System.out.println("FestivalDAOImpl-selectNearbyFeMarkersAjax()");
-		return null;
+		return session.selectList(NAMESPACE + "selectNearbyFeMarkersAjax");
 	}
 	
 	// 축제 상세 페이지용 메서드 ---------------------------------------

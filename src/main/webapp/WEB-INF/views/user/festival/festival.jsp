@@ -16,18 +16,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>축제 페이지</title>
+<title>맛침내-축제 지도 탐색</title>
 
 <!-- 부트스트랩 선언 + 헤더/푸터 -->
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="stylesheet" href="${path}/resources/css/user/festival/festival.css"/>
+<link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
+
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
 
 </head>
 <body>
 	<div class="wrap">
 		<%@ include file="../../common/header.jsp"%>
+		
+		<div class="content-wrapper">
+			<div class="main-tab-wrapper" style="display: flex; justify-content: center; margin-bottom: 30px;">
+	            <div class="nav-pill-group" 
+	                 onclick="location.href='${path}/bestFestivals.fe'" 
+	                 style="cursor: pointer;">
+	                <div class="nav-pill-item active">내 주변</div>
+	                <div class="nav-pill-item best-link">베스트 축제</div>
+	            </div>
+	        </div>
+		</div>
+		
+		<!-- 아래는 내가 기작성한 코드 -->
 
 		<main class="rk-page">
 			<div class="container">
@@ -124,6 +140,10 @@
 		<!-- [JS에서 사용할 공통 path 설정] -->
 		<script>
 			const path = "${path}";
+			
+			const favoritePlaceIds = ${not empty favoritePlaceIds ? favoritePlaceIds : '[]'};
+		    const userLat = ${not empty userLat ? userLat : 37.5665};
+		    const userLng = ${not empty userLng ? userLng : 126.9780};
 		</script>
 		
 		<!-- 지도용 js -->

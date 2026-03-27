@@ -142,5 +142,15 @@ public class ReservationDAOImpl implements ReservationDAO {
 	    System.out.println("[ReservationDAOImpl - updateReservationPaymentId()]");
 	    return sqlSession.getMapper(ReservationDAO.class).updateReservationPaymentId(map);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map) {
+	    return sqlSession.getMapper(ReservationDAO.class).getRestTimeReservationCount(map);
+	}
+
+	@Override
+	public int countRestReservationByDateTime(Map<String, Object> map) {
+	    return sqlSession.getMapper(ReservationDAO.class).countRestReservationByDateTime(map);
+	}
 
 }

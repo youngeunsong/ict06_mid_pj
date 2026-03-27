@@ -73,4 +73,9 @@ public interface ReservationDAO {
 
 	// 예약에 연결된 payment_id 저장
 	int updateReservationPaymentId(Map<String, Object> map);
+
+	List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map);
+	
+	
+	int countRestReservationByDateTime(Map<String, Object> map);
 }

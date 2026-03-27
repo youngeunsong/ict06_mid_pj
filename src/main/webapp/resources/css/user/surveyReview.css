@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+/* 전체 영역 */
+.survey-review-section {
+	max-width: 900px;
+	margin: 50px auto;
+	padding: 0 20px;
+	min-height: 700px;
+}
+
+/* 상단 제목 */
+.page-header {
+	margin-bottom: 35px;
+	border-bottom: 3px solid #0CB574;
+	padding-bottom: 15px;
+}
+
+.page-header h2 {
+	font-size: 28px;
+	font-weight: 800;
+	color: #222;
+	margin: 0;
+}
+
+.page-header h2 i {
+	color: #0CB574;
+	margin-right: 12px;
+}
+
+/* 안내 카드 */
+.info-card {
+	background-color: #f8fffb;
+	border: 1px solid #dff5eb;
+	border-radius: 16px;
+	padding: 22px 24px;
+	margin-bottom: 28px;
+	box-shadow: 0 4px 16px rgba(12, 181, 116, 0.06);
+}
+
+.info-card .place-name {
+	font-size: 24px;
+	font-weight: 800;
+	color: #222;
+	margin-bottom: 10px;
+}
+
+.info-card .info-text {
+	font-size: 15px;
+	color: #555;
+	line-height: 1.7;
+	margin: 0;
+}
+
+/* 공통 카드 */
+.form-card {
+	background-color: #fff;
+	border: 1px solid #eef2f0;
+	border-radius: 18px;
+	padding: 28px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+	margin-bottom: 24px;
+}
+
+.form-card h3 {
+	font-size: 22px;
+	font-weight: 800;
+	color: #222;
+	margin: 0 0 22px;
+}
+
+.form-card h3 i {
+	color: #0CB574;
+	margin-right: 10px;
+}
+
+/* 문항 블록 */
+.form-group {
+	margin-bottom: 24px;
+}
+
+.survey-last-group,
+.review-last-group {
+	margin-bottom: 0;
+}
+
+.form-label {
+	display: block;
+	font-size: 15px;
+	font-weight: 700;
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.form-hint {
+	font-size: 13px;
+	color: #888;
+	margin-top: 6px;
+	line-height: 1.5;
+}
+
+/* 점수 버튼 */
+.score-wrap {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.score-item,
+.star-item {
+	min-width: 44px;
+	height: 44px;
+	border: 1px solid #d9e3df;
+	border-radius: 10px;
+	background-color: #fff;
+	color: #555;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+
+.score-item:hover,
+.star-item:hover {
+	border-color: #0CB574;
+	color: #0CB574;
+	transform: translateY(-2px);
+}
+
+.score-item.active,
+.star-item.active {
+	background-color: #0CB574;
+	border-color: #0CB574;
+	color: #fff;
+	box-shadow: 0 4px 10px rgba(12, 181, 116, 0.2);
+}
+
+/* 입력창 */
+.form-control-custom {
+	width: 100%;
+	min-height: 110px;
+	border: 1px solid #dfe7e3;
+	border-radius: 12px;
+	padding: 14px 16px;
+	font-size: 14px;
+	color: #333;
+	resize: vertical;
+	outline: none;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-custom:focus {
+	border-color: #0CB574;
+	box-shadow: 0 0 0 4px rgba(12, 181, 116, 0.08);
+}
+
+/* 별점 설명 */
+.star-guide {
+	font-size: 13px;
+	color: #777;
+	margin-top: 8px;
+}
+
+/* 하단 버튼 영역 */
+.button-area {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 30px;
+}
+
+.btn-line {
+	min-width: 130px;
+	height: 46px;
+	border-radius: 10px;
+	border: 1px solid #cfd8d3;
+	background-color: #fff;
+	color: #555;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.btn-line:hover {
+	background-color: #f8faf9;
+	border-color: #97b4a7;
+}
+
+.btn-point {
+	min-width: 150px;
+	height: 46px;
+	border-radius: 10px;
+	border: none;
+	background-color: #0CB574;
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.btn-point:hover {
+	background-color: #099d63;
+	box-shadow: 0 6px 18px rgba(12, 181, 116, 0.25);
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+	.survey-review-section {
+		margin: 30px auto;
+		padding: 0 14px;
+	}
+
+	.form-card {
+		padding: 22px 18px;
+	}
+
+	.page-header h2 {
+		font-size: 24px;
+	}
+
+	.info-card .place-name {
+		font-size: 20px;
+	}
+
+	.button-area {
+		flex-direction: column;
+	}
+
+	.btn-line,
+	.btn-point {
+		width: 100%;
+	}
+}

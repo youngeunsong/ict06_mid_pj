@@ -103,11 +103,15 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	
 	// [관리자 - 장소 관리] 오픈API로 축제 정보 가져오기
 	@RequestMapping("/festivalImportAction.adfe")
-	@ResponseBody
 	public String festivalImportAction(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws Exception {
+			throws ServletException, IOException   {
 		logger.info("[url => /festivalImportAction.adfe]");
-		String json = adFestService.bringFestivalFromAPI(request, response, model); 
+		String json = null;
+		try {
+			json = adFestService.bringFestivalFromAPI(request, response, model);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		adFestService.insertFestivalsFromApi(json, request, response, model);
 	    return "admin/place/festival/festivalImportAction";
 	}

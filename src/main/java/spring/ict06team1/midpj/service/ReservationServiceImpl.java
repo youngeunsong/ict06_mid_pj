@@ -321,4 +321,21 @@ public class ReservationServiceImpl implements ReservationService {
 
         return result;
     }
+	
+	@Override
+	public List<Map<String, Object>> getRestTimeReservationCount(int place_id, String visit_date) {
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("place_id", place_id);
+	    map.put("visit_date", Date.valueOf(visit_date));
+	    return resDao.getRestTimeReservationCount(map);
+	}
+
+	@Override
+	public int countRestReservationByDateTime(int place_id, String visit_date, String visit_time) {
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("place_id", place_id);
+	    map.put("visit_date", Date.valueOf(visit_date));
+	    map.put("visit_time", visit_time);
+	    return resDao.countRestReservationByDateTime(map);
+	}
 }

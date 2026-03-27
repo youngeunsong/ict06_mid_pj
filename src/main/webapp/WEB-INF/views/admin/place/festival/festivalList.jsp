@@ -267,54 +267,11 @@
 	                            <img id="modal_image" style="width:40%">
 	                        </td>
 	                    </tr>
-	                    <!-- 티켓 정보 입력 시작 -->
 			           	<tr>
 			           		<th>티켓 정보</th>
 			           		<td colspan="3"> 
-			           			<!-- 티켓 표 시작 -->
-			            		<table class="table">
-			            			<!-- 헤더 시작: 티켓 종류, 가격, 재고, 설명 -->
-			            			<tr>
-			            				<th>티켓 종류</th>
-			            				<th>가격</th>
-			            				<th>재고</th>
-			            				<th>설명</th>
-			            			</tr>
-			            			<!-- 헤더 끝 -->
-			            			<!-- 무료 티켓 시작 -->
-									<tr>
-									    <td>무료</td>
-									    <td id="detail_priceFree"></td>
-									    <td id="detail_stockFree"></td>
-									    <td id="detail_ticketDescFreeDay" style="white-space: pre-wrap;"></td>
-									</tr>
-									<!-- 무료 티켓 끝 -->
-									<!-- 1일권 시작 -->
-									<tr>
-									    <td>1일권</td>
-									    <td id="detail_priceOneDay"></td>
-									    <td id="detail_stockOneDay"></td>
-									    <td id="detail_ticketDescOneDay" style="white-space: pre-wrap;"></td>
-									</tr>
-									<!-- 1일권 끝 -->
-									<!-- 2일권 시작 -->
-									<tr>
-									    <td>2일권</td>
-									    <td id="detail_priceTwoDay"></td>
-									    <td id="detail_stockTwoDay"></td>
-									    <td id="detail_ticketDescTwoDay" style="white-space: pre-wrap;"></td>
-									</tr>
-									<!-- 2일권 끝 -->
-									<!-- 전일권 시작 -->
-									<tr>
-									    <td>전일권</td>
-									    <td id="detail_priceAllDay"></td>
-									    <td id="detail_stockAllDay"></td>
-									    <td id="detail_ticketDescAllDay"></td>
-									</tr>
-									<!-- 전일권 끝 -->
-			              		</table>
-			              		<!-- 티켓 표 끝 -->
+			                    <!-- 티켓 정보 : js로 처리 -->
+			           			<div id="ticketTableArea"></div>
 			           		</td>
 			           	</tr>
 			           	<!-- 티켓 정보 입력 끝 -->

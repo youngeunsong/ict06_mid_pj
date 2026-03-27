@@ -1,11 +1,13 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +32,8 @@ import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
+import spring.ict06team1.midpj.dto.ReviewDTO;
+import spring.ict06team1.midpj.dto.SurveyDTO;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -42,6 +46,8 @@ public class ReservationServiceImpl implements ReservationService {
 	public AccommodationDAO accDao;
 	@Autowired
 	public FestivalDAO festDao;
+	@Autowired
+	private SurveyServiceImpl svService;
 	
 	// 네이버페이 승인 API 호출에 필요한 설정값
 	@Value("${naverpay.client-id}")
@@ -314,5 +320,99 @@ public class ReservationServiceImpl implements ReservationService {
 	    }
 
 	    return result;
+	}
+
+	// 설문 + 리뷰 등록 처리
+	@Override
+	public void surveyReviewAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    System.out.println("ReservationServiceImpl - surveyReviewAction()");
+
+	    // 1. 세션 아이디 확인
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    if (sessionID == null) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", "로그인 후 이용 가능합니다.");
+	        return;
+	    }
+
+	    // 2. 파라미터 받기
+	    String reservation_id = request.getParameter("reservation_id");
+	    String strSatisfaction = request.getParameter("page_satisfaction_score");
+	    String strNps = request.getParameter("page_nps_score");
+	    String strReliability = request.getParameter("page_info_reliability_score");
+	    String inconvenience = request.getParameter("inconvenience");
+	    String improvements = request.getParameter("improvements");
+	    String strRating = request.getParameter("page_rating");
+	    String content = request.getParameter("content");
+	    
+	    System.out.println("reservation_id = " + reservation_id);
+	    System.out.println("strSatisfaction = [" + strSatisfaction + "]");
+	    System.out.println("strNps = [" + strNps + "]");
+	    System.out.println("strReliability = [" + strReliability + "]");
+	    System.out.println("strRating = [" + strRating + "]");
+	    System.out.println("content = [" + content + "]");
+	    
+	    // 2-1. 필수값 체크
+	    if (reservation_id == null || reservation_id.trim().isEmpty()) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", "예약 정보가 누락되었습니다.");
+	        return;
+	    }
+
+	    if (strSatisfaction == null || strSatisfaction.trim().isEmpty()
+	            || strNps == null || strNps.trim().isEmpty()
+	            || strReliability == null || strReliability.trim().isEmpty()
+	            || strRating == null || strRating.trim().isEmpty()) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", "필수 평가 항목을 모두 입력해주세요.");
+	        return;
+	    }
+
+	    if (content == null || content.trim().isEmpty()) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", "리뷰 내용을 입력해주세요.");
+	        return;
+	    }
+
+	    // 3. SurveyDTO 세팅
+	    SurveyDTO surveyDto = new SurveyDTO();
+	    surveyDto.setUser_id(sessionID);
+	    surveyDto.setReservation_id(reservation_id);
+	    surveyDto.setSatisfaction_score(Integer.parseInt(strSatisfaction));
+	    surveyDto.setNps_score(Integer.parseInt(strNps));
+	    surveyDto.setInfo_reliability_score(Integer.parseInt(strReliability));
+	    surveyDto.setInconvenience(inconvenience);
+	    surveyDto.setImprovements(improvements);
+
+	    // 4. ReviewDTO 세팅
+	    ReviewDTO reviewDto = new ReviewDTO();
+	    reviewDto.setUser_id(sessionID);
+	    reviewDto.setReservation_id(reservation_id);
+	    reviewDto.setRating(Integer.parseInt(strRating));
+	    reviewDto.setContent(content);
+
+	    // 5. 설문 저장
+	    Map<String, Object> surveyResult = svService.insertSurvey(surveyDto);
+
+	    if (!(Boolean) surveyResult.get("success")) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", surveyResult.get("msg"));
+	        return;
+	    }
+
+	    // 6. 리뷰 저장
+	    Map<String, Object> reviewResult = svService.insertReview(reviewDto, reservation_id);
+
+	    if (!(Boolean) reviewResult.get("success")) {
+	        model.addAttribute("result", 0);
+	        model.addAttribute("msg", reviewResult.get("msg"));
+	        return;
+	    }
+
+	    // 7. 성공 처리
+	    model.addAttribute("result", 1);
+	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다.");
 	}
 }

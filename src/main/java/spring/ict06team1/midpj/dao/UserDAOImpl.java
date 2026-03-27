@@ -162,6 +162,16 @@ public class UserDAOImpl implements UserDAO {
 		return dto;
 	}
 	
+	// 나의 예약 취소
+	@Override
+	public int cancelReservation(String reservation_id) {
+	    System.out.println("UserDAOImpl - cancelReservation()");
+
+	    int updateCnt = sqlSession.update("spring.ict06team1.midpj.dao.UserDAO.cancelReservation", reservation_id);
+
+	    return updateCnt;
+	}
+	
 	// 마이페이지 홈 활동현황 카운트
 	@Override
 	public int getFavoriteCount(String user_id) {

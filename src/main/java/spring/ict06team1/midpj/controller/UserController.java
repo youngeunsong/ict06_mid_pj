@@ -269,13 +269,30 @@ public class UserController {
 		
 		 String sessionID = (String) request.getSession().getAttribute("sessionID");
 
-		    if (sessionID == null) {
-		        return "redirect:/login.do";
-		    }
-		    
-		    service.myReservationDetailAction(request, response, model);
+	    if (sessionID == null) {
+	        return "redirect:/login.do";
+	    }
+	    
+	    service.myReservationDetailAction(request, response, model);
 		
 		return "user/mypage/reservationDetail";
+	}
+	
+	// [마이페이지] 예약 취소 처리
+	@RequestMapping("/cancelReservationAction.do")
+	public String cancelReservationAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    logger.info("<<< url => cancelReservationAction.do>>>");
+
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    if (sessionID == null) {
+	        return "redirect:/login.do";
+	    }
+
+	    service.cancelReservationAction(request, response, model);
+
+	    return "user/mypage/cancelReservationAction";
 	}
 	
 	// [마이페이지] 1:1 문의목록

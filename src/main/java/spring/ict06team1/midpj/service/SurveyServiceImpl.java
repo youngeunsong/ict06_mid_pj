@@ -106,7 +106,11 @@ public class SurveyServiceImpl implements SurveyService {
 	    	if(svDao.checkReviewExists(reservation_id) > 0)
 	    		throw new RuntimeException("이미 리뷰 작성함");
 	    	
+	    	// 예약정보를 기준으로 place_id, reservation_id를 확정 세팅
 	    	dto.setPlace_id(resDto.getPlace_id());
+	    	dto.setReservation_id(reservation_id);
+	    	
+	    	// 리뷰 등록
 	    	svDao.insertReview(dto);
 	    	
 	    	result.put("success", true);

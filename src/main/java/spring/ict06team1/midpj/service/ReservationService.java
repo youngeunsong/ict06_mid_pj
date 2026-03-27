@@ -1,7 +1,9 @@
 package spring.ict06team1.midpj.service;
 
+import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,4 +29,8 @@ public interface ReservationService {
 	// 4. 네이버페이 승인 처리
 	// 네이버페이 paymentId로 승인 API를 호출하고 성공 시 DB 상태를 변경
 	Map<String, Object> approveNaverPay(String paymentId, String reservationId);
+	
+	// 설문 + 리뷰 등록 처리
+	public void surveyReviewAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException;
 }

@@ -278,6 +278,14 @@
 	      AND USER_ID = #{user_id}
 	</select>
 	
+	<!-- 나의 예약 취소 -->
+	<update id="cancelReservation" parameterType="String">
+	    UPDATE RESERVATION
+	       SET STATUS = 'CANCELLED',
+	           UPDATED_AT = SYSTIMESTAMP
+	     WHERE RESERVATION_ID = #{reservation_id}
+	</update>
+	
 	<!-- 예약 결과 매핑 -->
 	<resultMap id="ReservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
 		<!-- 기본 키 (예약ID) -->

@@ -1,5 +1,6 @@
 package spring.ict06team1.midpj.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,4 +28,8 @@ public interface ReservationService {
 	// 4. 네이버페이 승인 처리
 	// 네이버페이 paymentId로 승인 API를 호출하고 성공 시 DB 상태를 변경
 	Map<String, Object> approveNaverPay(String paymentId, String reservationId);
+	
+	List<Map<String, Object>> getRestTimeReservationCount(int place_id, String visit_date);
+
+	int countRestReservationByDateTime(int place_id, String visit_date, String visit_time);
 }

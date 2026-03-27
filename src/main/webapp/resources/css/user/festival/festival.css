@@ -1,0 +1,227 @@
+@charset "UTF-8";
+/*-------축제 페이지용 css : 맛집 페이지용 css 응용 ------------------------*/
+:root{
+  --rk-text:#111827;
+  --rk-muted:#6b7280;
+  --rk-line:#e5e7eb;
+  --rk-bg:#f9fafb;
+  --rk-brand:#10b981;
+  --rk-brand2:#059669;
+  --rk-soft:#ecfdf5;
+  --rk-orange-soft:#fff7ed;
+}
+
+.rk-page{
+  padding:32px 0 60px;
+  background:#fff;
+  color:var(--rk-text);
+}
+
+.rk-head{
+  margin-bottom:24px;
+}
+
+.rk-title{
+  margin:0;
+  font-size:40px;
+  font-weight:900;
+  letter-spacing:-0.03em;
+}
+
+.rk-sub{
+  margin-top:8px;
+  color:var(--rk-muted);
+  font-size:15px;
+}
+
+/* [탭 UI] 실시간 / 지역 / 추천 전환을 버튼 형태로 구성하기 위해 사용 */
+.rk-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  width:fit-content;
+  border:1px solid var(--rk-line);
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 8px 20px rgba(17,24,39,.04);
+  margin-bottom:18px;
+}
+
+.rk-tab{
+  min-width:170px;
+  padding:16px 22px;
+  border:none;
+  border-right:1px solid var(--rk-line);
+  background:#fff;
+  font-size:17px;
+  font-weight:800;
+  color:#374151;
+  cursor:pointer;
+}
+
+.rk-tab:last-child{
+  border-right:none;
+}
+
+.rk-tab.active{
+  background:var(--rk-orange-soft); /* 선택된 탭 강조 */
+}
+
+/* [필터 영역]
+     추천 카테고리, 지역 선택 UI를 한 줄로 정렬하기 위해 사용
+*/
+.rk-filterRow{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:24px;
+}
+
+.rk-chipWrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.rk-chip{
+  padding:9px 16px;
+  border-radius:14px;
+  border:1px solid var(--rk-line);
+  background:#fff;
+  color:#374151;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.rk-chip.active{
+  background:var(--rk-soft);
+  border-color:#b7f0d5;
+  color:var(--rk-brand2); /* 선택된 필터 강조 */
+}
+
+/* [TOP5 / 더보기 카드 영역 스타일] */
+.rk-section{
+  border:1px solid var(--rk-line);
+  border-radius:24px;
+  background:#fff;
+  padding:28px;
+  box-shadow:0 10px 30px rgba(17,24,39,.04);
+}
+
+.rk-sectionTitle{
+  margin:0;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:-0.02em;
+}
+
+.rk-sectionSub{
+  margin-top:8px;
+  color:var(--rk-muted);
+  font-size:17px;
+}
+
+.rk-topWrap{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid var(--rk-line);
+}
+
+.rk-moreTitle{
+  margin:36px 0 18px;
+  font-size:28px;
+  font-weight:900;
+}
+
+/* [카드 이미지 크기 제어]
+     TOP1 / TOP5 / 더보기 영역별로 이미지 크기를 다르게 설정
+*/ 
+.rk-top1 .thumb-img{
+  height:320px;
+  object-fit:cover;
+}
+
+.rk-topSub .thumb-img{
+  height:220px;
+  object-fit:cover;
+}
+
+.rk-moreGrid .thumb-img{
+  height:180px;
+  object-fit:cover;
+}
+
+/*[반응형 처리] */
+@media (max-width: 991.98px){
+  .rk-title{
+    font-size:34px;
+  }
+
+  .rk-section{
+    padding:22px;
+  }
+}
+
+@media (max-width: 575.98px){
+  .rk-title{
+    font-size:28px;
+  }
+
+  .rk-sectionTitle{
+    font-size:24px;
+  }
+}
+
+/* [지역 select 우측 정렬] */
+#regionSelect {
+  margin-left: auto;
+}
+
+/* [TOP1 카드 높이 과확장 방지]
+     카드 내부 콘텐츠 길이에 따라 레이아웃이 깨지는 것을 방지하기 위해 사용
+*/
+.rk-top1 .place-card,
+.rk-top1 .place-card-wrap {
+  height: auto !important;
+}
+    
+/* --------- 슬라이더용 css ------------------*/
+/* 슬라이더 컨트롤과 레이블을 감싸는 컨테이너로,
+   수평 방향으로 배치합니다. */
+.control-container {
+    display: flex;
+}
+
+/* 레이블과 슬라이더 사이에 적당한 간격을 둡니다 */
+label + .control {
+    margin-left: 1em;
+}
+
+/* datalist 요소에 스타일을 적용해
+   눈금과 레이블을 슬라이더에 맞춰 배치합니다. */
+datalist {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+}
+
+datalist option {
+    writing-mode: horizontal-tb;
+}
+
+/* 각 눈금 레이블의 기본 패딩을 제거하고,
+   작은 글씨 크기를 적용합니다. */
+option {
+    padding: 0; /* 불필요한 패딩을 제거해 레이블 정렬을 개선 */
+    font-size: smaller;
+}
+
+/* 슬라이더 너비를 datalist와 일치시켜
+   눈금과 정렬을 맞춥니다. */
+input[type="range"] {
+    width: 200px;
+    margin: 0;
+}

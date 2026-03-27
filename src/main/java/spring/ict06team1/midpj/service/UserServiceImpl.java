@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import spring.ict06team1.midpj.SearchCriteria.Paging;
+import spring.ict06team1.midpj.dao.SurveyDAO;
 import spring.ict06team1.midpj.dao.UserDAO;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
@@ -31,7 +32,11 @@ public class UserServiceImpl implements UserService {
 	private UserDAO dao;
 	
 	@Autowired
+	private SurveyDAO surveyDAO;
+	
+	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
+	
 	
 	// 1. 아이디 중복 확인 (AJAX 사용, 중복이면 1 아니면 0 반환)
 	@Override
@@ -405,14 +410,17 @@ public class UserServiceImpl implements UserService {
 	    model.addAttribute("category", category);
 	}
 	
-	// 마이페이지 홈 카운트
+	// 마이페이지 홈 카운트, top3, calendar
 	@Override
 	public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
 	        throws ServletException, IOException {
 	    System.out.println("UserServiceImpl - myPageHomeAction()");
 
 	    String sessionID = (String) request.getSession().getAttribute("sessionID");
-
+	    
+	    // 회원정보 조회
+	    MemberDTO dto = dao.getUserDetail(sessionID);
+	    
 	    // 각 활동 수 조회
 	    int bookmarkCount = dao.getFavoriteCount(sessionID);
 	    int inquiryCount = dao.getInquiryCount(sessionID);
@@ -421,6 +429,36 @@ public class UserServiceImpl implements UserService {
 	    model.addAttribute("bookmarkCount", bookmarkCount);
 	    model.addAttribute("inquiryCount", inquiryCount);
 	    model.addAttribute("reservationCount", reservationCount);
+	    
+	    // 마이페이지 캘린더 예약 목록 조회
+		List<Map<String, Object>> calendarList = dao.getMyCalendarReservations(sessionID);
+		model.addAttribute("calendarList", calendarList);
+		System.out.println("calendarList : " + calendarList);
+	    
+	    // =================================================
+	    // 마이페이지 홈 하단 카테고리별 top3
+	    
+	    // 공통 파라미터 map 생성
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("user_id", sessionID);
+
+	    // 맛집 TOP3 (REST)
+	    map.put("category", "REST");
+	    List<PlaceDTO> topRestList = dao.getFavoriteTop3ByCategory(map);
+
+	    // 숙소 TOP3 (ACC)
+	    map.put("category", "ACC");
+	    List<PlaceDTO> topAccList = dao.getFavoriteTop3ByCategory(map);
+
+	    // 축제 TOP3 (FEST)
+	    map.put("category", "FEST");
+	    List<PlaceDTO> topFestList = dao.getFavoriteTop3ByCategory(map);
+
+	    // JSP 전달
+	    model.addAttribute("dto",dto);
+	    model.addAttribute("topRestList", topRestList);
+	    model.addAttribute("topAccList", topAccList);
+	    model.addAttribute("topFestList", topFestList);
 	}
 	
 	// 나의 문의 목록 조회
@@ -532,6 +570,17 @@ public class UserServiceImpl implements UserService {
 	    System.out.println("start: " + paging.getStartRow());
 	    System.out.println("end: " + paging.getEndRow());
 	    System.out.println("status : " + status);
+	    
+	    // 리뷰 작성 여부 체크
+	    Map<String, Integer> reviewCheckMap = new HashMap<String, Integer>();
+
+	    for (ReservationDTO dto : list) {
+	    	int reviewCnt = surveyDAO.checkSurveyWritten(dto.getReservation_id());
+	    	reviewCheckMap.put(dto.getReservation_id(), reviewCnt);
+	    }
+
+	    // JSP로 전달
+	    model.addAttribute("reviewCheckMap", reviewCheckMap);
 	}
 	// 나의 예약 상세
 	@Override
@@ -549,6 +598,9 @@ public class UserServiceImpl implements UserService {
 		ReservationDTO dto = dao.selectMyReservationDetail(map);
 		
 		model.addAttribute("dto", dto);
+		
+		int surveyWrittenCnt = surveyDAO.checkSurveyWritten(dto.getReservation_id());
+		model.addAttribute("surveyWrittenCnt", surveyWrittenCnt);
 	}
 	
 	//------------------------------

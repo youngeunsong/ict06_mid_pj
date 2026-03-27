@@ -65,7 +65,7 @@
 		LEFT JOIN PLACE p ON r.place_id = p.place_id
 		WHERE r.user_id = #{user_id}
 		AND r.status = 'COMPLETED'
-		AND r.reservation_id NOT IN (
+		AND r.reservation_id NOT IN(
 			SELECT reservation_id FROM SURVEY
 		)
 		ORDER BY r.created_at DESC
@@ -90,6 +90,13 @@
 	<select id="checkReviewExists" parameterType="String" resultType="int">
 		SELECT COUNT(*)
 		FROM REVIEW
+		WHERE reservation_id = #{reservation_id}
+	</select>
+	
+	<!-- 설문 작성 완료 여부 확인(예약목록 버튼 전환용) -->
+	<select id="checkSurveyWritten" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM SURVEY
 		WHERE reservation_id = #{reservation_id}
 	</select>
  </mapper>

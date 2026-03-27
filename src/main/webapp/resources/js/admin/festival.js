@@ -230,15 +230,15 @@ function updateFestival(id){
   },
 
   success : function(res){
-
-   if(res == 1){
-
+  	console.log("response:", res);
     alert("수정 완료");
     $('#modal_festival_modify').modal('hide');
     location.reload();
+   	},
 
-   }
-  }
+   error : function(){
+    alert("수정 실패");
+  	} 
  });
 }
 

@@ -59,6 +59,12 @@ public class SurveyDAOImpl implements SurveyDAO {
 		System.out.println("[SurveyDAOImpl - checkReviewExists()]");
 		return sqlSession.getMapper(SurveyDAO.class).checkReviewExists(reservation_id);
 	}
-    
 
+	// 설문 작성 완료 여부 확인(예약목록 버튼 전환용)
+	@Override
+	public int checkSurveyWritten(String reservation_id) {
+		System.out.println("[SurveyDAOImpl - checkSurveyWritten()]");
+		return sqlSession.getMapper(SurveyDAO.class).checkSurveyWritten(reservation_id);
+	}
+    
 }

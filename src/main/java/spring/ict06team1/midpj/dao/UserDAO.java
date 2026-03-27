@@ -6,6 +6,7 @@ import java.util.Map;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.PointDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
 public interface UserDAO {
@@ -38,6 +39,12 @@ public interface UserDAO {
     // 즐겨찾기 목록 카운트
     public int getFavoriteListCount(Map<String, Object> map);
     
+    // 마이페이지 홈 즐겨찾기 카테고리별 탑3
+    public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map);
+    
+    // 마에피이지 홈 캘린더 예약 목록
+    public List<Map<String, Object>> getMyCalendarReservations(String user_id);
+    
     // 나의 문의 목록 조회
     public List<InquiryDTO> selectMyInquiryList(Map<String, Object> map);
     
@@ -63,10 +70,12 @@ public interface UserDAO {
     // 관리자 정보 수정
     public int updateAdmin(MemberDTO dto);
     
-    // ----------------------------------------------------
-    // 신규 회원가입시 포인트 지급
+	// ===============================
+	// 추가: 김재원 2026-03-27
+	// 회원가입 시 포인트 지급 알림
     public int insertPoint(Map<String, Object> map);
     
-    // 신규 가입후 첫 로그인 시 포인 처리
-    public int countPointForPolicy(Map<String, Object> map1);
+    // 마이페이지에서 포인트 가져오기
+    public List<PointDTO> getPointHistory(String userId);
+    
 }    

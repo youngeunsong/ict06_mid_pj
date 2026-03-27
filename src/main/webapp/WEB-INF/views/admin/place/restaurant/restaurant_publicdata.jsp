@@ -106,7 +106,7 @@ $(function(){
 			<hr>
 		</div>
 
-		<footer class="main-footer">
+		<footer class="main-footer text-center py-3">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
 	</div>

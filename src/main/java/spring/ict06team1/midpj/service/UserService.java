@@ -52,7 +52,7 @@ public interface UserService {
     public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
         throws ServletException, IOException;
     
-    // 마이페이지 홈 카운트
+    // 마이페이지 홈 카운트, top3, calendar
     public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException;
     

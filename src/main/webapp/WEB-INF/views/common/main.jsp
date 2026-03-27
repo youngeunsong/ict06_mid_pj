@@ -373,8 +373,7 @@
 		                                        <div class="col-6">
 		                                            <div class="best-sub-card card text-decoration-none text-dark position-relative">
 		                                                <button type="button"
-													        class="bookmark-btn"
-													        data-place-id="${item.PLACE_ID}">
+													        class="bookmark-btn" data-place-id="${item.PLACE_ID}">
 		                                                    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(item.PLACE_ID) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
 		                                                </button>
 		
@@ -692,6 +691,9 @@
 
 		<!-- 설문 모달 -->
 		<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp"%>
+		<script>
+			const path = "${pageContext.request.contextPath}";
+		</script>
 		<script src="${path}/resources/js/user/survey.js"></script>
 	</div>
 </body>

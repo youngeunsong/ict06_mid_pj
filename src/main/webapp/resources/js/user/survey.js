@@ -1,98 +1,215 @@
 /*
  * @author 김다솜
  * 최초작성일: 2026-03-25
- * 최종수정일: 2026-03-25
+ * 최종수정일: 2026-03-26
  * 참고 코드: none
 */
 
 // =========================
-// 설문 모달 띄우기
+// 전역변수
 // =========================
-// 로그인 후 설문 대상 체크
+let surveyQueue = [];
+let currentSurvey = null;
+let totalSurveyCount = 0;
+let shouldOpenSurvey = false;
+let isFirstSurvey = true;
+
+console.log("survey.js 로드됨");
+
+// =========================
+// 설문 진행률 업데이트
+// =========================
+function updateProgress() {
+	if(totalSurveyCount === 0) return;
+	
+	const current = totalSurveyCount - surveyQueue.length;
+	const percent = Math.round((current/totalSurveyCount)*100);
+	
+	$('#surveyProgressBar').css('width', percent + '%');
+	$('#progressText').text(`${current}/${totalSurveyCount}`);
+}
+
+// =========================
+// 문서 준비 완료
+// =========================
 $(document).ready(function() {
-	console.log("설문 체크 시작");
+	console.log("📄 문서 준비 완료");
+	
+	// ✅ 여기서 URL 파라미터 처리
+	const urlParams = new URLSearchParams(window.location.search);
+	shouldOpenSurvey = urlParams.get('openSurvey') === 'true';
+	
+	console.log("🔍 URL:", window.location.href);
+	console.log("🔍 openSurvey 파라미터:", urlParams.get('openSurvey'));
+	console.log("✅ shouldOpenSurvey:", shouldOpenSurvey);
 	
 	//설문 대상 조회
 	$.ajax({
-		url: CTX + "/surveyList.sv",
+		url: path + "/surveyList.sv",
 		type: "get",
+		dataType: "json",
 		success: function(list) {
-			console.log("서버 응답 데이터:",list);
+			console.log("✅ 서버 응답 데이터:", list);
 			
-			if(list && list.length > 0) {
-				const target = list[0];
-				
-				//데이터 체크(placeDTO null여부 확인)
-				const hasPlace = target.placeDTO && target.placeDTO.name;
-				const placeId = target.place_id || "";
-				const placeName = (target.placeDTO && target.placeDTO.name) || "알 수 없는 장소";
-				
-        		console.log("장소 ID:", placeId);
-        
-				const skipUntil = localStorage.getItem("survey_skip_until");
-				if(!skipUntil || new Date().getTime() > parseInt(skipUntil)) {
-					$('#surveyGuide').removeClass('d-none');
-				}
-				
-				//설문용 데이터
-				$('#survey_reservation_id').val(target.reservation_id);
-				$('#survey_place_name').text(placeName);
-				
-				//리뷰용 데이터
-				$('#review_place_id').val(placeId);
-				$('#review_place_name').text(placeName);
+			if(!list || list.length === 0) {
+				console.log("⚠️ 설문 목록 비어있음");
+				return;
 			}
+			
+			//skip하지 않은 설문만 필터
+			surveyQueue = list.filter(item => {
+        		const key = "survey_skip_" + item.reservation_id;
+				return !sessionStorage.getItem(key);
+			});
+			
+			totalSurveyCount = surveyQueue.length;
+			console.log("✅ 필터된 설문 개수:", totalSurveyCount);
+			
+			if(surveyQueue.length === 0) {
+				console.log("⚠️ 필터 후 설문 없음");
+				return;
+			}
+			
+			isFirstSurvey = true;
+			console.log("✅ isFirstSurvey = true");
+			showNextSurvey();
+		},
+		error: function(error) {
+			console.error("❌ 설문 목록 조회 실패:", error);
 		}
 	});
-	
+					
 	//NPS 슬라이더
-	$('#nps_score').on('input', function() {
-		$('#nps_value').text($('#nps_score').val());
+	$(document).on('input', '#nps_score', function() {
+		$('#nps_value').text($(this).val());
 	});
 });
 
-//작성하기 클릭 > 모달 오픈
+// =========================
+// 설문 값 초기화
+// =========================
+function resetSurveyForm() {
+	$('#satisfaction_score').val('');
+	$('#nps_score').val('');
+	$('#info_reliability_score').val('');
+	$('#inconvenience').val('');
+	$('#improvements').val('');
+	
+	$('.score-item').removeClass('active');
+	$('.selected-value').remove();
+
+	$('#review_rating').val('');
+	$('#review_content').val('');
+	$('.star-item').removeClass('active');
+}
+
+// =========================
+// 다음 설문 표시
+// =========================
+function showNextSurvey() {
+	console.log("🔄 showNextSurvey 호출됨");
+	console.log("   shouldOpenSurvey:", shouldOpenSurvey);
+	console.log("   isFirstSurvey:", isFirstSurvey);
+	console.log("   surveyQueue.length:", surveyQueue.length);
+	
+	if(!surveyQueue || surveyQueue.length === 0) {
+		console.log("⚠️ 모든 설문 완료");
+		currentSurvey = null;
+		
+		$('#surveyGuide').addClass('d-none');
+		showToast("모든 설문 완료! 감사합니다🎉");
+		
+		$('body').append('<div id="doneEffect">🎉 완료!</div>');
+		setTimeout(() => {
+			$('#doneEffect').remove();
+		}, 1500);
+		
+		return;
+	}
+	
+	resetSurveyForm();
+	
+	currentSurvey = surveyQueue.shift();
+	updateProgress();
+	
+	const placeId = currentSurvey.place_id || "";
+	const placeName = (currentSurvey.placeDTO && currentSurvey.placeDTO.name) || "알 수 없는 장소";
+	
+	console.log("✅ 현재 설문:", currentSurvey);
+	
+	$('#surveyGuide').removeClass('d-none');
+	$('#surveyGuideText').text(placeName);
+	
+	$('#survey_reservation_id').val(currentSurvey.reservation_id);
+	$('#survey_place_name').text(placeName);
+	
+	$('#review_place_id').val(placeId);
+	$('#review_place_name').text(placeName);
+	
+	console.log("🔍 조건 체크 - shouldOpenSurvey:", shouldOpenSurvey, "isFirstSurvey:", isFirstSurvey);
+	
+	if(shouldOpenSurvey && isFirstSurvey) {
+		console.log("✅ 모달 오픈!");
+		isFirstSurvey = false;
+		
+		setTimeout(() => {
+			console.log("🎬 modal show 호출");
+			$('#surveyModal').modal('show');
+		}, 300);
+	} else {
+		console.log("⚠️ 모달 오픈 조건 불만족");
+		isFirstSurvey = false;
+	}
+}
+
+// =========================
+// 설문 열기
+// =========================
 $(document).on('click', '#openSurveyBtn', function() {
-	$('#surveyModal').modal('show');
+	location.href = path + '/viewReservations.do?openSurvey=true';
 });
 
-//나중에 클릭
+// =========================
+// '나중에' 버튼 클릭
+// =========================
 $(document).on('click', '#laterBtn', function() {
-	const now = new Date().getTime();
-	const tomorrow = now + (24*60*60*1000);
+	const reservationId = $('#survey_reservation_id').val();
+	const key = "survey_skip_" + reservationId;
 	
-	localStorage.setItem("survey_skip_until", tomorrow);
+	sessionStorage.setItem(key, "true");
 	
-	$('#surveyGuide').hide();
+	$('#surveyGuide').addClass('d-none');
+	showNextSurvey();
 });
 
-//신뢰도 버튼 클릭
+// =========================
+// 점수 선택
+// =========================
 $(document).on('click', '.score-item', function() {
 	const group = $(this).closest('.score-group');
 	const type = group.data('type');
 	const value = $(this).data('value');
 	
-	//버튼 active 처리
 	group.find('.score-item').removeClass('active');
 	$(this).addClass('active');
 	
-	//값 표시
 	group.find('.selected-value').remove();
 	group.append(`<div class="selected-value">선택한 점수: ${value}점</div>`);
 	
-	//hidden값 세팅
 	if(type === 'satisfaction') {
 		$('#satisfaction_score').val(value);
 	}
 	else if(type === 'reliability') {
 		$('#info_reliability_score').val(value);
 	}
-	if(type === 'nps') {
+	else if(type === 'nps') {
 		$('#nps_score').val(value);
 	}
 });
 
-//설문 등록
+// =========================
+// 설문 제출
+// =========================
 function submitSurvey() {
 	const data = {
 		reservation_id: $('#survey_reservation_id').val(),
@@ -103,18 +220,18 @@ function submitSurvey() {
 		improvements: $('#improvements').val()
 	};
 	
-	//유효성 검사(만족도, nps, reliability)
 	if(!data.satisfaction_score || !data.nps_score || !data.info_reliability_score) {
 		alert("필수 항목을 선택하세요.");
 		return;
 	}
 	
 	$.ajax({
-		url: CTX + "/surveyInsert.sv",
+		url: path + "/surveyInsert.sv",
 		type: "post",
 		data: data,
 		success: function(res) {
 			if(res.success) {
+
 				alert("설문이 제출되었습니다. 응답해 주셔서 감사합니다😊");
 				
 				// ===============================
@@ -124,12 +241,12 @@ function submitSurvey() {
                 alert("🎉 설문 참여로 1000 포인트가 적립되었습니다!");
                 
 	            // ================================
-	            
+
 				$('#surveyModal').modal('hide');
 				
 				setTimeout(() => {
 					$('#reviewModal').modal('show');
-				}, 500);
+				}, 300);
 			}
 		},
 		error: function() {
@@ -139,27 +256,23 @@ function submitSurvey() {
 }
 
 // =========================
-// 설문 제출 후 리뷰 모달 띄우기
+// 별점 클릭
 // =========================
-//별점 클릭
 $(document).on('click', '.star-item', function() {
 	const value = $(this).data('value');
 	$('#review_rating').val(value);
 	
 	$('.star-item').each(function() {
-		if($(this).data('value') <= value) {
-			$(this).addClass('active');
-		}
-		else {
-			$(this).removeClass('active');
-		}
+		$(this).toggleClass('active', $(this).data('value') <= value);
 	});
 });
 
-//리뷰 등록
+// =========================
+// 리뷰 제출
+// =========================
 function submitReview() {
 	const placeId = $('#review_place_id').val();
-	console.log("제출 시점 placeId 확인:",placeId);
+	console.log("제출 시점 placeId 확인:", placeId);
 	
 	if(!placeId) {
 		alert("장소 정보 누락");
@@ -167,7 +280,7 @@ function submitReview() {
 	}
 	
 	const data = {
-		place_id: $('#review_place_id').val(),
+		place_id: placeId,
 		reservation_id: $('#survey_reservation_id').val(),
 		rating: $('#review_rating').val(),
 		content: $('#review_content').val()
@@ -184,11 +297,12 @@ function submitReview() {
 	}
 	
 	$.ajax({
-		url: CTX + '/reviewInsert.sv',
+		url: path + '/reviewInsert.sv',
 		type: 'post',
 		data: data,
 		success: function(res) {
 			if(res.success) {
+
 				alert('리뷰가 등록되었습니다. 감사합니다😊');
 				
 				// ===============================
@@ -198,11 +312,26 @@ function submitReview() {
 	            alert("🎉 리뷰 작성으로 500 포인트가 적립되었습니다!");
 	            
 	            // ================================
+
 				$('#reviewModal').modal('hide');
+				
+				showNextSurvey();
 			}
 		},
 		error: function() {
 			alert('리뷰 등록 실패. 다시 시도해주세요.');
 		}
 	});
+}
+
+// =========================
+// 알림 toast UI
+// =========================
+function showToast(msg) {
+	const toast = $('#toast');
+	toast.text(msg).fadeIn();
+	
+	setTimeout(() => {
+		toast.fadeOut();
+	}, 2000);
 }

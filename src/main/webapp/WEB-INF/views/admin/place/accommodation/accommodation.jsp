@@ -227,6 +227,9 @@
 				</div>
 			</section>
 		</div>
+		<footer class="main-footer text-center py-3">
+			<strong>Copyright &copy; 2026</strong>
+		</footer>
 	</div>
 <script>
 	function handleCombinedSearch() {
@@ -267,7 +270,5 @@
 	}
 </script>
 </body>
-<footer class="main-footer text-center py-3">
-	<strong>Copyright &copy; 2026</strong>
-</footer>
+
 </html>

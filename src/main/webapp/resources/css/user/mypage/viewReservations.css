@@ -385,3 +385,34 @@
 		height: 180px;
 	}
 }
+
+.status-action-wrap {
+	text-align: right;
+}
+
+.review-btn-wrap {
+    margin-top: 6px;
+}
+
+.btn-review {
+    background-color: #ff7a3d;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-review:hover {
+    background-color: #ff5a1f;
+}
+
+.btn-review-done {
+	background-color: #cfd4d9;
+	cursor: default;
+}
+
+.btn-review-done:hover {
+	background-color: #cfd4d9;
+}

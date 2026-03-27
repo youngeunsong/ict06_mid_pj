@@ -51,4 +51,18 @@
 		WHERE p.user_id = #{user_id}
 		AND p.policy_key = #{policy_key}
 	</select>
+	
+	<select id="getPointHistory" parameterType="string" resultType="spring.ict06team1.midpj.dto.PointDTO">
+        SELECT 
+            point_id, 
+            user_id,
+            policy_key,
+            amount,
+            type,
+            description,
+            created_at AS pointLogDate
+        FROM POINT
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
 </mapper>

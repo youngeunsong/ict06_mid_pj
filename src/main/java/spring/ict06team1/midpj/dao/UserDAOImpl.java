@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.PointDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
 @Repository
@@ -105,8 +106,31 @@ public class UserDAOImpl implements UserDAO {
 	// 즐겨찾기 목록 카운트
 	@Override
 	public int getFavoriteListCount(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - getFavoriteListCount()");
+		
 	    int count = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.getFavoriteListCount", map);
+	    
 	    return count;
+	}
+	
+	// 마이페이지 홈 즐겨찾기 카테고리별 탑3
+	@Override
+	public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - getFavoriteTop3ByCategory()");
+		
+		List<PlaceDTO> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.getFavoriteTop3ByCategory", map);
+		
+		return list;
+	}
+	
+	// 마이페이지 홈 캘린더 예약 목록 조회
+	@Override
+	public List<Map<String, Object>> getMyCalendarReservations(String user_id) {
+		System.out.println("UserDAOImpl - getMyCalendarReservations()");
+		
+		List<Map<String, Object>> list = sqlSession.selectList("spring.ict06team1.midpj.dao.UserDAO.getMyCalendarReservations",user_id);
+		
+		return list;
 	}
 
 	// 나의 문의 목록 조회
@@ -200,7 +224,8 @@ public class UserDAOImpl implements UserDAO {
 
 		return sqlSession.getMapper(UserDAO.class).updateAdmin(dto);
 	}
-	//--------------------------------------------------------------
+	// ===============================
+	// 추가: 김재원 2026-03-27
 	// 포인트 DB에 입력
 	@Override
 	public int insertPoint(Map<String, Object> map) {
@@ -208,9 +233,10 @@ public class UserDAOImpl implements UserDAO {
 		return sqlSession.insert("PointMapper.insertPoint", map);
 	}
 	
-	// 세션 기반 첫 로그인 포인트 처리
-	public int countPointForPolicy(Map<String, Object> map1) {
-		System.out.println("UserDAOImpl - countPointForPolicy()");      
-	    return sqlSession.selectOne("PointMapper.countPointForPolicy", map1); 
-	}
+	// 마이페이지 포인트 가져오기
+	@Override
+    public List<PointDTO> getPointHistory(String userId) {
+		System.out.println("UserDAOImpl - getPointHistory()");
+        return sqlSession.selectList("PointMapper.getPointHistory", userId);
+    }
 }

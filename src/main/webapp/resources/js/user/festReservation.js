@@ -1,8 +1,13 @@
 /*
  * @author 김다솜
  * 최초작성일: 2026-03-22
- * 최종수정일: 2026-03-23
+ * 최종수정일: 2026-03-27
  * 참고 코드: festivalDetail.js
+ * 변경 사항
+ * ----------------------------------------
+ * v260327
+ * 종료 축제의 예약하기 클릭 시 '종료된 축제입니다' 메시지 이후 상세페이지로 돌아가도록 수정
+ * ----------------------------------------	
 */
 
 // =========================
@@ -80,6 +85,7 @@ $(document).ready(function() {
 	
 	if(today > festEnd) {
 		alert("종료된 축제입니다.");
+		location.href = CTX + "/festReservation.rv?place_id=" + PLACE_ID;
 		$('#btnSubmitReservation').prop('disabled', true);
 	}
 	

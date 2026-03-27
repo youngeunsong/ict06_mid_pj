@@ -32,7 +32,7 @@
 	       </association>
 	 </resultMap>
 	  
-	 <!--지도에 나오는 맛집 갯수  -->
+	 <!--지도에 나오는 맛집 갯수 -->
 	 <select id="selectNearbyRestaurantCount" parameterType="map" resultType="int">
 	   SELECT COUNT(*)
 	   FROM restaurant r

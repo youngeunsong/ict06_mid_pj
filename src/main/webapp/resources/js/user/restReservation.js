@@ -3,23 +3,113 @@
  * 최초작성일: 2026-03-24
  * 최종수정일: 2026-03-24
  * 참고 코드: accReservation.js
+ * 변경 사항
+ * ----------------------------------------
+ * v260327
+ * 예약시간 30분 단위 생성 및 오늘 날짜의 과거 시간 차단 로직 추가
+ * ----------------------------------------	
 */
 
 // =========================
-// 예약페이지로 이동
+// 예약 날짜/시간 설정, flatpickr 캘린더 설정
 // =========================
-document.addEventListener("DOMContentLoaded", function() {
-	console.log("DOM 로딩 완료");
+$(document).ready(function() {
+	//flatpickr 인라인 캘린더 설정
+	flatpickr('#visit_date', {
+		locale: 'ko',
+		dateFormat: 'Y-m-d',
+		minDate: 'today',
+		//inline: 별도 클릭 없이 바로 화면에 렌더링
+		inline: true,
+		//날짜 선택 시 동작
+		onChange: function(selectedDates, dateStr) {
+			console.log("선택된 날짜:", dateStr);
+			$('#visit_date').val(dateStr);
+			generateTimeOptions(dateStr);
+			checkForm();
+		}
+	});
 	
-	const btn = document.getElementById("btnReserve");
+	//이벤트 바인딩
+	$('#guest_count').on('input', checkForm);
+	checkForm();
+});
 
-	console.log("btn:",btn);	
+// =========================
+// 시간 슬롯
+// =========================
+function generateTimeOptions(selectedDate) {
+	console.log("선택 날짜:", selectedDate);
 	
-	if(btn) {
-		btn.addEventListener("click", function() {
-			location.href = CTX + "/restReservation.rv?place_id=" + PLACE_ID;
-		});
+	const wrap = $('#timeSlotWrap');
+	wrap.empty();
+	$('#visit_time').val('');
+	
+	const now = new Date();
+	const today = now.toISOString().split('T')[0];
+	const isToday = selectedDate === today;
+	
+	//오늘 선택 시 현재 +1시간 이후부터
+	const minTime = new Date(now.getTime() + 60*60*1000);
+	
+	let amGroup = $('<div class="time-group"><div class="time-title">🌞 오전</div></div>');
+	let pmGroup = $('<div class="time-group"><div class="time-title">🌙 오후</div></div>');
+	
+	let hasSlot = false;
+	
+	for(let h=9; h<=21; h++) {
+		for(let m=0; m<60; m+=30) {
+			if(h === 21 && m > 0)
+				break;
+			
+			//오늘이면 과거 시간 제거
+			if(isToday) {
+				const slotTime = new Date();
+				slotTime.setHours(h, m, 0, 0);
+				
+				if(slotTime <= minTime)
+					continue;
+			}
+			
+			const hh = String(h).padStart(2, '0');
+			const mm = String(m).padStart(2, '0');
+			const timeStr = `${hh}:${mm}`;
+			
+			const btn = $(`<button type="button" class="time-slot-btn">${timeStr}</button>`);
+			btn.data('time', timeStr);
+			
+			//시간대 분기
+			if(h < 13) {
+				amGroup.append(btn);
+			}
+			else {
+				pmGroup.append(btn);
+			}
+			
+			hasSlot = true; 
+		}
 	}
+	
+	if(amGroup.children().length > 1) {
+		wrap.append(amGroup);
+	}
+	if(pmGroup.children().length > 1) {
+		wrap.append(pmGroup);
+	}
+}
+
+// =========================
+// 시간 클릭 이벤트
+// =========================
+$(document).on('click', '.time-slot-btn', function() {
+	$('.time-slot-btn').removeClass('active');
+	$(this).addClass('active');
+	
+	const time = $(this).data('time');
+	$('#visit_time').val(time);
+	
+	//예약 버튼 활성화
+	checkForm();
 });
 
 // =========================
@@ -30,17 +120,6 @@ function checkForm() {
 	const isTimeSelected = $('#visit_time').val() !== '';
 	$('#btnSubmitReservation').prop('disabled', !isDateSelected || !isTimeSelected);
 }
-
-$(document).ready(function() {
-	const today = new Date().toISOString().split('T')[0];
-	$('#visit_date').attr('min', today);
-	
-	$('#visit_date').on('change', checkForm);
-	$('#visit_time').on('change', checkForm);
-	$('#guest_count').on('input', checkForm);
-	
-	checkForm();
-});
 
 // =========================
 // 예약 처리

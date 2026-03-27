@@ -128,6 +128,14 @@ INCREMENT BY 1;
 -- SEQ_TICKET의 최댓값 확인
 SELECT SEQ_TICKET.NEXTVAL FROM DUAL;
 
+-- 실제 최대 티켓 아이디 확인 
+SELECT MAX(ticket_id) FROM FESTIVAL_TICKET ft; 
+
+DROP SEQUENCE SEQ_TICKET;
+CREATE SEQUENCE SEQ_TICKET
+START WITH 304 -- 최대 place_id + 1 (이거 상수만 넣을 수 있음. 주의!)
+INCREMENT BY 1;
+
 --------------------------------------------
 -- 테이블 리셋 필요 시 사용할 drop 문
 -- 1. 자식 테이블

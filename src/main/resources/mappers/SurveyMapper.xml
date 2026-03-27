@@ -92,4 +92,11 @@
 		FROM REVIEW
 		WHERE reservation_id = #{reservation_id}
 	</select>
+	
+	<!-- 설문 작성 완료 여부 확인(예약목록 버튼 전환용) -->
+	<select id="checkSurveyWritten" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM SURVEY
+		WHERE reservation_id = #{reservation_id}
+	</select>
  </mapper>

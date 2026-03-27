@@ -100,21 +100,25 @@ function renderFaqList(list) {
                 </div>`;
     } else {
         $.each(list, function(index, faq) {
+            // 조회수 변수 처리 (DTO 필드명에 따라 view_count 또는 viewCount 자동 대응)
             let views = (faq.view_count !== undefined) ? faq.view_count : (faq.viewCount || 0);
 
             html += `
                 <div class="faq-item border-bottom">
                     <div class="faq-question p-3 d-flex justify-content-between align-items-center" onclick="toggleAnswer(this)">
                         <div class="d-flex align-items-center">
-                            <span class="fw-bold me-2" style="color: #3CB371;">Q.</span> <span class="fw-medium text-dark">${faq.question}</span>
+                            <span class="fw-bold me-2" style="color: #3CB371;">Q.</span> 
+                            <span class="fw-medium text-dark">${faq.question}</span>
                         </div>
+                        
                         <div class="d-flex align-items-center">
-                            <span class="badge rounded-pill bg-light text-dark border me-3" style="font-size: 0.7rem; font-weight: 400;">
+                            <span class="text-muted small me-3" style="font-size: 0.8rem;">
                                 <i class="fa-regular fa-eye me-1"></i> ${views}
                             </span>
                             <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
                         </div>
                     </div>
+                    
                     <div class="faq-answer bg-light" style="display: none;">
                         <div class="p-4 d-flex">
                             <span class="text-danger fw-bold me-2">A.</span>
@@ -124,7 +128,8 @@ function renderFaqList(list) {
                 </div>`;
         });
 
-        if(keyword !== "" && list.length >= 5) { // 5개 이상일 때도 보여주게 조절 가능
+        // (이하 전체보기 버튼 로직 동일...)
+        if(keyword !== "" && list.length >= 5) { 
             html += `
                 <div class="p-4 text-center">
                     <a href="${contextPath}/faqAllList.sp?keyword=${encodeURIComponent(keyword)}" 
@@ -236,7 +241,7 @@ $(document).on("click", "#btnSendReport", function() {
 		        $('#reportForm')[0].reset();
 		        
 		        // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
-		        location.href = contextPath + "/myInquiryList.sp?user_id=" + sessionUserId; 
+		        location.href = "faqMain.sp?user_id=" + sessionUserId;
 		    } else {
 		        alert("접수 실패. 다시 시도해주세요.");
 		    }

@@ -21,7 +21,9 @@
 			<div class="reservation_detail_inner">
 
 				<div class="page-header">
-				    <h2><i class="bi bi-calendar-check"></i> 예약 상세</h2>
+					<h2>
+						<i class="bi bi-calendar-check"></i> 예약 상세
+					</h2>
 				</div>
 
 				<div class="reservation_card">
@@ -41,20 +43,20 @@
 					<div class="reservation_content_area">
 
 						<div class="place_summary">
-								<c:choose>
-									<c:when test="${dto.placeDTO.place_type eq 'REST'}">
-										<div class="place_type_badge badge_rest">맛집</div>
-									</c:when>
-									<c:when test="${dto.placeDTO.place_type eq 'ACC'}">
-										<div class="place_type_badge badge_acc">숙소</div>
-									</c:when>
-									<c:when test="${dto.placeDTO.place_type eq 'FEST'}">
-										<div class="place_type_badge badge_fest">축제</div>
-									</c:when>
-									<c:otherwise>
-										<div class="place_type_badge">장소</div>
-									</c:otherwise>
-								</c:choose>
+							<c:choose>
+								<c:when test="${dto.placeDTO.place_type eq 'REST'}">
+									<div class="place_type_badge badge_rest">맛집</div>
+								</c:when>
+								<c:when test="${dto.placeDTO.place_type eq 'ACC'}">
+									<div class="place_type_badge badge_acc">숙소</div>
+								</c:when>
+								<c:when test="${dto.placeDTO.place_type eq 'FEST'}">
+									<div class="place_type_badge badge_fest">축제</div>
+								</c:when>
+								<c:otherwise>
+									<div class="place_type_badge">장소</div>
+								</c:otherwise>
+							</c:choose>
 
 							<h3 class="place_name">${dto.placeDTO.name}</h3>
 							<p class="place_address">${dto.placeDTO.address}</p>
@@ -150,9 +152,17 @@
 
 							<c:choose>
 								<c:when test="${dto.status eq 'COMPLETED'}">
-									<button type="button" class="btn_point"
-										onclick="location.href='${path}/surveyReview.rv?reservation_id=${dto.reservation_id}'">
-										리뷰쓰기</button>
+									<c:choose>
+										<c:when test="${surveyWrittenCnt > 0}">
+											<button type="button" class="btn_disabled" disabled>리뷰
+												완료</button>
+										</c:when>
+										<c:otherwise>
+											<button type="button" class="btn_point"
+												onclick="location.href='${path}/surveyReview.rv?reservation_id=${dto.reservation_id}'">
+												리뷰쓰기</button>
+										</c:otherwise>
+									</c:choose>
 								</c:when>
 
 								<c:when test="${dto.status eq 'CANCELLED'}">

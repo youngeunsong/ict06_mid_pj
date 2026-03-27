@@ -374,8 +374,7 @@
 		                                        <div class="col-6">
 		                                            <div class="best-sub-card card text-decoration-none text-dark position-relative">
 		                                                <button type="button"
-													        class="bookmark-btn"
-													        data-place-id="${item.PLACE_ID}">
+													        class="bookmark-btn" data-place-id="${item.PLACE_ID}">
 		                                                    <i class="${not empty favoritePlaceIds and favoritePlaceIds.contains(item.PLACE_ID) ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
 		                                                </button>
 		

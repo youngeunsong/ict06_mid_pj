@@ -27,8 +27,10 @@ import spring.ict06team1.midpj.service.FestivalServiceImpl;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-22
+ * 최종수정일: 2026-03-25
  * 참고 코드: RestaurantController.java
+ * 변경 사항
+ * v260326 : 축제 내 주변 지도 기능 구현
  */
 
 @Controller
@@ -48,6 +50,30 @@ public class FestivalController {
 		return "user/festival/festival";
 	}
 	
+	// [festival] 지도 페이지 ---------------------------------------
+	// [festival] 축제 리스트 보여주기
+    @RequestMapping("/festivalAjax.fe")
+    public String festivalAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => festivalAjax.fe>>>");
+        service.getNearbyFestivalAjax(request, response, model);
+        // return "user/festival/festivalCard";
+        return "user/festival/festivalCard_map";
+    }
+    
+    // JSP로 이동하지 않고 데이터를 직접 리턴함
+    @ResponseBody
+    // 축제 페이지로 이동
+    @RequestMapping("/getNearbyFeMarkersAjax.fe")
+    public List<FestivalDTO> getNearbyFeMarkersAjax(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException {
+        logger.info("<<< url => getNearbyFeMarkersAjax.fe>>>");
+        List<FestivalDTO> list = service.getNearbyFeMarkersAjax(request, response);
+        return list;
+    }
+    
+    
+    // [festival] 랭킹 페이지 ---------------------------------------
 	// [festival] 축제 랭킹 - 상위 5개 축제 강조 
 	@RequestMapping("/bestFestivals.fe")
 	public String bestFestivals(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -88,6 +114,7 @@ public class FestivalController {
         return service.getBestFestivalPageList(start, end);
     }
 	
+    // [festival] 축제 상세 페이지 --------------------------------------------------------------
 	// [festival] 축제 상세 & 예약 페이지로 이동
 	@RequestMapping("/festivalDetail.fe")	
 	public String festivalDetail(@RequestParam("place_id") int place_id, HttpSession session, Model model) 

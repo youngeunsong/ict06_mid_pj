@@ -61,7 +61,7 @@ public class NoticeServiceImpl implements NoticeService {
         //상단 고정 공지 | 일반 공지
         List<NoticeDTO> topNoticeList = dao.getTopNoticeList();
         List<NoticeDTO> noticeList = dao.getNoticeList(map);
-
+        
         model.addAttribute("topNoticeList", topNoticeList);
         model.addAttribute("noticeList", noticeList);
         model.addAttribute("paging", paging);
@@ -133,12 +133,19 @@ public class NoticeServiceImpl implements NoticeService {
             model.addAttribute("noticeDTO", null);
             return;
         }
-
+        
         // 실제로 사용되는 공지/ 이벤트 아이디
-        int notice_id = Integer.parseInt(noticeIdStr);
-
+        int notice_id = Integer.parseInt(noticeIdStr); 
+        
+        //[1건 가져오기]-----------------------------------------------------
         NoticeDTO noticeDTO = dao.getNoticeDetail(notice_id);
+        
+        // 정상 게시글만 조회수 증가
+        dao.increaseViewCount(notice_id);
+        
+        // 증가된 조회수 반영 다시 조회
+        noticeDTO = dao.getNoticeDetail(notice_id);
 
-        model.addAttribute("noticeDTO", noticeDTO);
+        model.addAttribute("noticeDTO", noticeDTO); //게시글 1건
     }
 }

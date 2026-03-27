@@ -26,7 +26,8 @@
 
 			<!-- 상태 필터 -->
 			<div class="filter-tabs">
-				<button class="filter-tab ${empty status or status eq 'all' ? 'active' : ''}"
+				<button
+					class="filter-tab ${empty status or status eq 'all' ? 'active' : ''}"
 					onclick="filterReservation('all')">전체</button>
 
 				<button class="filter-tab ${status eq 'RESERVED' ? 'active' : ''}"
@@ -101,7 +102,8 @@
 												</p>
 											</div>
 
-											<div>
+											<div class="status-action-wrap"
+												onclick="event.stopPropagation();">
 												<c:choose>
 													<c:when test="${res.status eq 'PENDING'}">
 														<span class="badge-status badge-pending">예약 대기</span>
@@ -111,6 +113,21 @@
 													</c:when>
 													<c:when test="${res.status eq 'COMPLETED'}">
 														<span class="badge-status badge-completed">이용 완료</span>
+
+														<div class="review-btn-wrap">
+															<c:choose>
+																<c:when test="${reviewCheckMap[res.reservation_id] > 0}">
+																	<button type="button"
+																		class="btn-review btn-review-done" disabled>
+																		리뷰 완료</button>
+																</c:when>
+																<c:otherwise>
+																	<button type="button" class="btn-review"
+																		onclick="location.href='${path}/surveyReview.rv?reservation_id=${res.reservation_id}'">
+																		리뷰 작성</button>
+																</c:otherwise>
+															</c:choose>
+														</div>
 													</c:when>
 													<c:when test="${res.status eq 'CANCELLED'}">
 														<span class="badge-status badge-cancelled">예약 취소</span>
@@ -127,37 +144,38 @@
 
 										<div class="reservation-meta">
 											<div class="meta-line">
-												<span class="meta-label">예약번호 :</span>
-												<span class="meta-value">${res.reservation_id}</span>
+												<span class="meta-label">예약번호 :</span> <span
+													class="meta-value">${res.reservation_id}</span>
 											</div>
 
 											<div class="meta-line">
-												<span class="meta-label">예약일 :</span>
-												<span class="meta-value">
-													<fmt:formatDate value="${res.resDate}" pattern="yyyy-MM-dd" />
+												<span class="meta-label">예약일 :</span> <span
+													class="meta-value"> <fmt:formatDate
+														value="${res.resDate}" pattern="yyyy-MM-dd" />
 												</span>
 											</div>
 
 											<div class="meta-line">
-												<span class="meta-label">이용일정 :</span>
-												<span class="meta-value">
-													<c:choose>
+												<span class="meta-label">이용일정 :</span> <span
+													class="meta-value"> <c:choose>
 														<c:when test="${res.placeDTO.place_type eq 'ACC'}">
-															<fmt:formatDate value="${res.check_in}" pattern="yyyy-MM-dd" />
+															<fmt:formatDate value="${res.check_in}"
+																pattern="yyyy-MM-dd" />
 															~
-															<fmt:formatDate value="${res.check_out}" pattern="yyyy-MM-dd" />
+															<fmt:formatDate value="${res.check_out}"
+																pattern="yyyy-MM-dd" />
 														</c:when>
 														<c:otherwise>
-															<fmt:formatDate value="${res.check_in}" pattern="yyyy-MM-dd" />
+															<fmt:formatDate value="${res.check_in}"
+																pattern="yyyy-MM-dd" />
 														</c:otherwise>
 													</c:choose>
 												</span>
 											</div>
 
 											<div class="meta-line">
-												<span class="meta-label">방문시간 / 인원 :</span>
-												<span class="meta-value">
-													<c:choose>
+												<span class="meta-label">방문시간 / 인원 :</span> <span
+													class="meta-value"> <c:choose>
 														<c:when test="${not empty res.visit_time}">
 															${res.visit_time} / ${res.guest_count}명
 														</c:when>
@@ -171,8 +189,8 @@
 
 										<c:if test="${not empty res.request_note}">
 											<div class="request-inline">
-												<span class="meta-label">요청사항 :</span>
-												<span class="meta-value">${res.request_note}</span>
+												<span class="meta-label">요청사항 :</span> <span
+													class="meta-value">${res.request_note}</span>
 											</div>
 										</c:if>
 
@@ -197,30 +215,26 @@
 							<ul class="pagination">
 
 								<c:if test="${paging.prev != 0}">
-									<li class="page-item">
-										<a class="page-link"
-											href="${path}/viewReservations.do?pageNum=${paging.prev}&status=${status}">
-											이전
-										</a>
-									</li>
+									<li class="page-item"><a class="page-link"
+										href="${path}/viewReservations.do?pageNum=${paging.prev}&status=${status}">
+											이전 </a></li>
 								</c:if>
 
-								<c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
-									<li class="page-item ${i == paging.currentPage ? 'active' : ''}">
+								<c:forEach var="i" begin="${paging.startPage}"
+									end="${paging.endPage}">
+									<li
+										class="page-item ${i == paging.currentPage ? 'active' : ''}">
 										<a class="page-link"
-											href="${path}/viewReservations.do?pageNum=${i}&status=${status}">
-											${i}
-										</a>
+										href="${path}/viewReservations.do?pageNum=${i}&status=${status}">
+											${i} </a>
 									</li>
 								</c:forEach>
 
-								<c:if test="${paging.next != 0 && paging.next <= paging.pageCount}">
-									<li class="page-item">
-										<a class="page-link"
-											href="${path}/viewReservations.do?pageNum=${paging.next}&status=${status}">
-											다음
-										</a>
-									</li>
+								<c:if
+									test="${paging.next != 0 && paging.next <= paging.pageCount}">
+									<li class="page-item"><a class="page-link"
+										href="${path}/viewReservations.do?pageNum=${paging.next}&status=${status}">
+											다음 </a></li>
 								</c:if>
 
 							</ul>
@@ -232,8 +246,7 @@
 					<div class="no-data">
 						<i class="bi bi-calendar-x"></i>
 						<p>
-							아직 예약 내역이 없네요.<br>
-							궁금한 장소가 있다면 상세 페이지에서 예약해 보세요!
+							아직 예약 내역이 없네요.<br> 궁금한 장소가 있다면 상세 페이지에서 예약해 보세요!
 						</p>
 						<a href="${path}/main.do" class="btn-sig">홈 화면으로 가기</a>
 					</div>
@@ -243,13 +256,6 @@
 
 		<%@ include file="../../common/footer.jsp"%>
 	</div>
-	
-	<!-- 설문 모달, js -->
-	<%@ include file="/WEB-INF/views/user/mypage/surveyModal.jsp"%>
-	<script>
-		const path = "${pageContext.request.contextPath}"
-	</script>
-	<script src="${path}/resources/js/user/survey.js"></script>
 
 	<script>
 		function filterReservation(status) {

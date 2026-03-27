@@ -231,7 +231,17 @@ function submitSurvey() {
 		data: data,
 		success: function(res) {
 			if(res.success) {
-				showToast("설문이 제출되었습니다. 응답해 주셔서 감사합니다😊");
+
+				alert("설문이 제출되었습니다. 응답해 주셔서 감사합니다😊");
+				
+				// ===============================
+				// 추가: 김재원 2026-03-26
+				// 설문 참여 시 포인트 지급 알림
+				
+                alert("🎉 설문 참여로 1000 포인트가 적립되었습니다!");
+                
+	            // ================================
+
 				$('#surveyModal').modal('hide');
 				
 				setTimeout(() => {
@@ -292,7 +302,17 @@ function submitReview() {
 		data: data,
 		success: function(res) {
 			if(res.success) {
-				showToast('리뷰가 등록되었습니다. 감사합니다😊');
+
+				alert('리뷰가 등록되었습니다. 감사합니다😊');
+				
+				// ===============================
+				// 추가: 김재원 2026-03-26
+				// 리뷰 참여 시 포인트 지급 알림
+	            
+	            alert("🎉 리뷰 작성으로 500 포인트가 적립되었습니다!");
+	            
+	            // ================================
+
 				$('#reviewModal').modal('hide');
 				
 				showNextSurvey();

@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +22,7 @@ import spring.ict06team1.midpj.dao.UserDAO;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.PointDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
 
@@ -145,8 +147,29 @@ public class UserServiceImpl implements UserService {
 	    // 5. DB에 저장
 	    int insertCnt = dao.insertUser(dto);
 	    
+	    // 추가-------------------------------------------
+	    // 포인트 DB에 저장
+	    // 6. 신규 회원가입 성공 시 포인트 지급 
+	    if(insertCnt == 1) {
+
+	        // 회원가입 포인트 지급
+	        Map<String, Object> pointMap = new HashMap<>();
+	        pointMap.put("userId", user_id);
+	        pointMap.put("policyKey", "EARN_LOGIN");           
+	        pointMap.put("description", "회원가입 포인트 적립");
+
+	        int result = dao.insertPoint(pointMap);
+
+	        // 포인트가 정상적으로 지급되었으면 세션에 1회용 플래그 저장
+	        if(result > 0) {
+	            request.getSession().setAttribute("joinPointGiven", true);
+	        }
+	    
+	    // 추가 끝---------------------------------------------
+	    
 	    // 결과 전달 (1이면 성공, 0이면 실패)
 	    model.addAttribute("insertCnt", insertCnt);
+	    }
 	}
 
 	// 3. 로그인 처리 / 회원정보 인증 (아이디와 비번을 받아 일치하는 회원이 있는지 확인)
@@ -453,7 +476,13 @@ public class UserServiceImpl implements UserService {
 	    // 축제 TOP3 (FEST)
 	    map.put("category", "FEST");
 	    List<PlaceDTO> topFestList = dao.getFavoriteTop3ByCategory(map);
-
+	    
+	    // ======================================
+	    //추가: 김재원 2026-03-27
+	    // 마이페이지 포인트 가져오기 
+	    List<PointDTO> pointList = dao.getPointHistory(sessionID); // 
+	    model.addAttribute("pointList", pointList);
+	    // =======================================
 	    // JSP 전달
 	    model.addAttribute("dto",dto);
 	    model.addAttribute("topRestList", topRestList);

@@ -6,6 +6,7 @@ import java.util.Map;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.PointDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
 public interface UserDAO {
@@ -66,7 +67,15 @@ public interface UserDAO {
     public ReservationDTO selectMyReservationDetail(Map<String, Object> map);
     
     //------------------------------
-    //관리자 정보 수정
+    // 관리자 정보 수정
     public int updateAdmin(MemberDTO dto);
-
+    
+	// ===============================
+	// 추가: 김재원 2026-03-27
+	// 회원가입 시 포인트 지급 알림
+    public int insertPoint(Map<String, Object> map);
+    
+    // 마이페이지에서 포인트 가져오기
+    public List<PointDTO> getPointHistory(String userId);
+    
 }    

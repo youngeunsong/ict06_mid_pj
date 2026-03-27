@@ -86,28 +86,40 @@ public class AdAccommodationController {
 	@GetMapping("/accommodationDeleteAction.adac")
 	public String accommodationDeleteAction(HttpServletRequest request, Model model) 
 	        throws ServletException, IOException {
-	    logger.info("<<< url => /accommodationDeleteAction.adac >>>");
-	    
-	    // 1. 삭제 서비스 호출 (여기서 model에 담아준 값을 나중에 꺼내 씁니다)
-	    adAccService.getAccommodationDeleteAction(request, null, model);
-	    // 2. 서비스에서 model에 담아둔 파라미터 꺼내기
-	    String pageNum = (String) model.asMap().get("pageNum");
-	    String areaCode = (String) model.asMap().get("areaCode");
-	    String category = (String) model.asMap().get("category");
-	    String keyword = (String) model.asMap().get("keyword"); // 서비스에서 담아준 keyword 꺼내기
-	    // 3. 키워드 유무에 따른 리다이렉트 분기
-	    if (keyword != null && !keyword.trim().isEmpty()) {
-	        // 검색 중이었을 경우 -> 검색 컨트롤러로 이동
-	        return "redirect:/accommodationSearch.adac?pageNum=" + pageNum 
-	             + "&areaCode=" + areaCode 
-	             + "&category=" + category 
-	             + "&keyword=" + URLEncoder.encode(keyword, "UTF-8"); 
-	             // ※ 한글 키워드일 경우 URLEncoder 사용 권장 (java.net.URLEncoder)
-	    } else {
-	        // 일반 목록이었을 경우 -> 전체 목록 컨트롤러로 이동
-	        return "redirect:/accommodation.adac?pageNum=" + pageNum 
-	             + "&areaCode=" + areaCode; 
-	    }
+		logger.info("<<< url => /accommodationDeleteAction.adac >>>");
+
+		// 1. 삭제 서비스 호출
+		adAccService.getAccommodationDeleteAction(request, null, model);
+
+		// 2. 서비스에서 model에 담아둔 파라미터 꺼내기
+		String pageNum = (String) model.asMap().get("pageNum");
+		String areaCode = (String) model.asMap().get("areaCode");
+		String category = (String) model.asMap().get("category");
+		String keyword = (String) model.asMap().get("keyword");
+
+		// 3. null 방지 기본값 처리
+		if (pageNum == null || pageNum.isEmpty())
+			pageNum = "1";
+		if (areaCode == null)
+			areaCode = "";
+		if (category == null)
+			category = "";
+		if (keyword == null)
+			keyword = "";
+
+		// 4. 한글 포함 파라미터 전체 인코딩 처리
+		String encodedAreaCode = URLEncoder.encode(areaCode, "UTF-8");
+		String encodedCategory = URLEncoder.encode(category, "UTF-8");
+		String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
+
+		// 5. 키워드 유무에 따른 리다이렉트 분기
+		if (!keyword.isEmpty()) {
+			return "redirect:/accommodationSearch.adac?pageNum=" + pageNum + "&areaCode=" + encodedAreaCode
+					+ "&category=" + encodedCategory + "&keyword=" + encodedKeyword;
+		} else {
+			return "redirect:/accommodation.adac?pageNum=" + pageNum + "&areaCode=" + encodedAreaCode + "&category="
+					+ encodedCategory;
+		}
 	}
 	//-----------------------------------------------------------------------------------------------------------------
 	// 관리자 숙소 정보 입력 받는 곳 - 공공 데이터 활용

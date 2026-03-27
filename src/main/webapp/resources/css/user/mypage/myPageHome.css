@@ -480,3 +480,137 @@ body {
 .fc-list-event.fc-status-etc .fc-list-event-dot {
 	border-color: #7f8c8d !important;
 }
+
+
+/* ===포인트 부분 css ===============================================*/
+/*/* =========================
+   포인트 내역 카드 전체 CSS
+========================= */
+
+/* 기본 부모 카드 제거 */
+.point-card {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+
+/* 펼치기 버튼 스타일 */
+.toggle-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 10px;
+	font-size: 0.85rem;
+	border: none;
+	background: transparent;
+	color: #ffffff; /* 버튼 글자 흰색 */
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+	opacity: 0.8;
+}
+
+.toggle-btn .arrow {
+	transition: transform 0.25s ease;
+}
+
+.toggle-btn.open .arrow {
+	transform: rotate(180deg);
+}
+
+/* 포인트 내역 박스 */
+.point-history {
+	display: none;
+	background: #ffffff; /* 펼칠 때 흰색 */
+	border-radius: 8px;
+	padding: 6px 8px; /* 패딩 살짝 줄여서 마지막 줄도 보이게 */
+	margin-top: 6px;
+	font-family: 'Noto Sans KR', 'Arial', sans-serif;
+	font-size: 0.8rem;
+	color: #0ea760;
+	width: calc(100% + 16px); /* 좌우 넓게 */
+	margin-left: -8px;
+	box-sizing: border-box;
+	overflow-x: auto;
+	max-height: 260px; /* 마지막 글자 보이도록 약간 늘림 */
+}
+
+/* 한 줄 정렬 */
+.point-row {
+	display: flex;
+	align-items: center;
+	padding: 2px 0; /* 패딩 줄여서 글자 잘림 방지 */
+	border-bottom: none;
+}
+
+/* 날짜 */
+.point-row .date {
+	width: 60px;
+	flex-shrink: 0;
+	font-weight: 500;
+	font-size: 0.8rem;
+	color: #0ea760;
+	white-space: nowrap;
+	overflow: visible;
+	text-overflow: clip;
+}
+
+/* 내용 */
+.point-row .content {
+	flex: 1;
+	font-weight: 500;
+	font-size: 0.8rem;
+	color: #0ea760;
+	white-space: nowrap;
+	overflow: visible; /* 잘림 방지 */
+	text-overflow: clip;
+	margin: 0 8px;
+}
+
+/* 포인트 */
+.point-row .amount {
+	width: 60px;
+	flex-shrink: 0;
+	text-align: right;
+	font-weight: 600;
+	font-size: 0.8rem;
+	color: #0ea760;
+}
+
+/* 스크롤 막대 스타일 (선택사항) */
+.point-history::-webkit-scrollbar {
+	height: 6px;
+}
+
+.point-history::-webkit-scrollbar-thumb {
+	background-color: rgba(14, 167, 96, 0.4);
+	border-radius: 3px;
+}
+
+.point-history::-webkit-scrollbar-track {
+	background: transparent;
+}
+/* 포인트 내역 카드 위치 조정 */
+.profile_card .point-card {
+	margin-bottom: 4px; /* 카드 아래 여백 줄임 */
+	margin-top: -20px; /* 카드 위 여백도 살짝 줄임 */
+}
+
+/* 정보 수정/탈퇴 버튼 위치 조정 */
+.profile_card .btn.btn-light {
+	margin-top: 4px;
+}
+/* 카드 내부 버튼 */
+.point-card button {
+	user-select: none;
+}
+/* 정보 수정/탈퇴 버튼 위치 조정 */
+.profile_card .btn.btn-light {
+	margin-top: -50px; /* 기본 간격보다 줄임 */
+}
+*
+/

@@ -4,296 +4,286 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="PlaceMapper">
 
-	 <!-- ========================= -->
-	 <!-- 맛집 상세 조회 -->
-	 <!-- ========================= -->
-	 <resultMap id="RestaurantResultMap" type="spring.ict06team1.midpj.dto.RestaurantDTO">
-	       <id property="restaurant_id" column="restaurant_id" />
-	       <result property="description" column="description" />
-	       <result property="phone" column="phone" />
-	       <result property="category" column="category" />
-	       <result property="status" column="status" />
-	       <result property="restdate" column="restdate" />
-	       <result property="areaCode" column="areaCode" />
-	       
-	       <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	           <id property="place_id" column="place_id" />
-	           <result property="place_type" column="place_type" />
-	           <result property="name" column="name" />
-	           <result property="address" column="address" />
-	           <result property="view_count" column="view_count" />
-	           <result property="latitude" column="latitude" />
-	           <result property="longitude" column="longitude" />
-	           <result property="image_url" column="image_url" />
-	           <result property="review_count" column="review_count" />
-	           <result property="avg_rating" column="avg_rating" />
-	           <result property="placeRegDate" column="created_at" />
-	           <result property="placeUpdateDate" column="updated_at" />
-	       </association>
-	 </resultMap>
-	  
-	 <!--지도에 나오는 맛집 갯수  -->
-	 <select id="selectNearbyRestaurantCount" parameterType="map" resultType="int">
-	   SELECT COUNT(*)
-	   FROM restaurant r
-	   JOIN place p ON r.restaurant_id = p.place_id
-	   WHERE (
-	       6371 * acos(
-	           cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
-	           * cos((p.longitude * 3.14159 / 180)-(#{lng} * 3.14159 / 180))+ 
-	           sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	       )
-	   ) &lt;= #{radius}
-	   
-	   <if test="category != null and category != ''">
-	       AND r.category = #{category}
-	   </if>
-	   
-	   <if test="minRating != null and minRating > 0">
-	       AND (
-	           SELECT NVL(ROUND(AVG(rating),1),0) 
-	           FROM review 
-	           WHERE place_id = p.place_id AND status = 'display'
-	       ) &gt;= #{minRating}
-	   </if>
-	
-	   <if test="keyword != null and keyword != ''">
-	       AND (p.name LIKE '%' || #{keyword} || '%')
-	   </if>
-	   
-	   <if test="province != null and province != ''">
-		   AND p.address LIKE '%' || #{province} || '%'
-	   </if>
-	   <if test="district != null and district != ''">
-		   AND p.address LIKE '%' || #{district} || '%'
-	   </if>
-	 </select>
-	
-	<!--맛집 리스트 조회하기  -->
-	 <select id="selectNearbyRestaurantList" parameterType="map" resultMap="RestaurantResultMap">
-	    SELECT 
-	        restaurant_id, 
-	        description, 
-	        category,
-	        place_id, 
-	        name, 
-	        address, 
-	        latitude, 
-	        longitude, 
-	        image_url,
-	        view_count, 
-	        review_count, 
-	        avg_rating, 
-	        rnum
-	    FROM (
-	        SELECT a.*, ROWNUM AS rnum 
-	        FROM (
-	            SELECT 
-	                r.restaurant_id, 
-	                r.description, 
-	                r.category,
-	                p.place_id, 
-	                p.name, 
-	                p.address, 
-	                p.latitude, 
-	                p.longitude, 
-	                p.image_url,
-	                p.view_count,
-	                (SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
-	                (SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
-	                (6371 * acos(
-	                    cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-	                    sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	                )) AS distance
-	            FROM restaurant r
-	            JOIN place p ON r.restaurant_id = p.place_id
-	            WHERE r.status = 'OPEN'
-	              <if test="keyword != null and keyword != ''">
-	                AND p.name LIKE '%' || #{keyword} || '%'
-	              </if>
-	              <if test="category != null and category != ''">
-	        		AND r.category = #{category}
-			      </if>
-	            ORDER BY distance ASC 
-	        ) a 
-	        WHERE a.distance &lt;= #{radius}
-	        <if test="minRating != null and minRating > 0">
-	            AND a.avg_rating &gt;= #{minRating}
-	        </if>
-	        <if test="end != null">
-	            AND ROWNUM &lt;= #{end}
-	        </if>
-	        <if test="province != null and province != ''">
-			    AND p.address LIKE '%' || #{province} || '%'
-			</if>
-			<if test="district != null and district != ''">
-			    AND p.address LIKE '%' || #{district} || '%'
-			</if>
-	    ) 
-	    WHERE rnum &gt;= #{start}
-	</select>
-	
-	<!--지도 마커 조회하기  -->
-	<select id="selectNearbyMarkersAjax" parameterType="map" resultMap="RestaurantResultMap">
-	    SELECT 
-	        restaurant_id, 
-	        place_id,      name, 
-	        latitude, 
-	        longitude, 
-	        image_url,  
-	        avg_rating,
-	        review_count,
-	        view_count,
-	        category
-	    FROM (
-	        SELECT 
-	            r.restaurant_id, 
-	            p.place_id, p.name, 
-	            p.latitude, 
-	            p.longitude,
-	            p.image_url, 
-	            p.view_count,
-	            r.category,
-	            (SELECT COUNT(*) 
-	             FROM review 
-	             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
-	            (SELECT NVL(ROUND(AVG(rating), 1), 0) 
-	             FROM review 
-	             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
-	            (6371 * acos(
-	                cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-	                sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	            )) AS distance 
-	        FROM restaurant r
-	        JOIN place p ON r.restaurant_id = p.place_id
-	        WHERE r.status = 'OPEN'
-	        
-	        <if test="keyword != null and keyword != ''">
-	            AND (p.name LIKE '%' || #{keyword} || '%')
-	        </if>
-	        <if test="category != null and category != ''">
-	             AND r.category = #{category}
-	        </if>
-	        <if test="province != null and province != ''">
-			    AND p.address LIKE '%' || #{province} || '%'
-			</if>
-			<if test="district != null and district != ''">
-			    AND p.address LIKE '%' || #{district} || '%'
-			</if>
-	    ) a
-	    <where>
-	        a.distance &lt;= #{radius}
-	        <if test="minRating != null and minRating > 0">
-	            AND a.avg_rating &gt;= #{minRating}
-	        </if>
-	    </where>
-	    ORDER BY a.distance ASC
-	 </select>
-	
-	<!-- [리뷰 총 개수]
-       상세 페이지에서 전체 리뷰 수를 표시하거나 더보기 가능 여부를 판단할 때 사용
-	-->
-	<select id="getReviewCount"
-	        parameterType="int"
-	        resultType="int">
-	  SELECT COUNT(*)
-	  FROM review
-	  WHERE place_id = #{value}
-	    AND status = 'DISPLAY'
-	</select>
-	
-	<!-- [맛집 상세 조회]
-	     place + review를 함께 조회해서 상세 페이지에 필요한 기본 정보, 리뷰 수, 평균 별점을 한 번에 가져오기 위해 사용
-	-->
-	  <select id="selectPlaceDetail"
-	        parameterType="int"
-	        resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-		  SELECT
-		    p.place_id,
-		    p.place_type,
-		    p.name,
-		    p.address,
-		    p.view_count,
-		    p.latitude,
-		    p.longitude,
-		    p.image_url,
-		    p.created_at AS placeRegDate,
-		    COUNT(r.review_id) AS review_count,
-		    NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating -- 리뷰가 없으면 0으로 처리
-		  FROM place p
-		  LEFT JOIN review r
-		    ON p.place_id = r.place_id
-		   AND r.status = 'DISPLAY' -- 노출 가능한 리뷰만 집계
-		  WHERE p.place_id = #{value}
-		    AND p.place_type = 'REST' -- 맛집 상세 전용 조회
-		  GROUP BY
-		    p.place_id,
-		    p.place_type,
-		    p.name,
-		    p.address,
-		    p.view_count,
-		    p.latitude,
-		    p.longitude,
-		    p.image_url,
-		    p.created_at
-		</select>
-	
-	
-		<!-- [즐겨찾기 여부 확인]
-		    로그인한 사용자가 현재 맛집을 즐겨찾기 했는지 확인하기 위해 사용
-		-->
-		<select id="isFavorite"
-		        parameterType="map"
-		        resultType="int">
-		  SELECT COUNT(*)
-		  FROM favorite
-		  WHERE user_id = #{userId}
-		    AND place_id = #{placeId}
-		</select>
-	
-		<!-- [즐겨찾기 추가]
-		    즐겨찾기 버튼 클릭 시 favorite 테이블에 새 데이터를 저장하기 위해 사용
-		-->
-		<insert id="insertFavorite" parameterType="map">
-		  INSERT INTO favorite (
-		    favorite_id,
-		    user_id,
-		    place_id,
-		    created_at
-		  )
-		  VALUES (
-		    SEQ_FAVORITE.NEXTVAL, -- 시퀀스를 사용해 PK 생성
-		    #{userId},
-		    #{placeId},
-		    SYSTIMESTAMP
-		  )
-		</insert>
+	<!-- ========================= -->
+	<!-- 맛집 상세 조회 -->
+	<!-- ========================= -->
+	<resultMap id="RestaurantResultMap"
+		type="spring.ict06team1.midpj.dto.RestaurantDTO">
+		<id property="restaurant_id" column="restaurant_id" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="category" column="category" />
+		<result property="status" column="status" />
+		<result property="restdate" column="restdate" />
+		<result property="areaCode" column="areaCode" />
 
-		<!-- [즐겨찾기 삭제]
-		    이미 즐겨찾기 된 맛집을 다시 클릭했을 때 해제하기 위해 사용
-		-->
-		<delete id="deleteFavorite" parameterType="map">
-		  DELETE FROM favorite
-		  WHERE user_id = #{userId}
-		    AND place_id = #{placeId}
-		</delete>
-		
-		<!-- [조회수 증가]
-		      상세 페이지 진입 시 해당 맛집의 조회수를 1 증가시키기 위해 사용
-		 -->
-		 <update id="increaseViewCount" parameterType="int">
-		   UPDATE place
-		   SET view_count = NVL(view_count, 0) + 1 -- null 방지를 위해 NVL 사용
-		   WHERE place_id = #{value}
-		     AND place_type = 'REST'
-		 </update>
-	
-		 <!-- [리뷰 페이징 조회]
-		      상세 페이지에서 최신 리뷰를 일정 개수씩 더보기 형태로 가져오기 위해 사용
-		 -->
-		 <select id="selectReviewsPaged"
-		         parameterType="map"
-		         resultType="spring.ict06team1.midpj.dto.ReviewDTO">
+		<association property="placeDTO"
+			javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+			<id property="place_id" column="place_id" />
+			<result property="place_type" column="place_type" />
+			<result property="name" column="name" />
+			<result property="address" column="address" />
+			<result property="view_count" column="view_count" />
+			<result property="latitude" column="latitude" />
+			<result property="longitude" column="longitude" />
+			<result property="image_url" column="image_url" />
+			<result property="review_count" column="review_count" />
+			<result property="avg_rating" column="avg_rating" />
+			<result property="placeRegDate" column="created_at" />
+			<result property="placeUpdateDate" column="updated_at" />
+		</association>
+	</resultMap>
+
+	<!--지도에 나오는 맛집 갯수 -->
+	<select id="selectNearbyRestaurantCount" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM restaurant r
+		JOIN place p ON r.restaurant_id = p.place_id
+		WHERE (
+		6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180)
+		* cos((p.longitude * 3.14159 / 180)-(#{lng} * 3.14159 / 180))+
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)
+		) &lt;= #{radius}
+
+		<if test="category != null and category != ''">
+			AND r.category = #{category}
+		</if>
+
+		<if test="minRating != null and minRating > 0">
+			AND (
+			SELECT NVL(ROUND(AVG(rating),1),0)
+			FROM review
+			WHERE place_id = p.place_id AND status = 'display'
+			) &gt;= #{minRating}
+		</if>
+
+		<if test="keyword != null and keyword != ''">
+			AND (p.name LIKE '%' || #{keyword} || '%')
+		</if>
+
+		<if test="province != null and province != ''">
+			AND p.address LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+			AND p.address LIKE '%' || #{district} || '%'
+		</if>
+	</select>
+
+	<!--맛집 리스트 조회하기 -->
+	<select id="selectNearbyRestaurantList" parameterType="map"
+		resultMap="RestaurantResultMap">
+		SELECT
+		restaurant_id,
+		description,
+		category,
+		place_id,
+		name,
+		address,
+		latitude,
+		longitude,
+		image_url,
+		view_count,
+		review_count,
+		avg_rating,
+		rnum
+		FROM (
+		SELECT a.*, ROWNUM AS rnum
+		FROM (
+		SELECT
+		r.restaurant_id,
+		r.description,
+		r.category,
+		p.place_id,
+		p.name,
+		p.address,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.view_count,
+		(SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) =
+		'DISPLAY') AS review_count,
+		(SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id
+		AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		(6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude
+		* 3.14159 / 180) - (#{lng} * 3.14159 / 180)) +
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)) AS distance
+		FROM restaurant r
+		JOIN place p ON r.restaurant_id = p.place_id
+		WHERE r.status = 'OPEN'
+		<if test="keyword != null and keyword != ''">
+			AND p.name LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="category != null and category != ''">
+			AND r.category = #{category}
+		</if>
+		ORDER BY distance ASC
+		) a
+		WHERE a.distance &lt;= #{radius}
+		<if test="minRating != null and minRating > 0">
+			AND a.avg_rating &gt;= #{minRating}
+		</if>
+		<if test="end != null">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		<if test="province != null and province != ''">
+			AND p.address LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+			AND p.address LIKE '%' || #{district} || '%'
+		</if>
+		)
+		WHERE rnum &gt;= #{start}
+	</select>
+
+	<!--지도 마커 조회하기 -->
+	<select id="selectNearbyMarkersAjax" parameterType="map"
+		resultMap="RestaurantResultMap">
+		SELECT
+		restaurant_id,
+		place_id, name,
+		latitude,
+		longitude,
+		image_url,
+		avg_rating,
+		review_count,
+		view_count,
+		category
+		FROM (
+		SELECT
+		r.restaurant_id,
+		p.place_id, p.name,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.view_count,
+		r.category,
+		(SELECT COUNT(*)
+		FROM review
+		WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
+		(SELECT NVL(ROUND(AVG(rating), 1), 0)
+		FROM review
+		WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		(6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude
+		* 3.14159 / 180) - (#{lng} * 3.14159 / 180)) +
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)) AS distance
+		FROM restaurant r
+		JOIN place p ON r.restaurant_id = p.place_id
+		WHERE r.status = 'OPEN'
+
+		<if test="keyword != null and keyword != ''">
+			AND (p.name LIKE '%' || #{keyword} || '%')
+		</if>
+		<if test="category != null and category != ''">
+			AND r.category = #{category}
+		</if>
+		<if test="province != null and province != ''">
+			AND p.address LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+			AND p.address LIKE '%' || #{district} || '%'
+		</if>
+		) a
+		<where>
+			a.distance &lt;= #{radius}
+			<if test="minRating != null and minRating > 0">
+				AND a.avg_rating &gt;= #{minRating}
+			</if>
+		</where>
+		ORDER BY a.distance ASC
+	</select>
+
+	<!-- [리뷰 총 개수] 상세 페이지에서 전체 리뷰 수를 표시하거나 더보기 가능 여부를 판단할 때 사용 -->
+	<select id="getReviewCount" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM review
+		WHERE place_id = #{value}
+		AND status = 'DISPLAY'
+	</select>
+
+	<!-- [맛집 상세 조회] place + review를 함께 조회해서 상세 페이지에 필요한 기본 정보, 리뷰 수, 평균 별점을 
+		한 번에 가져오기 위해 사용 -->
+	<select id="selectPlaceDetail" parameterType="int"
+		resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+		SELECT
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		p.view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at AS placeRegDate,
+		COUNT(r.review_id) AS review_count,
+		NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating -- 리뷰가 없으면 0으로 처리
+		FROM place p
+		LEFT JOIN review r
+		ON p.place_id = r.place_id
+		AND r.status = 'DISPLAY' -- 노출 가능한 리뷰만 집계
+		WHERE p.place_id = #{value}
+		AND p.place_type = 'REST' -- 맛집 상세 전용 조회
+		GROUP BY
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		p.view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at
+	</select>
+
+
+	<!-- [즐겨찾기 여부 확인] 로그인한 사용자가 현재 맛집을 즐겨찾기 했는지 확인하기 위해 사용 -->
+	<select id="isFavorite" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM favorite
+		WHERE user_id = #{userId}
+		AND place_id = #{placeId}
+	</select>
+
+	<!-- [즐겨찾기 추가] 즐겨찾기 버튼 클릭 시 favorite 테이블에 새 데이터를 저장하기 위해 사용 -->
+	<insert id="insertFavorite" parameterType="map">
+		INSERT INTO favorite (
+		favorite_id,
+		user_id,
+		place_id,
+		created_at
+		)
+		VALUES (
+		SEQ_FAVORITE.NEXTVAL, -- 시퀀스를 사용해 PK 생성
+		#{userId},
+		#{placeId},
+		SYSTIMESTAMP
+		)
+	</insert>
+
+	<!-- [즐겨찾기 삭제] 이미 즐겨찾기 된 맛집을 다시 클릭했을 때 해제하기 위해 사용 -->
+	<delete id="deleteFavorite" parameterType="map">
+		DELETE FROM favorite
+		WHERE user_id = #{userId}
+		AND place_id = #{placeId}
+	</delete>
+
+	<!-- [조회수 증가] 상세 페이지 진입 시 해당 맛집의 조회수를 1 증가시키기 위해 사용 -->
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE place
+		SET view_count = NVL(view_count, 0) + 1 -- null 방지를 위해 NVL 사용
+		WHERE place_id = #{value}
+		AND place_type = 'REST'
+	</update>
+
+	<!-- [리뷰 페이징 조회] 상세 페이지에서 최신 리뷰를 일정 개수씩 더보기 형태로 가져오기 위해 사용 -->
+	<select id="selectReviewsPaged" parameterType="map"
+		resultType="spring.ict06team1.midpj.dto.ReviewDTO">
 		   <![CDATA[
 		   SELECT *
 		   FROM (
@@ -313,517 +303,516 @@
 		   WHERE rn > #{offset}
 		     AND rn <= (#{offset} + #{limit}) -- offset 이후 limit 개수만큼 조회
 		   ]]>
-		 </select>
+	</select>
 
-	<!-- [맛집 랭킹용 resultMap]
-	     PLACE + RESTAURANT 조인 결과를 RestaurantDTO 안의 placeDTO 구조에 맞게 매핑하기 위해 사용
-	     프론트에서 rest.placeDTO.xxx 형태로 접근할 수 있도록 구조를 통일
-	-->
-	<resultMap id="restaurantRankResultMap" type="spring.ict06team1.midpj.dto.RestaurantDTO">
-	  <id property="restaurant_id" column="restaurant_id" />
-	  <result property="description" column="description" />
-	  <result property="phone" column="phone" />
-	  <result property="category" column="category" />
-	  <result property="status" column="restaurant_status" />
-	  <result property="restdate" column="restdate" />
-	  <result property="areaCode" column="areacode" />
-	
-	  <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	    <id property="place_id" column="place_id" />
-	    <result property="place_type" column="place_type" />
-	    <result property="name" column="name" />
-	    <result property="address" column="address" />
-	    <result property="view_count" column="view_count" />
-	    <result property="latitude" column="latitude" />
-	    <result property="longitude" column="longitude" />
-	    <result property="image_url" column="image_url" />
-	    <result property="placeRegDate" column="placeRegDate" />
-	    <result property="review_count" column="review_count" />
-	    <result property="avg_rating" column="avg_rating" />
-	  </association>
+	<!-- [맛집 랭킹용 resultMap] PLACE + RESTAURANT 조인 결과를 RestaurantDTO 안의 placeDTO 
+		구조에 맞게 매핑하기 위해 사용 프론트에서 rest.placeDTO.xxx 형태로 접근할 수 있도록 구조를 통일 -->
+	<resultMap id="restaurantRankResultMap"
+		type="spring.ict06team1.midpj.dto.RestaurantDTO">
+		<id property="restaurant_id" column="restaurant_id" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="category" column="category" />
+		<result property="status" column="restaurant_status" />
+		<result property="restdate" column="restdate" />
+		<result property="areaCode" column="areacode" />
+
+		<association property="placeDTO"
+			javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+			<id property="place_id" column="place_id" />
+			<result property="place_type" column="place_type" />
+			<result property="name" column="name" />
+			<result property="address" column="address" />
+			<result property="view_count" column="view_count" />
+			<result property="latitude" column="latitude" />
+			<result property="longitude" column="longitude" />
+			<result property="image_url" column="image_url" />
+			<result property="placeRegDate" column="placeRegDate" />
+			<result property="review_count" column="review_count" />
+			<result property="avg_rating" column="avg_rating" />
+		</association>
 	</resultMap>
 
-	<!-- [맛집 랭킹 목록 조회]
-	     TOP5 아래 기본 리스트와 더보기 AJAX에서 공통으로 사용하는 랭킹 조회 쿼리
-	     지역/카테고리 조건에 따라 목록을 유동적으로 필터링하기 위해 사용
-	-->
-	<select id="getBestRestaurantPageList"
-	        parameterType="map"
-	        resultMap="restaurantRankResultMap">
-	  SELECT *
-	  FROM (
-	      SELECT
-	        p.place_id,
-	        p.place_type,
-	        p.name,
-	        p.address,
-	        NVL(p.view_count, 0) AS view_count,
-	        p.latitude,
-	        p.longitude,
-	        p.image_url,
-	        p.created_at AS placeRegDate,
-	
-	        rt.restaurant_id,
-	        DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description, -- CLOB 컬럼을 JSP에서 사용 가능한 길이로 잘라서 조회
-	        rt.phone,
-	        rt.category,
-	        rt.status AS restaurant_status,
-	        rt.restdate,
-	        rt.areacode,
-	
-	        COUNT(r.review_id) AS review_count,
-	        NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
-	
-	        ROW_NUMBER() OVER (
-	          ORDER BY
-	            CASE
-	              WHEN p.created_at >= SYSTIMESTAMP -
-	                   CASE
-	                     WHEN (
-	                       SELECT COUNT(*)
-	                       FROM place p2
-	                       JOIN restaurant rt2
-	                         ON p2.place_id = rt2.restaurant_id
-	                       WHERE p2.place_type = 'REST'
-	                         AND rt2.status = 'OPEN'
-	                         <if test="region != null and region != '' and region != 'all'">
-	                           AND p2.address LIKE '%' || #{region} || '%'
-	                         </if>
-	                         <if test="category != null and category != '' and category != 'ALL'">
-	                           AND rt2.category = #{category}
-	                         </if>
-	                         AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
-	                     ) &lt; 10
-	                     THEN INTERVAL '60' DAY
-	                     ELSE INTERVAL '30' DAY
-	                   END
-	              THEN 0
-	              ELSE 1
-	            END ASC, -- 최근 등록된 맛집 수가 적으면 60일, 충분하면 30일 기준으로 최신 맛집을 우선 노출
-	            NVL(p.view_count, 0) DESC, -- 최신 조건이 같으면 조회수 높은 순
-	            p.place_id DESC -- 마지막 동점 정렬 기준
-	        ) AS rn
-	
-	      FROM place p
-	      JOIN restaurant rt
-	        ON p.place_id = rt.restaurant_id
-	      LEFT JOIN review r
-	        ON p.place_id = r.place_id
-	       AND r.status = 'DISPLAY'
-	      WHERE p.place_type = 'REST'
-	        AND rt.status = 'OPEN' -- 영업 중인 맛집만 랭킹 대상
-	      <if test="region != null and region != '' and region != 'all'">
-	        AND p.address LIKE '%' || #{region} || '%'
-	      </if>
-	      <if test="category != null and category != '' and category != 'ALL'">
-	        AND rt.category = #{category}
-	      </if>
-	      GROUP BY
-	        p.place_id,
-	        p.place_type,
-	        p.name,
-	        p.address,
-	        p.view_count,
-	        p.latitude,
-	        p.longitude,
-	        p.image_url,
-	        p.created_at,
-	        rt.restaurant_id,
-	        DBMS_LOB.SUBSTR(rt.description, 4000, 1),
-	        rt.phone,
-	        rt.category,
-	        rt.status,
-	        rt.restdate,
-	        rt.areacode
-	  )
-	  WHERE rn &gt; #{start}
-	    AND rn &lt;= #{end} -- start 초과 ~ end 이하 구간만 조회
+	<!-- [맛집 랭킹 목록 조회] TOP5 아래 기본 리스트와 더보기 AJAX에서 공통으로 사용하는 랭킹 조회 쿼리 지역/카테고리 
+		조건에 따라 목록을 유동적으로 필터링하기 위해 사용 -->
+	<select id="getBestRestaurantPageList" parameterType="map"
+		resultMap="restaurantRankResultMap">
+		SELECT *
+		FROM (
+		SELECT
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		NVL(p.view_count, 0) AS view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at AS placeRegDate,
+
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description, -- CLOB 컬럼을 JSP에서 사용 가능한 길이로 잘라서 조회
+		rt.phone,
+		rt.category,
+		rt.status AS restaurant_status,
+		rt.restdate,
+		rt.areacode,
+
+		COUNT(r.review_id) AS review_count,
+		NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+
+		ROW_NUMBER() OVER (
+		ORDER BY
+		CASE
+		WHEN p.created_at >= SYSTIMESTAMP -
+		CASE
+		WHEN (
+		SELECT COUNT(*)
+		FROM place p2
+		JOIN restaurant rt2
+		ON p2.place_id = rt2.restaurant_id
+		WHERE p2.place_type = 'REST'
+		AND rt2.status = 'OPEN'
+		<if test="region != null and region != '' and region != 'all'">
+			AND p2.address LIKE '%' || #{region} || '%'
+		</if>
+		<if
+			test="category != null and category != '' and category != 'ALL'">
+			AND rt2.category = #{category}
+		</if>
+		AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+		) &lt; 10
+		THEN INTERVAL '60' DAY
+		ELSE INTERVAL '30' DAY
+		END
+		THEN 0
+		ELSE 1
+		END ASC, -- 최근 등록된 맛집 수가 적으면 60일, 충분하면 30일 기준으로 최신 맛집을 우선 노출
+		NVL(p.view_count, 0) DESC, -- 최신 조건이 같으면 조회수 높은 순
+		p.place_id DESC -- 마지막 동점 정렬 기준
+		) AS rn
+
+		FROM place p
+		JOIN restaurant rt
+		ON p.place_id = rt.restaurant_id
+		LEFT JOIN review r
+		ON p.place_id = r.place_id
+		AND r.status = 'DISPLAY'
+		WHERE p.place_type = 'REST'
+		AND rt.status = 'OPEN' -- 영업 중인 맛집만 랭킹 대상
+		<if test="region != null and region != '' and region != 'all'">
+			AND p.address LIKE '%' || #{region} || '%'
+		</if>
+		<if
+			test="category != null and category != '' and category != 'ALL'">
+			AND rt.category = #{category}
+		</if>
+		GROUP BY
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		p.view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at,
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1),
+		rt.phone,
+		rt.category,
+		rt.status,
+		rt.restdate,
+		rt.areacode
+		)
+		WHERE rn &gt; #{start}
+		AND rn &lt;= #{end} -- start 초과 ~ end 이하 구간만 조회
 	</select>
 
-	<!-- [평균 별점 조회]
-	     특정 맛집의 평균 평점을 별도로 조회할 때 사용
-	-->
-	<select id="getAvgRating"
-	        parameterType="int"
-	        resultType="double">
-	  SELECT NVL(ROUND(AVG(r.rating), 1), 0)
-	  FROM review r
-	  WHERE r.place_id = #{value}
-	    AND r.status = 'DISPLAY'
+	<!-- [평균 별점 조회] 특정 맛집의 평균 평점을 별도로 조회할 때 사용 -->
+	<select id="getAvgRating" parameterType="int"
+		resultType="double">
+		SELECT NVL(ROUND(AVG(r.rating), 1), 0)
+		FROM review r
+		WHERE r.place_id = #{value}
+		AND r.status = 'DISPLAY'
 	</select>
 
-	 <!-- [전체 맛집 수 조회]
-	      현재 지역/카테고리 조건에 맞는 전체 개수를 구해서 더보기 가능 여부를 판단할 때 사용
-	 -->
-	 <select id="getBestRestaurantCount"
-	         parameterType="map"
-	         resultType="int">
-	   SELECT COUNT(*)
-	   FROM place p
-	   JOIN restaurant rt
-	     ON p.place_id = rt.restaurant_id
-	   WHERE p.place_type = 'REST'
-	     AND rt.status = 'OPEN'
-	   <if test="region != null and region != '' and region != 'all'">
-	     AND p.address LIKE '%' || #{region} || '%'
-	   </if>
-	   <if test="category != null and category != '' and category != 'ALL'">
-	     AND rt.category = #{category}
-	   </if>
-	 </select>
+	<!-- [전체 맛집 수 조회] 현재 지역/카테고리 조건에 맞는 전체 개수를 구해서 더보기 가능 여부를 판단할 때 사용 -->
+	<select id="getBestRestaurantCount" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM place p
+		JOIN restaurant rt
+		ON p.place_id = rt.restaurant_id
+		WHERE p.place_type = 'REST'
+		AND rt.status = 'OPEN'
+		<if test="region != null and region != '' and region != 'all'">
+			AND p.address LIKE '%' || #{region} || '%'
+		</if>
+		<if
+			test="category != null and category != '' and category != 'ALL'">
+			AND rt.category = #{category}
+		</if>
+	</select>
 
 	<!-- ========================= -->
 	<!--사용자 숙소 -->
 	<!-- ========================= -->
-	
-	<resultMap id="AccommodationResultMap" type="spring.ict06team1.midpj.dto.AccommodationDTO">
-	      <id property="accommodation_id" column="accommodation_id" />
-	      <result property="description" column="description" />
-	      <result property="phone" column="phone" />
-	      <result property="category" column="category" />
-	      <result property="status" column="status" />
-	      <result property="restdate" column="restdate" />
-	      <result property="areaCode" column="areaCode" />
-	      <result property="price" column="price" />
-	      
-	      <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-	          <id property="place_id" column="place_id" />
-	          <result property="place_type" column="place_type" />
-	          <result property="name" column="name" />
-	          <result property="address" column="address" />
-	          <result property="view_count" column="view_count" />
-	          <result property="latitude" column="latitude" />
-	          <result property="longitude" column="longitude" />
-	          <result property="image_url" column="image_url" />
-	          <result property="review_count" column="review_count" />
-	          <result property="avg_rating" column="avg_rating" />
-	          <result property="placeRegDate" column="created_at" />
-	          <result property="placeUpdateDate" column="updated_at" />
-	      </association>
-	 </resultMap>
-	 
-	 <!--지도에 나오는 숙소 갯수  -->
-	 <select id="selectNearbyAccommodationCount" parameterType="map" resultType="int">
-	   SELECT COUNT(*)
-	   FROM accommodation a
-	   JOIN place p ON a.accommodation_id = p.place_id
-	   WHERE (
-	      6371 * acos(
-	          cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-	          sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	      )
-	   ) &lt;= #{radius}
-	  
-	   <if test="category != null and category != ''">
-	      AND a.category = #{category}
-	   </if>
-	  
-	   <if test="minRating != null and minRating > 0">
-	      AND (
-	          SELECT NVL(ROUND(AVG(rating),1),0) 
-	          FROM review 
-	          WHERE place_id = p.place_id AND status = 'display'
-	      ) &gt;= #{minRating}
-	   </if>
-	
-	   <if test="keyword != null and keyword != ''">
-	      AND (p.name LIKE '%' || #{keyword} || '%')
-	   </if>
-	 </select>
-	
-	<!--숙소 리스트 조회하기  -->
-	 <select id="selectNearbyAccommodationList" parameterType="map" resultMap="AccommodationResultMap">
-	    SELECT 
-	        accommodation_id, 
-	        description, 
-	        category,
-	        place_id, 
-	        name, 
-	        address, 
-	        latitude, 
-	        longitude, 
-	        image_url,
-	        view_count, 
-	        review_count, 
-	        avg_rating, 
-	        rnum
-	    FROM (
-	        SELECT b.*, ROWNUM AS rnum 
-	        FROM (
-	            SELECT 
-	                a.accommodation_id, 
-	                a.description, 
-	                a.category,
-	                p.place_id, 
-	                p.name, 
-	                p.address, 
-	                p.latitude, 
-	                p.longitude, 
-	                p.image_url,
-	                p.view_count,
-	                (SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
-	                (SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
-	                (6371 * acos(
-	                    cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-	                    sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	                )) AS distance
-	            FROM accommodation a
-	            JOIN place p ON a.accommodation_id = p.place_id
-	            WHERE a.status = 'OPEN'
-	              <if test="keyword != null and keyword != ''">
-	                AND p.name LIKE '%' || #{keyword} || '%'
-	              </if>
-	              <if test="category != null and category != ''">
-	        		AND a.category = #{category}
-			      </if>
-	            ORDER BY distance ASC 
-	        ) b 
-	        WHERE b.distance &lt;= #{radius}
-	        <if test="minRating != null and minRating > 0">
-	            AND b.avg_rating &gt;= #{minRating}
-	        </if>
-	        <if test="end != null">
-	            AND ROWNUM &lt;= #{end}
-	        </if>
-	    ) 
-	    WHERE rnum &gt;= #{start}
-	 </select>
-	 
-	<!--지도 마커 조회하기  -->
-	<select id="selectNearbyMarkersAjaxAcc" parameterType="map" resultMap="AccommodationResultMap">
-	    SELECT 
-	        accommodation_id, 
-	        place_id,     
-	        name, 
-	        latitude, 
-	        longitude, 
-	        image_url,  
-	        avg_rating,
-	        review_count,
-	        view_count,
-	        category
-	    FROM (
-	        SELECT 
-	            a.accommodation_id, 
-	            p.place_id, 
-	            p.name, 
-	            p.latitude, 
-	            p.longitude,
-	            p.image_url, 
-	            p.view_count,
-	            a.category,
-	            (SELECT COUNT(*) 
-	             FROM review 
-	             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
-	            (SELECT NVL(ROUND(AVG(rating), 1), 0) 
-	             FROM review 
-	             WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
-	            (6371 * acos(
-	                cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude * 3.14159 / 180) - (#{lng} * 3.14159 / 180)) + 
-	                sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
-	            )) AS distance 
-	        FROM accommodation a
-	        JOIN place p ON a.accommodation_id = p.place_id
-	        WHERE a.status = 'OPEN'
-	        
-	        <if test="keyword != null and keyword != ''">
-	            AND (p.name LIKE '%' || #{keyword} || '%')
-	        </if>
-	        <if test="category != null and category != ''">
-	             AND a.category = #{category}
-	        </if>
-	    ) b
-	    <where>
-	        b.distance &lt;= #{radius}
-	        <if test="minRating != null and minRating > 0">
-	            AND b.avg_rating &gt;= #{minRating}
-	        </if>
-	    </where>
-	    ORDER BY b.distance ASC
-	 </select>
 
-  <!-- [맛집 랭킹 목록 조회]
-       TOP5 아래 기본 리스트와 더보기 AJAX에서 공통으로 사용하는 랭킹 조회 쿼리
-       지역/카테고리 조건에 따라 목록을 유동적으로 필터링하기 위해 사용
-  -->
- 
+	<resultMap id="AccommodationResultMap"
+		type="spring.ict06team1.midpj.dto.AccommodationDTO">
+		<id property="accommodation_id" column="accommodation_id" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="category" column="category" />
+		<result property="status" column="status" />
+		<result property="restdate" column="restdate" />
+		<result property="areaCode" column="areaCode" />
+		<result property="price" column="price" />
 
-  <!-- [맛집 랭킹 TOP5 조회]
-       랭킹 페이지 상단 TOP5 강조 영역에 사용할 데이터를 조회하기 위해 사용
-       정렬 기준은 목록 조회와 동일하게 유지해서 TOP5와 나머지 리스트 흐름이 이어지도록 구성
-  -->
-  <select id="getBestRestaurantTop5"
-          parameterType="map"
-          resultMap="restaurantRankResultMap">
-    SELECT *
-    FROM (
-        SELECT
-          p.place_id,
-          p.place_type,
-          p.name,
-          p.address,
-          NVL(p.view_count, 0) AS view_count,
-          p.latitude,
-          p.longitude,
-          p.image_url,
-          p.created_at AS placeRegDate,
+		<association property="placeDTO"
+			javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+			<id property="place_id" column="place_id" />
+			<result property="place_type" column="place_type" />
+			<result property="name" column="name" />
+			<result property="address" column="address" />
+			<result property="view_count" column="view_count" />
+			<result property="latitude" column="latitude" />
+			<result property="longitude" column="longitude" />
+			<result property="image_url" column="image_url" />
+			<result property="review_count" column="review_count" />
+			<result property="avg_rating" column="avg_rating" />
+			<result property="placeRegDate" column="created_at" />
+			<result property="placeUpdateDate" column="updated_at" />
+		</association>
+	</resultMap>
 
-          rt.restaurant_id,
-          DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
-          rt.phone,
-          rt.category,
-          rt.status AS restaurant_status,
-          rt.restdate,
-          rt.areacode,
+	<!--지도에 나오는 숙소 갯수 -->
+	<select id="selectNearbyAccommodationCount" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM accommodation a
+		JOIN place p ON a.accommodation_id = p.place_id
+		WHERE (
+		6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude
+		* 3.14159 / 180) - (#{lng} * 3.14159 / 180)) +
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)
+		) &lt;= #{radius}
 
-          COUNT(r.review_id) AS review_count,
-          NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+		<if test="category != null and category != ''">
+			AND a.category = #{category}
+		</if>
 
-          ROW_NUMBER() OVER (
-            ORDER BY
-              CASE
-                WHEN p.created_at >= SYSTIMESTAMP -
-                     CASE
-                       WHEN (
-                         SELECT COUNT(*)
-                         FROM place p2
-                         JOIN restaurant rt2
-                           ON p2.place_id = rt2.restaurant_id
-                         WHERE p2.place_type = 'REST'
-                           AND rt2.status = 'OPEN'
-                           <if test="region != null and region != '' and region != 'all'">
-                             AND p2.address LIKE '%' || #{region} || '%'
-                           </if>
-                           <if test="category != null and category != '' and category != 'ALL'">
-                             AND rt2.category = #{category}
-                           </if>
-                           AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
-                       ) &lt; 10
-                       THEN INTERVAL '60' DAY
-                       ELSE INTERVAL '30' DAY
-                     END
-                THEN 0
-                ELSE 1
-              END ASC,
-              NVL(p.view_count, 0) DESC,
-              p.place_id DESC
-          ) AS rn
+		<if test="minRating != null and minRating > 0">
+			AND (
+			SELECT NVL(ROUND(AVG(rating),1),0)
+			FROM review
+			WHERE place_id = p.place_id AND status = 'display'
+			) &gt;= #{minRating}
+		</if>
 
-        FROM place p
-        JOIN restaurant rt
-          ON p.place_id = rt.restaurant_id
-        LEFT JOIN review r
-          ON p.place_id = r.place_id
-         AND r.status = 'DISPLAY'
-        WHERE p.place_type = 'REST'
-          AND rt.status = 'OPEN'
-        <if test="region != null and region != '' and region != 'all'">
-          AND p.address LIKE '%' || #{region} || '%'
-        </if>
-        <if test="category != null and category != '' and category != 'ALL'">
-          AND rt.category = #{category}
-        </if>
-        GROUP BY
-          p.place_id,
-          p.place_type,
-          p.name,
-          p.address,
-          p.view_count,
-          p.latitude,
-          p.longitude,
-          p.image_url,
-          p.created_at,
-          rt.restaurant_id,
-          DBMS_LOB.SUBSTR(rt.description, 4000, 1),
-          rt.phone,
-          rt.category,
-          rt.status,
-          rt.restdate,
-          rt.areacode
-    )
-    WHERE rn &lt;= 5
-  </select>
-  
-  <!-- [맛집 상세용 resultMap]
-     RestaurantDTO 안에 PlaceDTO를 포함하는 상세 페이지 전용 매핑
--->
-<resultMap id="restaurantDetailResultMap" type="spring.ict06team1.midpj.dto.RestaurantDTO">
-  <id property="restaurant_id" column="restaurant_id" />
-  <result property="description" column="description" />
-  <result property="phone" column="phone" />
-  <result property="category" column="category" />
-  <result property="status" column="restaurant_status" />
-  <result property="restdate" column="restdate" />
-  <result property="areaCode" column="areacode" />
+		<if test="keyword != null and keyword != ''">
+			AND (p.name LIKE '%' || #{keyword} || '%')
+		</if>
+	</select>
 
-  <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
-    <id property="place_id" column="place_id" />
-    <result property="place_type" column="place_type" />
-    <result property="name" column="name" />
-    <result property="address" column="address" />
-    <result property="view_count" column="view_count" />
-    <result property="latitude" column="latitude" />
-    <result property="longitude" column="longitude" />
-    <result property="image_url" column="image_url" />
-    <result property="placeRegDate" column="placeRegDate" />
-    <result property="review_count" column="review_count" />
-    <result property="avg_rating" column="avg_rating" />
-  </association>
-</resultMap>
+	<!--숙소 리스트 조회하기 -->
+	<select id="selectNearbyAccommodationList" parameterType="map"
+		resultMap="AccommodationResultMap">
+		SELECT
+		accommodation_id,
+		description,
+		category,
+		place_id,
+		name,
+		address,
+		latitude,
+		longitude,
+		image_url,
+		view_count,
+		review_count,
+		avg_rating,
+		rnum
+		FROM (
+		SELECT b.*, ROWNUM AS rnum
+		FROM (
+		SELECT
+		a.accommodation_id,
+		a.description,
+		a.category,
+		p.place_id,
+		p.name,
+		p.address,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.view_count,
+		(SELECT COUNT(*) FROM review WHERE place_id = p.place_id AND UPPER(status) =
+		'DISPLAY') AS review_count,
+		(SELECT NVL(ROUND(AVG(rating), 1), 0) FROM review WHERE place_id = p.place_id
+		AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		(6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude
+		* 3.14159 / 180) - (#{lng} * 3.14159 / 180)) +
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)) AS distance
+		FROM accommodation a
+		JOIN place p ON a.accommodation_id = p.place_id
+		WHERE a.status = 'OPEN'
+		<if test="keyword != null and keyword != ''">
+			AND p.name LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="category != null and category != ''">
+			AND a.category = #{category}
+		</if>
+		ORDER BY distance ASC
+		) b
+		WHERE b.distance &lt;= #{radius}
+		<if test="minRating != null and minRating > 0">
+			AND b.avg_rating &gt;= #{minRating}
+		</if>
+		<if test="end != null">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		)
+		WHERE rnum &gt;= #{start}
+	</select>
 
-<!-- [맛집 상세 조회 - RestaurantDTO]
-     place + restaurant + review 집계를 함께 조회해서 상세 페이지에 필요한 데이터를 한 번에 가져오기 위해 사용
--->
-<select id="getRestaurantDetail"
-        parameterType="int"
-        resultMap="restaurantDetailResultMap">
-	  SELECT
-	    p.place_id,
-	    p.place_type,
-	    p.name,
-	    p.address,
-	    NVL(p.view_count, 0) AS view_count,
-	    p.latitude,
-	    p.longitude,
-	    p.image_url,
-	    p.created_at AS placeRegDate,
-	    
-	
-	    rt.restaurant_id,
-	    DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
-	    rt.phone,
-	    rt.category,
-	    rt.status AS restaurant_status,
-	    rt.restdate,
-	    rt.areacode,
-	
-	    COUNT(r.review_id) AS review_count,
-	    NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
-	  FROM place p
-	  JOIN restaurant rt
-	    ON p.place_id = rt.restaurant_id
-	  LEFT JOIN review r
-	    ON p.place_id = r.place_id
-	   AND r.status = 'DISPLAY'
-	  WHERE p.place_id = #{value}
-	    AND p.place_type = 'REST'
-	  GROUP BY
-	    p.place_id,
-	    p.place_type,
-	    p.name,
-	    p.address,
-	    p.view_count,
-	    p.latitude,
-	    p.longitude,
-	    p.image_url,
-	    p.created_at,
+	<!--지도 마커 조회하기 -->
+	<select id="selectNearbyMarkersAjaxAcc" parameterType="map"
+		resultMap="AccommodationResultMap">
+		SELECT
+		accommodation_id,
+		place_id,
+		name,
+		latitude,
+		longitude,
+		image_url,
+		avg_rating,
+		review_count,
+		view_count,
+		category
+		FROM (
+		SELECT
+		a.accommodation_id,
+		p.place_id,
+		p.name,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.view_count,
+		a.category,
+		(SELECT COUNT(*)
+		FROM review
+		WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS review_count,
+		(SELECT NVL(ROUND(AVG(rating), 1), 0)
+		FROM review
+		WHERE place_id = p.place_id AND UPPER(status) = 'DISPLAY') AS avg_rating,
+		(6371 * acos(
+		cos(#{lat} * 3.14159 / 180) * cos(p.latitude * 3.14159 / 180) * cos((p.longitude
+		* 3.14159 / 180) - (#{lng} * 3.14159 / 180)) +
+		sin(#{lat} * 3.14159 / 180) * sin(p.latitude * 3.14159 / 180)
+		)) AS distance
+		FROM accommodation a
+		JOIN place p ON a.accommodation_id = p.place_id
+		WHERE a.status = 'OPEN'
 
-	    rt.restaurant_id,
-	    DBMS_LOB.SUBSTR(rt.description, 4000, 1),
-	    rt.phone,
-	    rt.category,
-	    rt.status,
-	    rt.restdate,
-	    rt.areacode
+		<if test="keyword != null and keyword != ''">
+			AND (p.name LIKE '%' || #{keyword} || '%')
+		</if>
+		<if test="category != null and category != ''">
+			AND a.category = #{category}
+		</if>
+		) b
+		<where>
+			b.distance &lt;= #{radius}
+			<if test="minRating != null and minRating > 0">
+				AND b.avg_rating &gt;= #{minRating}
+			</if>
+		</where>
+		ORDER BY b.distance ASC
+	</select>
+
+	<!-- [맛집 랭킹 목록 조회] TOP5 아래 기본 리스트와 더보기 AJAX에서 공통으로 사용하는 랭킹 조회 쿼리 지역/카테고리 
+		조건에 따라 목록을 유동적으로 필터링하기 위해 사용 -->
+
+
+	<!-- [맛집 랭킹 TOP5 조회] 랭킹 페이지 상단 TOP5 강조 영역에 사용할 데이터를 조회하기 위해 사용 정렬 기준은 목록 
+		조회와 동일하게 유지해서 TOP5와 나머지 리스트 흐름이 이어지도록 구성 -->
+	<select id="getBestRestaurantTop5" parameterType="map"
+		resultMap="restaurantRankResultMap">
+		SELECT *
+		FROM (
+		SELECT
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		NVL(p.view_count, 0) AS view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at AS placeRegDate,
+
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
+		rt.phone,
+		rt.category,
+		rt.status AS restaurant_status,
+		rt.restdate,
+		rt.areacode,
+
+		COUNT(r.review_id) AS review_count,
+		NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+
+		ROW_NUMBER() OVER (
+		ORDER BY
+		CASE
+		WHEN p.created_at >= SYSTIMESTAMP -
+		CASE
+		WHEN (
+		SELECT COUNT(*)
+		FROM place p2
+		JOIN restaurant rt2
+		ON p2.place_id = rt2.restaurant_id
+		WHERE p2.place_type = 'REST'
+		AND rt2.status = 'OPEN'
+		<if test="region != null and region != '' and region != 'all'">
+			AND p2.address LIKE '%' || #{region} || '%'
+		</if>
+		<if
+			test="category != null and category != '' and category != 'ALL'">
+			AND rt2.category = #{category}
+		</if>
+		AND p2.created_at >= SYSTIMESTAMP - INTERVAL '30' DAY
+		) &lt; 10
+		THEN INTERVAL '60' DAY
+		ELSE INTERVAL '30' DAY
+		END
+		THEN 0
+		ELSE 1
+		END ASC,
+		NVL(p.view_count, 0) DESC,
+		p.place_id DESC
+		) AS rn
+
+		FROM place p
+		JOIN restaurant rt
+		ON p.place_id = rt.restaurant_id
+		LEFT JOIN review r
+		ON p.place_id = r.place_id
+		AND r.status = 'DISPLAY'
+		WHERE p.place_type = 'REST'
+		AND rt.status = 'OPEN'
+		<if test="region != null and region != '' and region != 'all'">
+			AND p.address LIKE '%' || #{region} || '%'
+		</if>
+		<if
+			test="category != null and category != '' and category != 'ALL'">
+			AND rt.category = #{category}
+		</if>
+		GROUP BY
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		p.view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at,
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1),
+		rt.phone,
+		rt.category,
+		rt.status,
+		rt.restdate,
+		rt.areacode
+		)
+		WHERE rn &lt;= 5
+	</select>
+
+	<!-- [맛집 상세용 resultMap] RestaurantDTO 안에 PlaceDTO를 포함하는 상세 페이지 전용 매핑 -->
+	<resultMap id="restaurantDetailResultMap"
+		type="spring.ict06team1.midpj.dto.RestaurantDTO">
+		<id property="restaurant_id" column="restaurant_id" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="category" column="category" />
+		<result property="status" column="restaurant_status" />
+		<result property="restdate" column="restdate" />
+		<result property="areaCode" column="areacode" />
+
+		<association property="placeDTO"
+			javaType="spring.ict06team1.midpj.dto.PlaceDTO">
+			<id property="place_id" column="place_id" />
+			<result property="place_type" column="place_type" />
+			<result property="name" column="name" />
+			<result property="address" column="address" />
+			<result property="view_count" column="view_count" />
+			<result property="latitude" column="latitude" />
+			<result property="longitude" column="longitude" />
+			<result property="image_url" column="image_url" />
+			<result property="placeRegDate" column="placeRegDate" />
+			<result property="review_count" column="review_count" />
+			<result property="avg_rating" column="avg_rating" />
+		</association>
+	</resultMap>
+
+	<!-- [맛집 상세 조회 - RestaurantDTO] place + restaurant + review 집계를 함께 조회해서 
+		상세 페이지에 필요한 데이터를 한 번에 가져오기 위해 사용 -->
+	<select id="getRestaurantDetail" parameterType="int"
+		resultMap="restaurantDetailResultMap">
+		SELECT
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		NVL(p.view_count, 0) AS view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at AS placeRegDate,
+
+
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1) AS description,
+		rt.phone,
+		rt.category,
+		rt.status AS restaurant_status,
+		rt.restdate,
+		rt.areacode,
+
+		COUNT(r.review_id) AS review_count,
+		NVL(ROUND(AVG(r.rating), 1), 0) AS avg_rating
+		FROM place p
+		JOIN restaurant rt
+		ON p.place_id = rt.restaurant_id
+		LEFT JOIN review r
+		ON p.place_id = r.place_id
+		AND r.status = 'DISPLAY'
+		WHERE p.place_id = #{value}
+		AND p.place_type = 'REST'
+		GROUP BY
+		p.place_id,
+		p.place_type,
+		p.name,
+		p.address,
+		p.view_count,
+		p.latitude,
+		p.longitude,
+		p.image_url,
+		p.created_at,
+
+		rt.restaurant_id,
+		DBMS_LOB.SUBSTR(rt.description, 4000, 1),
+		rt.phone,
+		rt.category,
+		rt.status,
+		rt.restdate,
+		rt.areacode
 	</select>
 </mapper>

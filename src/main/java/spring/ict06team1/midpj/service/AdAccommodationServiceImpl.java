@@ -399,8 +399,8 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	    // 각각의 값들 model에 담아서 jsp로 전달
 		model.addAttribute("updateCnt",updateCntR);
 		model.addAttribute("hiddenPageNum",hiddenPageNum);
-		model.addAttribute("areaCode1",areaCode1);
-		model.addAttribute("category1",category1);
+		model.addAttribute("areaCode",areaCode1);
+		model.addAttribute("category",category1);
 		model.addAttribute("keyword",keyword);
 		
 		System.out.println("수정 후 areaCode 확인 : " + areaCode1);
@@ -504,8 +504,11 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	                pDto.setPlace_id(Integer.parseInt(contentId));
 	                aDto.setAccommodation_id(Integer.parseInt(contentId));
 	                pDto.setPlace_type("ACC"); // ★ 맛집(REST)에서 숙소(ACC)로 변경!
-	                pDto.setName(item.path("title").asText(""));//숙소 이름
-	                pDto.setAddress(item.path("addr1").asText(""));//숙소 주소
+	                String title = item.path("title").asText("");
+	                pDto.setName(title.length() > 33 ? title.substring(0, 33) : title);
+	                
+	                String addr1 = item.path("addr1").asText("");//숙소 주소
+	                pDto.setAddress(addr1.length() > 66 ? addr1.substring(0, 66) : addr1);
 	                pDto.setImage_url(imageUrl); //숙소 이미지 경로
 	                pDto.setLongitude(item.path("mapx").asDouble());//숙소 경도
 	                pDto.setLatitude(item.path("mapy").asDouble());//숙소 위도
@@ -721,5 +724,6 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	    } catch (Exception e) {
 	        System.err.println(">>> 추가 이미지 수집 실패: " + e.getMessage());
 	    }
+	    
 	}
 }

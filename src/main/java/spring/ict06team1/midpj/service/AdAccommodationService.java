@@ -47,5 +47,4 @@ public interface AdAccommodationService {
 	
 	//숙소 여러 이미지 불러오기
 	public void testRegisterImages(String contentId);
-	
 }

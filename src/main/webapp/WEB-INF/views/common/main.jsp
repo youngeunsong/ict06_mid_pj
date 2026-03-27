@@ -65,7 +65,6 @@
 	};
 </script>
 <% } %>
-
 		<!-- header -->
 		<%@ include file="header.jsp"%>
 

@@ -212,19 +212,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (dateSlider && timeSlotsWrap && selectedReserveDateInput) {
     const DAYS_TO_SHOW = 7;
-
-    // 예시 시간 슬롯
-    const baseSlots = [
-      { start: "10:00", end: "11:50" },
-      { start: "12:00", end: "13:50" },
-      { start: "14:00", end: "15:50" },
-      { start: "17:00", end: "18:50" },
-      { start: "19:00", end: "20:50" }
-    ];
-
+    const LIMIT_PER_TIME = 2;
     const dayLabels = ["일", "월", "화", "수", "목", "금", "토"];
 
-    // 오늘부터 +7일 생성
+    function generateBaseSlots() {
+      const slots = [];
+
+      for (let hour = 0; hour < 24; hour++) {
+        for (let min = 0; min < 60; min += 30) {
+          const startHour = String(hour).padStart(2, "0");
+          const startMin = String(min).padStart(2, "0");
+
+          let nextHour = hour;
+          let nextMin = min + 30;
+
+          if (nextMin >= 60) {
+            nextHour += 1;
+            nextMin = 0;
+          }
+
+          const endHour = String(nextHour).padStart(2, "0");
+          const endMin = String(nextMin).padStart(2, "0");
+
+          slots.push({
+            start: startHour + ":" + startMin,
+            end: endHour + ":" + endMin
+          });
+        }
+      }
+
+      return slots;
+    }
+
+    const baseSlots = generateBaseSlots();
+
     const reserveDates = [];
     const today = new Date();
 
@@ -244,10 +265,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    let activeDate = reserveDates[0].value;
+    let activeDate = reserveDates.length > 0 ? reserveDates[0].value : "";
 
     renderDateButtons();
-    renderTimeSlots(activeDate);
+
+    if (activeDate) {
+      loadRestTimeStatus(activeDate);
+    }
 
     function renderDateButtons() {
       dateSlider.innerHTML = "";
@@ -265,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
             activeDate = "";
             selectedReserveDateInput.value = "";
             renderDateButtons();
-            renderTimeSlots("");
+            timeSlotsWrap.innerHTML = "";
             return;
           }
 
@@ -273,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
           selectedReserveDateInput.value = item.value;
 
           renderDateButtons();
-          renderTimeSlots(item.value);
+          loadRestTimeStatus(item.value);
         });
 
         dateSlider.appendChild(btn);
@@ -282,20 +306,59 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedReserveDateInput.value = activeDate;
     }
 
-    function renderTimeSlots(dateValue) {
+    function loadRestTimeStatus(dateValue) {
+      if (!PLACE_ID || !dateValue) {
+        console.error("PLACE_ID 또는 dateValue가 비어 있음", PLACE_ID, dateValue);
+        timeSlotsWrap.innerHTML = "";
+        return;
+      }
+
+      fetch(
+        CTX + "/restTimeStatus.rv"
+        + "?place_id=" + encodeURIComponent(PLACE_ID)
+        + "&visit_date=" + encodeURIComponent(dateValue)
+      )
+        .then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (t) {
+              throw new Error("HTTP " + res.status + ": " + t);
+            });
+          }
+          return res.json();
+        })
+        .then(function (data) {
+          console.log("restTimeStatus 응답:", data);
+          console.log("timeCounts:", data.timeCounts);
+          renderTimeSlots(dateValue, data.timeCounts || []);
+        })
+        .catch(function (err) {
+          console.error("restTimeStatus fetch error:", err);
+          timeSlotsWrap.innerHTML = "";
+        });
+    }
+
+    function renderTimeSlots(dateValue, timeCounts) {
       timeSlotsWrap.innerHTML = "";
 
       if (!dateValue) {
         return;
       }
 
-      // 임시 예시 비활성화 규칙
-      // 나중에는 서버 예약 데이터 기준으로 회색 처리하면 됨
-      const dateIndex = reserveDates.findIndex(function (d) {
-        return d.value === dateValue;
+      const countMap = {};
+
+      timeCounts.forEach(function (item) {
+        const rawTime = item.visit_time || item.VISIT_TIME || "";
+        const rawCnt = item.cnt || item.CNT || 0;
+
+        const timeKey = String(rawTime).substring(0, 5);
+        countMap[timeKey] = Number(rawCnt);
+
+        console.log("매핑:", rawTime, "->", timeKey, "cnt:", rawCnt);
       });
 
-      baseSlots.forEach(function (slot, idx) {
+      console.log("최종 countMap:", countMap);
+
+      baseSlots.forEach(function (slot) {
         const slotBox = document.createElement("div");
         const badge = document.createElement("span");
         const timeText = document.createElement("span");
@@ -305,11 +368,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         badge.className = "r-slotBadge";
 
-        const isDisabled =
-          (dateIndex === 0 && idx === 1) ||
-          (dateIndex === 2 && idx === 3) ||
-          (dateIndex === 4 && idx === 0) ||
-          (dateIndex === 6 && idx === 4);
+        const reservedCount = countMap[slot.start] || 0;
+        const isDisabled = reservedCount >= LIMIT_PER_TIME;
 
         if (isDisabled) {
           slotBox.className = "r-timeSlot is-disabled";

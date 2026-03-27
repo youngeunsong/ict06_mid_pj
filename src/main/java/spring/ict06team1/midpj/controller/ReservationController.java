@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -145,5 +146,16 @@ public class ReservationController {
 
 		model.addAttribute("result", result);
 		return "user/reservation/naverPayResult";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/restTimeStatus.rv")
+	public Map<String, Object> restTimeStatus(
+	        @RequestParam("place_id") int place_id,
+	        @RequestParam("visit_date") String visit_date) {
+
+	    Map<String, Object> result = new HashMap<String, Object>();
+	    result.put("timeCounts", resService.getRestTimeReservationCount(place_id, visit_date));
+	    return result;
 	}
 }

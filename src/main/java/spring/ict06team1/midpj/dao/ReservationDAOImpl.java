@@ -130,5 +130,15 @@ public class ReservationDAOImpl implements ReservationDAO {
 		return sqlSession.update("spring.ict06team1.midpj.dao.ReservationDAO.updateReservationStatusConfirmed",
 				reservationId);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map) {
+	    return sqlSession.getMapper(ReservationDAO.class).getRestTimeReservationCount(map);
+	}
+
+	@Override
+	public int countRestReservationByDateTime(Map<String, Object> map) {
+	    return sqlSession.getMapper(ReservationDAO.class).countRestReservationByDateTime(map);
+	}
 
 }

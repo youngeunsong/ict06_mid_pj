@@ -67,4 +67,10 @@ public interface ReservationDAO {
 	// 10. 예약 상태 변경
 	// 결제 승인 성공 후 RESERVATION.status를 변경할 때 사용
 	int updateReservationStatusConfirmed(String reservationId);
+	
+
+	List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map);
+	
+	
+	int countRestReservationByDateTime(Map<String, Object> map);
 }

@@ -52,6 +52,10 @@ public interface UserService {
     public void inquiryDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
         throws ServletException, IOException;
     
+    // 문의 상세 예약 취소 처리
+    public void cancelReservationAction(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws ServletException, IOException;
+    
     // 마이페이지 홈 카운트, top3, calendar
     public void myPageHomeAction(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException;

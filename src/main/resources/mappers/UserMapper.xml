@@ -278,6 +278,14 @@
 	      AND USER_ID = #{user_id}
 	</select>
 	
+	<!-- 나의 예약 취소 -->
+	<update id="cancelReservation" parameterType="String">
+	    UPDATE RESERVATION
+	       SET STATUS = 'CANCELLED',
+	           UPDATED_AT = SYSTIMESTAMP
+	     WHERE RESERVATION_ID = #{reservation_id}
+	</update>
+	
 	<!-- 예약 결과 매핑 -->
 	<resultMap id="ReservationMap" type="spring.ict06team1.midpj.dto.ReservationDTO">
 		<!-- 기본 키 (예약ID) -->
@@ -382,5 +390,22 @@
 		WHERE r.RESERVATION_ID = #{reservation_id}
 		  AND r.USER_ID = #{user_id}
 	</select>
+	
+	    <!-- 리뷰/설문 작성 포인트 적립 -->
+	<insert id="insertReviewPoint" parameterType="map">
+	    INSERT INTO POINT (
+	        point_id, user_id, policy_key, amount, type, description, created_at
+	    )
+	    SELECT
+	        SEQ_POINT.NEXTVAL,
+	        #{userId},
+	        pp.policy_key,
+	        pp.amount,
+	        'EARN',
+	        #{description},
+	        SYSDATE
+	    FROM point_policy pp
+	    WHERE pp.policy_key = #{policyKey}
+	</insert>
 	
 </mapper>

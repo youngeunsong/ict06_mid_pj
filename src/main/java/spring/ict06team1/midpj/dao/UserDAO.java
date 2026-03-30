@@ -66,6 +66,9 @@ public interface UserDAO {
     // 나의 예약 상세
     public ReservationDTO selectMyReservationDetail(Map<String, Object> map);
     
+    // 나의 예약 취소 처리
+    public int cancelReservation(String reservation_id);
+    
     //------------------------------
     // 관리자 정보 수정
     public int updateAdmin(MemberDTO dto);

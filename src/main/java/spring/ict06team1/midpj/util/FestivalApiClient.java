@@ -24,7 +24,7 @@ public class FestivalApiClient {
 
     private static final String SERVICE_KEY = "d7db7b7765d36202abf82894066af507d09c4e72ba858c461e82332456e5a105"; // TODO: API용 키. 추후 깃허브 메인에 올리기 전에 이 라인을 다른 방식으로 처리할 것.
     
-    public String callAPI(int pageNo, int numOfRows) throws IOException {
+    public String callAPI(int pageNo, int numOfRows, String fstvlStartDate) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + URLEncoder.encode(SERVICE_KEY, "UTF-8")); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(Integer.toString(pageNo), "UTF-8")); /*페이지 번호*/
@@ -32,7 +32,7 @@ public class FestivalApiClient {
         urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*XML/JSON 여부*/
 //        urlBuilder.append("&" + URLEncoder.encode("fstvlNm","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*축제명*/
 //        urlBuilder.append("&" + URLEncoder.encode("opar","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*개최장소*/
-//        urlBuilder.append("&" + URLEncoder.encode("fstvlStartDate","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*축제시작일자*/
+        urlBuilder.append("&" + URLEncoder.encode("fstvlStartDate","UTF-8") + "=" + URLEncoder.encode(fstvlStartDate, "UTF-8")); /*축제시작일자*/
 //        urlBuilder.append("&" + URLEncoder.encode("fstvlEndDate","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*축제종료일자*/
 //        urlBuilder.append("&" + URLEncoder.encode("fstvlCo","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*축제내용*/
 //        urlBuilder.append("&" + URLEncoder.encode("mnnstNm","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*주관기관명*/

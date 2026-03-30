@@ -76,6 +76,9 @@ public interface ReservationDAO {
 
 	List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map);
 	
+	// 리뷰/설문 작성 포인트 적립
+	public int insertReviewPoint(Map<String, Object> map);
+	
 	
 	int countRestReservationByDateTime(Map<String, Object> map);
 }

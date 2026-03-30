@@ -28,6 +28,7 @@ import spring.ict06team1.midpj.dao.AccommodationDAO;
 import spring.ict06team1.midpj.dao.FestivalDAO;
 import spring.ict06team1.midpj.dao.ReservationDAO;
 import spring.ict06team1.midpj.dao.RestaurantDAO;
+import spring.ict06team1.midpj.dao.UserDAO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
 import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
@@ -50,6 +51,10 @@ public class ReservationServiceImpl implements ReservationService {
     public FestivalDAO festDao;
     @Autowired
     public PointService pointService;
+    @Autowired
+    private org.apache.ibatis.session.SqlSession sqlSession;
+    @Autowired
+    private UserDAO userDao;
 
     @Value("${naverpay.client-id}")
     private String naverPayClientId;
@@ -62,6 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Value("${naverpay.approve-url}")
     private String naverPayApproveUrl;
+    
 
     // 1-1. 축제 예약 페이지에 필요한 데이터 조회
     @Override
@@ -433,9 +439,21 @@ public class ReservationServiceImpl implements ReservationService {
 	        model.addAttribute("msg", reviewResult.get("msg"));
 	        return;
 	    }
+	    
+	    // 7. 포인트 지급
+	    Map<String, Object> pointMap = new HashMap<String, Object>();
+	    pointMap.put("userId", sessionID);
+	    pointMap.put("policyKey", "EARN_REVIEW");
+	    pointMap.put("description", "리뷰/설문 작성 적립 - 예약번호: " + reservation_id);
 
-	    // 7. 성공 처리
+	    int pointCnt = resDao.insertReviewPoint(pointMap);
+
+	    System.out.println("pointCnt = " + pointCnt);
+	    // 8. 성공 처리
 	    model.addAttribute("result", 1);
-	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다.");
+	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다. 포인트가 지급되었습니다.");
+	    
+	    
+	    
 	}
 }

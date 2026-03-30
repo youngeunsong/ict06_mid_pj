@@ -391,4 +391,21 @@
 		  AND r.USER_ID = #{user_id}
 	</select>
 	
+	    <!-- 리뷰/설문 작성 포인트 적립 -->
+	<insert id="insertReviewPoint" parameterType="map">
+	    INSERT INTO POINT (
+	        point_id, user_id, policy_key, amount, type, description, created_at
+	    )
+	    SELECT
+	        SEQ_POINT.NEXTVAL,
+	        #{userId},
+	        pp.policy_key,
+	        pp.amount,
+	        'EARN',
+	        #{description},
+	        SYSDATE
+	    FROM point_policy pp
+	    WHERE pp.policy_key = #{policyKey}
+	</insert>
+	
 </mapper>

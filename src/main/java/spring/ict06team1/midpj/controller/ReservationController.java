@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import spring.ict06team1.midpj.dao.UserDAO;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.FestivalDTO;
+import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 import spring.ict06team1.midpj.service.AccommodationService;
@@ -37,7 +39,9 @@ public class ReservationController {
 	private AccommodationService accService;
 	@Autowired
 	private FestivalService festService;
-
+	@Autowired
+	private UserDAO userDao;
+	
 	private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
 	// [Reservation]
@@ -117,12 +121,24 @@ public class ReservationController {
 
 	// [Reservation] 결제 최종 확인 페이지 이동
 	@RequestMapping("/reservationConfirm.rv")
-	public String reservationConfirm(@RequestParam("reservation_id") String reservation_id, Model model) {
+	public String reservationConfirm(@RequestParam("reservation_id") String reservation_id,
+			HttpServletRequest request, Model model) {
 
 		ReservationDTO reservation = resService.getReservationById(reservation_id);
 		model.addAttribute("reservation", reservation);
 
-		// 네이버페이 테스트용 공개값
+		String user_id = (String) request.getSession().getAttribute("sessionID");
+
+		if (user_id != null) {
+			MemberDTO member = userDao.getUserDetail(user_id);
+
+			if (member != null) {
+				model.addAttribute("memberName", member.getName());
+				model.addAttribute("availablePoint", member.getPoint_balance());
+				model.addAttribute("userId", member.getUser_id());
+			}
+		}
+
 		model.addAttribute("naverPayClientId", "HN3GGCMDdTgGUfl0kFCo");
 		model.addAttribute("naverPayChainId", "TUxwbzJsVVJ4b2x");
 
@@ -131,16 +147,33 @@ public class ReservationController {
 
 	// [Reservation] 네이버페이 결제 후 returnUrl 처리
 	@RequestMapping("/naverPayReturn.rv")
-	public String naverPayReturn(@RequestParam(value = "paymentId", required = false) String paymentId,
+	public String naverPayReturn(
+			@RequestParam(value = "paymentId", required = false) String paymentId,
 			@RequestParam(value = "reservation_id", required = false) String reservationId,
-			@RequestParam(value = "resultCode", required = false) String resultCode, Model model) {
+			@RequestParam(value = "resultCode", required = false) String resultCode,
+			@RequestParam(value = "usedPoint", required = false, defaultValue = "0") int usedPoint,
+			Model model) {
 
 		System.out.println("=== naverPayReturn 진입 ===");
 		System.out.println("paymentId = " + paymentId);
 		System.out.println("reservationId = " + reservationId);
 		System.out.println("resultCode = " + resultCode);
+		System.out.println("usedPoint = " + usedPoint);
 
-		Map<String, Object> result = resService.approveNaverPay(paymentId, reservationId);
+		// 사용자가 결제창을 닫거나 취소한 경우
+		if ("UserCancel".equals(resultCode)) {
+			Map<String, Object> result = new HashMap<>();
+			result.put("success", false);
+			result.put("msg", "결제가 취소되었습니다.");
+			result.put("reservationId", reservationId);
+			result.put("paymentId", paymentId);
+			result.put("usedPoint", usedPoint);
+
+			model.addAttribute("result", result);
+			return "user/reservation/naverPayResult";
+		}
+
+		Map<String, Object> result = resService.approveNaverPay(paymentId, reservationId, usedPoint);
 
 		System.out.println("result = " + result);
 

@@ -101,6 +101,37 @@
     font-weight: 700;
   }
 
+  .point-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .point-input {
+    width: 180px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d9dfe8;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+
+  .point-btn {
+    height: 40px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 10px;
+    background: #e9edf3;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .point-btn:hover {
+    background: #dfe5ec;
+  }
+
   .btn-area {
     padding: 30px;
     background: #fafafa;
@@ -178,6 +209,10 @@
 
     .btn-group {
       flex-direction: column;
+    }
+
+    .point-input {
+      width: 100%;
     }
   }
 </style>
@@ -264,10 +299,35 @@
     </div>
 
     <div class="section">
+      <h3 class="section-title">포인트 사용</h3>
+      <div class="info-list">
+        <div class="label">예약자</div>
+        <div class="value">${memberName}</div>
+
+        <div class="label">사용 가능 포인트</div>
+        <div class="value"><span id="availablePointText">${availablePoint}</span>P</div>
+
+        <div class="label">사용할 포인트</div>
+        <div class="value">
+          <div class="point-row">
+            <input type="number" id="usedPoint" class="point-input" value="0" min="0" />
+            <button type="button" id="useAllPointBtn" class="point-btn">전액 사용</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
       <h3 class="section-title">결제 정보</h3>
       <div class="info-list">
-        <div class="label">결제 금액</div>
-        <div class="value amount">${reservation.amount}원</div>
+        <div class="label">원래 금액</div>
+        <div class="value"><span id="originAmount">${reservation.amount}</span>원</div>
+
+        <div class="label">포인트 차감</div>
+        <div class="value"><span id="usedPointText">0</span>P</div>
+
+        <div class="label">최종 결제 금액</div>
+        <div class="value amount"><span id="finalAmount">${reservation.amount}</span>원</div>
       </div>
     </div>
 
@@ -311,6 +371,41 @@
 <script src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
 <script>
   const reservationStatus = "${reservation.status}";
+  const originalAmount = Number("${reservation.amount}");
+  const availablePoint = Number("${availablePoint}");
+
+  const usedPointInput = document.getElementById("usedPoint");
+  const useAllPointBtn = document.getElementById("useAllPointBtn");
+  const usedPointText = document.getElementById("usedPointText");
+  const finalAmountText = document.getElementById("finalAmount");
+
+  function updateFinalAmount() {
+    let usedPoint = Number(usedPointInput.value || 0);
+
+    if (usedPoint < 0 || isNaN(usedPoint)) {
+      usedPoint = 0;
+    }
+
+    if (usedPoint > availablePoint) {
+      usedPoint = availablePoint;
+    }
+
+    if (usedPoint > originalAmount) {
+      usedPoint = originalAmount;
+    }
+
+    usedPointInput.value = usedPoint;
+    usedPointText.textContent = usedPoint;
+    finalAmountText.textContent = originalAmount - usedPoint;
+  }
+
+  usedPointInput.addEventListener("input", updateFinalAmount);
+
+  useAllPointBtn.addEventListener("click", function() {
+    const maxUsablePoint = Math.min(availablePoint, originalAmount);
+    usedPointInput.value = maxUsablePoint;
+    updateFinalAmount();
+  });
 
   const oPay = Naver.Pay.create({
     mode: "development",
@@ -325,18 +420,28 @@
       return;
     }
 
+    const usedPoint = Number(usedPointInput.value || 0);
+    const finalAmount = originalAmount - usedPoint;
+
+    if (finalAmount < 0) {
+      alert("결제 금액이 올바르지 않습니다.");
+      return;
+    }
+
     oPay.open({
       merchantPayKey: "${reservation.reservation_id}",
       merchantPayTransactionKey: "${reservation.reservation_id}_T1",
       merchantUserKey: "${reservation.user_id}",
       productName: "${reservation.placeDTO.name}",
       productCount: 1,
-      totalPayAmount: ${reservation.amount},
-      taxScopeAmount: ${reservation.amount},
+      totalPayAmount: finalAmount,
+      taxScopeAmount: finalAmount,
       taxExScopeAmount: 0,
-      returnUrl: "${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/naverPayReturn.rv?reservation_id=${reservation.reservation_id}"
+      returnUrl: "${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/naverPayReturn.rv?reservation_id=${reservation.reservation_id}&usedPoint=" + usedPoint
     });
   });
+
+  updateFinalAmount();
 </script>
 
 </body>

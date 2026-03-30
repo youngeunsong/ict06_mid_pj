@@ -42,11 +42,11 @@
 		INSERT INTO SURVEY (
 			survey_id, user_id, reservation_id,
 			nps_score, satisfaction_score,
-			inconvenience, info_reliability_score, improvements
+			inconvenience, info_reliability_score, improvements, created_at
 		) VALUES (
 			#{survey_id}, #{user_id}, #{reservation_id},
 			#{nps_score}, #{satisfaction_score},
-			#{inconvenience}, #{info_reliability_score}, #{improvements}
+			#{inconvenience}, #{info_reliability_score}, #{improvements}, SYSTIMESTAMP
 		)
 	</insert>
 	
@@ -77,12 +77,12 @@
 			SELECT SEQ_REVIEW.NEXTVAL FROM DUAL
 		</selectKey>
 		INSERT INTO REVIEW(
-			review_id, place_id, reservation_id,
+			review_id, user_id, reservation_id, place_id,
 			rating, content, created_at
 		)
 		VALUES(
-			#{review_id}, #{place_id}, #{reservation_id},
-			#{rating}, #{content}, SYSDATE
+			#{review_id}, #{user_id}, #{reservation_id}, #{place_id},
+			#{rating}, #{content}, SYSTIMESTAMP
 		)
 	</insert>
 	

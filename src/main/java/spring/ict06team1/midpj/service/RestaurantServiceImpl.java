@@ -48,7 +48,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         String keyword = request.getParameter("keyword");
         String sortType = request.getParameter("sortType");
         String category = request.getParameter("category");
-
+        String province = request.getParameter("province"); 
+        String district = request.getParameter("district");
+        
         // 2. 초기 위치 및 반경 설정
         double lat = (strLat != null && !strLat.isEmpty()) ? Double.parseDouble(strLat) : 37.525; 
         double lng = (strLng != null && !strLng.isEmpty()) ? Double.parseDouble(strLng) : 126.864;
@@ -68,7 +70,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         countMap.put("minRating", minRating);
         countMap.put("category", category);
         
+        if (province != null && !province.isEmpty()) {
+			countMap.put("radius", 400);
+		} else {
+			countMap.put("radius", radius);
+		}
         int totalCount = dao.selectNearbyRestaurantCount(countMap);
+        logger.info("province :" + province);
+		logger.info("district :" + district);
         
         // setTotalCount 호출 시 내부에서 startRow, endRow가 6개 기준으로 자동 계산됨
         paging.setTotalCount(totalCount);
@@ -78,7 +87,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         listMap.put("sortType", (sortType != null && !sortType.isEmpty()) ? sortType : "distance");
         listMap.put("start", paging.getStartRow()); // 6개 기준 시작 번호 (예: 1, 7, 13...)
         listMap.put("end", paging.getEndRow());     // 6개 기준 끝 번호 (예: 6, 12, 18...)
-
+        listMap.put("province", province != null ? province : "");
+		listMap.put("district", district != null ? district : "");
         // 5. DB 데이터 조회 (RestaurantDTO + PlaceDTO 조인)
         List<RestaurantDTO> restaurantList = dao.selectNearbyRestaurantList(listMap);
 
@@ -98,6 +108,17 @@ public class RestaurantServiceImpl implements RestaurantService {
         
     	// 1. 파라미터 수집 및 검색용 Map 생성
         Map<String, Object> listMap = new HashMap<>();
+        String province = request.getParameter("province");
+		String district = request.getParameter("district");
+		double radius = Double.parseDouble(request.getParameter("radius"));
+		if (province != null && !province.isEmpty()) {
+			listMap.put("radius", 400);
+		} else {
+			listMap.put("radius", radius);
+		}
+		
+		listMap.put("province", province != null ? province : "");
+		listMap.put("district", district != null ? district : "");
         listMap.put("lat", Double.parseDouble(request.getParameter("lat")));
         listMap.put("lng", Double.parseDouble(request.getParameter("lng")));
         listMap.put("radius", Double.parseDouble(request.getParameter("radius")));
@@ -106,6 +127,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         String strMinRating = request.getParameter("minRating");
         double minRating = (strMinRating != null && !strMinRating.isEmpty()) ? Double.parseDouble(strMinRating) : 0.0;
         listMap.put("minRating", minRating);
+        
         // 2. DAO 호출 (전체 마커용 데이터 조회)
         List<RestaurantDTO> restaurantList = dao.selectNearbyMarkersAjax(listMap);
 

@@ -287,6 +287,12 @@
 	  color:#6b7280;
 	}
 	
+	.reserve-time-scroll {
+	  max-height: 360px;   /* 대략 5~6개 정도 보이게 조절 */
+	  overflow-y: auto;
+	  padding-right: 4px;
+	}
+	
   </style>
 </head>
 
@@ -363,7 +369,7 @@
             </div>
 
             <!-- 시간 슬롯 영역 -->
-            <div id="reserveTimeSlots" class="d-grid gap-2">
+            <div id="reserveTimeSlots" class="d-grid gap-2 reserve-time-scroll">
               <!-- JS로 시간 슬롯 들어갈 자리 -->
             </div>
 

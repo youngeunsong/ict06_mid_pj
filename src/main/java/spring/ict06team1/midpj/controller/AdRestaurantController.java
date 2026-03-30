@@ -1,6 +1,7 @@
 package spring.ict06team1.midpj.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
@@ -86,27 +87,36 @@ public class AdRestaurantController {
 	@GetMapping("/restaurantDeleteAction.adre")
 	public String restaurantDeleteAction(HttpServletRequest request, Model model) 
 	        throws ServletException, IOException {
-	    logger.info("<<< url => /restaurantDeleteAction.adre >>>");
-	    
-	    // 1. 삭제 서비스 호출 (여기서 model에 담아준 값을 나중에 꺼내 씁니다)
+		logger.info("<<< url => /restaurantDeleteAction.adre >>>");
+
 	    adResService.getRestaurantDeleteAction(request, null, model);
-	    // 2. 서비스에서 model에 담아둔 파라미터 꺼내기
-	    String pageNum = (String) model.asMap().get("pageNum");
+
+	    String pageNum  = (String) model.asMap().get("pageNum");
 	    String areaCode = (String) model.asMap().get("areaCode");
 	    String category = (String) model.asMap().get("category");
-	    String keyword = (String) model.asMap().get("keyword"); // 서비스에서 담아준 keyword 꺼내기
-	    // 3. 키워드 유무에 따른 리다이렉트 분기
-	    if (keyword != null && !keyword.trim().isEmpty()) {
-	        // 검색 중이었을 경우 -> 검색 컨트롤러로 이동
-	        return "redirect:/restaurantSearch.adre?pageNum=" + pageNum 
-	             + "&areaCode=" + areaCode 
-	             + "&category=" + category 
-	             + "&keyword=" + URLEncoder.encode(keyword, "UTF-8"); 
-	             // ※ 한글 키워드일 경우 URLEncoder 사용 권장 (java.net.URLEncoder)
+	    String keyword  = (String) model.asMap().get("keyword");
+
+	    // null 방지
+	    if (pageNum  == null || pageNum.isEmpty())  pageNum  = "1";
+	    if (areaCode == null) areaCode = "";
+	    if (category == null) category = "";
+	    if (keyword  == null) keyword  = "";
+
+	    // areaCode, category 도 인코딩 처리
+	    String encodedAreaCode = URLEncoder.encode(areaCode, "UTF-8");
+	    String encodedCategory = URLEncoder.encode(category, "UTF-8");
+	    String encodedKeyword  = URLEncoder.encode(keyword,  "UTF-8");
+
+	    // RedirectAttributes 대신 직접 URL 조립 (model 자동 추가 방지)
+	    if (!keyword.isEmpty()) {
+	        return "redirect:/restaurantSearch.adre?pageNum=" + pageNum
+	             + "&areaCode=" + encodedAreaCode
+	             + "&category=" + encodedCategory
+	             + "&keyword="  + encodedKeyword;
 	    } else {
-	        // 일반 목록이었을 경우 -> 전체 목록 컨트롤러로 이동
-	        return "redirect:/restaurant.adre?pageNum=" + pageNum 
-	             + "&areaCode=" + areaCode; 
+	        return "redirect:/restaurantList.adre?pageNum=" + pageNum
+	             + "&areaCode=" + encodedAreaCode
+	             + "&category=" + encodedCategory;
 	    }
 	}
 	//-----------------------------------------------------------------------------------------------------------------

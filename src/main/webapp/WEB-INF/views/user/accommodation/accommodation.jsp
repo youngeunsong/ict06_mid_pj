@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/setting.jsp" %>
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+<%@ include file="/WEB-INF/views/common/setting.jsp"%>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,89 +8,193 @@
 <title>맛집어때 - 지도 탐색</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="${path}/resources/css/user/accommodation/accommodation.css">
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
+<script type="text/javascript"
+    src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
+
+</head>
+<body>
+    <div class="wrap">
+        <%@ include file="../../common/header.jsp"%>
+
+        <div class="content-wrapper">
+            <div class="main-tab-wrapper" style="display:flex; justify-content:center; margin-bottom:30px;">
+                <div class="nav-pill-group" onclick="location.href='${path}/bestAccommodations.ac'" style="cursor:pointer;">
+                    <div class="nav-pill-item active">내 주변</div>
+                    <div class="nav-pill-item best-link">베스트 숙소</div>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <div class="search-main-row">
+                    <div class="search-input-group">
+                        <%-- ✅ onkeyup, onclick 모두 doKeywordSearch() 로 변경 --%>
+                        <input type="text" id="keywordInput" placeholder="숙소를 검색하세요"
+                               onkeyup="if(event.keyCode==13) doKeywordSearch()">
+                        <i class="fa fa-search text-muted" onclick="doKeywordSearch()"></i>
+                    </div>
+
+                    <div class="distance-filter">
+                        <span class="distance-label">반경</span>
+                        <div class="step-wrapper">
+                            <div class="step-line-bg"></div>
+                            <div id="activeLine" class="step-line-active"></div>
+                            <div class="step-nodes">
+                                <div class="dist-node" data-label="1k"  onclick="setDistance(1.0,   0,   this)"></div>
+                                <div class="dist-node" data-label="5k"  onclick="setDistance(5.0,   25,  this)"></div>
+                                <div class="dist-node" data-label="10k" onclick="setDistance(10.0,  50,  this)"></div>
+                                <div class="dist-node" data-label="50k" onclick="setDistance(50.0,  75,  this)"></div>
+                                <div class="dist-node" data-label="All" onclick="setDistance(400.0, 500, this)"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-filter-icon" onclick="toggleFilter()">
+                        <i class="fa fa-filter"></i>
+                    </button>
+                </div>
+
+                <div id="filterArea" class="filter-detail-area">
+                    <div class="filter-group">
+                        <select id="provinceSelect" onchange="updateRegionOptions()">
+                            <option value="">지역 선택</option>
+                            <option value="서울">서울</option>
+                            <option value="인천">인천</option>
+                            <option value="대전">대전</option>
+                            <option value="대구">대구</option>
+                            <option value="광주">광주</option>
+                            <option value="부산">부산</option>
+                            <option value="울산">울산</option>
+                            <option value="경기">경기</option>
+                            <option value="제주">제주</option>
+                        </select>
+
+                        <%-- 카테고리/별점은 searchData() 직접 호출 — 잠금 로직 안 탐 --%>
+                        <select id="categorySelect" class="form-select shadow-none" onchange="searchData()">
+                            <option value="">카테고리 전체</option>
+                            <option value="일반호텔">일반호텔</option>
+                            <option value="일반숙박업">일반숙박업</option>
+                            <option value="펜션">펜션</option>
+                            <option value="호스텔">호스텔</option>
+                            <option value="서비스드레지던스">서비스드레지던스</option>
+                            <option value="한옥스테이">한옥스테이</option>
+                            <option value="관광호텔">관광호텔</option>
+                            <option value="홈스테이">홈스테이</option>
+                            <option value="수상관광호텔">수상관광호텔</option>
+                            <option value="한국전통호텔">한국전통호텔</option>
+                            <option value="가족호텔">가족호텔</option>
+                            <option value="유스호스텔">유스호스텔</option>
+                            <option value="콘도미니엄">콘도미니엄</option>
+                            <option value="휴양펜션">휴양펜션</option>
+                        </select>
+
+                        <select id="ratingSelect" class="form-select shadow-none" onchange="searchData()">
+                            <option value="0.0">별점 전체</option>
+                            <option value="1.0">⭐ 이상</option>
+                            <option value="2.0">⭐⭐ 이상</option>
+                            <option value="3.0">⭐⭐⭐ 이상</option>
+                            <option value="4.0">⭐⭐⭐⭐ 이상</option>
+                        </select>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                onclick="resetFilters()"
+                                style="font-size:11px; border-radius:10px;">초기화</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+            <div id="accListArea" class="mt-4"></div>
+        </div>
+
+        <%@ include file="../../common/footer.jsp"%>
+    </div>
+    
 <script type="text/javascript">
-	// 전역 변수 설정: 지도 객체, 마커 배열, 오버레이 상태 등 관리
-	var map;
-	var markers = [];
-	var myCustomOverlay = null; 
-	var isClickMoving = false;
-	var isRegionFiltered = false; // 지역 필터 적용 여부
+const regionMap = {
+};
+var map;
+var markers = [];
+var myCustomOverlay = null;
+var isClickMoving = false;
+var isRegionFiltered = false;
+var isDistanceLocked = false;
+var favoritePlaceIds = ${not empty favoritePlaceIds ? favoritePlaceIds : '[]'}.map(String);
+var savedConfig = localStorage.getItem("accSearchConfig");
+var currentSearchConfig = savedConfig ? JSON.parse(savedConfig) : {
+    lat: ${not empty userLat ? userLat : 37.5665},
+    lng: ${not empty userLng ? userLng : 126.9780},
+    radius: 5.0,
+    minRating: 0.0,
+    keyword: "",
+    category: "",
+    province: "",
+    district: "",
+    pageNum: 1
+};
 
-	// JSP에서 전달된 북마크 리스트 (로그인 유저의 찜 목록)를 문자열 배열로 관리
-	var favoritePlaceIds = ${not empty favoritePlaceIds ? favoritePlaceIds : '[]'}.map(String);
-	
-	// 로컬 스토리지에서 이전 검색 설정 불러오기 (없으면 기본값 설정)
-	var savedConfig = localStorage.getItem("accSearchConfig");
-	var currentSearchConfig = savedConfig ? JSON.parse(savedConfig) : {
-	    lat: ${not empty userLat ? userLat : 37.5665},
-	    lng: ${not empty userLng ? userLng : 126.9780},
-	    radius: 5.0, 
-	    minRating: 0.0, 
-	    keyword: "", 
-	    category: "",
-	    province: "",       // 선택한 시/도
-	    district: "",       // 선택한 구/시
-	    pageNum: 1
-	};
-
-// 현재 검색 설정을 브라우저 로컬 스토리지에 저장하는 함수
 function saveToLocal() {
     localStorage.setItem("accSearchConfig", JSON.stringify(currentSearchConfig));
 }
 
-	$(document).ready(function() {
-	    // 카카오맵 SDK 로드 후 실행
-	    kakao.maps.load(function() {
-    // 1. 지도 생성
-    var mapContainer = document.getElementById('map');
-    map = new kakao.maps.Map(mapContainer, {
-        center: new kakao.maps.LatLng(currentSearchConfig.lat, currentSearchConfig.lng),
-        level: 5
-    });
+// 반경 잠금 — 플래그 true + All 고정
+function lockDistanceFilter() {
+    isDistanceLocked = true;
+    currentSearchConfig.radius = 400.0;
+    saveToLocal();
+    updateDistanceUI(400.0);
+    $(".distance-filter").css({"opacity": "0.5", "pointer-events": "none"});
+}
 
-    // 2. 위치 권한 있으면 현재 위치 반영
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            currentSearchConfig.lat = pos.coords.latitude;
-            currentSearchConfig.lng = pos.coords.longitude;
-            var newCenter = new kakao.maps.LatLng(currentSearchConfig.lat, currentSearchConfig.lng);
-            map.setCenter(newCenter);
-            saveToLocal();
-            refreshAll(); 
-        }, function() {
-            refreshAll();
+// 반경 해제 — 플래그 false + 5km 복구
+function unlockDistanceFilter() {
+    isDistanceLocked = false;
+    currentSearchConfig.radius = 5.0;
+    saveToLocal();
+    updateDistanceUI(5.0);
+    $(".distance-filter").css({"opacity": "1", "pointer-events": "auto"});
+}
+
+$(document).ready(function() {
+    kakao.maps.load(function() {
+        var mapContainer = document.getElementById('map');
+        map = new kakao.maps.Map(mapContainer, {
+            center: new kakao.maps.LatLng(currentSearchConfig.lat, currentSearchConfig.lng),
+            level: 5
         });
-    } else {
-        refreshAll();
-    }
 
-    
-	// idle 이벤트: 드래그 후 재검색
-    kakao.maps.event.addListener(map, 'idle', function() {
-        if (isClickMoving) return; // 마커 클릭 이동 시 무시
+        updateDistanceUI(5.0);
 
-     	// 지역 선택되어 있으면 드래그 검색 차단
-        if (currentSearchConfig.province || currentSearchConfig.district) {
-            return;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                currentSearchConfig.lat = pos.coords.latitude;
+                currentSearchConfig.lng = pos.coords.longitude;
+                map.setCenter(new kakao.maps.LatLng(currentSearchConfig.lat, currentSearchConfig.lng));
+                saveToLocal();
+                refreshAll();
+            }, function() {
+                refreshAll();
+            });
+        } else {
+            refreshAll();
         }
 
-        // 드래그 시 새 위치 조회
-        var center = map.getCenter();
-        currentSearchConfig.lat = center.getLat();
-        currentSearchConfig.lng = center.getLng();
-        saveToLocal();
-        refreshAll();
-    	});
-	});
+        kakao.maps.event.addListener(map, 'idle', function() {
+            if (isClickMoving) return;
 
-    // 동적으로 생성된 북마크 버튼에 대한 클릭 이벤트 핸들러 (Ajax 처리)
+            var center = map.getCenter();
+            currentSearchConfig.lat = center.getLat();
+            currentSearchConfig.lng = center.getLng();
+            saveToLocal();
+            refreshAll(false);
+        });
+    });
+
     $(document).on('click', '.bookmark-btn', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
         const btn = $(this);
-        const placeId = String(btn.attr('data-place-id')); 
+        const placeId = String(btn.attr('data-place-id'));
         const icon = btn.find('i');
 
         $.ajax({
@@ -100,112 +204,104 @@ function saveToLocal() {
             success: function(acc) {
                 if (acc.needLogin) {
                     alert("로그인이 필요한 서비스입니다.");
-                    location.href = "${path}/login.do"; 
+                    location.href = "${path}/login.do";
                     return;
                 }
                 if (acc.ok) {
                     if (acc.favorite) {
-                        // 즐겨찾기 추가 시: 초록색 아이콘으로 변경
-                        icon.removeClass('fa-regular text-muted').addClass('fa-solid text-success')
-                            .css('color', '#00E600');
-                        if(!favoritePlaceIds.includes(placeId)) favoritePlaceIds.push(placeId);
+                        icon.removeClass('fa-regular text-muted').addClass('fa-solid text-success').css('color', '#00E600');
+                        if (!favoritePlaceIds.includes(placeId)) favoritePlaceIds.push(placeId);
                     } else {
-                        // 즐겨찾기 해제 시: 회색 빈 아이콘으로 변경
-                        icon.removeClass('fa-solid text-success').addClass('fa-regular text-muted')
-                            .css('color', '#dee2e6');
+                        icon.removeClass('fa-solid text-success').addClass('fa-regular text-muted').css('color', '#dee2e6');
                         favoritePlaceIds = favoritePlaceIds.filter(id => id !== placeId);
                     }
                 }
             },
-            error: function() {
-                alert("통신 중 오류가 발생했습니다.");
-            }
+            error: function() { alert("통신 중 오류가 발생했습니다."); }
         });
     });
 });
 
-// 반경 선택 바(UI)의 시각적 위치를 업데이트하는 함수
 function updateDistanceUI(radius) {
     var percent = 0;
     var label = "5k";
-    if(radius == 1.0) { percent = 0; label = "1k"; }
-    else if(radius == 5.0) { percent = 25; label = "5k"; }
-    else if(radius == 10.0) { percent = 50; label = "10k"; }
-    else if(radius == 50.0) { percent = 75; label = "50k"; }
-    else if(radius == 100.0) { percent = 100; label = "All"; }
+    if      (radius == 1.0)                      { percent = 0;   label = "1k";  }
+    else if (radius == 5.0)                      { percent = 25;  label = "5k";  }
+    else if (radius == 10.0)                     { percent = 50;  label = "10k"; }
+    else if (radius == 50.0)                     { percent = 75;  label = "50k"; }
+    else if (radius == 100.0 || radius == 400.0) { percent = 100; label = "All"; }
 
     $('#activeLine').css('width', percent + '%');
     $('.dist-node').removeClass('active');
     $(`.dist-node[data-label="${label}"]`).addClass('active');
 }
 
-// 필터 영역(카테고리, 별점)을 슬라이드 애니메이션으로 열고 닫음
 function toggleFilter() { $("#filterArea").slideToggle(200); }
 
-// 반경 노드를 클릭했을 때 거리 설정 및 재검색
+// 잠금 상태면 클릭 무시
 function setDistance(val, percent, element) {
+    if (isDistanceLocked) return;
     currentSearchConfig.radius = val;
     updateDistanceUI(val);
     saveToLocal();
+    refreshAll(false);
+}
+
+// 키워드 검색 전용 — 잠금/해제 처리는 여기서만
+function doKeywordSearch() {
+    const keyword = $("#keywordInput").val();
+    if (keyword !== "") {
+        lockDistanceFilter();
+    } else {
+        // 키워드 없고 지역도 없을 때만 해제
+        const hasRegion = currentSearchConfig.province !== ""
+                       || currentSearchConfig.district !== "";
+        if (!hasRegion) {
+            unlockDistanceFilter();
+        }
+    }
     searchData();
 }
 
-// 검색 버튼 클릭 또는 필터 변경 시 실행되는 메인 검색 함수
-function searchData(filterType) { 
-    const categorySelect = $("#categorySelect");
-    const ratingSelect = $("#ratingSelect");
-
-    // 카테고리와 별점 필터 중 하나만 선택 가능하도록 제어 (상호 배타적 필터)
-    if (filterType === 'category') {
-        if (categorySelect.val() !== "") {
-            ratingSelect.val("0.0").prop('disabled', true).css('opacity', '0.5');
-        } else {
-            ratingSelect.prop('disabled', false).css('opacity', '1');
-        }
-    } else if (filterType === 'rating') {
-        if (ratingSelect.val() !== "0.0") {
-            categorySelect.val("").prop('disabled', true).css('opacity', '0.5');
-        } else {
-            categorySelect.prop('disabled', false).css('opacity', '1');
-        }
-    }
-
-    currentSearchConfig.keyword = $("#keywordInput").val(); 
-    currentSearchConfig.minRating = parseFloat(ratingSelect.val());
-    currentSearchConfig.category = categorySelect.val();
-    currentSearchConfig.province = $("#provinceSelect").val();   // 시/도
-    currentSearchConfig.district = $("#districtSelect").val();   // 구/시
-    currentSearchConfig.pageNum = 1; // 검색 시 1페이지부터 시작
+// searchData — 잠금/해제 로직 완전히 없음, 순수하게 값 수집 + 검색만
+function searchData() {
+    currentSearchConfig.keyword   = $("#keywordInput").val();
+    currentSearchConfig.minRating = parseFloat($("#ratingSelect").val());
+    currentSearchConfig.category  = $("#categorySelect").val();
+    currentSearchConfig.province  = $("#provinceSelect").val();
+    currentSearchConfig.district  = $("#districtSelect").val();
+    currentSearchConfig.pageNum   = 1;
     saveToLocal();
-    refreshAll(); 
+    refreshAll(true);
 }
 
-// 지도 마커와 하단 리스트를 동시에 갱신하는 함수
-function refreshAll() {
-    // 1. 지도에 표시할 마커 데이터 가져오기 (JSON)
+function refreshAll(autoClickFirstMarker = true) {
     $.ajax({
         url: "${path}/getNearbyMarkersAjax.ac",
-        type: "GET", 
-        data: currentSearchConfig, 
+        type: "GET",
+        data: currentSearchConfig,
         dataType: "json",
-        success: function(data) {updateMarkers(data);}
+        success: function(data) {
+            updateMarkers(data);
+            if (autoClickFirstMarker && data && data.length > 0) {
+                const p = data[0].placeDTO || data[0];
+                if (p && p.place_id) {
+                    setTimeout(() => showMarkerDetail(p.place_id), 200);
+                }
+            }
+        }
     });
-    // 2. 하단 리스트 영역 갱신 (HTML 조각)
     $.ajax({
         url: "${path}/accommodationAjax.ac",
-        type: "GET", 
-        data: currentSearchConfig, 
+        type: "GET",
+        data: currentSearchConfig,
         dataType: "html",
-        success: function(html) {$("#accListArea").html(html);}
+        success: function(html) { $("#accListArea").html(html); }
     });
 }
 
-// 지도에 마커를 배치하고 클릭 이벤트를 연결하는 함수
 function updateMarkers(data) {
-    // 기존 마커 및 커스텀 오버레이 초기화
-    if (markers && markers.length > 0) {
-        markers.forEach(m => m.setMap(null));
-    }
+    if (markers && markers.length > 0) markers.forEach(m => m.setMap(null));
     markers = [];
     if (myCustomOverlay) myCustomOverlay.setMap(null);
 
@@ -213,52 +309,43 @@ function updateMarkers(data) {
         console.warn("표시할 숙소 데이터가 없습니다.");
         return;
     }
-  	
-    // 커스텀 마커 이미지 설정 (대형 사이즈 적용)
-    var imageSrc = '${path}/resources/images/user/restaurant/markerImage.png'; 
-    var imageSize = new kakao.maps.Size(160, 50); 
-    var imageOption = { offset: new kakao.maps.Point(50, 125) }; 
+
+    var imageSrc    = '${path}/resources/images/user/restaurant/markerImage.png';
+    var imageSize   = new kakao.maps.Size(160, 50);
+    var imageOption = { offset: new kakao.maps.Point(80, 50) };
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-    // 전달받은 맛집 데이터를 순회하며 마커 생성
     data.forEach(function(acc) {
         var p = acc.placeDTO || acc.placedto || acc;
         if (!p || !p.latitude || !p.longitude) return;
-        
-        var coords = new kakao.maps.LatLng(Number(p.latitude), Number(p.longitude));
-        
-        var marker = new kakao.maps.Marker({
-            position: coords,
-            map: map,
-            image: markerImage
-        });
 
+        var coords = new kakao.maps.LatLng(Number(p.latitude), Number(p.longitude));
+        var marker = new kakao.maps.Marker({ position: coords, map: map, image: markerImage });
         marker.placeId = String(p.place_id);
 
-        // 마커 클릭 시 상세 정보를 보여주는 커스텀 오버레이 생성
         kakao.maps.event.addListener(marker, 'click', function() {
             isClickMoving = true;
             if (myCustomOverlay) myCustomOverlay.setMap(null);
-            
-            // 이미지 경로 처리 (기본 이미지 대응)
-            var imgPath = p.image_url && p.image_url !== 'null' ? 
-                          (p.image_url.startsWith('http') ? p.image_url : '${path}/resources/images/common/' + p.image_url) : 
-                          '${path}/resources/images/common/no-image.png';
+
+            var imgPath = p.image_url && p.image_url !== 'null'
+                ? (p.image_url.startsWith('http') ? p.image_url : '${path}/resources/images/common/' + p.image_url)
+                : '${path}/resources/images/common/no-image.png';
 
             var isFav = favoritePlaceIds.includes(String(p.place_id));
 
-            // 오버레이 내부 HTML 구조 (맛집 정보, 북마크, 상세보기 버튼 등)
             var content = `
                 <div class="custom-overlay-card">
                     <div style="position:relative; margin-bottom:12px;">
-                        <img src="\${imgPath}" style="width:100%; height:110px; object-fit:cover; border-radius:12px;" onerror="this.src='${path}/resources/images/common/no-image.png'">
-                        
+                        <img src="\${imgPath}" style="width:100%; height:110px; object-fit:cover; border-radius:12px;"
+                             onerror="this.src='${path}/resources/images/common/no-image.png'">
                         <button type="button" class="bookmark-btn" data-place-id="\${p.place_id}">
-                            <i class="\${isFav ? 'fa-solid text-success' : 'fa-regular text-muted'} fa-bookmark" 
+                            <i class="\${isFav ? 'fa-solid text-success' : 'fa-regular text-muted'} fa-bookmark"
                                style="color: \${isFav ? '#00E600' : '#ccc'} !important;"></i>
                         </button>
-
-                        <div onclick="closeMyOverlay()" style="position:absolute; top:-10px; right:-10px; cursor:pointer; background:white; width:26px; height:26px; border-radius:50%; text-align:center; line-height:24px; border:1px solid #eee; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.1); z-index:1001;">×</div>
+                        <div onclick="closeMyOverlay()"
+                             style="position:absolute; top:-10px; right:-10px; cursor:pointer; background:white;
+                                    width:26px; height:26px; border-radius:50%; text-align:center; line-height:24px;
+                                    border:1px solid #eee; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.1); z-index:1001;">×</div>
                     </div>
                     <div style="text-align:left; padding:0 4px;">
                         <div style="font-weight:bold; font-size:16px; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">\${p.name}</div>
@@ -271,37 +358,29 @@ function updateMarkers(data) {
                             </div>
                         </div>
                     </div>
-                    <button onclick="location.href='${path}/accommodationDetail.ac?place_id=\${p.place_id}'" 
-                            style="width:100%; margin-top:12px; border:none; background:#00E600 !important; color:white !important; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;">상세보기</button>
+                    <button onclick="location.href='${path}/accommodationDetail.ac?place_id=\${p.place_id}'"
+                            style="width:100%; margin-top:12px; border:none; background:#00E600 !important;
+                                   color:white !important; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;">상세보기</button>
                 </div>`;
 
-            myCustomOverlay = new kakao.maps.CustomOverlay({ 
-                content: content, 
-                map: map, 
-                position: marker.getPosition(), 
-                xAnchor: 0.35, // 가로 중앙 정렬 (이게 빠지면 왼쪽으로 치우침)
-                yAnchor: 1.2  // 1.0은 카드 본체 하단, 1.1 정도 주어야 10px 삼각형 꼬리까지 포함해서 마커 위에 뜸 
+            myCustomOverlay = new kakao.maps.CustomOverlay({
+                content: content, map: map,
+                position: marker.getPosition(),
+                xAnchor: 0.5, yAnchor: 1.0
             });
-         	// 2. ★ 자연스러운 이동을 위한 좌표 계산
-            var projection = map.getProjection();
-            var markerPoint = projection.pointFromCoords(coords); // 마커의 화면상 픽셀 좌표
-            
-            // 마커가 화면 아래에 오도록, 중심점을 마커보다 150px 위로 잡음
-            var targetPoint = new kakao.maps.Point(markerPoint.x, markerPoint.y - 150);
-            var targetCoords = projection.coordsFromPoint(targetPoint);
 
-            // 3. 딱 한 번만 부드럽게 이동
-            map.panTo(targetCoords); 
+            var projection  = map.getProjection();
+            var markerPoint = projection.pointFromCoords(coords);
+            var targetPoint = new kakao.maps.Point(markerPoint.x, markerPoint.y - 150);
+            map.panTo(projection.coordsFromPoint(targetPoint));
 
             setTimeout(() => isClickMoving = false, 500);
         });
         markers.push(marker);
     });
-
     console.log("대형 마커 로드 완료: " + markers.length + "개");
 }
 
-// 리스트의 항목 클릭 시 지도상의 해당 마커로 이동 및 상세 정보 표시
 function showMarkerDetail(placeId) {
     const targetMarker = markers.find(m => String(m.placeId) === String(placeId));
     if (targetMarker) {
@@ -310,10 +389,8 @@ function showMarkerDetail(placeId) {
     }
 }
 
-// 열려있는 커스텀 오버레이를 닫는 함수
 function closeMyOverlay() { if (myCustomOverlay) myCustomOverlay.setMap(null); }
 
-// 내 위치 찾기 버튼 클릭 시 사용자 현위치 재설정
 function findMyLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
@@ -326,256 +403,67 @@ function findMyLocation() {
     } else { refreshAll(); }
 }
 
-// 모든 필터 조건 초기화 함수
-function resetFilters() {
-    // 1. 입력창 및 기본 필터 초기화
-    $("#keywordInput").val(""); 
-    $("#categorySelect").val("").prop('disabled', false).css('opacity', '1');
-    $("#ratingSelect").val("0.0").prop('disabled', false).css('opacity', '1');
-    
-    // 2. ★ 시/도 및 구/시 선택창 초기화
-    $("#provinceSelect").val(""); // "시/도 선택"으로 변경
-    $("#districtSelect").empty().append('<option value="">전체</option>'); // 구/시 목록 비우기
-    
-    // 3. 반경 필터 UI 복구 (투명도 및 클릭 차단 해제)
-    $(".distance-filter").css({"opacity":"1", "pointer-events":"auto"});
-    updateDistanceUI(5.0); // 기본 반경 5km로 설정
-
-    // 4. 전역 설정 데이터(config) 초기화
-    currentSearchConfig.keyword = "";
-    currentSearchConfig.category = "";
-    currentSearchConfig.minRating = 0.0;
-    currentSearchConfig.radius = 5.0;
-    currentSearchConfig.province = "";
-    currentSearchConfig.district = "";
-    currentSearchConfig.pageNum = 1;
-
-    // 5. 로컬 스토리지 정리 및 지도 갱신
-    localStorage.removeItem("accSearchConfig"); 
-    saveToLocal();
-    
-    if (myCustomOverlay) myCustomOverlay.setMap(null);
-    
-    // 내 현재 위치로 지도를 다시 맞추고 싶다면 findMyLocation() 호출, 
-    // 아니라면 그냥 refreshAll()만 실행하세요.
-    refreshAll(); 
-}
-
-// 페이지네이션 번호 클릭 시 해당 페이지 데이터 로드
-function changePage(page) {
-    currentSearchConfig.pageNum = page;
-    saveToLocal();
-    $.ajax({
-        url: "${path}/accommodationAjax.ac", 
-        type: "GET", 
-        data: currentSearchConfig, 
-        dataType: "html",
-        success: function(html) {
-            $("#accListArea").html(html);
-            // 리스트 영역으로 부드럽게 스크롤 이동
-            $('html, body').animate({ scrollTop: $("#accListArea").offset().top - 100 }, 300);
-        }
-    });
-}
-
-const regionMap = {
-	    "서울": ["강남구","강동구","강북구","관악구","양천구","송파구","서초구","마포구","용산구","성동구","중구","동대문구","종로구","금천구","영등포구","강서구","노원구","도봉구","은평구","서대문구","구로구","중랑구","성북구","동작구"],
-	    "부산": ["해운대구","수영구","동래구","부산진구","남구","연제구","사하구","금정구","북구","강서구","사상구"],
-	    "대전": ["동구","중구","서구","유성구","대덕구"],
-	    "대구": ["중구","동구","서구","북구","수성구","달서구","달성군"],
-	    "광주": ["동구","서구","남구","북구","광산구"],
-	    "울산": ["중구","남구","동구","북구","울주군"],
-	    "제주": ["제주시","서귀포시"],
-	    "경기": ["수원시","성남시","고양시","용인시","부천시","안산시","안양시","남양주시","화성시","평택시",
-	        "의정부시","시흥시","김포시","광명시","광주시","구리시","군포시","의왕시","하남시","오산시",
-	        "포천시","이천시","양평군","여주시","연천군","가평군","양주군"]
-};
-
-const regionCenter = {
-	    // 서울특별시
-	    "서울": {lat: 37.5665, lng: 126.9780},
-	    "강남구": {lat: 37.5172, lng: 127.0473},
-	    "강동구": {lat: 37.5301, lng: 127.1236},
-	    "강북구": {lat: 37.6392, lng: 127.0250},
-	    "강서구": {lat: 37.5502, lng: 126.8495},
-	    "관악구": {lat: 37.4783, lng: 126.9516},
-	    "광진구": {lat: 37.5380, lng: 127.0825},
-	    "구로구": {lat: 37.4951, lng: 126.8874},
-	    "금천구": {lat: 37.4567, lng: 126.8958},
-	    "노원구": {lat: 37.6543, lng: 127.0564},
-	    "도봉구": {lat: 37.6688, lng: 127.0469},
-	    "동대문구": {lat: 37.5743, lng: 127.0390},
-	    "동작구": {lat: 37.5001, lng: 126.9442},
-	    "마포구": {lat: 37.5668, lng: 126.9012},
-	    "서대문구": {lat: 37.5796, lng: 126.9368},
-	    "서초구": {lat: 37.4837, lng: 127.0325},
-	    "성동구": {lat: 37.5635, lng: 127.0364},
-	    "성북구": {lat: 37.5895, lng: 127.0165},
-	    "송파구": {lat: 37.5145, lng: 127.1054},
-	    "양천구": {lat: 37.5165, lng: 126.8669},
-	    "영등포구": {lat: 37.5269, lng: 126.8966},
-	    "용산구": {lat: 37.5310, lng: 126.9816},
-	    "은평구": {lat: 37.6020, lng: 126.9293},
-	    "종로구": {lat: 37.5729, lng: 126.9794},
-	    "중구": {lat: 37.5637, lng: 126.9979},
-	    "중랑구": {lat: 37.6065, lng: 127.0923},
-
-	    // 부산광역시
-	    "부산": {lat: 35.1796, lng: 129.0756},
-	    "강서구": {lat: 35.1025, lng: 128.9485},
-	    "금정구": {lat: 35.2430, lng: 129.0901},
-	    "기장군": {lat: 35.2432, lng: 129.2226},
-	    "남구": {lat: 35.1152, lng: 129.0480},
-	    "동구": {lat: 35.1337, lng: 129.0421},
-	    "동래구": {lat: 35.2045, lng: 129.0816},
-	    "부산진구": {lat: 35.1635, lng: 129.0606},
-	    "북구": {lat: 35.1907, lng: 129.0246},
-	    "사상구": {lat: 35.1576, lng: 128.9871},
-	    "사하구": {lat: 35.0960, lng: 128.9795},
-	    "서구": {lat: 35.0945, lng: 129.0280},
-	    "수영구": {lat: 35.1592, lng: 129.1140},
-	    "연제구": {lat: 35.1795, lng: 129.0890},
-	    "영도구": {lat: 35.0960, lng: 129.0666},
-	    "중구": {lat: 35.1022, lng: 129.0325},
-	    "해운대구": {lat: 35.1635, lng: 129.1639},
-
-	    // 경기
-	    "경기": {lat: 37.4138, lng: 127.5183},
-	    "수원시": {lat: 37.2636, lng: 127.0286},
-	    "성남시": {lat: 37.4200, lng: 127.1262},
-	    "고양시": {lat: 37.6584, lng: 126.8320},
-	    "용인시": {lat: 37.2418, lng: 127.1776},
-	    "부천시": {lat: 37.5036, lng: 126.7666},
-	    "안산시": {lat: 37.3220, lng: 126.8307},
-	    "안양시": {lat: 37.3943, lng: 126.9568},
-	    "남양주시": {lat: 37.6353, lng: 127.2163},
-	    "화성시": {lat: 37.1995, lng: 126.8317},
-	    "평택시": {lat: 36.9923, lng: 127.1107},
-	    "의정부시": {lat: 37.7386, lng: 127.0376},
-	    "시흥시": {lat: 37.3780, lng: 126.8058},
-	    "김포시": {lat: 37.6153, lng: 126.7145},
-	    "광명시": {lat: 37.4781, lng: 126.8679},
-	    "광주시": {lat: 37.4293, lng: 127.2513},
-	    "구리시": {lat: 37.5940, lng: 127.1238},
-	    "군포시": {lat: 37.3571, lng: 126.9352},
-	    "의왕시": {lat: 37.3458, lng: 126.9639},
-	    "하남시": {lat: 37.5409, lng: 127.2113},
-	    "오산시": {lat: 37.1442, lng: 127.0696},
-	    "포천시": {lat: 37.8944, lng: 127.2082},
-	    "이천시": {lat: 37.2717, lng: 127.4412},
-	    "양평군": {lat: 37.4922, lng: 127.4871},
-	    "여주시": {lat: 37.2983, lng: 127.6370},
-	    "연천군": {lat: 38.1019, lng: 127.0631},
-	    "가평군": {lat: 37.8317, lng: 127.5125},
-	    "양주군": {lat: 37.7864, lng: 127.0489},
-
-	    // 제주
-	    "제주": {lat: 33.4996, lng: 126.5312},
-	    "제주시": {lat: 33.4996, lng: 126.5312},
-	    "서귀포시": {lat: 33.2525, lng: 126.5659},
-	    
-	    "인천": {lat: 37.4563, lng: 126.7052},
-	    "중구": {lat: 37.4766, lng: 126.6226},
-	    "동구": {lat: 37.4781, lng: 126.6357},
-	    "미추홀구": {lat: 37.4559, lng: 126.6805},
-	    "연수구": {lat: 37.4138, lng: 126.7017},
-	    "남동구": {lat: 37.4419, lng: 126.7300},
-	    "부평구": {lat: 37.5116, lng: 126.7196},
-	    "계양구": {lat: 37.5426, lng: 126.7333},
-	    "서구": {lat: 37.5700, lng: 126.6331},
-
-	    "대전": {lat: 36.3504, lng: 127.3845},
-	    "동구": {lat: 36.3371, lng: 127.4502},
-	    "중구": {lat: 36.3208, lng: 127.3847},
-	    "서구": {lat: 36.3320, lng: 127.3675},
-	    "유성구": {lat: 36.3725, lng: 127.3303},
-	    "대덕구": {lat: 36.4210, lng: 127.4520},
-
-	    "대구": {lat: 35.8714, lng: 128.6014},
-	    "중구": {lat: 35.8685, lng: 128.5970},
-	    "동구": {lat: 35.8797, lng: 128.6307},
-	    "서구": {lat: 35.8713, lng: 128.5530},
-	    "남구": {lat: 35.8417, lng: 128.5896},
-	    "북구": {lat: 35.8976, lng: 128.6169},
-	    "수성구": {lat: 35.8471, lng: 128.6423},
-	    "달서구": {lat: 35.8430, lng: 128.5437},
-	    "달성군": {lat: 35.7464, lng: 128.4726},
-
-	    "광주": {lat: 35.1595, lng: 126.8526},
-	    "동구": {lat: 35.1426, lng: 126.9132},
-	    "서구": {lat: 35.1453, lng: 126.8810},
-	    "남구": {lat: 35.1258, lng: 126.8917},
-	    "북구": {lat: 35.1820, lng: 126.8937},
-	    "광산구": {lat: 35.1395, lng: 126.7453},
-
-	    "울산": {lat: 35.5395, lng: 129.3114},
-	    "중구": {lat: 35.5651, lng: 129.3173},
-	    "남구": {lat: 35.5453, lng: 129.3146},
-	    "동구": {lat: 35.5607, lng: 129.4100},
-	    "북구": {lat: 35.5931, lng: 129.3700},
-	    "울주군": {lat: 35.5269, lng: 129.2855}
-	};
-
-//--- province 선택 시 district 옵션 갱신 ---
+// 지역 선택 — 잠금/해제는 여기서만 처리, searchData 호출 시 잠금 로직 안 탐
 function updateRegionOptions() {
-    const province = $("#provinceSelect").val();
+    const province       = $("#provinceSelect").val();
     const districtSelect = $("#districtSelect");
-    const district = districtSelect.val();
 
-    districtSelect.empty();
-    districtSelect.append('<option value="">전체</option>');
+    districtSelect.empty().append('<option value="">전체</option>');
 
-    if(province && regionMap[province]) {
+    if (province && regionMap[province]) {
         regionMap[province].forEach(d => {
             districtSelect.append(`<option value="${d}">${d}</option>`);
         });
-        $(".distance-filter").css({"opacity":"0.5", "pointer-events":"none"});
-    } else {
-        $(".distance-filter").css({"opacity":"1", "pointer-events":"auto"});
     }
 
     currentSearchConfig.province = province || "";
-    currentSearchConfig.district = district || "";
+    currentSearchConfig.district = "";
 
-    // 기존 마커와 리스트 초기화
-    if(markers && markers.length > 0) markers.forEach(m => m.setMap(null));
+    if (markers && markers.length > 0) markers.forEach(m => m.setMap(null));
     markers = [];
     $("#accListArea").empty();
 
-    // 지도 중심 이동
-    const centerKey = district || province; 
-    if(centerKey && regionCenter[centerKey]){
-        const center = regionCenter[centerKey];
-        map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
+    // 지역 선택 시 잠금, 해제 시 키워드도 없으면 unlock
+    if (province) {
+        lockDistanceFilter();
+    } else {
+        const hasKeyword = $("#keywordInput").val() !== "";
+        if (!hasKeyword) unlockDistanceFilter();
     }
 
-    // 지역 필터 적용
-    if(province || district) {
-        // 새 지역 선택 시 먼저 드래그 조회 가능
-        isRegionFiltered = false;    
-        searchData('region');  // 새 지역 기준 조회
-    } else {
-        // 선택 해제 → 드래그 조회 가능
-        isRegionFiltered = false;  
-        refreshAll();
-    }
+    isRegionFiltered = false;
+    searchData();
+
+    setTimeout(() => {
+        if (markers.length > 0) {
+            map.setCenter(markers[0].getPosition());
+            showMarkerDetail(markers[0].placeId);
+        }
+    }, 500);
 }
-//초기화 버튼 클릭 시
+
+// 구/군 변경 — 지역 잠금 상태 유지, searchData만 호출
+function updateDistrictOption() {
+    currentSearchConfig.district = $("#districtSelect").val() || "";
+    saveToLocal();
+    searchData();
+}
+
 function resetFilters() {
-    $("#keywordInput").val(""); 
+    $("#keywordInput").val("");
     $("#categorySelect").val("").prop('disabled', false).css('opacity', '1');
     $("#ratingSelect").val("0.0").prop('disabled', false).css('opacity', '1');
     $("#provinceSelect").val("");
     $("#districtSelect").empty().append('<option value="">전체</option>');
-    $(".distance-filter").css({"opacity":"1", "pointer-events":"auto"});
-    updateDistanceUI(5.0);
+
+    unlockDistanceFilter();
 
     currentSearchConfig = {
         lat: currentSearchConfig.lat,
         lng: currentSearchConfig.lng,
-        radius: 5.0, 
-        minRating: 0.0, 
-        keyword: "", 
+        radius: 5.0,
+        minRating: 0.0,
+        keyword: "",
         category: "",
         province: "",
         district: "",
@@ -586,105 +474,21 @@ function resetFilters() {
     if (myCustomOverlay) myCustomOverlay.setMap(null);
     refreshAll();
 }
+
+function changePage(page) {
+    currentSearchConfig.pageNum = page;
+    saveToLocal();
+    $.ajax({
+        url: "${path}/accommodationAjax.ac",
+        type: "GET",
+        data: currentSearchConfig,
+        dataType: "html",
+        success: function(html) {
+            $("#accListArea").html(html);
+            $('html, body').animate({ scrollTop: $("#accListArea").offset().top - 100 }, 300);
+        }
+    });
+}
 </script>
-</head>
-<body>
-<div class="wrap">
-    <%@ include file="../../common/header.jsp" %>
-    
-    <div class="content-wrapper">
-        <div class="main-tab-wrapper" style="display: flex; justify-content: center; margin-bottom: 30px;">
-            <div class="nav-pill-group" 
-                 onclick="location.href='${path}/bestAccommodations.ac'" 
-                 style="cursor: pointer;">
-                <div class="nav-pill-item active">내 주변</div>
-                <div class="nav-pill-item best-link">베스트 숙소</div>
-            </div>
-        </div>
-
-        <div class="search-container">
-            <div class="search-main-row">
-                <div class="search-input-group">
-                    <input type="text" id="keywordInput" placeholder="숙소를 검색하세요" onkeyup="if(event.keyCode==13)searchData()">
-                    <i class="fa fa-search text-muted" onclick="searchData()"></i>
-                </div>
-
-                <div class="distance-filter">
-                    <span class="distance-label">반경</span>
-                    <div class="step-wrapper">
-                        <div class="step-line-bg"></div>
-                        <div id="activeLine" class="step-line-active"></div>
-                        <div class="step-nodes">
-                            <div class="dist-node" data-label="1k" onclick="setDistance(1.0, 0, this)"></div>
-                            <div class="dist-node" data-label="5k" onclick="setDistance(5.0, 25, this)"></div>
-                            <div class="dist-node" data-label="10k" onclick="setDistance(10.0, 50, this)"></div>
-                            <div class="dist-node" data-label="50k" onclick="setDistance(50.0, 75, this)"></div>
-                            <div class="dist-node" data-label="All" onclick="setDistance(100.0, 100, this)"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="button" class="btn-filter-icon" onclick="toggleFilter()">
-                    <i class="fa fa-filter"></i>
-                </button>
-            </div>
-
-            <div id="filterArea" class="filter-detail-area">
-                <div class="filter-group">
-                    <span class="fw-bold text-muted" style="font-size:12px;">상세 설정:</span>
-                    
-                     <!-- 시/도 선택 -->
-		             <select id="provinceSelect" class="form-select shadow-none" onchange="updateRegionOptions()">
-		                <option value="">시/도 선택</option>
-		                <option value="서울">서울</option>
-		                <option value="인천">인천</option>
-		                <option value="대전">대전</option>
-		                <option value="대구">대구</option>
-		                <option value="광주">광주</option>
-		                <option value="부산">부산</option>
-		                <option value="울산">울산</option>
-		                <option value="경기">경기</option>
-		                <option value="제주">제주</option>
-		            </select>
-
-		            <!-- 구/시 선택 (서울/부산/제주 → 구, 경기 → 시) -->
-		            <select id="districtSelect" class="form-select shadow-none" onchange="searchData('region')">
-		                <option value="">전체</option>
-		            </select>
-		            
-                    <select id="categorySelect" class="form-select shadow-none" onchange="searchData('category')">
-                        <option value="">카테고리 전체</option>
-                        <option value="일반숙박업">일반숙박업</option>
-                        <option value="펜션">펜션</option>
-                        <option value="호스텔">호스텔</option>
-                        <option value="서비스드레지던스">서비스드레지던스</option>
-                        <option value="한옥스테이">한옥스테이</option>
-                        <option value="관광호텔">관광호텔</option>
-                        <option value="홈스테이">홈스테이</option>
-                        <option value="수상관광호텔">수상관광호텔</option>
-                        <option value="한국전통호텔">한국전통호텔</option>
-                        <option value="가족호텔">가족호텔</option>
-                        <option value="유스호스텔">유스호스텔</option>
-                        <option value="콘도미니엄">콘도미니엄</option>
-                        <option value="휴양펜션">휴양펜션</option>
-                    </select>
-
-                    <select id="ratingSelect" class="form-select shadow-none" onchange="searchData('rating')">
-                        <option value="0.0">별점 전체</option>
-                        <option value="1.0">⭐ 이상</option>
-                        <option value="2.0">⭐⭐ 이상</option>
-                        <option value="3.0">⭐⭐⭐ 이상</option>
-                        <option value="4.0">⭐⭐⭐⭐ 이상</option>
-                    </select>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetFilters()" style="font-size:11px; border-radius:10px;">초기화</button>
-                </div>
-            </div>
-        </div>
-        <div id="map"></div>
-        <div id="accListArea" class="mt-4"></div>
-    </div>
-    
-    <%@ include file="../../common/footer.jsp" %>
-</div>
 </body>
 </html>

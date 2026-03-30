@@ -18,6 +18,8 @@
 <!-- 풀캘린더 js -->
 <script
 	src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
+<script src="${path}/resources/js/user/survey.js"></script>
+
 </head>
 <body>
 
@@ -57,6 +59,49 @@
 							<i class="bi bi-cash-coin"></i> 보유 포인트 <strong>${dto.point_balance != null ? dto.point_balance : 0}
 								P</strong>
 						</p>
+
+						<!--  ===============================
+						 추가: 김재원 2026-03-26
+						 마이페이지 포인트 내역 보여주기 -->
+						<!-- 포인트 내역 카드 -->
+						<div class="point-card card mb-4 shadow-sm">
+							<div class="card-body p-3">
+								<!-- 펼치기 버튼 -->
+								<button id="toggleHistory" class="toggle-btn mb-2">
+									<span class="arrow">▼</span> 포인트 내역
+								</button>
+
+								<!-- 포인트 내역 -->
+								<div class="point-history"
+									style="display: none; max-height: 250px; overflow-y: auto;">
+									<c:forEach var="p" items="${pointList}">
+										<div
+											class="point-row d-flex align-items-center py-1 border-bottom">
+											<div class="date text-muted"
+												style="width: 45px; flex-shrink: 0;">
+												${fn:substring(p.pointLogDate.toString(),2,10)}</div>
+											<div class="content text-truncate"
+												style="flex-grow: 1; margin: 0 7px;">
+												<c:choose>
+													<c:when test="${p.policy_key == 'EARN_LOGIN'}">회원가입</c:when>
+													<c:when test="${p.policy_key == 'EARN_REVIEW'}">리뷰작성</c:when>
+													<c:when test="${p.policy_key == 'EARN_SURVEY'}">설문조사 </c:when>
+													<c:when test="${p.policy_key == 'USE_BOOKING'}">예약사용</c:when>
+													<c:otherwise>${p.policy_key}</c:otherwise>
+												</c:choose>
+											</div>
+
+											<div class="amount text-end fw-bold"
+												style="width:60px; flex-shrink:0; color:${p.type == 'EARN' ? 'green' : 'red'};">
+												${p.amount} P</div>
+										</div>
+									</c:forEach>
+								</div>
+							</div>
+						</div>
+
+						<!-- =================================  -->
+
 						<a href="${path}/modifyUser.do"
 							class="btn btn-light btn-sm rounded-pill fw-bold px-3 text-success">정보
 							수정/탈퇴</a>
@@ -522,4 +567,17 @@
 		</div>
 	</div>
 </body>
+<!-- 포인트 부분 펼치고 접는 기능 js  -->
+<script>
+const toggleBtn = document.getElementById('toggleHistory');
+const historyDiv = document.querySelector('.point-history');
+
+toggleBtn.addEventListener('click', () => {
+    const isHidden = historyDiv.style.display === 'none' || historyDiv.style.display === '';
+    
+    historyDiv.style.display = isHidden ? 'block' : 'none';
+    toggleBtn.textContent = isHidden ? '접기 ▲' : '펼치기 ▼';
+});
+</script>
+
 </html>

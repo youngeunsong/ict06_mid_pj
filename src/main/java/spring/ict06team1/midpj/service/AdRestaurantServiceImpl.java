@@ -401,8 +401,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	    // 각각의 값들 model에 담아서 jsp로 전달
 		model.addAttribute("updateCnt",updateCntR);
 		model.addAttribute("hiddenPageNum",hiddenPageNum);
-		model.addAttribute("areaCode1",areaCode1);
-		model.addAttribute("category1",category1);
+		model.addAttribute("areaCode",areaCode1);
+		model.addAttribute("category",category1);
 		model.addAttribute("keyword",keyword);
 		
 		System.out.println("수정 후 areaCode 확인 : " + areaCode1);
@@ -416,6 +416,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	public void getRestaurantDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 	        throws ServletException, IOException {
 	    System.out.println("AdRestaurantServiceImpl - getRestaurantDeleteAction()");
+	    
+	    request.setCharacterEncoding("UTF-8");
 	    
 	    // 1. 파라미터를 먼저 문자열로 다 받는다.
 	    String strPlace_id = request.getParameter("place_id");

@@ -30,7 +30,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	// 축제 관리 --------------------------------------------------------------------------------------------
 	// [관리자 - 장소 관리] 등록된 축제 목록 전체 조회, 검색/필터
 	@RequestMapping("/festivalList.adfe")
-	public String festivalList(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String festivalLisgt(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /festivalList.adfe]");
 		adFestService.getFestivalList(request, response, model); 
@@ -46,7 +46,7 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 	}
 	
 	// [관리자 - 장소 관리] 새로운 축제 등록 액션
-	// 오류가 날 경우 SQL에서 SEQ_PLACE의 최댓값이 최대 place_id와 동일한지 확인. SEQ_PLACE 재설정 필요. 
+	// 오류가 날 경우 SQL에서 SEQ_PLACE의 최댓값이 최대 place_id와 동일한지 확인. SEQ_PLACE값이 최대 place_id보다 작다면 SEQ_PLACE 재설정 필요. 
 	// @RequestMapping("/createFestivalAction.adfe")
 	@PostMapping("/createFestivalAction.adfe")
 	public String createFestivalAction(HttpServletRequest request, HttpServletResponse response, Model model)

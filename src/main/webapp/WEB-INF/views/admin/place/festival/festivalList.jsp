@@ -365,49 +365,52 @@
            	<tr>
            		<th>티켓 정보</th>
            		<td> 
-           			<!-- 티켓 표 시작 -->
-            		<table class="table">
-            			<!-- 헤더 시작: 티켓 종류, 가격, 재고, 설명 -->
+           			<!-- 티켓 표 시작: 동적으로 작동 -->
+           			<div id="ticketTable_edit"></div>
+           			<!-- 티켓 표 끝 -->
+           			<!-- 이전 작성 코드 -->
+            		<!-- <table class="table">
+            			헤더 시작: 티켓 종류, 가격, 재고, 설명
             			<tr>
             				<th>티켓 종류</th>
             				<th>가격</th>
             				<th>재고</th>
             				<th>설명</th>
             			</tr>
-            			<!-- 헤더 끝 -->
-            			<!-- 무료 티켓 시작 -->
+            			헤더 끝
+            			무료 티켓 시작
             			<tr>
             				<td>무료</td>
             				<td><input type="number" id="priceFree" name="priceFree" placeholder="가격" >원</td>
             				<td><input type="number" id="stockFree" name="stockFree" placeholder="재고" ></td>
             				<td><textarea id="ticketDescFreeDay" name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
             			</tr>
-            			<!-- 무료 티켓 끝 -->
-            			<!-- 1일권 시작 -->
+            			무료 티켓 끝
+            			1일권 시작
             			<tr>
             				<td>1일권</td>
             				<td><input type="number" id="priceOneDay" name="priceOneDay" placeholder="가격" >원</td>
             				<td><input type="number" id="stockOneDay" name="stockOneDay" placeholder="재고" ></td>
             				<td><textarea id="ticketDescOneDay" name="ticketDescOneDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
             			</tr>
-            			<!-- 1일권 끝 -->
-            			<!-- 2일권 시작 -->
+            			1일권 끝
+            			2일권 시작
             			<tr>
             				<td>2일권</td>
             				<td><input type="number" id="priceTwoDay" name="priceTwoDay" placeholder="가격" >원</td>
             				<td><input type="number" id="stockTwoDay" name="stockTwoDay" placeholder="재고" ></td>
             				<td><textarea id="ticketDescTwoDay" name="ticketDescTwoDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
             			</tr>
-            			<!-- 2일권 끝 -->
-            			<!-- 전일권 시작 -->
+            			2일권 끝
+            			전일권 시작
             			<tr>
             				<td>전일권</td>
             				<td><input type="number" id="priceAllDay" name="priceAllDay" placeholder="가격" >원</td>
             				<td><input type="number" id="stockAllDay" name="stockAllDay" placeholder="재고" ></td>
             				<td><textarea id="ticketDescAllDay" name="ticketDescAllDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
             			</tr>
-            			<!-- 전일권 끝 -->
-              		</table>
+            			전일권 끝
+              		</table> -->
               		<!-- 티켓 표 끝 -->
            		</td>
            	</tr>

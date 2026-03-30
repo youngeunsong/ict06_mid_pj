@@ -3,6 +3,11 @@
  * 최초작성일: 2026-03-24
  * 최종수정일: 2026-03-27
  * 참고 코드: festReservation.jsp
+ * 변경 사항
+ * ----------------------------------------
+ * v260327
+ * 예약날짜 선택 flatpickr 캘린더 적용, 예약시간 30분 단위 생성으로 수정
+ * ----------------------------------------	
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -24,30 +29,30 @@
 <!-- Flatpickr Calendar -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 
 <style>
-:root { -
-	-r-text: #111827; -
-	-r-muted: #6b7280; -
-	-r-line: #e5e7eb; -
-	-r-brand: #10b981; -
-	-r-brand2: #059669; -
-	-r-pill: #f3f4f6;
+:root {
+	--r-text: #111827;
+	--r-muted: #6b7280;
+	--r-line: #e5e7eb;
+	--r-brand: #10b981;
+	--r-brand2: #059669;
+	--r-pill: #f3f4f6;
 }
 
 /* 공통 */
 .r-muted {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 }
 
 .r-pill {
 	font-size: 12px;
-	color: var(- -r-muted);
-	background: var(- -r-pill);
+	color: var(--r-muted);
+	background: var(--r-pill);
 	padding: 6px 10px;
 	border-radius: 999px;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -68,14 +73,14 @@
 
 .r-score {
 	font-weight: 800;
-	color: var(- -r-text);
+	color: var(--r-text);
 }
 
 /* 갤러리 */
 .r-hero {
 	border-radius: 18px;
 	overflow: hidden;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #f9fafb;
 	position: relative;
 	min-height: 420px;
@@ -103,7 +108,7 @@
 }
 
 .r-thumb {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 16px;
 	overflow: hidden;
 	background: #f9fafb;
@@ -139,7 +144,7 @@
 }
 
 .r-thumbSub {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	display: flex;
 	gap: 8px;
@@ -149,7 +154,7 @@
 /* 섹션 */
 .r-section {
 	padding: 18px 0;
-	border-bottom: 1px solid var(- -r-line);
+	border-bottom: 1px solid var(--r-line);
 }
 
 .r-section:last-child {
@@ -164,19 +169,19 @@
 }
 
 .r-lead {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 14px;
 	line-height: 1.7;
 	margin: 0;
 }
 
 .r-chip {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #fff;
 	border-radius: 999px;
 	padding: 8px 12px;
 	font-size: 13px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	display: inline-flex;
 	gap: 8px;
 	align-items: center;
@@ -185,12 +190,12 @@
 }
 
 .r-chip i {
-	color: var(- -r-brand);
+	color: var(--r-brand);
 }
 
 /* 지도 */
 .r-mapBox {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 18px;
 	overflow: hidden;
 	height: 240px;
@@ -204,7 +209,7 @@
 	justify-content: space-between;
 	gap: 12px;
 	padding: 12px 0;
-	border-bottom: 1px dashed var(- -r-line);
+	border-bottom: 1px dashed var(--r-line);
 }
 
 .r-menuItem:last-child {
@@ -218,7 +223,7 @@
 
 .r-menuDesc {
 	margin-top: 4px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	line-height: 1.5;
 }
@@ -336,7 +341,8 @@
 						<label class="form-label fw-bold">방문일 및 시간</label>
 						
 						<!-- 캘린더 -->
-						<div id="calendar-inline-container" style="display:flex; justify-content:center;"></div>
+						<!-- <div id="calendar-inline-container" style="display:flex; justify-content:center;"></div> -->
+						<div id="selected_date_display" class="text-center mt-2 fw-bold text-success"></div>
 						<input type="hidden" id="visit_date">
 						
 						<!-- 시간 -->
@@ -370,7 +376,7 @@
 					</div>
 					
 					<!-- 결제/예약 버튼 -->
-					<button id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
+					<button type="button" id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
 							onclick="submitReservation()" style="border-radius:15px;" disabled>
 						예약하기
 					</button>

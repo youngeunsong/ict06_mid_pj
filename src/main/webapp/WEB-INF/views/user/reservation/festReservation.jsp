@@ -3,6 +3,10 @@
  * 최초작성일: 2026-03-22
  * 최종수정일: 2026-03-23
  * 참고 코드: festivalDetail.jsp
+ * ----------------------------------------
+ * v260327
+ * 예약날짜 선택 flatpickr 캘린더 적용, 예약시간 30분 단위 생성으로 수정
+ * ----------------------------------------	
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -21,28 +25,34 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+<!-- Flatpickr Calendar -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<!-- <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script> -->
+
 <style>
-:root { -
-	-r-text: #111827; -
-	-r-muted: #6b7280; -
-	-r-line: #e5e7eb; -
-	-r-brand: #10b981; -
-	-r-brand2: #059669; -
-	-r-pill: #f3f4f6;
+:root {
+	--r-text: #111827;
+	--r-muted: #6b7280;
+	--r-line: #e5e7eb;
+	--r-brand: #10b981;
+	--r-brand2: #059669;
+	--r-pill: #f3f4f6;
 }
 
 /* 공통 */
 .r-muted {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 }
 
 .r-pill {
 	font-size: 12px;
-	color: var(- -r-muted);
-	background: var(- -r-pill);
+	color: var(--r-muted);
+	background: var(--r-pill);
 	padding: 6px 10px;
 	border-radius: 999px;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -63,14 +73,14 @@
 
 .r-score {
 	font-weight: 800;
-	color: var(- -r-text);
+	color: var(--r-text);
 }
 
 /* 갤러리 */
 .r-hero {
 	border-radius: 18px;
 	overflow: hidden;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #f9fafb;
 	position: relative;
 	min-height: 420px;
@@ -98,7 +108,7 @@
 }
 
 .r-thumb {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 16px;
 	overflow: hidden;
 	background: #f9fafb;
@@ -134,7 +144,7 @@
 }
 
 .r-thumbSub {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	display: flex;
 	gap: 8px;
@@ -144,7 +154,7 @@
 /* 섹션 */
 .r-section {
 	padding: 18px 0;
-	border-bottom: 1px solid var(- -r-line);
+	border-bottom: 1px solid var(--r-line);
 }
 
 .r-section:last-child {
@@ -159,19 +169,19 @@
 }
 
 .r-lead {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 14px;
 	line-height: 1.7;
 	margin: 0;
 }
 
 .r-chip {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #fff;
 	border-radius: 999px;
 	padding: 8px 12px;
 	font-size: 13px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	display: inline-flex;
 	gap: 8px;
 	align-items: center;
@@ -180,12 +190,12 @@
 }
 
 .r-chip i {
-	color: var(- -r-brand);
+	color: var(--r-brand);
 }
 
 /* 지도 */
 .r-mapBox {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 18px;
 	overflow: hidden;
 	height: 240px;
@@ -199,7 +209,7 @@
 	justify-content: space-between;
 	gap: 12px;
 	padding: 12px 0;
-	border-bottom: 1px dashed var(- -r-line);
+	border-bottom: 1px dashed var(--r-line);
 }
 
 .r-menuItem:last-child {
@@ -213,7 +223,7 @@
 
 .r-menuDesc {
 	margin-top: 4px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	line-height: 1.5;
 }
@@ -272,37 +282,52 @@
 				
 				<h3 class="fw-bold mb-4">예약 정보 입력</h3>
 				
-				<!-- 방문일 -->
 				<div class="card shadow-sm border-0 p-4" style="border-radius: 20px;">
-					<div class="mb-3">
-						<label class="form-label fw-bold">방문 예정일</label>
-						<input type="date" id="visit_date" class="form-control form-control-lg" 
-								min="${festival.start_date}" max="${festival.end_date}">
+				
+					<!-- 방문일 -->
+					<div class="mb-4">
+						<label class="form-label fw-bold">방문일 선택</label>
+						<input type="hidden" id="festStartDate" value="<fmt:formatDate value='${festival.start_date}' pattern='yyyy-MM-dd'/>">
+						<input type="hidden" id="festEndDate" value="<fmt:formatDate value='${festival.end_date}' pattern='yyyy-MM-dd'/>">
+						<input type="hidden" id="visit_date" name="visit_date">
+						<div id="flatpickr-container" style="display:flex; justify-content:center;"></div>
+						<div id="selected_date_display" class="text-center mt-2 fw-bold text-success"></div>
+						<!-- <div id="calendar-inline-container" style="display:flex; justify-content:center;"></div> -->
 					</div>
+
 					
 					<!-- 티켓 종류 -->
-					<div class="mb-3">
-						<label class="form-label fw-bold">티켓 종류</label>
-						<div>
-							<c:forEach var="ticket" items="${festival.ticketList}">
-								<div class="form-check mb-2">
-									<input class="form-check-input ticket-checkbox" type="radio"
-											name="ticket_id" value="${ticket.ticket_id}"
-											data-price="${ticket.price}" data-stock="${ticket.stock}"
-											<c:if test="${ticket.stock == 0}">
-												<span class="text-danger">(매진)</span>
-											</c:if>
-									>
-											
-									<label class="form-check-label">
-										${ticket.ticket_type} -
-										<fmt:formatNumber value="${ticket.price}" type="currency" />
-										(잔여: ${ticket.stock}매)
-									</label>
-								</div>
-							</c:forEach>
+					<c:if test="${not empty festival.ticketList}">
+						<div class="mb-4">
+							<label class="form-label fw-bold">티켓 종류</label>
+							<div class="ticket-list-group">
+								<c:forEach var="ticket" items="${festival.ticketList}">
+									<div class="form-check ticket-item p-3 border rounded-3 mb-2
+										${ticket.stock == 0 ? 'bg-light opacity-50' : ''}">
+										<input class="form-check-input ticket-radio" type="radio"
+												id="ticket_${ticket.ticket_id}" name="ticket_id" value="${ticket.ticket_id}"
+												data-price="${ticket.price}" data-stock="${ticket.stock}"
+												${ticket.stock == 0 ? 'disabled' : ''}>
+												
+										<label class="form-check-label d-flex justify-content-between w-100" for="ticket_${ticket.ticket_id}">
+											<span>
+												<strong>${ticket.ticket_type}</strong>
+												<c:if test="${ticket.stock == 0}">
+													<span class="badge bg-danger ms-2">매진</span>
+												</c:if>
+											</span>
+											<span class="fw-bold text-primary">
+												<fmt:formatNumber value="${ticket.price}" type="currency" />
+												<small class="text-muted d-block text-end" style="font-size:11px;">
+													잔여 ${ticket.stock}매
+												</small>
+											</span>
+										</label>
+									</div>
+								</c:forEach>
+							</div>
 						</div>
-					</div>
+					</c:if>
 					
 					<!-- 인원수 -->
 					<div class="mb-4">
@@ -328,8 +353,8 @@
 					</div>
 					
 					<!-- 결제/예약 버튼 -->
-					<button id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
-							onclick="submitReservation()" style="border-radius:15px;">
+					<button type="button" id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
+							onclick="submitReservation()" style="border-radius:15px;" disabled>
 						결제 및 예약하기
 					</button>
 				</div>

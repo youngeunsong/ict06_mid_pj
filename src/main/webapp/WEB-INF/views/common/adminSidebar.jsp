@@ -73,8 +73,8 @@
 				<!-- 회원 관리 메뉴 끝 -->
 				
 				<!-- 장소 관리 메뉴 시작 -->
-				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adpl')||fn:contains(currentURI, 'adfe') ? 'menu-open' : ''}">
-					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adpl')||fn:contains(currentURI, 'adfe') ? 'active' : ''}"> 
+				<li class="nav-item ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adac')||fn:contains(currentURI, 'adfe') ? 'menu-open' : ''}">
+					<a href="#" class="nav-link ${fn:contains(currentURI, 'place')||fn:contains(currentURI, 'adre')||fn:contains(currentURI, 'adac')||fn:contains(currentURI, 'adfe') ? 'active' : ''}"> 
 						<i class="fa-solid fa-location-dot"></i>
 						장소 관리
 						<i class="right fas fa-angle-left"></i>
@@ -87,12 +87,12 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/accommodation.adac" class="nav-link ${fn:contains(currentURI, 'accommodationList') ? 'active' : ''}">
+							<a href="${path}/accommodation.adac" class="nav-link ${fn:contains(currentURI, 'accommodation') ? 'active' : ''}">
 								숙소 관리
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="${path}/festivalList.adfe" class="nav-link ${fn:contains(currentURI, 'festivalList') ? 'active' : ''}">
+							<a href="${path}/festivalList.adfe" class="nav-link ${fn:contains(currentURI, 'festival') ? 'active' : ''}">
 								축제 관리
 							</a>
 						</li>

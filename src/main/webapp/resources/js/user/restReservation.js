@@ -6,7 +6,7 @@
  * 변경 사항
  * ----------------------------------------
  * v260327
- * 예약시간 30분 단위 생성 및 오늘 날짜의 과거 시간 차단 로직 추가
+ * 예약시간 30분 단위 생성 및 오늘 날짜의 과거 시간 차단 로직 추가, 예약날짜 선택 flatpickr 캘린더 적용
  * ----------------------------------------	
 */
 
@@ -25,6 +25,7 @@ $(document).ready(function() {
 		onChange: function(selectedDates, dateStr) {
 			console.log("선택된 날짜:", dateStr);
 			$('#visit_date').val(dateStr);
+			$('#selected_date_display').text("선택일:" + dateStr);
 			generateTimeOptions(dateStr);
 			checkForm();
 		}
@@ -46,8 +47,8 @@ function generateTimeOptions(selectedDate) {
 	$('#visit_time').val('');
 	
 	const now = new Date();
-	const today = now.toISOString().split('T')[0];
-	const isToday = selectedDate === today;
+	const todayStr = now.toISOString().split('T')[0];
+	const isToday = selectedDate === todayStr;
 	
 	//오늘 선택 시 현재 +1시간 이후부터
 	const minTime = new Date(now.getTime() + 60*60*1000);
@@ -90,6 +91,12 @@ function generateTimeOptions(selectedDate) {
 		}
 	}
 	
+	if(!hasSlot) {
+		wrap.html('<span class="text-muted small">선택한 날짜에 예약 가능한 시간이 없습니다.</span>');
+		checkForm();
+		return;
+	}
+	
 	if(amGroup.children().length > 1) {
 		wrap.append(amGroup);
 	}
@@ -118,7 +125,10 @@ $(document).on('click', '.time-slot-btn', function() {
 function checkForm() {
 	const isDateSelected = $('#visit_date').val() !== '';
 	const isTimeSelected = $('#visit_time').val() !== '';
-	$('#btnSubmitReservation').prop('disabled', !isDateSelected || !isTimeSelected);
+	const guestCount = Number($('#guest_count').val());
+	const isGuestValid = guestCount > 0;
+	
+	$('#btnSubmitReservation').prop('disabled', !isDateSelected || !isTimeSelected || !isGuestValid);
 }
 
 // =========================
@@ -158,6 +168,7 @@ function submitReservation() {
 		url: CTX + "/reservationAction.rv",
 		type: "post",
 		data: data,
+		dataType: "json",
 		success: function(res) {
 			location.href = CTX + "/reservationConfirm.rv?reservation_id=" + res.reservation_id;
 		},

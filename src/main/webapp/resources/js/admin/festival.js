@@ -191,32 +191,63 @@ function editFestival(id){
    $('#inputStartDate').val(data.start_date_str);
    $('#inputEndDate').val(data.end_date_str);
    
-   // 티켓 정보
-   data.ticketList.forEach(function(ticket){
-	 if(ticket.ticket_type == "Free"){
-	   $('#priceFree').val(ticket.price);
-	   $('#stockFree').val(ticket.stock);
-	   $('#ticketDescFreeDay').val(ticket.description);
-	 }
+   // 티켓 정보 표시
+   if(data.ticketList && data.ticketList.length > 0){
+	    var ticketHtml = '';
+
+	    ticketHtml += '<table class="table">';
+	    ticketHtml += '<thead>';
+	    ticketHtml += '<tr>';
+	    ticketHtml += '<th>티켓 종류</th>';
+	    ticketHtml += '<th>가격</th>';
+	    ticketHtml += '<th>재고</th>';
+	    ticketHtml += '<th>설명</th>';
+	    ticketHtml += '</tr>';
+	    ticketHtml += '</thead>';
+	    ticketHtml += '<tbody>';
+
+	    data.ticketList.forEach(function(ticket){
+
+	        ticketHtml += '<tr>';
+	        ticketHtml += '<td><input type="text" value="' + ticket.ticket_type + '"></td>';
+	        ticketHtml += '<td><input type="number" value="' + ticket.price + '"></td>';
+	        ticketHtml += '<td><input type="number" value="' + ticket.stock + '"></td>';
+	        ticketHtml += '<td><textarea cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요." value="' + ticket.description + '"></textarea></td>';
+	        ticketHtml += '</tr>';
+
+	    });
+
+	    ticketHtml += '</tbody>';
+	    ticketHtml += '</table>';
+
+	    $('#ticketTable_edit').html(ticketHtml);
+	}
+   // data.ticketList.forEach(function(ticket){
+
+	 // if(ticket.ticket_type == "Free"){
+	 //   $('#priceFree').val(ticket.price);
+	 //   $('#stockFree').val(ticket.stock);
+	 //   $('#ticketDescFreeDay').val(ticket.description);
+	 // }
 	
-	 if(ticket.ticket_type == "OneDay"){
-	   $('#priceOneDay').val(ticket.price);
-	   $('#stockOneDay').val(ticket.stock);
-	   $('#ticketDescOneDay').val(ticket.description);
-	 }
+	 // if(ticket.ticket_type == "OneDay"){
+	 //   $('#priceOneDay').val(ticket.price);
+	 //   $('#stockOneDay').val(ticket.stock);
+	 //   $('#ticketDescOneDay').val(ticket.description);
+	 // }
 	
-	 if(ticket.ticket_type == "TwoDay"){
-	   $('#priceTwoDay').val(ticket.price);
-	   $('#stockTwoDay').val(ticket.stock);
-	   $('#ticketDescTwoDay').val(ticket.description);
-	 }
+	 // if(ticket.ticket_type == "TwoDay"){
+	 //   $('#priceTwoDay').val(ticket.price);
+	 //   $('#stockTwoDay').val(ticket.stock);
+	 //   $('#ticketDescTwoDay').val(ticket.description);
+	 // }
 	
-	 if(ticket.ticket_type == "AllDay"){
-	   $('#priceAllDay').val(ticket.price);
-	   $('#stockAllDay').val(ticket.stock);
-	   $('#ticketDescAllDay').val(ticket.description);
-	 }
-	});
+	 // if(ticket.ticket_type == "AllDay"){
+	 //   $('#priceAllDay').val(ticket.price);
+	 //   $('#stockAllDay').val(ticket.stock);
+	 //   $('#ticketDescAllDay').val(ticket.description);
+	 // }
+	// });
 
    $('#modal_festival_modify').modal("show");
   }

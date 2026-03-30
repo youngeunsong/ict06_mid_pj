@@ -390,7 +390,7 @@
 		
 		                                                    <div class="card-body">
 		                                                        <div class="card-region">
-		                                                            <i class="fa-regular fa-heart me-1"></i>평균 ${item.AVG_RATING}점
+		                                                            <i class="fa-regular fa-star me-1"></i>평균 ${item.AVG_RATING}점
 		                                                            &nbsp;·&nbsp;
 		                                                            <i class="fa-regular fa-comment me-1"></i>${item.REVIEW_COUNT}개
 		                                                        </div>

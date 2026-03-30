@@ -51,7 +51,6 @@
 		<if test="category != null and category != ''">
 			AND r.category = #{category}
 		</if>
-
 		<if test="minRating != null and minRating > 0">
 			AND (
 			SELECT NVL(ROUND(AVG(rating),1),0)
@@ -59,13 +58,12 @@
 			WHERE place_id = p.place_id AND status = 'display'
 			) &gt;= #{minRating}
 		</if>
-
 		<if test="keyword != null and keyword != ''">
 			AND (p.name LIKE '%' || #{keyword} || '%')
 		</if>
 
 		<if test="province != null and province != ''">
-			AND p.address LIKE '%' || #{province} || '%'
+			AND r.areaCode LIKE '%' || #{province} || '%'
 		</if>
 		<if test="district != null and district != ''">
 			AND p.address LIKE '%' || #{district} || '%'
@@ -96,6 +94,7 @@
 		r.restaurant_id,
 		r.description,
 		r.category,
+		r.areaCode,
 		p.place_id,
 		p.name,
 		p.address,
@@ -131,10 +130,10 @@
 			AND ROWNUM &lt;= #{end}
 		</if>
 		<if test="province != null and province != ''">
-			AND p.address LIKE '%' || #{province} || '%'
+			AND a.areaCode LIKE '%' || #{province} || '%'
 		</if>
 		<if test="district != null and district != ''">
-			AND p.address LIKE '%' || #{district} || '%'
+			AND a.address LIKE '%' || #{district} || '%'
 		</if>
 		)
 		WHERE rnum &gt;= #{start}
@@ -145,7 +144,8 @@
 		resultMap="RestaurantResultMap">
 		SELECT
 		restaurant_id,
-		place_id, name,
+		place_id, 
+		name,
 		latitude,
 		longitude,
 		image_url,
@@ -156,7 +156,9 @@
 		FROM (
 		SELECT
 		r.restaurant_id,
-		p.place_id, p.name,
+		r.areaCode,
+		p.place_id, 
+		p.name,
 		p.latitude,
 		p.longitude,
 		p.image_url,
@@ -184,7 +186,7 @@
 			AND r.category = #{category}
 		</if>
 		<if test="province != null and province != ''">
-			AND p.address LIKE '%' || #{province} || '%'
+			AND r.areaCode LIKE '%' || #{province} || '%'
 		</if>
 		<if test="district != null and district != ''">
 			AND p.address LIKE '%' || #{district} || '%'
@@ -513,6 +515,12 @@
 			WHERE place_id = p.place_id AND status = 'display'
 			) &gt;= #{minRating}
 		</if>
+		<if test="province != null and province != ''">
+		    AND a.areaCode LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+		    AND p.address LIKE '%' || #{district} || '%'
+		</if>
 
 		<if test="keyword != null and keyword != ''">
 			AND (p.name LIKE '%' || #{keyword} || '%')
@@ -567,6 +575,12 @@
 		</if>
 		<if test="category != null and category != ''">
 			AND a.category = #{category}
+		</if>
+		<if test="province != null and province != ''">
+		    AND a.areaCode LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+		    AND p.address LIKE '%' || #{district} || '%'
 		</if>
 		ORDER BY distance ASC
 		) b
@@ -625,6 +639,12 @@
 		</if>
 		<if test="category != null and category != ''">
 			AND a.category = #{category}
+		</if>
+		<if test="province != null and province != ''">
+		    AND a.areaCode LIKE '%' || #{province} || '%'
+		</if>
+		<if test="district != null and district != ''">
+		    AND p.address LIKE '%' || #{district} || '%'
 		</if>
 		) b
 		<where>

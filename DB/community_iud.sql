@@ -476,6 +476,10 @@ SELECT *
 FROM NOTICE n 
 WHERE category = 'EVENT'
 
+UPDATE NOTICE
+   SET IMAGE_URL = 'https://postfiles.pstatic.net/MjAyNjAzMjdfMjQz/MDAxNzc0NjAyNjc5ODM4.TI9As9b7ftfgig6K_72xk_7DJia6X7DErY9QVxl-T-sg.dyeIbwY1XRbZMqhGVhx8gCVZrclBJCSvnO2VhQYKbNQg.PNG/Gemini_Generated_Image_il0chmil0chmil0c.png?type=w966'
+ WHERE notice_id = 34;
+
  -- 이벤트 상단 고정
  SELECT notice_id,
        admin_id,

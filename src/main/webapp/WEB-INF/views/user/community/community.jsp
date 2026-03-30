@@ -58,7 +58,7 @@
 	<div class="page-body">
 		<div class="container">
 		
-			 <!-- 경로 -->
+			<!-- 경로 -->
 			<div class="breadcrumb-area">
 			    <a href="${path}/community_free.co">커뮤니티</a>
 			    <i class="bi bi-chevron-right"></i>

@@ -208,7 +208,7 @@ function updateMarkers(data) {
     // 커스텀 마커 이미지 설정 (대형 사이즈 적용)
     var imageSrc = '${path}/resources/images/user/restaurant/markerImage.png'; 
     var imageSize = new kakao.maps.Size(160, 50); 
-    var imageOption = { offset: new kakao.maps.Point(50, 125) }; 
+    var imageOption = { offset: new kakao.maps.Point(80, 50) }; 
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
     // 전달받은 맛집 데이터를 순회하며 마커 생성
@@ -269,8 +269,8 @@ function updateMarkers(data) {
                 content: content, 
                 map: map, 
                 position: marker.getPosition(), 
-                xAnchor: 0.35, // 가로 중앙 정렬 (이게 빠지면 왼쪽으로 치우침)
-                yAnchor: 1.2  // 1.0은 카드 본체 하단, 1.1 정도 주어야 10px 삼각형 꼬리까지 포함해서 마커 위에 뜸 
+                xAnchor: 0.5, // 가로 중앙 정렬 (이게 빠지면 왼쪽으로 치우침)
+                yAnchor: 1.0  // 1.0은 카드 본체 하단, 1.1 정도 주어야 10px 삼각형 꼬리까지 포함해서 마커 위에 뜸 
             });
          	// 2. ★ 자연스러운 이동을 위한 좌표 계산
             var projection = map.getProjection();

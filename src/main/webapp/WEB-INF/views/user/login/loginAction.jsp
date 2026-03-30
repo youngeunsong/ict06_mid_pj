@@ -14,6 +14,16 @@
             <script type="text/javascript">
                 // 세션에 저장된 ID를 가져와 환영 메시지 출력
                 alert("${sessionScope.sessionID}님, 환영합니다!");
+               
+                //--------------------------------------------------------------------
+                // 추가 포인트 지급부분
+             	// 신규 회원가입 포인트 지급 메시지 (한 번만)
+                <c:if test="${not empty sessionScope.joinPointGiven}">
+                    alert("🎉 신규 회원 가입으로 1,000 포인트가 적립되었습니다!");
+                    <c:remove var="joinPointGiven" scope="session"/>
+                </c:if>;
+                //---------------------------------------------------------------------
+                
                 // 메인 페이지로 이동
                 location.href = "${path}/main.do";
             </script>

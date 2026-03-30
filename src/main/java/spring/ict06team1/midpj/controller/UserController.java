@@ -89,6 +89,7 @@ public class UserController {
 	        if ("ADMIN".equals(userRole)) {
 	            return "redirect:/adminHome.ad"; // 관리자면 여기로!
 	        } else {
+
 	        	// 북마크) next값이 있으면 그곳으로, 없으면 메인으로!
 	        	if (next != null && !next.isEmpty()) {
 	                
@@ -102,7 +103,11 @@ public class UserController {
 	                logger.info("<<< 중복 제거 후 리다이렉트 경로: " + next + " >>>");
 	                return "redirect:" + next; // Spring이 다시 "/midpj"를 붙여서 올바른 주소가 됨
 	            }
-	            return "redirect:/main.do";
+	        	// ===============================
+				// 추가: 김재원 2026-03-27
+				// 신규 회원가입 참여 시 포인트 지급 알림(메인jsp에 알럿창 설정시 새로고침 시 알럿창이 계속생김)
+				return "user/login/loginAction"; 
+				// ===============================
 	        }
 	    } else {
 	        // 로그인 실패하면 원래 가던 jsp로
@@ -286,13 +291,30 @@ public class UserController {
 		
 		 String sessionID = (String) request.getSession().getAttribute("sessionID");
 
-		    if (sessionID == null) {
-		        return "redirect:/login.do";
-		    }
-		    
-		    service.myReservationDetailAction(request, response, model);
+	    if (sessionID == null) {
+	        return "redirect:/login.do";
+	    }
+	    
+	    service.myReservationDetailAction(request, response, model);
 		
 		return "user/mypage/reservationDetail";
+	}
+	
+	// [마이페이지] 예약 취소 처리
+	@RequestMapping("/cancelReservationAction.do")
+	public String cancelReservationAction(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    logger.info("<<< url => cancelReservationAction.do>>>");
+
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    if (sessionID == null) {
+	        return "redirect:/login.do";
+	    }
+
+	    service.cancelReservationAction(request, response, model);
+
+	    return "user/mypage/cancelReservationAction";
 	}
 	
 	// [마이페이지] 1:1 문의목록

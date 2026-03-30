@@ -22,5 +22,5 @@ window.onload = function() {
 	
 /* 기존 필터 변경 함수는 유지 */
 function handleFilterChange(areaCode) {
-	location.href = "${path}/restaurant.ad?areaCode=" + areaCode + "&pageNum=1";
+	location.href = "${path}/restaurantList.adre?areaCode=" + areaCode + "&pageNum=1";
 }

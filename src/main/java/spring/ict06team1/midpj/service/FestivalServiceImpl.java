@@ -27,13 +27,15 @@ import spring.ict06team1.midpj.dto.ReviewDTO;
 /*
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-26
+ * 최종수정일: 2026-03-27
  * 참고 코드: RestaurantServiceImpl
  * ----------------------------------
  * v260319
  * 랭킹 기능 구현을 위한 메써드 추가 (getBestFestivalCount, getBestFestivalList, getBestFestivalPageList, getBestFestivalTop5)
  * v260326 
  * 축제 내 주변 지도 기능 구현
+ * v260327
+ * 티켓 목록 리스트 순서 정렬 기능 삭제: 다양한 티켓 종류를 대응하기 위해 삭제
  * ----------------------------------
  */
 @Service
@@ -153,8 +155,8 @@ public class FestivalServiceImpl implements FestivalService {
 		List<FestivalTicketDTO> tickets = dao.getFestivalTickets(place_id); 
 		
 		// 티켓 목록 리스트 순서 정렬
-		List<String> order = Arrays.asList("Free", "OneDay", "TwoDay", "AllDay");
-		tickets.sort(Comparator.comparingInt(t -> order.indexOf(t.getTicket_type())));
+//		List<String> order = Arrays.asList("Free", "OneDay", "TwoDay", "AllDay");
+//		tickets.sort(Comparator.comparingInt(t -> order.indexOf(t.getTicket_type())));
 		
 		// festival에 place와 tickets 적용
 		festival.setPlaceDTO(place);

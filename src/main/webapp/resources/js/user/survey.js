@@ -33,6 +33,13 @@ function updateProgress() {
 // 문서 준비 완료
 // =========================
 $(document).ready(function() {
+
+    // 설문/리뷰 페이지형 JSP에서는 모달용 survey.js 실행 중지
+    if ($("#surveyForm").length > 0) {
+        console.log("surveyReview.jsp에서는 survey.js 실행 중지");
+        return;
+    }
+	
 	console.log("📄 문서 준비 완료");
 	
 	// ✅ 여기서 URL 파라미터 처리
@@ -89,6 +96,11 @@ $(document).ready(function() {
 // 설문 값 초기화
 // =========================
 function resetSurveyForm() {
+
+	if ($("#surveyForm").length > 0) {
+        return;
+    }
+    
 	$('#satisfaction_score').val('');
 	$('#nps_score').val('');
 	$('#info_reliability_score').val('');
@@ -229,6 +241,11 @@ function submitSurvey() {
 		improvements: $('#improvements').val()
 	};
 	
+	if(!data.reservation_id) {
+		alert("예약 정보 누락");
+		return;
+	}
+	
 	if(!data.satisfaction_score || !data.nps_score || !data.info_reliability_score) {
 		alert("필수 항목을 선택하세요.");
 		return;
@@ -239,18 +256,29 @@ function submitSurvey() {
 		type: "post",
 		data: data,
 		success: function(res) {
+			console.log("설문 응답:", res);
+		
 			if(res.success) {
-				showToast("설문이 제출되었습니다. 응답해 주셔서 감사합니다😊");
+
+				alert("설문이 제출되었습니다. 응답해 주셔서 감사합니다😊");
+				
+				// ===============================
+				// 추가: 김재원 2026-03-26
+				// 설문 참여 시 포인트 지급 알림
+				
+                alert("🎉 설문 참여로 1000 포인트가 적립되었습니다!");
+                
+	            // ================================
+
 				$('#surveyModal').modal('hide');
 				
 				setTimeout(() => {
 					$('#reviewModal').modal('show');
 				}, 300);
+			} else {
+				alert(res.msg || "설문 제출 실패");
 			}
 		},
-		error: function() {
-			alert("설문 제출 실패. 다시 시도해주세요.");
-		}
 	});
 }
 
@@ -271,16 +299,23 @@ $(document).on('click', '.star-item', function() {
 // =========================
 function submitReview() {
 	const placeId = $('#review_place_id').val();
+	const reservationId = $('#survey_reservation_id').val();
+	
 	console.log("제출 시점 placeId 확인:", placeId);
+	console.log("제출 시점 reservationId 확인:", reservationId);
 	
 	if(!placeId) {
 		alert("장소 정보 누락");
 		return;
 	}
+	if(!reservationId) {
+		alert("예약 정보 누락");
+		return;
+	}	
 	
 	const data = {
 		place_id: placeId,
-		reservation_id: $('#survey_reservation_id').val(),
+		reservation_id: reservationId,
 		rating: $('#review_rating').val(),
 		content: $('#review_content').val()
 	};
@@ -300,14 +335,28 @@ function submitReview() {
 		type: 'post',
 		data: data,
 		success: function(res) {
+			console.log("리뷰 응답:", res);
+
 			if(res.success) {
-				showToast('리뷰가 등록되었습니다. 감사합니다😊');
-				$('#reviewModal').modal('hide');
+
+				alert('리뷰가 등록되었습니다. 감사합니다😊');
 				
+				// ===============================
+				// 추가: 김재원 2026-03-26
+				// 리뷰 참여 시 포인트 지급 알림
+	            
+	            alert("🎉 리뷰 작성으로 500 포인트가 적립되었습니다!");
+	            
+	            // ================================
+
+				$('#reviewModal').modal('hide');
 				showNextSurvey();
+			} else {
+				alert(res.msg || '리뷰 등록 실패');
 			}
 		},
-		error: function() {
+		error: function(xhr, status, error) {
+			console.error("리뷰 등록 에러:", xhr.responseText, status, error);
 			alert('리뷰 등록 실패. 다시 시도해주세요.');
 		}
 	});

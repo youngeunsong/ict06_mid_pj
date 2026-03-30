@@ -19,6 +19,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
 	@Autowired
 	private SqlSession sqlSession;
+	
 
 	// 1. 장소 정보 조회
 	// mapper의 getPlaceDetail 쿼리를 실행
@@ -117,18 +118,40 @@ public class ReservationDAOImpl implements ReservationDAO {
 	}
 
 	// 9. 결제 상태 변경
-	// reservation_id 기준으로 PAYMENT.payment_status를 변경
 	@Override
 	public int updatePaymentStatusPaid(String reservationId) {
-		return sqlSession.update("spring.ict06team1.midpj.dao.ReservationDAO.updatePaymentStatusPaid", reservationId);
+	    return sqlSession.update("spring.ict06team1.midpj.dao.ReservationDAO.updatePaymentStatusPaid", reservationId);
 	}
 
 	// 10. 예약 상태 변경
-	// reservation_id 기준으로 RESERVATION.status를 변경
 	@Override
 	public int updateReservationStatusConfirmed(String reservationId) {
-		return sqlSession.update("spring.ict06team1.midpj.dao.ReservationDAO.updateReservationStatusConfirmed",
-				reservationId);
+	    return sqlSession.update("spring.ict06team1.midpj.dao.ReservationDAO.updateReservationStatusConfirmed",
+	            reservationId);
+	}
+
+	// 11. 결제 금액 수정
+	@Override
+	public int updatePaymentAmount(Map<String, Object> map) {
+	    System.out.println("[ReservationDAOImpl - updatePaymentAmount()]");
+	    return sqlSession.getMapper(ReservationDAO.class).updatePaymentAmount(map);
+	}
+
+	// 12. 예약에 payment_id 저장
+	@Override
+	public int updateReservationPaymentId(Map<String, Object> map) {
+	    System.out.println("[ReservationDAOImpl - updateReservationPaymentId()]");
+	    return sqlSession.getMapper(ReservationDAO.class).updateReservationPaymentId(map);
+	}
+	
+	// 리뷰/설문 작성 포인트 적립
+	@Override
+	public int insertReviewPoint(Map<String, Object> map) {
+	    System.out.println("ReservationDAOImpl - insertReviewPoint()");
+	    
+	    int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.UserDAO.insertReviewPoint", map);
+	    
+	    return insertCnt;
 	}
 	
 	@Override
@@ -140,5 +163,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 	public int countRestReservationByDateTime(Map<String, Object> map) {
 	    return sqlSession.getMapper(ReservationDAO.class).countRestReservationByDateTime(map);
 	}
+	
+	
 
 }

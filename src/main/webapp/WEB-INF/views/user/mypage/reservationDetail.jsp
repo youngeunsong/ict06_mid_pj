@@ -175,7 +175,9 @@
 								</c:when>
 
 								<c:otherwise>
-									<button type="button" class="btn_delete">예약취소</button>
+									<button type="button" class="btn_delete"
+										onclick="if(confirm('정말 예약을 취소하시겠습니까?')) location.href='${path}/cancelReservationAction.do?reservation_id=${dto.reservation_id}'">
+										예약취소</button>
 								</c:otherwise>
 							</c:choose>
 						</div>

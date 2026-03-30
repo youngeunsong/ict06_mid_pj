@@ -70,23 +70,39 @@
 			<!-- =========================
 			     설문 + 리뷰 작성 폼
 			     ========================= -->
-			<form action="${path}/surveyReviewAction.rv" method="post">
+			<form id="surveyForm" action="${path}/surveyReviewAction.rv" method="post">
 
-				<!-- 예약번호 hidden -->
-				<input type="hidden" name="reservation_id"
-					value="<c:choose><c:when test='${not empty dto.reservation_id}'>${dto.reservation_id}</c:when><c:otherwise>${param.reservation_id}</c:otherwise></c:choose>">
+				<!-- 예약번호 / 장소번호 hidden 값 세팅 -->
+				<c:choose>
+					<c:when test="${not empty dto.reservation_id}">
+						<c:set var="hiddenReservationId" value="${dto.reservation_id}" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="hiddenReservationId" value="${param.reservation_id}" />
+					</c:otherwise>
+				</c:choose>
 
-				<!-- place_id hidden -->
-				<input type="hidden" name="place_id"
-					value="<c:choose><c:when test='${not empty dto.placeDTO.place_id}'>${dto.placeDTO.place_id}</c:when><c:otherwise>${param.place_id}</c:otherwise></c:choose>">
+				<c:choose>
+					<c:when test="${not empty dto.placeDTO.place_id}">
+						<c:set var="hiddenPlaceId" value="${dto.placeDTO.place_id}" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="hiddenPlaceId" value="${param.place_id}" />
+					</c:otherwise>
+				</c:choose>
 
-				<!-- 설문 점수 hidden -->
-				<input type="hidden" name="satisfaction_score" id="satisfaction_score">
-				<input type="hidden" name="info_reliability_score" id="info_reliability_score">
-				<input type="hidden" name="nps_score" id="nps_score">
+				<input type="hidden" name="reservation_id" value="${hiddenReservationId}">
+				<input type="hidden" name="place_id" value="${hiddenPlaceId}">
 
-				<!-- 리뷰 별점 hidden -->
-				<input type="hidden" name="rating" id="rating">
+				<!-- =========================
+				     페이지 전용 hidden
+				     ※ name도 page_... 로 통일
+				     ※ 서비스에서 request.getParameter("page_...") 로 받기
+				     ========================= -->
+				<input type="hidden" name="page_satisfaction_score" id="page_satisfaction_score">
+				<input type="hidden" name="page_info_reliability_score" id="page_info_reliability_score">
+				<input type="hidden" name="page_nps_score" id="page_nps_score">
+				<input type="hidden" name="page_rating" id="page_rating">
 
 				<!-- =========================
 				     설문 카드
@@ -99,7 +115,7 @@
 					<!-- 1. 만족도 -->
 					<div class="form-group">
 						<label class="form-label">1. 전반적인 만족도를 선택해주세요. (10점 만점)</label>
-						<div class="score-wrap" data-target="satisfaction_score">
+						<div class="score-wrap" data-target="page_satisfaction_score">
 							<c:forEach begin="1" end="10" var="i">
 								<button type="button" class="score-item" data-value="${i}">${i}</button>
 							</c:forEach>
@@ -117,7 +133,7 @@
 					<!-- 3. 정보 신뢰도 -->
 					<div class="form-group">
 						<label class="form-label">3. 제공된 정보의 신뢰도는 어땠나요? (10점 만점)</label>
-						<div class="score-wrap" data-target="info_reliability_score">
+						<div class="score-wrap" data-target="page_info_reliability_score">
 							<c:forEach begin="1" end="10" var="i">
 								<button type="button" class="score-item" data-value="${i}">${i}</button>
 							</c:forEach>
@@ -135,7 +151,7 @@
 					<!-- 5. 추천 의향 -->
 					<div class="form-group survey-last-group">
 						<label class="form-label">5. 다른 사람에게 추천할 의향이 있나요? (10점 만점)</label>
-						<div class="score-wrap" data-target="nps_score">
+						<div class="score-wrap" data-target="page_nps_score">
 							<c:forEach begin="1" end="10" var="i">
 								<button type="button" class="score-item" data-value="${i}">${i}</button>
 							</c:forEach>
@@ -155,7 +171,7 @@
 					<!-- 별점 -->
 					<div class="form-group">
 						<label class="form-label">별점을 선택해주세요. (5점 만점)</label>
-						<div class="score-wrap" data-target="rating">
+						<div class="score-wrap" data-target="page_rating">
 							<c:forEach begin="1" end="5" var="i">
 								<button type="button" class="star-item" data-value="${i}">★${i}</button>
 							</c:forEach>
@@ -191,67 +207,91 @@
 	</div>
 
 	<script>
+	document.addEventListener("DOMContentLoaded", function() {
+
 		/* =========================
-		   점수 버튼 / 별점 버튼 공통 처리
-		   클릭한 버튼 active 처리 + hidden input 값 저장
+		   점수 / 별점 버튼 공통 처리
+		   data-target 값과 hidden id를 1:1로 맞춤
 		   ========================= */
-		document.querySelectorAll(".score-wrap").forEach(function(wrap) {
-			const targetId = wrap.dataset.target;
+		const wraps = document.querySelectorAll(".score-wrap");
+
+		wraps.forEach(function(wrap) {
+			const targetId = wrap.getAttribute("data-target");
 			const hiddenInput = document.getElementById(targetId);
 			const buttons = wrap.querySelectorAll("button");
 
 			buttons.forEach(function(btn) {
 				btn.addEventListener("click", function() {
+					// 같은 그룹 버튼 active 초기화
 					buttons.forEach(function(item) {
 						item.classList.remove("active");
 					});
 
+					// 현재 버튼 active
 					btn.classList.add("active");
-					hiddenInput.value = btn.dataset.value;
+
+					// hidden 값 세팅
+					if (hiddenInput) {
+						hiddenInput.value = btn.getAttribute("data-value");
+						console.log(targetId + " =", hiddenInput.value);
+					} else {
+						console.log("hidden input 못 찾음:", targetId);
+					}
 				});
 			});
 		});
 
 		/* =========================
-		   제출 전 간단 검증
+		   제출 전 검증
+		   page_... hidden 기준으로 검사
 		   ========================= */
-		document.querySelector("form").addEventListener("submit", function(e) {
-			const satisfaction = document.getElementById("satisfaction_score").value;
-			const reliability = document.getElementById("info_reliability_score").value;
-			const nps = document.getElementById("nps_score").value;
-			const rating = document.getElementById("rating").value;
-			const content = document.getElementById("content").value.trim();
+		const form = document.getElementById("surveyForm");
 
-			if (!satisfaction) {
-				alert("만족도를 선택해주세요.");
-				e.preventDefault();
-				return;
-			}
+		if (form) {
+			form.addEventListener("submit", function(e) {
+				const satisfaction = document.getElementById("page_satisfaction_score").value;
+				const reliability = document.getElementById("page_info_reliability_score").value;
+				const nps = document.getElementById("page_nps_score").value;
+				const rating = document.getElementById("page_rating").value;
+				const content = document.getElementById("content").value.trim();
 
-			if (!reliability) {
-				alert("정보 신뢰도를 선택해주세요.");
-				e.preventDefault();
-				return;
-			}
+				console.log("FINAL satisfaction =", satisfaction);
+				console.log("FINAL reliability =", reliability);
+				console.log("FINAL nps =", nps);
+				console.log("FINAL rating =", rating);
 
-			if (!nps) {
-				alert("추천 의향을 선택해주세요.");
-				e.preventDefault();
-				return;
-			}
+				if (!satisfaction) {
+					alert("만족도를 선택해주세요.");
+					e.preventDefault();
+					return;
+				}
 
-			if (!rating) {
-				alert("리뷰 별점을 선택해주세요.");
-				e.preventDefault();
-				return;
-			}
+				if (!reliability) {
+					alert("정보 신뢰도를 선택해주세요.");
+					e.preventDefault();
+					return;
+				}
 
-			if (content === "") {
-				alert("리뷰 내용을 작성해주세요.");
-				document.getElementById("content").focus();
-				e.preventDefault();
-			}
-		});
+				if (!nps) {
+					alert("추천 의향을 선택해주세요.");
+					e.preventDefault();
+					return;
+				}
+
+				if (!rating) {
+					alert("리뷰 별점을 선택해주세요.");
+					e.preventDefault();
+					return;
+				}
+
+				if (content === "") {
+					alert("리뷰 내용을 작성해주세요.");
+					document.getElementById("content").focus();
+					e.preventDefault();
+				}
+			});
+		}
+	});
 	</script>
 </body>
 </html>

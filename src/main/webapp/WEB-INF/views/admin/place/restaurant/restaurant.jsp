@@ -133,7 +133,7 @@
 							                    <td class="text-muted small text-center">${fn:substring(dto.placeUpdateDate, 0, 10)}</td>
 							                    <td class="text-center">
 							                        <button class="btn btn-xs btn-outline-secondary" onclick="location.href='${path}/restaurantModify.adre?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}'">수정</button>
-							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) { location.href='${path}/restaurantDeleteAction.adre?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${param.areaCode}&category=${param.category}&keyword=${keyword}';}">삭제</button>
+							                        <button class="btn btn-xs btn-outline-danger" onclick="if(confirm('삭제하시겠습니까?')) {location.href='${path}/restaurantDeleteAction.adre?place_id=${dto.place_id}&pageNum=${paging.pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}';}">삭제</button>
 							                    </td>
 							                </tr>
 							            </c:forEach>

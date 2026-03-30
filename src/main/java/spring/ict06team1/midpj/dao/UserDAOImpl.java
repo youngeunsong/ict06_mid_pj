@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import spring.ict06team1.midpj.dto.InquiryDTO;
 import spring.ict06team1.midpj.dto.MemberDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
+import spring.ict06team1.midpj.dto.PointDTO;
 import spring.ict06team1.midpj.dto.ReservationDTO;
 
 @Repository
@@ -162,6 +163,16 @@ public class UserDAOImpl implements UserDAO {
 		return dto;
 	}
 	
+	// 나의 예약 취소
+	@Override
+	public int cancelReservation(String reservation_id) {
+	    System.out.println("UserDAOImpl - cancelReservation()");
+
+	    int updateCnt = sqlSession.update("spring.ict06team1.midpj.dao.UserDAO.cancelReservation", reservation_id);
+
+	    return updateCnt;
+	}
+	
 	// 마이페이지 홈 활동현황 카운트
 	@Override
 	public int getFavoriteCount(String user_id) {
@@ -223,9 +234,19 @@ public class UserDAOImpl implements UserDAO {
 
 		return sqlSession.getMapper(UserDAO.class).updateAdmin(dto);
 	}
-
+	// ===============================
+	// 추가: 김재원 2026-03-27
+	// 포인트 DB에 입력
+	@Override
+	public int insertPoint(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - insertPoint()");
+		return sqlSession.insert("PointMapper.insertPoint", map);
+	}
 	
-
-	
-
+	// 마이페이지 포인트 가져오기
+	@Override
+    public List<PointDTO> getPointHistory(String userId) {
+		System.out.println("UserDAOImpl - getPointHistory()");
+        return sqlSession.selectList("PointMapper.getPointHistory", userId);
+    }
 }

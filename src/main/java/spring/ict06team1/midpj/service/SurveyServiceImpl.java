@@ -66,6 +66,18 @@ public class SurveyServiceImpl implements SurveyService {
 	    	//5. 설문 저장
 	    	svDao.insertSurvey(dto);
 	    	
+	    	// ===============================
+			// 추가: 김재원 2026-03-26
+			// 설문조사 참여 시 포인트 지급 
+	    	// 6. 포인트 지급
+	    	
+	    	Map<String, Object> pointMap = new HashMap<>();
+	    	pointMap.put("userId", dto.getUser_id());
+	        pointMap.put("policyKey", "EARN_SURVEY");           
+	        pointMap.put("description", "설문 조사 참여 포인트 적립");
+            svDao.insertPoint(pointMap);
+	    	// =================================
+            
 	    	result.put("success", true);
 	    	result.put("msg", "설문 등록 완료");
 	    } catch(Exception e) {
@@ -106,9 +118,24 @@ public class SurveyServiceImpl implements SurveyService {
 	    	if(svDao.checkReviewExists(reservation_id) > 0)
 	    		throw new RuntimeException("이미 리뷰 작성함");
 	    	
+	    	// 예약정보를 기준으로 place_id, reservation_id를 확정 세팅
 	    	dto.setPlace_id(resDto.getPlace_id());
+	    	dto.setReservation_id(reservation_id);
+	    	
+	    	// 리뷰 등록
 	    	svDao.insertReview(dto);
 	    	
+	    	// ===============================
+			// 추가: 김재원 2026-03-26
+			// 리뷰 참여 시 포인트 지급 
+	    	// 6. 포인트 지급
+            Map<String, Object> pointMap = new HashMap<>();
+	    	pointMap.put("userId", dto.getUser_id());
+	        pointMap.put("policyKey", "EARN_REVIEW");           
+	        pointMap.put("description", "리뷰 작성 포인트 적립");
+            svDao.insertPoint(pointMap);
+            // ===============================
+            
 	    	result.put("success", true);
 	    	result.put("msg", "리뷰 등록 완료");
 	    } catch(Exception e) {

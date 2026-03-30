@@ -68,8 +68,16 @@ public interface ReservationDAO {
 	// 결제 승인 성공 후 RESERVATION.status를 변경할 때 사용
 	int updateReservationStatusConfirmed(String reservationId);
 	
+	// 결제 금액 수정
+	int updatePaymentAmount(Map<String, Object> map);
+
+	// 예약에 연결된 payment_id 저장
+	int updateReservationPaymentId(Map<String, Object> map);
 
 	List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map);
+	
+	// 리뷰/설문 작성 포인트 적립
+	public int insertReviewPoint(Map<String, Object> map);
 	
 	
 	int countRestReservationByDateTime(Map<String, Object> map);

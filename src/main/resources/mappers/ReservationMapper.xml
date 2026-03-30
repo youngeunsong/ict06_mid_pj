@@ -224,8 +224,21 @@
 	    WHERE reservation_id = #{reservationId}
 	</update>
 	
+	<!-- 11. 결제 금액 수정 -->
+	<update id="updatePaymentAmount" parameterType="map">
+	    UPDATE PAYMENT
+	    SET amount = #{amount}
+	    WHERE reservation_id = #{reservation_id}
+	</update>
 	
-	<!-- 11. 맛집 특정 날짜 시간대별 예약 건수 조회 -->
+	<!-- 12. 예약에 payment_id 연결 -->
+	<update id="updateReservationPaymentId" parameterType="map">
+	    UPDATE RESERVATION
+	    SET payment_id = #{payment_id}
+	    WHERE reservation_id = #{reservation_id}
+	</update>
+	
+	<!-- 13. 맛집 특정 날짜 시간대별 예약 건수 조회 -->
 	<select id="getRestTimeReservationCount" parameterType="map" resultType="map">
 	    SELECT
 	        visit_time,
@@ -239,7 +252,7 @@
 	    ORDER BY visit_time
 	</select>
 	
-	<!-- 12. 맛집 특정 날짜/시간 예약 수 조회 -->
+	<!-- 14. 맛집 특정 날짜/시간 예약 수 조회 -->
 	<select id="countRestReservationByDateTime" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM RESERVATION
@@ -248,4 +261,5 @@
 	      AND visit_time = #{visit_time}
 	      AND status IN ('PENDING', 'RESERVED')
 	</select>
+
 </mapper>

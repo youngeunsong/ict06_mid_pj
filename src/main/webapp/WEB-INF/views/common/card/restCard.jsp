@@ -72,7 +72,7 @@
                         ${rest.placeDTO.view_count}
                     </span>
                     <span>
-                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-regular fa-star"></i>
                         <c:out value="${displayAvgRating}" default="0"/>
                     </span>
                     <span>

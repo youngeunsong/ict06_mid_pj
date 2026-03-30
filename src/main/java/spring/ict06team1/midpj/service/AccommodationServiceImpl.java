@@ -63,6 +63,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 		countMap.put("category", category);
 		countMap.put("province", province != null ? province : "");
 		countMap.put("district", district != null ? district : "");
+		
 		// 2. 핵심 로직: province가 존재하면 radius를 null로 설정
 		// (만약 MyBatis 등에서 null 체크를 한다면 유용합니다)
 		if (province != null && !province.isEmpty()) {
@@ -71,8 +72,8 @@ public class AccommodationServiceImpl implements AccommodationService {
 			countMap.put("radius", radius);
 		}
 		int totalCount = accDao.selectNearbyAccommodationCount(countMap);
-		logger.info("프로방스 :" + province);
-		logger.info("디스트릭트 :" + district);
+		logger.info("province :" + province);
+		logger.info("district :" + district);
 		// setTotalCount 호출 시 내부에서 startRow, endRow가 6개 기준으로 자동 계산됨
 		paging.setTotalCount(totalCount);
 
@@ -110,6 +111,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 		} else {
 			listMap.put("radius", radius);
 		}
+		
 		listMap.put("province", province != null ? province : "");
 		listMap.put("district", district != null ? district : "");
 		listMap.put("lat", Double.parseDouble(request.getParameter("lat")));

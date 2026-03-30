@@ -20,6 +20,9 @@ public interface UserDAO {
     // 회원정보 인증(수정, 탈퇴시)
     public int loginCheck(Map<String, Object> map);
     
+    // 아이디 찾기 (이름과 이메일로 마스킹된 아이디 조회)
+    public String findUserId(Map<String, Object> map);
+    
     //비밀번호 찾기 본인확인, 임시비밀번호 발급
     public int findPasswordCheck(Map<String, Object> map);
     public int updatePassword(Map<String, Object> map);

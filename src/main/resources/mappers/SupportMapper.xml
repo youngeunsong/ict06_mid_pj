@@ -64,7 +64,7 @@
     </select>
 
 	<!-- 4. FAQ 상세 내용 보기 -->
-    <select id="getFaqDetail	" parameterType="int" resultMap="faqMap">
+    <select id="getFaqDetail" parameterType="int" resultMap="faqMap">
         SELECT * FROM FAQ WHERE faq_id = #{faq_id}
     </select>
 
@@ -72,8 +72,21 @@
     <update id="updateFaqViewCount" parameterType="int">
         UPDATE FAQ SET view_count = view_count + 1 WHERE faq_id = #{faq_id}
     </update>
-
-	<!-- 6. 1:1 문의글 등록하기 -->
+	
+	<!-- 6. 전체 리스트 조회 (카테고리 구분 없이 최신순) -->
+	<select id="getFaqList" resultType="spring.ict06team1.midpj.dto.FaqDTO">
+	    SELECT * FROM FAQ 
+	    ORDER BY faq_id DESC
+	</select>
+	
+	<!-- 7. 카테고리별 리스트 조회 -->
+	<select id="getFaqListByCategory" parameterType="String" resultType="spring.ict06team1.midpj.dto.FaqDTO">
+	    SELECT * FROM FAQ 
+	    WHERE category = #{category} 
+	    ORDER BY faq_id DESC
+	</select>
+	
+	<!-- 8. 1:1 문의글 등록하기 -->
     <insert id="insertInquiry" parameterType="spring.ict06team1.midpj.dto.InquiryDTO">
 	    INSERT INTO INQUIRY (
 	        inquiry_id, 
@@ -94,7 +107,7 @@
 	    )
 	</insert>
 
-	<!-- 7. 조건에 맞는 문의글 개수 세기 -->
+	<!-- 9. 조건에 맞는 문의글 개수 세기 -->
     <select id="getInquiryCount" parameterType="map" resultType="int">
         SELECT COUNT(*) FROM INQUIRY
         <where>

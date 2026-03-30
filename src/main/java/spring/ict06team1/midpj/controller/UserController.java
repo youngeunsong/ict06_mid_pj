@@ -121,7 +121,24 @@ public class UserController {
 		return "redirect:/main.do";
 	}
 	
-	//비밀번호 찾기 폼
+	// 아이디 찾기 폼 이동 (추가)
+    @RequestMapping("/findId.do")
+    public String findId(HttpServletRequest request, HttpServletResponse response, Model model) 
+            throws ServletException, IOException {
+        logger.info("<<< url => findId.do >>>");
+        return "user/login/findId"; // findId.jsp로 이동
+    }
+
+    // 아이디 찾기 처리 (추가)
+    @RequestMapping("/findIdAction.do")
+    public String findIdAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+            throws ServletException, IOException {
+        logger.info("<<< url => findIdAction.do >>>");
+        service.findIdAction(request, response, model); // 서비스에 메서드 추가 필요
+        return "user/login/findIdResult"; 
+    }
+	
+	// 비밀번호 찾기 폼
 	@RequestMapping("/findPassword.do")
 	public String findPassword(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
@@ -130,7 +147,7 @@ public class UserController {
 		return "user/login/findPassword";
 	}
 	
-	//비밀번호 찾기 처리
+	// 비밀번호 찾기 처리
 	@RequestMapping("/findPasswordAction.do")
 	public String findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {

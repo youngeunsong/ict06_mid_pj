@@ -38,6 +38,16 @@
 		   AND status = 'ACTIVE'
 	</select>
 	
+	<!-- 3-0. 아이디 찾기 본인확인 -->
+	<select id="findUserId" parameterType="java.util.Map" resultType="String">
+	    SELECT 
+	        RPAD(SUBSTR(user_id, 1, 4), LENGTH(user_id), '*')
+	    FROM MEMBER
+	    WHERE name = #{name} 
+	      AND email = #{email}
+	      AND status = 'ACTIVE'
+	</select>
+	
 	<!-- 3-1. 비밀번호 찾기 본인확인 -->
 	<select id="findPasswordCheck" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(*) FROM MEMBER

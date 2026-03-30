@@ -193,7 +193,43 @@ public class UserServiceImpl implements UserService {
 		request.setAttribute("user_id", user_id);
 		request.setAttribute("selectCnt", selectCnt);
 	}
-	
+
+	// 3-0. 아이디 찾기 처리
+		@Override
+		public void findIdAction(HttpServletRequest request, HttpServletResponse response, Model model)
+				throws ServletException, IOException {
+			System.out.println("UserServiceImpl - findIdAction()");
+			
+			// 1. 이름과 이메일 정보 파싱
+			// UserServiceImpl - findIdAction 수정
+			String name = request.getParameter("name").trim(); // 공백 제거
+			String email1 = request.getParameter("email1").trim();
+			String email2 = request.getParameter("email2").trim();
+			String email = email1 + "@" + email2; 
+
+			// 2. DAO 전달을 위한 Map 생성
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("name", name);
+			map.put("email", email);
+			
+			// 3. DAO 호출 (아이디 조회)
+			// SQL에서 마스킹(RPAD, SUBSTR) 처리를 해서 가져옴
+			
+			String foundId = dao.findUserId(map);
+			
+			// 4. 결과값 처리 및 JSP 전달
+			if(foundId != null && !foundId.isEmpty()) {
+				model.addAttribute("foundId", foundId);
+				model.addAttribute("findCnt", 1); // 성공
+			} else {
+				model.addAttribute("findCnt", 0); // 실패 (일치하는 정보 없음)
+			}
+			
+			// 입력값 유지용 (필요시)
+			model.addAttribute("name", name);
+			model.addAttribute("email", email);
+		}
+		
 	// 3-1. 비밀번호 찾기
 	@Override
 	public void findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)

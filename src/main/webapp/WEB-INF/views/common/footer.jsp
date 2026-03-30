@@ -20,8 +20,8 @@
         </div>
 
         <div class="d-flex align-items-center gap-2">
-          <a href="${path}/FAQ.do" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;">FAQ</a>
-          <a href="${path}/inquiry.do" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;">1:1문의</a>
+          <a href="${path}/faqMain.sp" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;">FAQ</a>
+          <a href="${path}/inquiryWrite.sp" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;">1:1문의</a>
         </div>
       </div>
 

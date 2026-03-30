@@ -1,3 +1,18 @@
+<!--
+ * @author 송영은
+ * 최초작성일: 26.03.10
+ * 최종수정일: 26.03.30
+ * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
+ * 
+ * 코드 변경사항
+ * v260318: 
+ *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
+ * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ * v260330: 
+ * 		다양한 티켓 유형 대응할 수 있게 수정. 
+ * 		축제 수정 시 기존 티켓 유형 삭제 및 추가 가능하게 수정
+ *-->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>  <!-- 관리자용 setting 별도로 함. 주의! -->   
@@ -365,53 +380,16 @@
            	<tr>
            		<th>티켓 정보</th>
            		<td> 
+           			<!-- 티켓 추가 버튼 시작 -->
+           			<div class="mb-2">
+					    <button type="button" class="btn btn-primary" onclick="addTicketRow()">
+					        + 티켓 추가
+					    </button>
+					</div>
+					<!-- 티켓 추가 버튼 끝 -->
+					
            			<!-- 티켓 표 시작: 동적으로 작동 -->
            			<div id="ticketTable_edit"></div>
-           			<!-- 티켓 표 끝 -->
-           			<!-- 이전 작성 코드 -->
-            		<!-- <table class="table">
-            			헤더 시작: 티켓 종류, 가격, 재고, 설명
-            			<tr>
-            				<th>티켓 종류</th>
-            				<th>가격</th>
-            				<th>재고</th>
-            				<th>설명</th>
-            			</tr>
-            			헤더 끝
-            			무료 티켓 시작
-            			<tr>
-            				<td>무료</td>
-            				<td><input type="number" id="priceFree" name="priceFree" placeholder="가격" >원</td>
-            				<td><input type="number" id="stockFree" name="stockFree" placeholder="재고" ></td>
-            				<td><textarea id="ticketDescFreeDay" name="ticketDescFreeDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
-            			</tr>
-            			무료 티켓 끝
-            			1일권 시작
-            			<tr>
-            				<td>1일권</td>
-            				<td><input type="number" id="priceOneDay" name="priceOneDay" placeholder="가격" >원</td>
-            				<td><input type="number" id="stockOneDay" name="stockOneDay" placeholder="재고" ></td>
-            				<td><textarea id="ticketDescOneDay" name="ticketDescOneDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
-            			</tr>
-            			1일권 끝
-            			2일권 시작
-            			<tr>
-            				<td>2일권</td>
-            				<td><input type="number" id="priceTwoDay" name="priceTwoDay" placeholder="가격" >원</td>
-            				<td><input type="number" id="stockTwoDay" name="stockTwoDay" placeholder="재고" ></td>
-            				<td><textarea id="ticketDescTwoDay" name="ticketDescTwoDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
-            			</tr>
-            			2일권 끝
-            			전일권 시작
-            			<tr>
-            				<td>전일권</td>
-            				<td><input type="number" id="priceAllDay" name="priceAllDay" placeholder="가격" >원</td>
-            				<td><input type="number" id="stockAllDay" name="stockAllDay" placeholder="재고" ></td>
-            				<td><textarea id="ticketDescAllDay" name="ticketDescAllDay" cols="24" rows="2" placeholder="티켓 설명문을 입력해주세요."></textarea></td>
-            			</tr>
-            			전일권 끝
-              		</table> -->
-              		<!-- 티켓 표 끝 -->
            		</td>
            	</tr>
            	<!-- 티켓 정보 입력 끝 -->

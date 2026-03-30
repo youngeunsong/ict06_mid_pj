@@ -1,13 +1,16 @@
 /**
  * @author 송영은
  * 최초작성일: 26.03.10
- * 최종수정일: 26.03.18
+ * 최종수정일: 26.03.30
  * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
  * 
  * 코드 변경사항
  * v260318: 
  *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
  * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ * v260330: 
+ * 		다양한 티켓 유형 대응할 수 있게 수정. 
+ * 		축제 수정 시 기존 티켓 유형 삭제 및 추가 가능하게 수정
  */
 
 package spring.ict06team1.midpj.service;
@@ -17,8 +20,10 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -142,71 +147,107 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 	// 축제 정보 수정
 	@Override
-	public int modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model) {
+	@Transactional
+	public int modifyFestival(FestivalDTO festivalDTO) {
 
 	    System.out.println("[AdFestivalServiceImpl - modifyFestival()]");
 
-	    int festival_id = Integer.parseInt(request.getParameter("festival_id"));
-
-	    String name = request.getParameter("name");
-	    String address = request.getParameter("address");
-	    double latitude = parseDouble(request.getParameter("latitude"));
-	    double longitude = parseDouble(request.getParameter("longitude"));
-	    String image_url = request.getParameter("image_url");
-
-	    String description = request.getParameter("description");
-	    Date start_date = Date.valueOf(request.getParameter("start_date"));
-	    Date end_date = Date.valueOf(request.getParameter("end_date"));
-
-	    // Place DTO
-	    PlaceDTO placeDTO = new PlaceDTO();
+	    int festival_id = festivalDTO.getFestival_id();
+	    
+	    // ===============================
+	    // 1. 장소 수정
+	    // ===============================
+	    PlaceDTO placeDTO = festivalDTO.getPlaceDTO();
+	    
+	    if(placeDTO == null){
+	        throw new RuntimeException("placeDTO is null");
+	    }
+	    
 	    placeDTO.setPlace_id(festival_id);
-	    placeDTO.setName(name);
-	    placeDTO.setAddress(address);
-	    placeDTO.setLatitude(latitude);
-	    placeDTO.setLongitude(longitude);
-	    placeDTO.setImage_url(image_url);
 
-	    // Festival DTO
-	    FestivalDTO festivalDTO = new FestivalDTO();
-	    festivalDTO.setFestival_id(festival_id);
-	    festivalDTO.setDescription(description);
-	    festivalDTO.setStart_date(start_date);
-	    festivalDTO.setEnd_date(end_date);
-
-	    // 1️) 장소 수정
+	    // 1) 장소 수정
 	    int placeUpdateCnt = dao.updatePlace(placeDTO);
 
-	    // 2️) 축제 수정
+	    // ===============================
+	    // 2. 축제 수정
+	    // ===============================
 	    int festivalUpdateCnt = dao.modifyFestival(festivalDTO);
 
-	    // 3️) 티켓 수정
-	    String[] ticket_types = {"Free", "OneDay", "TwoDay", "AllDay"};
+	    // ===============================
+	    // 3. 티켓 처리
+	    // ===============================
+	    List<FestivalTicketDTO> newTicketList = festivalDTO.getTicketList();
+	    
+	    // 기존 DB 티켓 조회
+	    List<FestivalTicketDTO> oldTicketList =
+	            dao.getTicketsByFestivalId(festival_id);
+	    
+	    Map<Integer, FestivalTicketDTO> oldTicketMap = new HashMap<Integer, FestivalTicketDTO>();
+	    for(FestivalTicketDTO oldTicket : oldTicketList){
+	        oldTicketMap.put(oldTicket.getTicket_id(), oldTicket);
+	    }
+	    
+	    int ticketCnt = 1;
 
-	    int ticketUpdateCnt = 1;
+	    if(newTicketList != null){
+	    	Set<String> typeSet = new HashSet<String>();
 
-	    for(String type : ticket_types){
+	        for(FestivalTicketDTO ticket : newTicketList){
+	        	
+	        	// 중복 티켓 유형 방지 
+	        	if(typeSet.contains(ticket.getTicket_type())){
+	                throw new RuntimeException("duplicate ticket_type");
+	            }
 
-	        FestivalTicketDTO ticketDTO = new FestivalTicketDTO();
+	            typeSet.add(ticket.getTicket_type());
 
-	        ticketDTO.setFestival_id(festival_id);
-	        ticketDTO.setTicket_type(type);
-	        ticketDTO.setPrice(parseInteger(request.getParameter("price"+type)));
-	        ticketDTO.setStock(parseInteger(request.getParameter("stock"+type)));
-	        ticketDTO.setDescription(request.getParameter("ticketDesc"+type));
+	            // 티켓의 축제 아이디 가져오기
+	        	ticket.setFestival_id(festival_id);
 
-	        int result = dao.updateTicket(ticketDTO);
+	            // 신규 티켓
+	            if(ticket.getTicket_id() == 0){
 
-	        if(result == 0){
-	            ticketUpdateCnt = 0;
+	                int insertResult = dao.insertTicket(ticket);
+
+	                if(insertResult == 0){
+	                    ticketCnt = 0;
+	                    break;
+	                }
+	            } 
+	            // 기존 티켓 정보 변경 시 티켓 정보 수정
+	            else{
+	            	int updateResult = dao.updateTicket(ticket);
+	            	
+	            	if(updateResult == 0){
+	                    ticketCnt = 0;
+	                    break;
+	                }
+
+	                oldTicketMap.remove(ticket.getTicket_id());
+	            }
+	        }
+	    }
+	    
+	    // ===============================
+	    // 4. 삭제 처리 : 수정하면서 삭제되는 티켓 정보
+	    // ===============================
+	    for(Integer deleteId : oldTicketMap.keySet()){
+	        int deleteResult = dao.deleteTicket(deleteId);
+
+	        if(deleteResult == 0){
+	            ticketCnt = 0;
 	            break;
 	        }
 	    }
+	    
+	    // ===============================
+	    // 5. 결과
+	    // ===============================
 
-	    if(placeUpdateCnt>0 && festivalUpdateCnt>0 && ticketUpdateCnt>0){
-	    	return 1; 
+	    if(placeUpdateCnt>0 && festivalUpdateCnt>0 && ticketCnt >0){
+	        return 1;
 	    }else{
-	    	return 0; 
+	        return 0;
 	    }
 	}
 

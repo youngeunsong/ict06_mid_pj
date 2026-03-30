@@ -19,6 +19,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
 	@Autowired
 	private SqlSession sqlSession;
+	
 
 	// 1. 장소 정보 조회
 	// mapper의 getPlaceDetail 쿼리를 실행
@@ -143,6 +144,16 @@ public class ReservationDAOImpl implements ReservationDAO {
 	    return sqlSession.getMapper(ReservationDAO.class).updateReservationPaymentId(map);
 	}
 	
+	// 리뷰/설문 작성 포인트 적립
+	@Override
+	public int insertReviewPoint(Map<String, Object> map) {
+	    System.out.println("ReservationDAOImpl - insertReviewPoint()");
+	    
+	    int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.UserDAO.insertReviewPoint", map);
+	    
+	    return insertCnt;
+	}
+	
 	@Override
 	public List<Map<String, Object>> getRestTimeReservationCount(Map<String, Object> map) {
 	    return sqlSession.getMapper(ReservationDAO.class).getRestTimeReservationCount(map);
@@ -152,5 +163,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 	public int countRestReservationByDateTime(Map<String, Object> map) {
 	    return sqlSession.getMapper(ReservationDAO.class).countRestReservationByDateTime(map);
 	}
+	
+	
 
 }

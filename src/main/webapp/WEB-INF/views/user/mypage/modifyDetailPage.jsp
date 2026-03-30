@@ -16,10 +16,27 @@
 <link rel="stylesheet" href="${path}/resources/css/user/mypage/modifyDetailPage.css">
 
 <script type="text/javascript">
-	// 폼 제출 전 유효성 검사
 	function validateForm() {
 		const pw = document.getElementById("password").value;
 		const pwConfirm = document.getElementById("password_confirm").value;
+
+		// 회원가입 화면에서 보여주는 기준과 동일하게 적용
+		const hasEng = /[a-zA-Z]/.test(pw);
+		const hasNum = /[0-9]/.test(pw);
+		const hasSpe = /[~!@#$%^&*()_+|<>?:{}]/.test(pw);
+		const validLen = pw.length >= 8 && pw.length <= 20;
+
+		if (!validLen) {
+			alert("비밀번호는 8~20자 이내로 입력해주세요.");
+			document.getElementById("password").focus();
+			return false;
+		}
+
+		if (!hasEng || !hasNum || !hasSpe) {
+			alert("비밀번호는 영문, 숫자, 특수문자를 모두 포함해야 합니다.");
+			document.getElementById("password").focus();
+			return false;
+		}
 
 		if (pw !== pwConfirm) {
 			alert("변경할 비밀번호가 서로 일치하지 않습니다.");
@@ -27,8 +44,9 @@
 			return false;
 		}
 
-		if (!confirm("입력하신 정보로 수정하시겠습니까?"))
+		if (!confirm("입력하신 정보로 수정하시겠습니까?")) {
 			return false;
+		}
 		return true;
 	}
 </script>
@@ -70,9 +88,10 @@
 								<div class="section-title">비밀번호 변경</div>
 								<div class="row g-3">
 									<div class="col-md-6">
-										<label class="form-label small fw-bold">새 비밀번호</label> <input
-											type="password" name="password" id="password"
+										<label class="form-label small fw-bold">새 비밀번호</label>
+										<input type="password" name="password" id="password"
 											class="form-control" placeholder="새 비밀번호 입력" required>
+										<div class="form-text">영문, 숫자, 특수문자를 포함한 8~20자로 입력해주세요.</div>
 									</div>
 									<div class="col-md-6">
 										<label class="form-label small fw-bold">새 비밀번호 확인</label> <input

@@ -27,6 +27,8 @@ import spring.ict06team1.midpj.service.AccommodationService;
 import spring.ict06team1.midpj.service.FestivalService;
 import spring.ict06team1.midpj.service.ReservationService;
 import spring.ict06team1.midpj.service.RestaurantService;
+import spring.ict06team1.midpj.service.SurveyServiceImpl;
+
 
 @Controller
 public class ReservationController {
@@ -115,6 +117,8 @@ public class ReservationController {
 	public String surveyReviewAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => surveyReviewAction.rv>>>");
+		
+		resService.surveyReviewAction(request, response, model);
 
 		return "user/reservation/surveyReviewAction";
 	}

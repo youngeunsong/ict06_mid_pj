@@ -100,10 +100,14 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 
-		if (password == null || password.length() < 8) {
-			model.addAttribute("insertCnt", -3); // 비밀번호가 너무 짧음
-			return;
-		}
+		// 서버측 비밀번호 유효성 검사 (영문, 숫자, 특수문자 조합 8자 이상)
+	    String pwdPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+|<>?:{}]).{8,20}$";
+	    
+	    if (password == null || !password.matches(pwdPattern)) {
+	        System.out.println("중단: 비밀번호가 보안 정책에 맞지 않습니다.");
+	        model.addAttribute("insertCnt", -3); // 비밀번호 형식 오류 전송
+	        return;
+	    }
 
 		// 3. DTO 객체 생성 및 데이터 세팅
 		MemberDTO dto = new MemberDTO();

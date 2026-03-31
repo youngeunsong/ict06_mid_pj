@@ -1,8 +1,13 @@
 <!-- 
  * @author 김다솜
  * 최초작성일: 2026-03-24
- * 최종수정일: 2026-03-24
+ * 최종수정일: 2026-03-27
  * 참고 코드: festReservation.jsp
+ * 변경 사항
+ * ----------------------------------------
+ * v260327
+ * 예약날짜 선택 flatpickr 캘린더 적용, 예약시간 30분 단위 생성으로 수정
+ * ----------------------------------------	
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -21,28 +26,33 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+<!-- Flatpickr Calendar -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+
 <style>
-:root { -
-	-r-text: #111827; -
-	-r-muted: #6b7280; -
-	-r-line: #e5e7eb; -
-	-r-brand: #10b981; -
-	-r-brand2: #059669; -
-	-r-pill: #f3f4f6;
+:root {
+	--r-text: #111827;
+	--r-muted: #6b7280;
+	--r-line: #e5e7eb;
+	--r-brand: #10b981;
+	--r-brand2: #059669;
+	--r-pill: #f3f4f6;
 }
 
 /* 공통 */
 .r-muted {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 }
 
 .r-pill {
 	font-size: 12px;
-	color: var(- -r-muted);
-	background: var(- -r-pill);
+	color: var(--r-muted);
+	background: var(--r-pill);
 	padding: 6px 10px;
 	border-radius: 999px;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -63,14 +73,14 @@
 
 .r-score {
 	font-weight: 800;
-	color: var(- -r-text);
+	color: var(--r-text);
 }
 
 /* 갤러리 */
 .r-hero {
 	border-radius: 18px;
 	overflow: hidden;
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #f9fafb;
 	position: relative;
 	min-height: 420px;
@@ -98,7 +108,7 @@
 }
 
 .r-thumb {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 16px;
 	overflow: hidden;
 	background: #f9fafb;
@@ -134,7 +144,7 @@
 }
 
 .r-thumbSub {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	display: flex;
 	gap: 8px;
@@ -144,7 +154,7 @@
 /* 섹션 */
 .r-section {
 	padding: 18px 0;
-	border-bottom: 1px solid var(- -r-line);
+	border-bottom: 1px solid var(--r-line);
 }
 
 .r-section:last-child {
@@ -159,19 +169,19 @@
 }
 
 .r-lead {
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 14px;
 	line-height: 1.7;
 	margin: 0;
 }
 
 .r-chip {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	background: #fff;
 	border-radius: 999px;
 	padding: 8px 12px;
 	font-size: 13px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	display: inline-flex;
 	gap: 8px;
 	align-items: center;
@@ -180,12 +190,12 @@
 }
 
 .r-chip i {
-	color: var(- -r-brand);
+	color: var(--r-brand);
 }
 
 /* 지도 */
 .r-mapBox {
-	border: 1px solid var(- -r-line);
+	border: 1px solid var(--r-line);
 	border-radius: 18px;
 	overflow: hidden;
 	height: 240px;
@@ -199,7 +209,7 @@
 	justify-content: space-between;
 	gap: 12px;
 	padding: 12px 0;
-	border-bottom: 1px dashed var(- -r-line);
+	border-bottom: 1px dashed var(--r-line);
 }
 
 .r-menuItem:last-child {
@@ -213,7 +223,7 @@
 
 .r-menuDesc {
 	margin-top: 4px;
-	color: var(- -r-muted);
+	color: var(--r-muted);
 	font-size: 12px;
 	line-height: 1.5;
 }
@@ -229,6 +239,59 @@
 	height: 44px;
 	border-radius: 999px;
 	font-weight: 900;
+}
+
+/* 예약 */
+/* Flatpickr */
+#visit_date {
+	display: none;
+}
+
+/* 캘린더 스타일 */
+.flatpickr-calendar {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+}
+
+.flatpickr-day.selected {
+	background-color: #10b981;
+	border-color: #10b981;
+}
+
+/* 예약시간 slot 버튼 */
+.time-slot-btn {
+	border: 1px solid #10b981;
+	background: #fff;
+	border-radius: 999px;
+	font-size: 14px;
+	padding: 6px 14px;
+	transition: all 0.2s;
+}
+
+.time-slot-btn:hover {
+	background: #d1fae5;
+}
+
+.time-slot-btn.active {
+	background-color: #10b981;
+	color: #fff;
+	border: 1px solid #10b981;
+	outline: none;
+}
+
+.time-group {
+	margin-bottom: 16px;
+}
+
+.time-title {
+	font-size: 14px;
+	font-weight: 700;
+	margin-bottom: 6px;
+	color: #555;
+}
+
+.time-group .time-slot-btn {
+	margin: 3px;
 }
 
 /* sticky 사이드 */
@@ -273,18 +336,20 @@
 				<h3 class="fw-bold mb-4">예약 정보 입력</h3>
 				
 				<div class="card shadow-sm border-0 p-4" style="border-radius: 20px;">
-					<!-- 방문일 -->
-					<div class="mb-3">
-						<label class="form-label fw-bold">방문 예정일</label>
-						<input type="date" id="visit_date" class="form-control form-control-lg" 
-								min="">
-					</div>
-					
-					<!-- 방문 시간 -->
-					<div class="mb-3">
-						<label class="form-label fw-bold">방문 시간</label>
-						<input type="time" id="visit_time" class="form-control form-control-lg" 
-								min="">
+					<!-- 방문일 및 시간 -->
+					<div class="mb-4">
+						<label class="form-label fw-bold">방문일 및 시간</label>
+						
+						<!-- 캘린더 -->
+						<!-- <div id="calendar-inline-container" style="display:flex; justify-content:center;"></div> -->
+						<div id="selected_date_display" class="text-center mt-2 fw-bold text-success"></div>
+						<input type="hidden" id="visit_date">
+						
+						<!-- 시간 -->
+						<div id="timeSlotWrap" class="mt-3 d-flex flex-wrap gap-2">
+							<span class="text-muted small">날짜를 먼저 선택해주세요.</span>
+						</div>
+						<input type="hidden" id="visit_time">
 					</div>
 					
 					<!-- 인원수 -->
@@ -311,7 +376,7 @@
 					</div>
 					
 					<!-- 결제/예약 버튼 -->
-					<button id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
+					<button type="button" id="btnSubmitReservation" class="btn btn-success btn-lg w-100 fw-bold py-3"
 							onclick="submitReservation()" style="border-radius:15px;" disabled>
 						예약하기
 					</button>

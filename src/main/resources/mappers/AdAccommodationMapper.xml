@@ -131,7 +131,7 @@
 	    )
 	</insert>
 	
-	<!-- 맛집 상세 정보 조회 -->
+	<!-- 숙소 상세 정보 조회 -->
 	<select id="getPlaceDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.PlaceDTO">
         SELECT 
             place_id, 
@@ -147,7 +147,7 @@
         WHERE place_id = #{place_id}
     </select>
     
-    <!-- 맛집 상세 정보 조회 -->
+    <!-- 숙소 상세 정보 조회 -->
     <select id="getAccommodationDetail" parameterType="int" resultType="spring.ict06team1.midpj.dto.AccommodationDTO">
         SELECT 
             accommodation_id, 

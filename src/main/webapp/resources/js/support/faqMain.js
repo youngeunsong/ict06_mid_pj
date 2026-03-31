@@ -7,6 +7,26 @@
 let searchTimer; // 실시간 검색 부하 방지용 타이머
 
 /**
+ * 0. 페이지 이탈 방지 체크 (신규 추가)
+ * 문의 작성 중 검색이나 로고 클릭 시 데이터 유실을 막습니다.
+ */
+function confirmExit() {
+    // 1. 현재 주소에 'inquiryWrite'가 포함되어 있는지 확인
+    const isInquiryWrite = window.location.pathname.includes('inquiryWrite');
+    
+    // 2. 문의 작성 페이지가 아니라면? 그냥 true를 반환하고 끝남!
+    if (isInquiryWrite) {
+        const hasTitle = $("#title").val() && $("#title").val().trim() !== "";
+        const hasContent = $("#content").val() && $("#content").val().trim() !== "";
+        
+        if (hasTitle || hasContent) {
+            return confirm("작성 중인 내용은 저장되지 않습니다. 정말 이 페이지를 벗어나시겠습니까?");
+        }
+    }
+    return true; 
+}
+
+/**
  * 1. 엔터키 및 타이핑 감지 (Debounce 적용)
  */
 function checkEnter(event) {
@@ -22,44 +42,56 @@ function checkEnter(event) {
 
 /**
  * 2. FAQ 검색 실행 (Ajax + 경로 분기)
- * 어느 페이지에서든 호출 가능하도록 경로 체크 로직이 포함됨
+ * 메인과 상세 페이지에서는 Ajax 검색을 수행하고, 
+ * 그 외 페이지(문의 작성 등)에서만 메인으로 이동합니다.
  */
 function searchFaq() {
     let keyword = $("#keyword").val().trim();
     
-    // 현재 페이지가 FAQ 메인(.sp)인지 정확히 판별 (URL에 faqMain이 포함되어 있는지 확인)
+    // 현재 페이지 경로 확인 (.sp 주소 체계에 맞게)
     const isFaqPage = window.location.pathname.includes('faqMain');
+    const isDetailPage = window.location.pathname.includes('faqDetail');
 
-    // [분기 1] FAQ 메인 페이지가 아닐 때 (예: 1:1 문의 작성 페이지 등)
-    if (!isFaqPage) {
+    // [분기 1] FAQ 메인도 상세도 아닐 때만 메인으로 이동
+    if (!isFaqPage && !isDetailPage) {
         if (keyword !== "") {
-            // 검색어를 쿼리 스트링으로 들고 FAQ 메인으로 페이지 이동
             location.href = contextPath + "/faqMain.sp?keyword=" + encodeURIComponent(keyword);
         }
-        return; // 메인으로 이동하므로 아래 Ajax 로직은 실행하지 않음
+        return; 
     }
 
-    // [분기 2] 이미 FAQ 메인 페이지일 때 (실시간 Ajax 검색 수행)
-    let $activeTag = $(".tag.active");
-    let currentCategory = ($activeTag.text() === '전체') ? '' : $activeTag.text();
-
+    // [분기 2] Ajax 검색 실행
     if (keyword !== "") {
-        // 검색어가 있을 때: 검색 API 호출
         $.ajax({
             url: contextPath + "/searchFaqAjax.sp", 
             type: "GET",
             data: { "keyword": keyword },
             success: function(data) {
-                renderFaqList(data); // 리스트 렌더링
-                $("#selected-category-name").text("검색 결과");
-            },
-            error: function() {
-                console.error("FAQ 검색 중 오류 발생");
+                // 1. 상세 내용 영역이나 기존 목록 영역을 숨김
+                $(".faq-list-container").hide();
+                $(".faq-q-section, .faq-a-section, nav[aria-label='breadcrumb'], .text-center.mt-5").hide();
+                $("#detailViewSection").hide(); // 감싸는 div를 만드셨다면 이것만 숨기면 됨
+
+                // 2. 결과 출력 영역 보여주기
+                $("#faqListArea").show();
+                
+                // 3. 리스트 렌더링
+                renderFaqList(data); 
+                
+                // 제목 영역이 있다면 '검색 결과'로 변경
+                $(".content-card h4.fw-bold").first().text("검색 결과");
             }
         });
     } else {
-        // 검색어를 비웠을 때: 현재 선택된 카테고리의 기본 리스트(Top 5)로 복구
-        loadFaqList(currentCategory); 
+        // 검색어를 다 지웠을 때
+        if (isFaqPage) {
+            let $activeTag = $(".tag.active");
+            let currentCategory = ($activeTag.text() === '전체') ? '' : $activeTag.text();
+            loadFaqList(currentCategory); 
+        } else if (isDetailPage) {
+            // 상세 페이지에서 검색어 지우면 원래대로 복구 (새로고침이 가장 확실함)
+            location.reload(); 
+        }
     }
 }
 
@@ -80,6 +112,9 @@ function loadFaqList(category, keyword = '') {
 }
 
 function changeCategory(category, obj) {
+   // ⭐ 카테고리 변경 시에도 작성 중이면 체크 (선택 사항)
+    if (!confirmExit()) return;
+   
     $(".tag").removeClass("active");
     $(obj).addClass("active");
     $("#keyword").val(""); // 카테고리 클릭 시 검색창 초기화
@@ -189,13 +224,26 @@ $(window).on("scroll", function() {
     }
 });
 
-// 초기 로드 시 URL 파라미터에 검색어가 있다면 자동 실행
+// 초기 로드 시 URL 파라미터에 검색어가 있다면 자동 실행 및 커서 제어
 $(document).ready(function() {
     const urlParams = new URLSearchParams(window.location.search);
     const keyword = urlParams.get('keyword');
+    const $searchInput = $("#keyword"); // 검색창 선택
+
     if (keyword) {
-        $("#keyword").val(keyword);
+        // 1. 검색창에 값 복원
+        $searchInput.val(keyword);
+        
+        // 2. 검색 실행 (기존 함수 호출)
         searchFaq();
+
+        // 3. ⭐ 커서 및 포커스 제어 (핵심!)
+        $searchInput.focus(); // 일단 포커스를 줌
+        
+        // 커서를 글자 맨 뒤로 보내기 위한 트릭
+        // 값을 비웠다가 다시 채우면 브라우저가 커서를 끝에 배치합니다.
+        let tempVal = $searchInput.val();
+        $searchInput.val('').val(tempVal);
     }
 });
 

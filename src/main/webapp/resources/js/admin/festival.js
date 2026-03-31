@@ -124,10 +124,10 @@ function viewFestivalDetail(id){
 	    data.ticketList.forEach(function(ticket){
 
 	        ticketHtml += '<tr>';
-	        ticketHtml += '<td>' + ticket.ticket_type + '</td>';
-	        ticketHtml += '<td>' + ticket.price + '</td>';
-	        ticketHtml += '<td>' + ticket.stock + '</td>';
-	        ticketHtml += '<td>' + ticket.description + '</td>';
+	        ticketHtml += '<td>' + (ticket.ticket_type === null ? '' : ticket.ticket_type) + '</td>';
+	        ticketHtml += '<td>' + (ticket.price === null ? '' : ticket.price) + '</td>';
+	        ticketHtml += '<td>' + (ticket.stock === null ? '' : ticket.stock) + '</td>';
+	        ticketHtml += '<td>' + (ticket.description === null ? '' : ticket.description) + '</td>';
 	        ticketHtml += '</tr>';
 
 	    });
@@ -137,34 +137,6 @@ function viewFestivalDetail(id){
 
 	    $('#ticketTableArea').html(ticketHtml);
 	}
-   // if(data.ticketList){
-   //  data.ticketList.forEach(function(ticket){
-
-// 	 	if(ticket.ticket_type == "Free"){
-// 			 $('#detail_priceFree').text(ticket.price + "원");
-// 			 $('#detail_stockFree').text(ticket.stock);
-// 			 $('#detail_ticketDescFreeDay').text(ticket.description);
-// 			}
-		
-// 		if(ticket.ticket_type == "OneDay"){
-// 			 $('#detail_priceOneDay').text(ticket.price + "원");
-// 			 $('#detail_stockOneDay').text(ticket.stock);
-// 			 $('#detail_ticketDescOneDay').text(ticket.description);
-// 		}
-		
-// 		if(ticket.ticket_type == "TwoDay"){
-// 			 $('#detail_priceTwoDay').text(ticket.price + "원");
-// 			 $('#detail_stockTwoDay').text(ticket.stock);
-// 			 $('#detail_ticketDescTwoDay').text(ticket.description);
-// 		}
-		
-// 		if(ticket.ticket_type == "AllDay"){
-// 			 $('#detail_priceAllDay').text(ticket.price + "원");
-// 			 $('#detail_stockAllDay').text(ticket.stock);
-// 			 $('#detail_ticketDescAllDay').text(ticket.description);
-// 		}
-   //  });
-   // }
 
    $('#modal_festival_detail').modal("show");
   }
@@ -275,6 +247,36 @@ function getTicketData(){
 /* 축제 수정 : 행 추가 함수 */
 function addTicketRow(){
 
+    // =========================
+    // 1. table이 없으면 생성
+    // =========================
+    if($('#ticketTable_edit table').length === 0){
+
+        var tableHtml = '';
+
+        tableHtml += '<table class="table">';
+        tableHtml += '<thead>';
+        tableHtml += '<tr>';
+        tableHtml += '<th>티켓 종류</th>';
+        tableHtml += '<th>가격</th>';
+        tableHtml += '<th>재고</th>';
+        tableHtml += '<th>설명</th>';
+        tableHtml += '<th>';
+        tableHtml += '<button type="button" class="btn btn-primary btn-sm" onclick="addTicketRow()">+</button>';
+        tableHtml += '</th>';
+        tableHtml += '</tr>';
+        tableHtml += '</thead>';
+
+        tableHtml += '<tbody></tbody>';
+        tableHtml += '</table>';
+
+        $('#ticketTable_edit').html(tableHtml);
+    }
+
+
+    // =========================
+    // 2. 중복 ticket_type 체크
+    // =========================
     var ticketTypes = [];
 
     $('#ticketTable_edit .ticket_type').each(function(){
@@ -286,6 +288,10 @@ function addTicketRow(){
         }
     });
 
+
+    // =========================
+    // 3. ticket_type 입력
+    // =========================
     var newType = prompt("추가할 티켓 종류를 입력하세요");
 
     if(newType == null || newType.trim() === ''){
@@ -299,13 +305,30 @@ function addTicketRow(){
         return;
     }
 
+
+    // =========================
+    // 4. row 생성
+    // =========================
     var row = '';
 
     row += '<tr class="ticketRow">';
-    row += '<td><input type="text" class="ticket_type" value="'+ newType +'"></td>';
-    row += '<td><input type="number" class="ticket_price"></td>';
-    row += '<td><input type="number" class="ticket_stock"></td>';
-    row += '<td><textarea class="ticket_desc"></textarea></td>';
+
+    row += '<td>';
+    row += '<input type="text" class="ticket_type" value="'+ newType +'">';
+    row += '<input type="hidden" class="ticket_id" value="0">';
+    row += '</td>';
+
+    row += '<td>';
+    row += '<input type="number" class="ticket_price" value="0">';
+    row += '</td>';
+
+    row += '<td>';
+    row += '<input type="number" class="ticket_stock" value="0">';
+    row += '</td>';
+
+    row += '<td>';
+    row += '<textarea class="ticket_desc" rows="2"></textarea>';
+    row += '</td>';
 
     row += '<td>';
     row += '<button type="button" class="btn btn-danger btn-sm" onclick="removeTicketRow(this)">-</button>';
@@ -313,6 +336,10 @@ function addTicketRow(){
 
     row += '</tr>';
 
+
+    // =========================
+    // 5. tbody에 추가
+    // =========================
     $('#ticketTable_edit tbody').append(row);
 }
 

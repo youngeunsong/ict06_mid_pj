@@ -112,6 +112,59 @@ DELETE FROM FESTIVAL
  WHERE festival_id = 1007;
 
 -----------------------------------------
+-- 시연을 위해 이미지가 존재하는 축제의 평점 올리는 테스트 데이터 생성
+INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
+SELECT 
+    SEQ_REVIEW.NEXTVAL,
+    u.user_id,
+    f.place_id,
+    5,
+    '시연용 최고 평점 리뷰입니다'
+FROM 
+(
+    SELECT 'user01' user_id FROM dual
+    UNION ALL SELECT 'user02' FROM dual
+    UNION ALL SELECT 'user03' FROM dual
+    UNION ALL SELECT 'user04' FROM dual
+    UNION ALL SELECT 'user05' FROM dual
+    UNION ALL SELECT 'user06' FROM dual
+    UNION ALL SELECT 'user07' FROM dual
+) u
+CROSS JOIN
+(
+    SELECT 3552203 place_id FROM dual
+    UNION ALL SELECT 3552157 FROM dual
+    UNION ALL SELECT 3552047 FROM dual
+    UNION ALL SELECT 3552009 FROM dual
+    UNION ALL SELECT 3551957 FROM dual
+    UNION ALL SELECT 1056 FROM dual
+    UNION ALL SELECT 1054 FROM dual
+) f;
+
+-- 시연을 위해 가짜 축제 데이터 중 평점이 높은 데이터의 평점이 랭킹에 반영 안 되게 처리
+-- 확인용
+SELECT r.review_id,
+       r.place_id,
+       r.rating,
+       r.status,
+       p.place_type
+FROM REVIEW r
+JOIN PLACE p ON r.place_id = p.place_id
+WHERE p.place_type = 'FEST'
+AND r.place_id BETWEEN 1 AND 983;
+
+-- 점수 수정용 쿼리
+UPDATE REVIEW
+SET status = 'HIDDEN'
+WHERE place_id IN (
+    SELECT place_id
+    FROM PLACE
+    WHERE place_type = 'FEST'
+    AND place_id BETWEEN 1 AND 983
+);
+
+
+-----------------------------------------
 -- 축제 등록 시 문제가 생길 때 체크 
 -- PLACE 테이블의 place_id 최댓값 확인
 SELECT MAX(place_id) FROM PLACE;

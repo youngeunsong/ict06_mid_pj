@@ -71,6 +71,9 @@ public interface UserService {
     public void myReservationDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException;
     
+    // 즐겨찾기 토글 처리
+    public int togglemyFavorite(String userId, int placeId);
+    
     //------------------------------
     //관리자 정보 조회 및 수정
     public MemberDTO getAdminDetail(String user_id);

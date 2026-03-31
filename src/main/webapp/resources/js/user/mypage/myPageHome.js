@@ -165,3 +165,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function toggleBookmark(event, el) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const placeId = el.getAttribute('data-place-id');
+
+    fetch(contextPath + '/togglemyFavorite.do?place_id=' + placeId, {
+        method: 'GET'
+    })
+    .then(response => response.text())
+    .then(result => {
+        result = result.trim();
+
+        if (result === '-1') {
+            alert('로그인이 필요합니다.');
+            location.href = contextPath + '/login.do';
+            return;
+        }
+
+        // 홈에서는 삭제되면 채워진 북마크 -> 빈 북마크
+        if (result === '0') {
+            el.innerHTML = '<i class="bi bi-bookmark"></i>';
+        }
+        // 홈에서는 추가되면 빈 북마크 -> 채워진 북마크
+        else if (result === '1') {
+            el.innerHTML = '<i class="bi bi-bookmark-fill"></i>';
+        }
+        else {
+            alert('즐겨찾기 처리 중 오류가 발생했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('togglemyFavorite 오류:', error);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+    });
+}

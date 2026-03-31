@@ -729,6 +729,26 @@ public class UserServiceImpl implements UserService {
 	        model.addAttribute("msg", "예약 취소에 실패했습니다.");
 	    }
 	}
+	
+	// 즐겨찾기 토글 처리
+	@Override
+	public int togglemyFavorite(String userId, int placeId) {
+		System.out.println("UserServiceImpl - togglemyFavorite()");
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", userId);
+	    map.put("place_id", placeId);
+
+	    int checkCnt = dao.checkmyFavorite(map);
+
+	    if (checkCnt > 0) {
+	        dao.deletemyFavorite(map);
+	        return 0;   // 삭제
+	    } else {
+	        dao.insertmyFavorite(map);
+	        return 1;   // 추가
+	    }
+	}
 
 	// ------------------------------
 	// 관리자 상세 정보 조회

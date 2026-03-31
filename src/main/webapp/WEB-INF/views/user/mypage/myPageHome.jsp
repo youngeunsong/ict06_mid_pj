@@ -167,21 +167,26 @@
 							<c:when test="${not empty topRestList}">
 								<c:forEach var="item" items="${topRestList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/restaurantDetail.rs?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>
@@ -203,21 +208,26 @@
 							<c:when test="${not empty topAccList}">
 								<c:forEach var="item" items="${topAccList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/accommodationDetail.ac?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>
@@ -239,21 +249,26 @@
 							<c:when test="${not empty topFestList}">
 								<c:forEach var="item" items="${topFestList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/festivalDetail.fe?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>

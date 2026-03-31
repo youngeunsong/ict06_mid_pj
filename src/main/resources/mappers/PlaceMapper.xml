@@ -55,7 +55,7 @@
 			AND (
 			SELECT NVL(ROUND(AVG(rating),1),0)
 			FROM review
-			WHERE place_id = p.place_id AND status = 'display'
+			WHERE place_id = p.place_id AND status = 'DISPLAY'
 			) &gt;= #{minRating}
 		</if>
 		<if test="keyword != null and keyword != ''">
@@ -512,7 +512,7 @@
 			AND (
 			SELECT NVL(ROUND(AVG(rating),1),0)
 			FROM review
-			WHERE place_id = p.place_id AND status = 'display'
+			WHERE place_id = p.place_id AND status = 'DISPLAY'
 			) &gt;= #{minRating}
 		</if>
 		<if test="province != null and province != ''">

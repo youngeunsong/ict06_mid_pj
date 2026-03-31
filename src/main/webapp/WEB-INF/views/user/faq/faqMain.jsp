@@ -1,5 +1,4 @@
 <!--  * 주요 기능:
- * 1. 카테고리별 필터링 (Ajax)
  * 2. 실시간 검색 및 엔터키 지원
  * 3. 아코디언 토글 (꿀렁임 방지 및 단일 개방 로직)
  * * @author 조민수
@@ -30,10 +29,23 @@
     body {
         background-color: #fafafa; /* 완전 흰색보다 눈이 편안한 밝은 회색 */
         color: #333; /* 글자색은 너무 검지 않은 짙은 회색 */
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; /* 트렌디한 Pretendard 폰트 사용 추천 (공통 설정에 없다면 추가) */
         overflow-x: hidden;
     }
-    
+	
+	/* [수정안] 모든 요소에 적용하되, 아이콘 전용 태그는 제외 */
+	.container.my-5 *:not(i), 
+	.inquiry-outer-container *:not(i),
+	.sticky-search-wrap *:not(i),
+	.content-card *:not(i) {
+	    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+	}
+	
+	/* Font Awesome 아이콘 폰트 강제 유지 */
+	.fa, .fas, .far, .fab, .transition-icon {
+	    font-family: "Font Awesome 5 Free" !important; /* 사용하시는 폰트어썸 버전에 맞춰 확인 */
+	    font-weight: 900;
+	}
+	
     .input-group #keyword:focus {
         border-color: #3CB371; /* 포커스 시 '맛침내 그린' 색상 */
         box-shadow: 0 0 0 0.2rem rgba(60, 179, 113, 0.25); /* 은은함 */
@@ -66,7 +78,7 @@
         background-color: #3CB371; /* 활성화된 카테고리는 '맛침내 그린' */
         color: #fff;
         border-color: #3CB371;
-        box-shadow: 0 4px 10px rgba(60, 179, 113, 0.3);
+        box-shadow: 0 4px 10px rgba(60, 179, 113, 0.2);
     }
     #selected-category-name {
         color: #3CB371; /* 선택된 카테고리 이름 색상 */
@@ -172,7 +184,11 @@
                             <a href="javascript:void(0);" onclick="changeCategory('이벤트/공지', this)" class="tag">이벤트/공지</a>
                             <a href="javascript:void(0);" onclick="changeCategory('기타', this)" class="tag">기타</a>
                         </div>
-                      
+                       	<div class="ms-auto">
+                            <a href="${pageContext.request.contextPath}/faqDetail.sp" class="text-secondary text-decoration-none small view-all-link">
+                                질문 전체보기 <i class="fa-solid fa-circle-chevron-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
                     
                     <div id="category-notice-area" class="pt-2 pb-2"> 
@@ -185,7 +201,7 @@
                 <div id="faqListArea">
                     <c:forEach var="faq" items="${faqList}">
                         <div class="faq-item border-bottom">
-                            <div class="faq-question p-3 d-flex justify-content-between align-items-center" 
+                            <div class="faq-question d-flex justify-content-between align-items-center" 
 							     onclick="toggleAnswer(this)" style="cursor:pointer;">
 							    <div>
 							        <span class="text-primary fw-bold me-2">Q.</span>
@@ -256,8 +272,8 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="list-group list-group-flush">
-                            <c:forEach var="top" items="${top10Global}" varStatus="status">
-                                <a href="faqMain.sp?faq_id=${top.faq_id}" 
+                              <c:forEach var="top" items="${top10Global}" varStatus="status">
+                                <a href="faqDetail.sp?faq_id=${top.faq_id}" 
                                    class="list-group-item list-group-item-action border-0 py-2 px-3">
                                     <div class="d-flex w-100 align-items-center">
                                         <span class="me-2 text-primary fw-bold" style="font-size: 0.85rem;">${status.count}.</span> 
@@ -273,6 +289,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div class="card shadow-sm border-0 mb-3" style="background-color: #f8fbf8;">
                     <div class="card-body p-4 text-center">

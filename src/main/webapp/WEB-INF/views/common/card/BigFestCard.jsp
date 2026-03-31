@@ -57,7 +57,7 @@
                         <c:out value="${fest.placeDTO.view_count}" default="0"/> <%-- 조회수가 없으면 0 출력 --%>
                     </span>
                     <span>
-                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-regular fa-star"></i>
                         <c:out value="${fest.placeDTO.avg_rating}" default="0"/> <%-- 평균 평점이 없으면 0 출력 --%>
                     </span>
                     <span>

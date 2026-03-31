@@ -82,15 +82,15 @@ $(function(){
 					수집 대상 지역 :
 				<select name="keyword" style="padding: 3px;">
 					<option value="">-- 지역 선택 --</option>
-					<option value="1">서울특별시</option>
-					<option value="2">인천광역시</option>
-					<option value="3">대전광역시</option>
-					<option value="4">대구광역시</option>
-					<option value="5">광주광역시</option>
-					<option value="6">부산광역시</option>
-					<option value="7">울산광역시</option>
-					<option value="31">경기도</option>
-					<option value="39">제주도</option>
+					<option value="1">서울</option>
+					<option value="2">인천</option>
+					<option value="3">대전</option>
+					<option value="4">대구</option>
+					<option value="5">광주</option>
+					<option value="6">부산</option>
+					<option value="7">울산</option>
+					<option value="31">경기</option>
+					<option value="39">제주</option>
 				</select>
 					
 					<button type="button" id="btn" style="margin-left: 10px;">수집 시작</button>

@@ -23,7 +23,8 @@ public interface AdFestivalService {
 	public FestivalDTO getFestivalDetailAjax(int festival_id);
 	
 	// 축제 정보 수정
-	public int modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model);
+//	public int modifyFestival(HttpServletRequest request, HttpServletResponse response, Model model);
+	public int modifyFestival(FestivalDTO festivalDTO);
 
 	// 신규 축제 등록
 	public void insertFestival(HttpServletRequest request, HttpServletResponse response, Model model);

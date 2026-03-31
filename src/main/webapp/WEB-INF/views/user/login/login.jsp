@@ -47,8 +47,12 @@
 			        <input type="submit" value="로그인" class="btn_login_submit">
 			        
 			        <div class="login_bottom_links">
-			            <a href="${path}/join.do">회원가입</a> | <a href="${path}/findPassword.do">ID/PW 찾기</a>
-			        </div>
+					    <a href="${path}/join.do">회원가입</a> 
+					    <span class="mx-2">|</span> 
+					    <a href="${path}/findId.do">아이디 찾기</a> 
+					    <span class="mx-2">|</span> 
+					    <a href="${path}/findPassword.do">비밀번호 찾기</a>
+					</div>
 			    </form>
 			</div>
          </div>

@@ -72,10 +72,35 @@ public class SupportController {
     @RequestMapping("/faqDetail.sp")
     public String faqDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
             throws ServletException, IOException {
-    	logger.info("[url => /faqDetail.sp]");
-    	
-        // 서비스 내부에서 updateFaqViewCount 실행 후 상세 조회 진행
-        service.getFaqDetail(request, response, model);
+        
+        logger.info("[url => /faqDetail.sp] 호출");
+
+        // 1. 파라미터 받기
+        String strId = request.getParameter("faq_id");
+        
+        // 2. [공통] 왼쪽 카테고리 메뉴를 위한 리스트 데이터는 항상 가져옴
+        service.getFaqList(request, response, model);
+
+        // 3. faq_id 존재 여부에 따른 로직 분기
+        if (strId == null || strId.trim().isEmpty()) {
+            // [케이스 1] ID가 없는 경우: "질문 전체보기" 모드
+            logger.info("모드: 전체 목록 보기");
+            
+            // 목록 모드 전달
+            model.addAttribute("viewMode", "LIST");
+            
+        } else {
+            // [케이스 2] ID가 있는 경우: "특정 질문 상세" 모드
+            logger.info("모드: 상세 내용 보기 (ID: " + strId + ")");
+            
+            // 상세 조회 서비스 호출 (조회수 증가 및 DTO 조회 포함)
+            service.getFaqDetail(request, response, model);
+            
+            // 상세 모드 전달
+            model.addAttribute("viewMode", "DETAIL");
+        }
+
+        // 4. 공통 뷰 페이지(faqDetail.jsp)로 이동
         return "user/faq/faqDetail";
     }
 

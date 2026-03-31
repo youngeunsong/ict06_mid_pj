@@ -1,6 +1,5 @@
 package spring.ict06team1.midpj.service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		Paging paging = new Paging(pageNum);
 		
 		//3. map으로 데이터 전달		
-		Map<String, Object> map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sc", sc);
 		map.put("paging", paging);
 
@@ -93,17 +92,23 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		dto.setContent(mpr.getParameter("content"));
 		dto.setIs_top(mpr.getParameter("isTop") != null ? "Y" : "N");
 		
-		MultipartFile file = mpr.getFile("uploadFile");
-		if(file != null && !file.isEmpty()) {
-			String savedPath = fileSaveService(file, request);
-			dto.setImage_url(savedPath);
+		//파일 여러개 가져오기
+		List<MultipartFile> files = mpr.getFiles("uploadFile");
+		StringBuilder sb = new StringBuilder();
+		
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				if(!file.isEmpty()) {
+					String savedPath = fileSaveService(file, request);
+					if(sb.length() > 0)
+						sb.append(",");
+					sb.append(savedPath);
+				}
+			}
 		}
-		else {
-			dto.setImage_url("");
-		}
+		dto.setImage_url(sb.toString());
 		
 		int result = adNoDao.insertNotice(dto);
-		
 		if(result > 0) {
 			model.addAttribute("msg", "등록 성공");
 		}
@@ -136,7 +141,7 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		}
 	
 		//DB에 들어갈 파일명
-		return savedFileName;
+		return request.getContextPath() + "/resources/upload/" + savedFileName;
 	}
 	
 
@@ -146,27 +151,54 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		System.out.println("[AdminNoticeImpl - updateNotice()]");
 		
 		MultipartHttpServletRequest mpr = (MultipartHttpServletRequest) request;
-		NoticeDTO dto = new NoticeDTO();
-		String userId = (String)request.getSession().getAttribute("sessionID");
 		
-		System.out.println("디버깅-관리자 세션ID: " + userId);
-		dto.setAdmin_id(userId);
-		dto.setNotice_id(Integer.parseInt(mpr.getParameter("noticeId")));
+		String[] existingFiles = mpr.getParameterValues("existingFiles");
+		StringBuilder sb = new StringBuilder();
+		
+		if(existingFiles != null) {
+			for(String file : existingFiles) {
+				if(sb.length() > 0)
+					sb.append(",");
+				sb.append(file);
+			}
+		}
+		
+		//새로 업로드된 파일 처리
+		List<MultipartFile> newFiles = mpr.getFiles("uploadFile");
+		for(MultipartFile file : newFiles) {
+			if(!file.isEmpty()) {
+				String savedName = fileSaveService(file, request);
+				if(sb.length() > 0)
+					sb.append(",");
+				sb.append(savedName);
+			}
+		}
+		
+		NoticeDTO dto = new NoticeDTO();
+		
+		int noticeId = Integer.parseInt(mpr.getParameter("noticeId"));
+		dto.setNotice_id(noticeId);
+		
+		String adminId = (String)request.getSession().getAttribute("sessionID");
+		dto.setAdmin_id(adminId);
+		
 		dto.setCategory(mpr.getParameter("category"));
 		dto.setTitle(mpr.getParameter("title"));
 		dto.setContent(mpr.getParameter("content"));
-		dto.setIs_top(mpr.getParameter("isTop") != null ? "Y" : "N");
 		
-		//이미지 수정
-		MultipartFile file = mpr.getFile("uploadFile");
-		if(file != null && !file.isEmpty()) {
-			String savedPath = fileSaveService(file, request);
-			dto.setImage_url(savedPath);
-		}
+		String isTop = mpr.getParameter("isTop") != null ? "Y" : "N";
+		dto.setIs_top(isTop);
+		
+		//최종 합쳐진 이미지 경로 저장
+		dto.setImage_url(sb.toString());
+		
 		int result = adNoDao.updateNotice(dto);
 		
 		if(result > 0) {
 			model.addAttribute("msg", "수정 성공");
+		}
+		else {
+			model.addAttribute("msg", "수정 실패");
 		}
 	}
 
@@ -188,25 +220,27 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		MultipartHttpServletRequest mpr = (MultipartHttpServletRequest) request;
 		
 		//1. 파일 데이터 가져오기
-		MultipartFile file = mpr.getFile("uploadFile");
+		MultipartFile file = mpr.getFile("file");
 		
-		if(file != null && !file.isEmpty()) {
-			String fileName = file.getOriginalFilename();
-			//2. 저장 경로 설정
-			String uploadPath = request.getSession().getServletContext().getRealPath("/resources/upload/");
-			File target = new File(uploadPath, fileName);
-			
-			try {
-				//3. 파일 저장
-				file.transferTo(target);
-				model.addAttribute("fileName", fileName);
-				model.addAttribute("msg", "파일 업로드 성공");
-			} catch(Exception e) {
-				e.printStackTrace();
-				model.addAttribute("msg", "파일 업로드 실패");
-			}
-		}
+		if(file == null) {
+	        System.out.println("[에러] 파일 객체가 null입니다. (Resolver 설정 확인 필요)");
+	    } else if(file.isEmpty()) {
+	        System.out.println("[에러] 파일이 비어있습니다. (JS formData 확인 필요)");
+	    } else {
+	        String savedFileName = fileSaveService(file, request);
+	        System.out.println("[성공] 저장된 파일명: " + savedFileName);
+	        
+	        String imagePath = request.getContextPath() + "/resources/upload/" + savedFileName;
+	        request.setAttribute("imageUrl", imagePath);
+	    }
+		/*
+		 * if(file != null && !file.isEmpty()) { String savedFileName =
+		 * fileSaveService(file, request); System.out.println("[성공] 저장된 파일명: " +
+		 * savedFileName); //2. 저장 경로 설정 String imagePath = request.getContextPath() +
+		 * "/resources/upload/" + savedFileName;
+		 * 
+		 * request.setAttribute("imageUrl", imagePath); }
+		 */
 	}
-	
 
 }

@@ -1,5 +1,5 @@
 <!-- 
- * @author 송혜진 / 송영은
+ * @author 김다솜 / 송혜진 / 송영은
  * 최초작성일: 2026-03-23
  * 최종수정일: 2026-03-25
  * 수정 내용
@@ -317,11 +317,12 @@
 				<div class="row g-4 mb-4">
 					<div class="col-lg-6 col-md-12">
 						<div class="card dashboard-card h-100">
-							<div
-								class="card-header d-flex justify-content-between align-items-center">
-								<h5 class="mb-0">1:1 문의 미처리</h5>
-								<a href="${path}/adInquiryList.adsp"
-									class="btn btn-sm btn-outline-primary">전체보기</a>
+							<div class="card-header d-flex align-items-center">
+								<h5 class="mb-0 me-auto">1:1 문의 미처리</h5>
+								<div class="card-tools">
+									<a href="${path}/adInquiryList.adsp"
+										class="btn btn-sm btn-outline-primary">전체보기</a>
+								</div>
 							</div>
 
 							<div class="card-body table-responsive">

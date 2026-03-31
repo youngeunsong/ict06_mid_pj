@@ -122,7 +122,7 @@ function showNextSurvey() {
 	console.log("🔄 showNextSurvey 호출됨");
 	console.log("   shouldOpenSurvey:", shouldOpenSurvey);
 	console.log("   isFirstSurvey:", isFirstSurvey);
-	console.log("   surveyQueue.length:", surveyQueue.length);
+	console.log("   남은 설문:", surveyQueue.length);
 	
 	if(!surveyQueue || surveyQueue.length === 0) {
 		console.log("⚠️ 모든 설문 완료");
@@ -130,11 +130,6 @@ function showNextSurvey() {
 		
 		$('#surveyGuide').addClass('d-none');
 		showToast("모든 설문 완료! 감사합니다🎉");
-		
-		$('body').append('<div id="doneEffect">🎉 완료!</div>');
-		setTimeout(() => {
-			$('#doneEffect').remove();
-		}, 1500);
 		
 		return;
 	}
@@ -185,14 +180,28 @@ $(document).on('click', '#openSurveyBtn', function() {
 // '나중에' 버튼 클릭
 // =========================
 $(document).on('click', '#laterBtn', function() {
-	const reservationId = $('#survey_reservation_id').val();
-	const key = "survey_skip_" + reservationId;
+	console.log("⏭️ '나중에' 버튼 클릭");
 	
-	sessionStorage.setItem(key, "true");
+	//모달 닫기
+	$('#surveyModal').modal('hide');
+	$('#reviewModal').modal('hide');
 	
+	//설문카드 숨기고 '나중에' 메시지 출력
 	$('#surveyGuide').addClass('d-none');
-	showNextSurvey();
+	$('#surveyLater').removeClass('d-none');
+	
+	console.log("✅ 설문을 건너뜀. 나중에 다시 들어오면 표시됩니다.");
 });
+
+// =========================
+// '지금 작성하기' 버튼 클릭
+// =========================
+$(document).on('click', '#retryBtn', function() {
+	console.log("🔄 지금 작성하기 클릭");
+	
+	//마이페이지로 이동
+	location.href = path + '/viewReservations.do?openSurvey=true';
+})
 
 // =========================
 // 점수 선택

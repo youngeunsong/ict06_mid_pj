@@ -164,14 +164,11 @@
             </div>
         </c:if>
     </section>
-
     <%@ include file="../../common/footer.jsp"%>
 </div>
-
 <script>
-    function filterBookmark(category) {
-        location.href = '${path}/viewBookmarks.do?category=' + category;
-    }
+    const contextPath = '${path}';
 </script>
+<script src="${path}/resources/js/user/mypage/viewBookmarks.js"></script>
 </body>
 </html>

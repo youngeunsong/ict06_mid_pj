@@ -394,18 +394,24 @@
 	    <!-- 리뷰/설문 작성 포인트 적립 -->
 	<insert id="insertReviewPoint" parameterType="map">
 	    INSERT INTO POINT (
-	        point_id, user_id, policy_key, amount, type, description, created_at
+	        point_id, 
+	        user_id, 
+	        policy_key, 
+	        amount, 		
+	        type, 
+	        description, 
+	        created_at
 	    )
 	    SELECT
 	        SEQ_POINT.NEXTVAL,
 	        #{userId},
-	        pp.policy_key,
-	        pp.amount,
+	        pp.policy_key, 		<!-- 정책 키 -->
+	        pp.amount,			<!-- 정책 테이블에서 포인트 금액 조회 -->
 	        'EARN',
 	        #{description},
 	        SYSDATE
 	    FROM point_policy pp
-	    WHERE pp.policy_key = #{policyKey}
+	    WHERE pp.policy_key = #{policyKey}	<!-- 전달받은 정책 키로 조회 -->
 	</insert>
 	
 </mapper>

@@ -23,6 +23,10 @@ public interface UserService {
     // 3. 로그인 처리 / 회원정보 인증 (아이디와 비번을 받아 일치하는 회원이 있는지 확인)
     public void loginAction(HttpServletRequest request, HttpServletResponse response, Model model)
     	throws ServletException, IOException;
+
+    // 3-0. 아이디 찾기
+    public void findIdAction(HttpServletRequest request, HttpServletResponse response, Model model)
+        	throws ServletException, IOException;
     
     // 3-1. 비밀번호 찾기
     public void findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -66,6 +70,9 @@ public interface UserService {
     // 나의 예약 상세
     public void myReservationDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException;
+    
+    // 즐겨찾기 토글 처리
+    public int togglemyFavorite(String userId, int placeId);
     
     //------------------------------
     //관리자 정보 조회 및 수정

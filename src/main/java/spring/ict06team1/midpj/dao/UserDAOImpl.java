@@ -48,6 +48,15 @@ public class UserDAOImpl implements UserDAO {
 		return selectCnt;
 	}
 	
+	// 아이디 찾기 (이름과 이메일로 마스킹된 아이디 조회)
+	@Override
+	public String findUserId(Map<String, Object> map) {
+		System.out.println("UserDAOImpl - findUserId()");
+		
+		// 네임스페이스와 ID를 직접 연결 (가장 안전함)
+	    return sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.findUserId", map);
+	}
+	
 	// 비밀번호 찾기 본인확인
 	@Override
 	public int findPasswordCheck(Map<String, Object> map) {
@@ -227,6 +236,37 @@ public class UserDAOImpl implements UserDAO {
 
 	    return dto;
 	}
+	
+	// 즐겨찾기(버튼) 존재 여부 확인
+	@Override
+	public int checkmyFavorite(Map<String, Object> map) {
+	    System.out.println("UserDAOImpl - checkmyFavorite()");
+	    
+	    int checkCnt = sqlSession.selectOne("spring.ict06team1.midpj.dao.UserDAO.checkmyFavorite", map);
+	    
+	    return checkCnt;
+	}
+
+	// 즐겨찾기(버튼) 추가
+	@Override
+	public int insertmyFavorite(Map<String, Object> map) {
+	    System.out.println("UserDAOImpl - insertmyFavorite()");
+	    
+	    int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.UserDAO.insertmyFavorite", map);
+	    
+	    return insertCnt;
+	}
+
+	// 즐겨찾기(버튼) 삭제
+	@Override
+	public int deletemyFavorite(Map<String, Object> map) {
+	    System.out.println("UserDAOImpl - deletemyFavorite()");
+	    
+	    int deleteCnt = sqlSession.delete("spring.ict06team1.midpj.dao.UserDAO.deletemyFavorite", map);
+	    
+	    return deleteCnt;
+	}
+	
 	//관리자 정보 수정
 	@Override
 	public int updateAdmin(MemberDTO dto) {

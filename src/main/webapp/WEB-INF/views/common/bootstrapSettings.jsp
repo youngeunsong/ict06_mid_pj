@@ -45,7 +45,13 @@
 <link rel="stylesheet" href="${path}/resources/css/common/card.css">
 
 <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- (다솜)adminSetting.jsp와 bootStrapSettings.jsp에서 jQuery를 중복 로드하면서 오류 발생하는 경우 있으므로
+	jQuery 로드된 페이지에서는 재로드 스킵하는 조건을 포함한 코드로 수정함 -->
+<script>
+if(typeof jQuery === 'undefined') {
+	document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
+}
+</script>
 
 <!-- Bootstrap bundle (Popper 포함) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>

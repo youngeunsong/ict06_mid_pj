@@ -75,12 +75,34 @@ $(document).ready(function() {
                 var newCenter = new kakao.maps.LatLng(currentSearchConfig.lat, currentSearchConfig.lng);
                 map.setCenter(newCenter);
                 saveToLocal();
-                refreshAll(); // 데이터 갱신
+                
+             	// 사용자 현재 위치를 마커로 표시 시작 ------------------
+             	// 마커 이미지 변경
+		        var imageSrc = '${path}/resources/images/common/myLocation.png', // 마커이미지의 주소입니다    
+			    imageSize = new kakao.maps.Size(64, 62), // 마커이미지의 크기입니다
+			    imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+		      
+				// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+				var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+		    	markerPosition = new kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다
+		        
+		        // 4. 현재 위치 마커로 표시 
+		        var marker = new kakao.maps.Marker({  
+		            map: map, 
+		            position: newCenter,
+		            image: markerImage
+		        });
+		     	// 사용자 현재 위치를 마커로 표시 끝 ------------------
+             	 
+                // refreshAll(); // 데이터 갱신
+    	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
             }, function() {
-                refreshAll(); // 위치 권한 거부 시 기존 중심좌표로 갱신
+                // refreshAll(); // 위치 권한 거부 시 기존 중심좌표로 갱신
+    	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
             });
         } else {
-            refreshAll();
+        	// refreshAll();
+	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
        }
 
         // 지도가 이동을 멈췄을 때(idle) 발생하는 이벤트: 현재 위치 기준으로 재검색
@@ -90,7 +112,8 @@ $(document).ready(function() {
             currentSearchConfig.lat = center.getLat();
             currentSearchConfig.lng = center.getLng();
             saveToLocal();
-            refreshAll();
+         // refreshAll();
+	        refreshAll(false);
         });
     });
 
@@ -168,18 +191,27 @@ function searchData(filterType) {
     currentSearchConfig.minRating = parseFloat(ratingSelect.val());
     currentSearchConfig.pageNum = 1; // 검색 시 1페이지부터 시작
     saveToLocal();
-    refreshAll(); 
+    refreshAll(true); 
 }
 
 // 지도 마커와 하단 리스트를 동시에 갱신하는 함수
-function refreshAll() {
+function refreshAll(autoClickFirstMarker = true) {
     // 1. 지도에 표시할 마커 데이터 가져오기 (JSON)
     $.ajax({
         url:  "${path}/getNearbyFeMarkersAjax.fe",
         type: "GET", 
         data: currentSearchConfig, 
         dataType: "json",
-        success: function(data) { updateMarkers(data); }
+        success: function(data) {
+            updateMarkers(data);
+            if (autoClickFirstMarker && data && data.length > 0) {
+                const p = data[0].placeDTO || data[0];
+                if (p && p.place_id) {
+                    setTimeout(() => showMarkerDetail(p.place_id), 200);
+                }
+            }
+        }
+        // success: function(data) { updateMarkers(data); }
     });
     // 2. 하단 리스트 영역 갱신 (HTML 조각)
     $.ajax({
@@ -322,15 +354,60 @@ function resetFilters() {
     $("#ratingSelect").val("0.0").prop('disabled', false).css('opacity', '1');
     updateDistanceUI(5.0); 
 
-    currentSearchConfig.keyword = "";
+    /* currentSearchConfig.keyword = "";
     currentSearchConfig.minRating = 0.0;
     currentSearchConfig.radius = 5.0;
-    currentSearchConfig.pageNum = 1;
+    currentSearchConfig.pageNum = 1; */
 
     localStorage.removeItem("resSearchConfig"); 
-    saveToLocal();
+    // saveToLocal();
     if (myCustomOverlay) myCustomOverlay.setMap(null);
-    refreshAll();
+    // refreshAll();
+    
+    // ⭐ 현재 위치 다시 가져오기
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(pos) {
+
+            currentSearchConfig = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                radius: 5.0,
+                minRating: 0.0,
+                keyword: "",
+                pageNum: 1
+            };
+
+            saveToLocal();
+
+            var newCenter = new kakao.maps.LatLng(
+                currentSearchConfig.lat,
+                currentSearchConfig.lng
+            );
+
+            map.setCenter(newCenter); // 내 현재 위치로 지도 중심 이동
+            refreshAll(false);   // ⭐ 첫 마커 자동 이동 방지
+
+        }, function() {
+
+            // 위치 못 가져오면 기본값
+            currentSearchConfig = {
+                lat: 37.5665,
+                lng: 126.9780,
+                radius: 5.0,
+                minRating: 0.0,
+                keyword: "",
+                pageNum: 1
+            };
+
+            saveToLocal();
+            map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
+            refreshAll(false);
+        });
+
+    } else {
+        refreshAll(false);
+    }
 }
 
 // 페이지네이션 번호 클릭 시 해당 페이지 데이터 로드

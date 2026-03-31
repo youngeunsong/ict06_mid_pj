@@ -100,10 +100,14 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 
-		if (password == null || password.length() < 8) {
-			model.addAttribute("insertCnt", -3); // 비밀번호가 너무 짧음
-			return;
-		}
+		// 서버측 비밀번호 유효성 검사 (영문, 숫자, 특수문자 조합 8자 이상)
+	    String pwdPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+|<>?:{}]).{8,20}$";
+	    
+	    if (password == null || !password.matches(pwdPattern)) {
+	        System.out.println("중단: 비밀번호가 보안 정책에 맞지 않습니다.");
+	        model.addAttribute("insertCnt", -3); // 비밀번호 형식 오류 전송
+	        return;
+	    }
 
 		// 3. DTO 객체 생성 및 데이터 세팅
 		MemberDTO dto = new MemberDTO();
@@ -215,6 +219,42 @@ public class UserServiceImpl implements UserService {
 		request.setAttribute("selectCnt", selectCnt);
 	}
 
+	// 3-0. 아이디 찾기 처리
+		@Override
+		public void findIdAction(HttpServletRequest request, HttpServletResponse response, Model model)
+				throws ServletException, IOException {
+			System.out.println("UserServiceImpl - findIdAction()");
+			
+			// 1. 이름과 이메일 정보 파싱
+			// UserServiceImpl - findIdAction 수정
+			String name = request.getParameter("name").trim(); // 공백 제거
+			String email1 = request.getParameter("email1").trim();
+			String email2 = request.getParameter("email2").trim();
+			String email = email1 + "@" + email2; 
+
+			// 2. DAO 전달을 위한 Map 생성
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("name", name);
+			map.put("email", email);
+			
+			// 3. DAO 호출 (아이디 조회)
+			// SQL에서 마스킹(RPAD, SUBSTR) 처리를 해서 가져옴
+			
+			String foundId = dao.findUserId(map);
+			
+			// 4. 결과값 처리 및 JSP 전달
+			if(foundId != null && !foundId.isEmpty()) {
+				model.addAttribute("foundId", foundId);
+				model.addAttribute("findCnt", 1); // 성공
+			} else {
+				model.addAttribute("findCnt", 0); // 실패 (일치하는 정보 없음)
+			}
+			
+			// 입력값 유지용 (필요시)
+			model.addAttribute("name", name);
+			model.addAttribute("email", email);
+		}
+		
 	// 3-1. 비밀번호 찾기
 	@Override
 	public void findPasswordAction(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -691,6 +731,26 @@ public class UserServiceImpl implements UserService {
 	    } else {
 	        model.addAttribute("result", 0);
 	        model.addAttribute("msg", "예약 취소에 실패했습니다.");
+	    }
+	}
+	
+	// 즐겨찾기 토글 처리
+	@Override
+	public int togglemyFavorite(String userId, int placeId) {
+		System.out.println("UserServiceImpl - togglemyFavorite()");
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", userId);
+	    map.put("place_id", placeId);
+
+	    int checkCnt = dao.checkmyFavorite(map);
+
+	    if (checkCnt > 0) {
+	        dao.deletemyFavorite(map);
+	        return 0;   // 삭제
+	    } else {
+	        dao.insertmyFavorite(map);
+	        return 1;   // 추가
 	    }
 	}
 

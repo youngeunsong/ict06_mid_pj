@@ -78,8 +78,17 @@
                         </div>
                     </div>
                 </div>
-
+				
                 <div class="notice-body">
+                	<!-- 이미지 -->
+                	<c:if test="${not empty noticeDTO.image_url}">
+                		<div class="mb-3 d-flex flex-wrap gap-2">
+                			<c:forEach var="img" items="${fn:split(noticeDTO.image_url, ',')}">
+                				<img src="${img}" class="img-fluid" style="max-height:300px; margin-right:8px; margin-bottom:8px;">
+                			</c:forEach>
+                		</div>
+                	</c:if>
+                	<!-- 내용 -->
                     ${noticeDTO.content}
                 </div>
 

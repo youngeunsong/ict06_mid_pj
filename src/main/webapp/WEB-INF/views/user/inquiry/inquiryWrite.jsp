@@ -16,11 +16,21 @@
 <script src="${pageContext.request.contextPath}/resources/js/support/faqMain.js" defer></script>
 <style>
     /* [1] 기본 설정 */
-    body {
-        background-color: #f8f9fa; /* 혹은 메인처럼 #fafafa */
-        color: #333;
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    }
+	body { background-color: #fafafa !important; }
+   
+    /* [수정안] 모든 요소에 적용하되, 아이콘 전용 태그는 제외 */
+	.container.my-5 *:not(i), 
+	.inquiry-outer-container *:not(i),
+	.sticky-search-wrap *:not(i),
+	.content-card *:not(i) {
+	    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+	}
+	
+	/* Font Awesome 아이콘 폰트 강제 유지 */
+	.fa, .fas, .far, .fab, .transition-icon {
+	    font-family: "Font Awesome 5 Free" !important; /* 사용하시는 폰트어썸 버전에 맞춰 확인 */
+	    font-weight: 900;
+	}
 
     /* [2] 전체 레이아웃 */
     .inquiry-outer-container {
@@ -65,9 +75,11 @@
 
     .form-label-side {
         font-weight: 700;
-        font-size: 0.95rem;
-        padding-top: 10px; /* 입력창과 높이 맞춤 */
-        color: #555;
+	    font-size: 0.95rem;
+	    color: #555;
+	    /* 추가: 부트스트랩 col-sm-2와 정렬을 맞추기 위해 */
+	    padding-top: calc(0.375rem + 1px); 
+	    line-height: 1.5;
     }
 
     /* Bootstrap 5 표준 클래스 강화 */
@@ -163,7 +175,25 @@
             </div>
         </div>
     </div>
+	<script>
+        $(document).ready(function() {
+            // 1. 브라우저 새로고침, 뒤로가기, 탭 닫기 시 경고 (범용 안전장치)
+            $(window).on("beforeunload", function() {
+                const hasTitle = $("#title").val().trim() !== "";
+                const hasContent = $("#content").val().trim() !== "";
+                
+                if (hasTitle || hasContent) {
+                    // 현대 브라우저에서는 보안상 사용자 지정 메시지 대신 브라우저 기본 메시지를 출력합니다.
+                    return "작성 중인 내용은 저장되지 않습니다."; 
+                }
+            });
 
+            // 2. 폼을 실제로 '등록하기' 버튼으로 제출할 때는 경고창이 뜨지 않게 해제
+            $("form").on("submit", function() {
+                $(window).off("beforeunload");
+            });
+        });
+    </script>
     <%@ include file="../../common/footer.jsp" %>
 </body>
 </html>

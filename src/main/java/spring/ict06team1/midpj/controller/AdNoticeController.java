@@ -105,9 +105,11 @@ public class AdNoticeController {
 	public String noticeImageUpload(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("[url => /noticeImageUpload.adnt]");
-		adNoService.uploadImage(request, response, model);
 		
-		return "redirect:/admin/notice/list.do";
+		adNoService.uploadImage(request, response, model);
+		String imageUrl = (String)request.getAttribute("imageUrl");
+		logger.info("최종 반환 URL: " + imageUrl); // 이 로그가 찍히는지 확인!
+		return imageUrl;
 	}
 
 }

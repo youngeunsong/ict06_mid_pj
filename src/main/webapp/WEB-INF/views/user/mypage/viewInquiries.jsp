@@ -119,7 +119,7 @@
 							아직 작성한 문의 내역이 없네요.<br>
 							궁금한 점이 있으시면 언제든지 문의해 주세요!
 						</p>
-						<a href="${path}/inquiryWrite.do" class="btn-sig">문의하러 가기</a>
+						<a href="${path}/inquiryWrite.sp" class="btn-sig">문의하러 가기</a>
 					</div>
 				</c:otherwise>
 			</c:choose>
@@ -129,13 +129,9 @@
 	</div>
 
 	<script>
-        function movePage(page) {
-            location.href = '${path}/viewInquiries.do?pageNum=' + page + '&status=${status}';
-        }
-
-        function filterInquiry(type) {
-            location.href = '${path}/viewInquiries.do?status=' + type + '&pageNum=1';
-        }
-    </script>
+	    const contextPath = '${path}';
+	    const inquiryStatus = '${status}';
+	</script>
+	<script src="${path}/resources/js/user/mypage/viewInquiries.js"></script>
 </body>
 </html>

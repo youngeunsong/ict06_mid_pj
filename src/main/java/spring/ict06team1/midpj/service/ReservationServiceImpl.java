@@ -443,7 +443,7 @@ public class ReservationServiceImpl implements ReservationService {
 	    // 7. 포인트 지급
 	    Map<String, Object> pointMap = new HashMap<String, Object>();
 	    pointMap.put("userId", sessionID);
-	    pointMap.put("policyKey", "EARN_REVIEW");
+	    pointMap.put("policyKey", "EARN_SURVEY&REVIEW");
 	    pointMap.put("description", "리뷰/설문 작성 적립 - 예약번호: " + reservation_id);
 
 	    int pointCnt = resDao.insertReviewPoint(pointMap);
@@ -451,7 +451,7 @@ public class ReservationServiceImpl implements ReservationService {
 	    System.out.println("pointCnt = " + pointCnt);
 	    // 8. 성공 처리
 	    model.addAttribute("result", 1);
-	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다. 포인트가 지급되었습니다.");
+	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다.");
 	    
 	    
 	    

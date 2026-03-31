@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
 	        // 회원가입 포인트 지급
 	        Map<String, Object> pointMap = new HashMap<>();
 	        pointMap.put("userId", user_id);
-	        pointMap.put("policyKey", "EARN_LOGIN");           
+	        pointMap.put("policyKey", "EARN_JOIN");           
 	        pointMap.put("description", "회원가입 포인트 적립");
 
 	        int result = dao.insertPoint(pointMap);

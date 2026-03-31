@@ -29,7 +29,13 @@ public interface SupportDAO {
     // FAQ 조회수 증가 로직
     public int updateFaqViewCount(int faq_id);
 
+    // 전체 리스트 조회 (카테고리 구분 없이 최신순)
+    public List<FaqDTO> getFaqList();
 
+    // 카테고리별 리스트 조회
+    public List<FaqDTO> getFaqListByCategory(String category);
+   
+    
     // ===========================================================
     // 2. INQUIRY (1:1 문의) 관련 설계
     // ===========================================================

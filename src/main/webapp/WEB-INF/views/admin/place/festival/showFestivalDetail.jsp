@@ -130,7 +130,18 @@
 		                				<th>설명</th>
 		                			</tr>
 		                			<!-- 헤더 끝 -->
-		                			<!-- 무료 티켓 시작 -->
+		                			<!-- 티켓 종류 별 가격 조회 시작 -->
+		                			<c:if test="${not empty festivalDTO.ticketList}">
+		                				<c:forEach var="ticket" items="${festivalDTO.ticketList}">
+			                				<td>${ticket.ticket_type}</td>
+			                				<td>${ticket.price}원</td>
+			                				<td>${ticket.stock}</td>
+			                				<td>${ticket.description}</td>
+			                			</c:forEach>
+		                			</c:if>
+		                			<!-- 티켓 종류 별 가격 조회 끝 -->
+		                			
+		                			<%-- <!-- 무료 티켓 시작 -->
 		                			<tr>
 		                				<td>무료</td>
 		                				<td>${freeTicket.price}원</td>
@@ -161,7 +172,7 @@
 		                				<td>${allDayTicket.stock}</td>
 		                				<td>${allDayTicket.description}</td>
 	                				</tr>
-		                			<!-- 전일권 끝 -->
+		                			<!-- 전일권 끝 --> --%>
 			                	</table>
 			                	<!-- 티켓 표 끝 -->
 		                	</td>

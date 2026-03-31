@@ -51,6 +51,18 @@ public class SupportDAOImpl implements SupportDAO {
         return sqlSession.update(NAMESPACE + ".updateFaqViewCount", faq_id);
     }
 
+    // 전체 리스트 조회 (카테고리 구분 없이 최신순)
+    @Override
+    public List<FaqDTO> getFaqList() {
+        // selectList를 사용해야 여러 개의 데이터를 담아옵니다.
+        return sqlSession.selectList(NAMESPACE + ".getFaqList");
+    }
+
+    // 카테고리별 리스트 조회
+    @Override
+    public List<FaqDTO> getFaqListByCategory(String category) {
+        return sqlSession.selectList(NAMESPACE + ".getFaqListByCategory", category);
+    }
 
     // ===========================================================
     // 2. INQUIRY (1:1 문의) 관련 메서드

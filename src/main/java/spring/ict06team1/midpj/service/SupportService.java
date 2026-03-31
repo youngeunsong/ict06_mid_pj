@@ -31,7 +31,10 @@ public interface SupportService {
     public void getFaqDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
            throws ServletException, IOException;
 
-
+    // FAQ 전체 목록 또는 카테고리별 목록 조회
+    public void getFaqList(HttpServletRequest request, HttpServletResponse response, Model model) 
+           throws ServletException, IOException;
+    
     // ===========================================================
     // 2. INQUIRY (1:1 문의) 관련 서비스
     // ===========================================================

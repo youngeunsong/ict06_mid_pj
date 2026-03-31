@@ -167,21 +167,26 @@
 							<c:when test="${not empty topRestList}">
 								<c:forEach var="item" items="${topRestList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/restaurantDetail.rs?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>
@@ -203,21 +208,26 @@
 							<c:when test="${not empty topAccList}">
 								<c:forEach var="item" items="${topAccList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/accommodationDetail.ac?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>
@@ -239,21 +249,26 @@
 							<c:when test="${not empty topFestList}">
 								<c:forEach var="item" items="${topFestList}" varStatus="status">
 									<div class="col-md-4">
-										<div class="card custom_card"
+										<div class="card custom_card position-relative"
 											onclick="location.href='${path}/festivalDetail.fe?place_id=${item.place_id}'">
 
 											<div class="card_img"
 												style="background-image: url('${empty item.image_url ? path.concat('/resources/images/noimage.jpg') : item.image_url}');">
+
+												<button type="button" class="bookmark-btn"
+													onclick="toggleBookmark(event, this)"
+													data-place-id="${item.place_id}">
+													<i class="bi bi-bookmark-fill"></i>
+												</button>
+
 												<span class="rank_badge">BEST ${status.index + 1}</span>
 											</div>
 
 											<div class="card-body p-3">
 												<p class="fw-bold mb-0 text-truncate"
 													style="font-size: 1.05rem;">${item.name}</p>
-												<small class="text-muted d-block mt-1">
-													${item.address} </small>
+												<small class="text-muted d-block mt-1">${item.address}</small>
 											</div>
-
 										</div>
 									</div>
 								</c:forEach>
@@ -278,8 +293,8 @@
 	</div>
 
 	<script>
-	document.addEventListener('DOMContentLoaded', function() {
-	
+		const contextPath = '${path}';
+		
 	    /* 미니 캘린더 타입/상태 2줄 표시용 */
 	    var miniEvents = [
 	        <c:forEach var="item" items="${calendarList}" varStatus="st">
@@ -364,189 +379,6 @@
 	        </c:forEach>
 	    ];
 	
-	    /* 미니 캘린더 생성 */
-	    var miniCalendar = new FullCalendar.Calendar(document.getElementById('miniCalendar'), {
-	
-	        // 월간 달력 뷰
-	        initialView: 'dayGridMonth',
-	
-	        // 캘린더 높이
-	        height: 480,
-	
-	        // 상단 헤더 구성
-	        headerToolbar: {
-	            left: 'prev',
-	            center: 'title',
-	            right: 'next'
-	        },
-	        /* 하루한개 이벤트 표시, 나머지 +more */
-	        dayMaxEvents: 1,
-	        /* 현재 달이 아닌 날짜 숨김 */
-	        showNonCurrentDates: false,
-	        /* 미니캘린더용 이벤트 데이터 연결 */
-	        events: miniEvents,
-
-	        /* 미니 캘린더 이벤트를 2줄 띠 구조로 커스텀 */
-	        eventContent: function(arg) {
-	            var placeTypeText = arg.event.extendedProps.placeTypeText;
-	            var statusText = arg.event.extendedProps.statusText;
-
-	            var wrap = document.createElement('div');
-	            wrap.className = 'mini_event_wrap';
-
-	            var typeBadge = document.createElement('div');
-	            typeBadge.className = 'mini_event_type ' + getTypeClass(arg.event.classNames);
-	            typeBadge.textContent = placeTypeText;
-
-	            var statusBadge = document.createElement('div');
-	            statusBadge.className = 'mini_event_status ' + getStatusClass(arg.event.classNames);
-	            statusBadge.textContent = statusText;
-
-	            wrap.appendChild(typeBadge);
-	            wrap.appendChild(statusBadge);
-
-	            return { domNodes: [wrap] };
-	        },
-			/* 예약 클릭 시 예약상세 페이지 이동 */
-	        eventClick: function(info) {
-	            location.href = '${path}/reservationDetail.do?reservation_id=' + info.event.id;
-	        }
-	    });
-	    miniCalendar.render();
-		
-	    /* 보조함수 */
-	    /* 미니캘린더 장소 타입 클래스 반환 */
-	    function getTypeClass(classNames) {
-	        if (classNames.includes('fc-type-rest')) return 'mini_type_rest';
-	        if (classNames.includes('fc-type-acc')) return 'mini_type_acc';
-	        if (classNames.includes('fc-type-fest')) return 'mini_type_fest';
-	        return 'mini_type_etc';
-	    }
-		/* 미니캘린더 상태 클래스 반환 */
-	    function getStatusClass(classNames) {
-	        if (classNames.includes('fc-status-completed')) return 'mini_status_completed';
-	        if (classNames.includes('fc-status-pending')) return 'mini_status_pending';
-	        if (classNames.includes('fc-status-reserved')) return 'mini_status_reserved';
-	        if (classNames.includes('fc-status-cancelled')) return 'mini_status_cancelled';
-	        if (classNames.includes('fc-status-noshow')) return 'mini_status_noshow';
-	        return 'mini_status_etc';
-	    }
-	    /* 모달캘린더 상태 배지용 클래스 반환 */
-	    function getModalStatusClass(classNames) {
-	        if (classNames.includes('fc-status-completed')) return 'modal_status_completed';
-	        if (classNames.includes('fc-status-pending')) return 'modal_status_pending';
-	        if (classNames.includes('fc-status-reserved')) return 'modal_status_reserved';
-	        if (classNames.includes('fc-status-cancelled')) return 'modal_status_cancelled';
-	        if (classNames.includes('fc-status-noshow')) return 'modal_status_noshow';
-	        return 'modal_status_etc';
-	    }
-		/* 모달캘린더 상태 텍스트 반환 */
-	    function getModalStatusText(classNames) {
-	        if (classNames.includes('fc-status-completed')) return '완료';
-	        if (classNames.includes('fc-status-pending')) return '대기';
-	        if (classNames.includes('fc-status-reserved')) return '확정';
-	        if (classNames.includes('fc-status-cancelled')) return '취소';
-	        if (classNames.includes('fc-status-noshow')) return '미방';
-	        return '기타';
-	    }
-	    
-	    /* 큰 캘린더 모달 관련 */
-	    var calendarModal = document.getElementById('calendarModal');
-	    var openCalendarModalBtn = document.getElementById('openCalendarModal');
-	    var closeCalendarModalBtn = document.getElementById('closeCalendarModal');
-	    var modalOverlay = document.querySelector('.calendar_modal_overlay');
-	    
-	    // 큰 캘린더는 모달이 처음 열릴 때 1번만 생성
-	    var bigCalendar = null;
-	
-	    // 모달 열기
-	    function openCalendarModal() {
-	        calendarModal.classList.add('show');
-	        document.body.style.overflow = 'hidden';
-	
-	        // 큰 캘린더가 아직 없으면 생성
-	        if (!bigCalendar) {
-	            bigCalendar = new FullCalendar.Calendar(document.getElementById('bigCalendar'), {
-	                initialView: 'dayGridMonth',
-	                height: 650,
-	
-	                headerToolbar: {
-	                    left: 'prev,next today',
-	                    center: 'title',
-	                    right: 'dayGridMonth,listMonth'
-	                },
-	
-	                buttonText: {
-	                    today: '오늘',
-	                    dayGridMonth: '월',
-	                    listMonth: '목록'
-	                },
-	
-	                dayMaxEvents: true,
-	                events: modalEvents,
-	
-	                /* 모달 캘린더 이벤트 커스텀 */
-	                eventContent: function(arg) {
-
-	                    /* 목록 뷰는 기본 구조 */
-	                    if (arg.view.type === 'listMonth') {
-	                        return true;
-	                    }
-
-	                    /* 월뷰 장소명 (상태) */
-	                    var wrap = document.createElement('div');
-	                    wrap.className = 'modal_event_inline';
-
-	                    var titleText = document.createElement('span');
-	                    titleText.className = 'modal_event_title_text';
-	                    titleText.textContent = arg.event.title;
-
-	                    var statusBadge = document.createElement('span');
-	                    statusBadge.className = 'modal_event_badge ' + getModalStatusClass(arg.event.classNames);
-	                    statusBadge.textContent = getModalStatusText(arg.event.classNames);
-
-	                    wrap.appendChild(titleText);
-	                    wrap.appendChild(statusBadge);
-
-	                    return { domNodes: [wrap] };
-	                },
-	                
-	                // 모달캘린더 예약 클릭 시 상세 이동
-	                eventClick: function(info) {
-	                    location.href = '${path}/reservationDetail.do?reservation_id=' + info.event.id;
-	                }
-	            });
-	
-	            bigCalendar.render();
-	        } else {
-	            // 이미 생성된 경우 크기 다시 계산
-	            bigCalendar.updateSize();
-	        }
-	    }
-	
-	    // 모달 닫기
-	    function closeCalendarModal() {
-	        calendarModal.classList.remove('show');
-	        document.body.style.overflow = '';
-	    }
-	
-	    // 열기 버튼 클릭
-	    openCalendarModalBtn.addEventListener('click', openCalendarModal);
-	
-	    // 닫기 버튼 클릭
-	    closeCalendarModalBtn.addEventListener('click', closeCalendarModal);
-	
-	    // 오버레이 클릭 시 닫기
-	    modalOverlay.addEventListener('click', closeCalendarModal);
-	
-	    // ESC 키로 닫기
-	    document.addEventListener('keydown', function(e) {
-	        if (e.key === 'Escape') {
-	            closeCalendarModal();
-	        }
-	    });
-	
-	});
 	</script>
 
 	<!-- 큰 캘린더 모달 -->
@@ -566,18 +398,8 @@
 			</div>
 		</div>
 	</div>
+	<script src="${path}/resources/js/user/mypage/myPageHome.js"></script>
 </body>
 <!-- 포인트 부분 펼치고 접는 기능 js  -->
-<script>
-const toggleBtn = document.getElementById('toggleHistory');
-const historyDiv = document.querySelector('.point-history');
-
-toggleBtn.addEventListener('click', () => {
-    const isHidden = historyDiv.style.display === 'none' || historyDiv.style.display === '';
-    
-    historyDiv.style.display = isHidden ? 'block' : 'none';
-    toggleBtn.textContent = isHidden ? '접기 ▲' : '펼치기 ▼';
-});
-</script>
 
 </html>

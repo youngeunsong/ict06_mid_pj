@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import spring.ict06team1.midpj.service.UserServiceImpl;
 
@@ -351,6 +352,33 @@ public class UserController {
 		service.inquiryDetailAction(request, response, model);
 		
 		return "user/mypage/inquiryDetail";
+	}
+	
+	// [마이페이지] 즐겨찾기 토글 처리
+	@RequestMapping("/togglemyFavorite.do")
+	@ResponseBody
+	public String togglemyFavorite(HttpServletRequest request, HttpServletResponse response, Model model)
+	        throws ServletException, IOException {
+	    logger.info("<<< url => togglemyFavorite.do>>>");
+
+	    // 1. 세션에서 로그인 아이디 확인
+	    String sessionID = (String) request.getSession().getAttribute("sessionID");
+
+	    // 2. 비로그인 상태면 -1 반환
+	    if (sessionID == null) {
+	        return "-1";
+	    }
+
+	    // 3. 클릭한 장소 번호(place_id) 받기
+	    int place_id = Integer.parseInt(request.getParameter("place_id"));
+
+	    // 4. 서비스 호출 후 결과값 받기
+	    //    1 = 즐겨찾기 추가 성공
+	    //    0 = 즐겨찾기 삭제 성공
+	    int result = service.togglemyFavorite(sessionID, place_id);
+
+	    // 5. AJAX로 결과값 그대로 반환
+	    return String.valueOf(result);
 	}
 
 }	

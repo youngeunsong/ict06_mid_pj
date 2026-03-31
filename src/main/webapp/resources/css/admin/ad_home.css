@@ -260,6 +260,20 @@
 }
 
 /* =========================
+	대시보드 카드 헤더
+========================= */
+.dashboard-card .card-header {
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: space-between !important;
+	align-items: center !important;
+	width: 100% !important;
+}
+
+.dashboard-card .card-header h5 {
+	flex-shrink: 0;
+}
+/* =========================
    워드클라우드 영역
 ========================= */
 .wordcloud-box {

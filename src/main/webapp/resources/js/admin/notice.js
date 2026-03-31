@@ -3,11 +3,31 @@
    ========================================*/
 
 $(document).ready(function() {
+	//----------------------------------------
+	//0. Toast 설정
+	//----------------------------------------
+	const urlParams = new URLSearchParams(window.location.search);
+	if(urlParams.get('deleted') === 'true') {
+		const deleteToast = $('#deleteToast');
+		
+		//toast 초기화
+		deleteToast.toast({
+			autohide: true,
+			delay: 3000
+		});
+		
+		//toast 표시
+		deleteToast.toast('show');
+	}
 	
+	$(document).on('click', '[data-dismiss="toast"]', function() {
+		$(this).closest('.toast').toast('hide');
+	});
+
 	//----------------------------------------
 	//1. Summernote 에디터 초기화(등록/수정 페이지)
 	//----------------------------------------
-	if($('#content').length) {
+	if($('#content').length && typeof $.fn.summernote === 'function') {
 		$('#content').summernote({
 			lang: 'ko-KR',
 			height: 400,
@@ -19,7 +39,7 @@ $(document).ready(function() {
 				['color', ['color']],
 				['para', ['ul','ol','paragraph']],
 				['table', ['table']],
-				['insert', ['link']],
+				['insert', ['link', 'picture']],
 				['view', ['fullscreen','codeview']]
 			],
 			callbacks: {
@@ -28,6 +48,96 @@ $(document).ready(function() {
 				}
 			}
 		});
+	}
+	
+	//----------------------------------------
+	//7. 이미지 업로드 드래그&드롭 및 미리보기
+	//----------------------------------------
+	const $uploadArea = $('#uploadArea');
+	const $fileInput = $('#fileInput');
+	const $previewGrid = $('#previewGrid');
+	
+	//전송에서 제외할 파일 관리
+	let selectedFiles = [];
+	
+	//드래그 이벤트 방지
+	['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+		$uploadArea.on(eventName, function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+	});
+	
+	//드래그 하이라이트 효과
+	$uploadArea.on('dragover', function() {
+		$(this).css('background-color', '#e9ecef');
+	});
+	$uploadArea.on('dragleave drop', function() {
+		$(this).css('background-color', '#f8f9fa');
+	});
+	
+	//파일 클릭 선택 시 처리
+	$fileInput.on('change', function() {
+		handleFiles(this.files);
+	});
+	
+	//파일 드롭 시 처리
+	$uploadArea.on('drop', function(e) {
+		const files = e.originalEvent.dataTransfer.files;
+		handleFiles(files);
+	});
+	
+	//파일 처리 핵심 함수
+	function handleFiles(files) {
+		const fileArray = Array.from(files);
+		
+		//현재 화면에 보이는 이미지 개수(기존+추가)
+		const currentTotal = $('.preview-item').length;
+		
+		if(currentTotal + fileArray.length > 5) {
+			alert("이미지는 최대 5장까지 등록 가능합니다.");
+			return;
+		}
+		
+		fileArray.forEach(file => {
+			//이미지 파일 형식 체크
+			if(!file.type.match('image.*')) {
+				alert("이미지 파일만 업로드 가능합니다.");
+				return;
+			}
+			
+			selectedFiles.push(file);
+			
+			//미리보기 HTML 생성
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				const html = `
+					<div class="preview-item" data-name="${file.name}">
+						<img src="${e.target.result}">
+						<span class="remove-btn" onclick="removeFile('${file.name}')">
+							<i class="bi bi-x"></i>
+						</span>
+					</div>
+				`;
+				$previewGrid.append(html);
+			};
+			reader.readAsDataURL(file);
+		});
+		updateInputFiles();
+	}
+	
+	//파일 삭제
+	window.removeFile = function(fileName) {
+		selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+		$(`.preview-item[data-name="${fileName}"]`).remove();
+		updateInputFiles();
+	};
+	
+	//input 태그의 실제 파일 목록을 배열과 동기화
+	function updateInputFiles() {
+		const dataTransfer = new DataTransfer();
+		selectedFiles.forEach(file => dataTransfer.items.add(file));
+		$fileInput[0].files = dataTransfer.files;
 	}
 
 	//----------------------------------------
@@ -53,6 +163,8 @@ $(document).ready(function() {
 			e.preventDefault();
 			return;
 		}
+		
+		console.log("전송될 파일 개수:", $fileInput[0].files.length);
 	});
 
 	//----------------------------------------
@@ -141,3 +253,12 @@ function uploadImage(file, editor) {
 		}
 	});
 }
+
+//기존 등록된 이미지 삭제 처리(수정 페이지용)
+window.removeExistingFile = function(obj, fileName) {
+	if(!confirm("기존 이미지를 삭제하시겠습니까?\n(수정 완료 시 삭제됩니다.)"))
+		return;
+		
+	//해당 미리보기 삭제
+	$(obj).closest('.preview-item').remove();
+};

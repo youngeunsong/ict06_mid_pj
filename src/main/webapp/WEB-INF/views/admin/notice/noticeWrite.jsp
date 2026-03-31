@@ -53,8 +53,8 @@
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-4">
-									<select name="category" class="form-control" required>
-										<option value="">선택</option>
+									<select name="category" class="custom-select" style="cursor: pointer;" required>
+										<option value="" disabled selected hidden>분류를 선택하세요</option>
 										<option value="NOTICE" ${dto.category == 'NOTICE'}>공지사항</option>
 										<option value="EVENT" ${dto.category == 'EVENT'}>이벤트</option>
 									</select>
@@ -85,11 +85,26 @@
 							
 							<%--이미지--%>
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">이미지</label>
+								<label class="col-sm-2 col-form-label font-weight-bold">이미지 첨부
+									<span style="font-size:0.75rem; color:#adb5bd; display:block; font-weight:400;">
+										(최대 5장 · JPG, PNG · 10MB 이하)
+									</span>
+								</label>
 								<div class="col-sm-10">
-									<input type="file" name="uploadFile" class="form-control" accept="image/*">
+									<div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()"
+										style="border: 2px dashed #dee2e6; padding: 40px; text-align: center; cursor: pointer; border-radius: 8px; background: #f8f9fa;">
+											<i class="bi bi-cloud-upload" style="font-size:2.5rem; color:#adb5bd;"></i>
+											<div class="upload-text" style="margin-top: 10px; color: #495057;">
+                								이미지를 <strong>드래그&드롭</strong>하거나 클릭해서 업로드하세요
+            								</div>
+            								<div class="upload-hint" style="font-size:0.85rem; color:#adb5bd;">첫 번째 이미지가 대표 이미지로 사용됩니다</div>
+										</div>
+
+										<input type="file" id="fileInput" name="uploadFile" accept="image/jpeg, image/png" multiple style="display:none;">
+										<div class="preview-grid" id="previewGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 20px;">
+            							</div>
+									</div>
 								</div>
-							</div>
 							
 							<%--상단 고정--%>
 							<div class="form-group row">

@@ -158,48 +158,7 @@
             </div>
          </div>
       </div>
-      
-      <!-- 관련 SQL -->
-       SQL 쿼리 : 아이디 중복 체크 
-  	<pre><code>
-  	<c:out value="
-        SELECT COUNT(*)
-        FROM MEMBER
-        WHERE user_id = #${'{'}user_id}
-  		" />
-	</code></pre>
-      
-      SQL 쿼리 : 이메일 중복 체크 
-  		<pre>
-			<code>
-			<c:out escapeXml="true" value="
-		        SELECT COUNT(*)
-		        FROM MEMBER
-		        WHERE user_id = #${'{'}user_id}
-			" />
-			</code> 
-		</pre>
-	
-     SQL 쿼리 : 회원 정보 insert
-  	<pre>
-			<code>
-			<c:out escapeXml="true" value="
-		        INSERT INTO MEMBER (
-            user_id, password, email, name, birth_date, 
-            gender, phone, address, point_balance, 
-            role, status, joinDate
-        ) VALUES (
-            #${'{'}user_id}, #${'{'}password}, #${'{'}email}, #${'{'}name}, #${'{'}birth_date},
-            #${'{'}gender}, #${'{'}phone}, #${'{'}address}, 
-            NVL(#${'{'}point_balance}, 0), 
-            NVL(#${'{'}role}, 'USER'), 
-            NVL(#${'{'}status}, 'ACTIVE'), 
-            CURRENT_TIMESTAMP
-        )
-			" />
-			</code> 
-		</pre>
-      
+    
    <%@ include file="../../common/footer.jsp" %>
    </div>
 

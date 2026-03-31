@@ -3,6 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="spring.ict06team1.midpj.dao.AdFestivalDAO">
+<!--
+ * @author 송영은
+ * 최초작성일: 26.03.10
+ * 최종수정일: 26.03.30
+ * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
+ * 
+ * 코드 변경사항
+ * v260318: 
+ *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
+ * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ * v260330: 
+ * 		다양한 티켓 유형 대응할 수 있게 수정. 
+ * 		축제 수정 시 기존 티켓 유형 삭제 및 추가 가능하게 수정
+ *-->
+
 	<!-- 축제 조회 -->
 	<!-- 축제에 필요한 변수 매핑 -->
 	<resultMap id="festivalMap" type="spring.ict06team1.midpj.dto.FestivalDTO">
@@ -151,15 +166,39 @@
 	</update>
 	
 	<!-- (3) 티켓 수정  -->
-	<update id="updateTicket" parameterType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
-		UPDATE FESTIVAL_TICKET
+	<!-- 구버전
+	UPDATE FESTIVAL_TICKET
 		SET
 		    price = #{price},
 		    stock = #{stock},
 		    description = #{description, jdbcType=CLOB}
 		WHERE festival_id = #{festival_id}
 		AND ticket_type = #{ticket_type}
+	 -->
+	<update id="updateTicket" parameterType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+		UPDATE FESTIVAL_TICKET
+		SET
+		    price = #{price},
+		    stock = #{stock},
+		    description = #{description, jdbcType=CLOB}, 
+		    ticket_type = #{ticket_type}
+		WHERE festival_id = #{festival_id}
+		AND ticket_id = #{ticket_id}
 	</update>
+	
+	<!-- 기존 티켓 조회 -->
+	<select id="getTicketsByFestivalId" resultType="spring.ict06team1.midpj.dto.FestivalTicketDTO">
+	    SELECT
+	        ticket_id,
+	        festival_id,
+	        ticket_type,
+	        price,
+	        stock,
+	        description
+	    FROM FESTIVAL_TICKET
+	    WHERE festival_id = #{festival_id}
+	</select>
+	
 	
 	<!-- 신규 축제 등록: 3단계 -->
 	<!-- (0) 기존 테이블에 있는 데이터인지 확인 -->
@@ -261,4 +300,10 @@
 	    DELETE FROM FESTIVAL
 	    WHERE festival_id = #{festival_id}
 	</delete>
+	
+	<!-- 단일 티켓 삭제 -->
+	<delete id="deleteTicket">
+	    DELETE FROM FESTIVAL_TICKET
+	    WHERE ticket_id = #{ticket_id}
+    </delete>
  </mapper> 

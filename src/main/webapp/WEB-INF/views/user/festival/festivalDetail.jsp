@@ -1,12 +1,13 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-17
- * 최종수정일: 2026-03-24
+ * 최종수정일: 2026-03-27
  * 참고 코드: restaurantDetail.jsp
  맛집 상세 페이지와 달리 행사기간, 티켓 메뉴 가짐. 
  * 업데이트
  v260322: festivalDetail.js 경로 수정
  v260324: festivalDetail.js 경로 수정
+ v260327: 다양한 티켓 정보 대응할 수 있게 변경 완료. 대표 이미지 1개만 남기고 사이드바에 정보 요약 카드 제공
 -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/setting.jsp" %>
@@ -153,6 +154,29 @@
       height:240px;
       background:#f9fafb;
     }
+    
+    .r-infoItem{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 0;
+      border-bottom:1px dashed var(--r-line);
+    }
+    .r-infoItem:last-child{ border-bottom:none; }
+
+    .r-infoName{
+      font-weight:900;
+      letter-spacing:-.01em;
+      min-width:110px;
+    }
+
+    .r-infoValue{
+      flex:1;
+      text-align:right;
+      color:var(--r-muted);
+      line-height:1.6;
+    }
 
     /* 메뉴 */
     .r-menuItem{
@@ -231,41 +255,66 @@
       </div>
     </div>
 
-    <!-- ===== 이미지 갤러리 ===== -->
+    <!-- ===== 이미지 + 요약 카드 ===== -->
     <div class="row g-3 mb-3">
+      <!-- 대표 이미지 -->	
       <div class="col-lg-8">
         <div class="r-hero shadow-sm">
-          <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="대표 이미지"/>
+          <c:choose>
+            <c:when test="${not empty festival.placeDTO.image_url}">
+              <img src="${festival.placeDTO.image_url}" alt="대표 이미지"/>
+            </c:when>
+            <c:otherwise>
+              <img src="${path}/resources/images/common/no-image.png" alt="대표 이미지"/>
+            </c:otherwise>
+          </c:choose>
           <div class="r-heroCount">
             <i class="fa-regular fa-images"></i>
-            <span>0+</span>
+            <span>대표 이미지</span>
           </div>
         </div>
       </div>
-
+      
+      <!-- 축제 요약 카드 -->
       <div class="col-lg-4">
-        <div class="d-flex flex-lg-column flex-row gap-3">
-          <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">축제포스터</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
+        <div class="card shadow-sm border-0 h-100" style="border-radius:18px;">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="fw-bold" style="font-size:18px;">축제 요약 정보</div>
             </div>
-          </div>
 
-          <div class="r-thumb shadow-sm">
-           <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">축제 사진</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i><span> 0</span></div>
+            <div class="r-infoItem">
+              <div class="r-infoName">상태</div>
+              <div class="r-infoValue"><c:out value="${festival.status}" default="정보 없음"/></div>
             </div>
-          </div>
-
-          <div class="r-thumb shadow-sm">
-            <img src="<c:out value='${festival.placeDTO.image_url}' default='${path}/resources/images/common/no-image.png'/>" alt="thumb1"/>
-            <div class="r-thumbInfo">
-              <div class="r-thumbTitle">후기 사진</div>
-              <div class="r-thumbSub"><i class="fa-regular fa-image"></i> <span>0</span></div>
+            
+            <div class="r-infoItem">
+              <div class="r-infoName">티켓 종류</div>
+              <div class="r-infoValue">
+             	<!-- 티켓 정보 있을 경우에만 보여주기 -->
+                <c:if test="${not empty festival.ticketList}">
+                	<table class="table">
+                		<tr>
+                			<th>티켓 종류</th>
+                		</tr>
+                		<c:forEach var="ticket" items="${festival.ticketList}">
+	                        <tr>
+	                            <td>${ticket.ticket_type}</td>
+	                        </tr>
+	                    </c:forEach>
+                	</table>
+                </c:if>
+                
+                <!-- 티켓 정보 없을 경우 안내문 출력 -->
+                <c:if test="${empty festival.ticketList}">
+	                등록된 티켓 정보가 없습니다.
+	            </c:if>
+              </div>
+            </div>
+            
+            <div class="r-muted mt-3" style="font-size:12px;">
+              자세한 티켓 정보는 '티켓' 메뉴에서 확인해주세요. <br>
+              티켓 재고 및 가격은 축제 운영사 사정에 따라 변동될 수 있습니다.
             </div>
           </div>
         </div>
@@ -381,20 +430,7 @@
               		<!-- 티켓 정보 가져오기 시작 -->
               		<c:forEach var="ticket" items="${festival.ticketList}">
 					    <tr>
-					        <td>
-					        	<c:if test="${ticket.ticket_type eq 'Free'}">
-								    무료
-								</c:if>
-								<c:if test="${ticket.ticket_type eq 'OneDay'}">
-								    1일권
-								</c:if>
-								<c:if test="${ticket.ticket_type eq 'TwoDay'}">
-								    2일권
-								</c:if>
-								<c:if test="${ticket.ticket_type eq 'AllDay'}">
-								    전일권
-								</c:if>
-					        </td>
+					        <td>${ticket.ticket_type}</td>
 					        <td>${ticket.price}</td>
 					        <td>${ticket.stock}</td>
 					        <td>${ticket.description}</td>

@@ -1,3 +1,18 @@
+/*
+ * @author 송영은
+ * 최초작성일: 26.03.10
+ * 최종수정일: 26.03.30
+ * 한 메서드 안에서 여러 개의 sql 쿼리가 반드시 순차적으로 일어나야 할 경우 @Transaction 추가 
+ * 
+ * 코드 변경사항
+ * v260318: 
+ *    	오픈 API로 받아온 정보를 DB에 추가하는 기능 구현 완료. 
+ * 		기존 신규 축제 등록 방법 변경. 축제 이름, 주소, 시작일이 일치 시 중복 등록 안 되게 설정.  
+ * v260330: 
+ * 		다양한 티켓 유형 대응할 수 있게 수정. 
+ * 		축제 수정 시 기존 티켓 유형 삭제 및 추가 가능하게 수정
+ */
+
 /**
  * 관리자 > 축제 전체목록 > 상세조회
  */
@@ -92,34 +107,64 @@ function viewFestivalDetail(id){
    $('#modal_image').attr("src",data.placeDTO.image_url);
 
    // 티켓 표시
-   if(data.ticketList){
-    data.ticketList.forEach(function(ticket){
+   if(data.ticketList && data.ticketList.length > 0){
+	    var ticketHtml = '';
 
-	 	if(ticket.ticket_type == "Free"){
-			 $('#detail_priceFree').text(ticket.price + "원");
-			 $('#detail_stockFree').text(ticket.stock);
-			 $('#detail_ticketDescFreeDay').text(ticket.description);
-			}
+	    ticketHtml += '<table class="table">';
+	    ticketHtml += '<thead>';
+	    ticketHtml += '<tr>';
+	    ticketHtml += '<th>티켓 종류</th>';
+	    ticketHtml += '<th>가격</th>';
+	    ticketHtml += '<th>재고</th>';
+	    ticketHtml += '<th>설명</th>';
+	    ticketHtml += '</tr>';
+	    ticketHtml += '</thead>';
+	    ticketHtml += '<tbody>';
+
+	    data.ticketList.forEach(function(ticket){
+
+	        ticketHtml += '<tr>';
+	        ticketHtml += '<td>' + ticket.ticket_type + '</td>';
+	        ticketHtml += '<td>' + ticket.price + '</td>';
+	        ticketHtml += '<td>' + ticket.stock + '</td>';
+	        ticketHtml += '<td>' + ticket.description + '</td>';
+	        ticketHtml += '</tr>';
+
+	    });
+
+	    ticketHtml += '</tbody>';
+	    ticketHtml += '</table>';
+
+	    $('#ticketTableArea').html(ticketHtml);
+	}
+   // if(data.ticketList){
+   //  data.ticketList.forEach(function(ticket){
+
+// 	 	if(ticket.ticket_type == "Free"){
+// 			 $('#detail_priceFree').text(ticket.price + "원");
+// 			 $('#detail_stockFree').text(ticket.stock);
+// 			 $('#detail_ticketDescFreeDay').text(ticket.description);
+// 			}
 		
-		if(ticket.ticket_type == "OneDay"){
-			 $('#detail_priceOneDay').text(ticket.price + "원");
-			 $('#detail_stockOneDay').text(ticket.stock);
-			 $('#detail_ticketDescOneDay').text(ticket.description);
-		}
+// 		if(ticket.ticket_type == "OneDay"){
+// 			 $('#detail_priceOneDay').text(ticket.price + "원");
+// 			 $('#detail_stockOneDay').text(ticket.stock);
+// 			 $('#detail_ticketDescOneDay').text(ticket.description);
+// 		}
 		
-		if(ticket.ticket_type == "TwoDay"){
-			 $('#detail_priceTwoDay').text(ticket.price + "원");
-			 $('#detail_stockTwoDay').text(ticket.stock);
-			 $('#detail_ticketDescTwoDay').text(ticket.description);
-		}
+// 		if(ticket.ticket_type == "TwoDay"){
+// 			 $('#detail_priceTwoDay').text(ticket.price + "원");
+// 			 $('#detail_stockTwoDay').text(ticket.stock);
+// 			 $('#detail_ticketDescTwoDay').text(ticket.description);
+// 		}
 		
-		if(ticket.ticket_type == "AllDay"){
-			 $('#detail_priceAllDay').text(ticket.price + "원");
-			 $('#detail_stockAllDay').text(ticket.stock);
-			 $('#detail_ticketDescAllDay').text(ticket.description);
-		}
-    });
-   }
+// 		if(ticket.ticket_type == "AllDay"){
+// 			 $('#detail_priceAllDay').text(ticket.price + "원");
+// 			 $('#detail_stockAllDay').text(ticket.stock);
+// 			 $('#detail_ticketDescAllDay').text(ticket.description);
+// 		}
+   //  });
+   // }
 
    $('#modal_festival_detail').modal("show");
   }
@@ -161,73 +206,184 @@ function editFestival(id){
    $('#inputStartDate').val(data.start_date_str);
    $('#inputEndDate').val(data.end_date_str);
    
-   // 티켓 정보
-   data.ticketList.forEach(function(ticket){
-	 if(ticket.ticket_type == "Free"){
-	   $('#priceFree').val(ticket.price);
-	   $('#stockFree').val(ticket.stock);
-	   $('#ticketDescFreeDay').val(ticket.description);
-	 }
-	
-	 if(ticket.ticket_type == "OneDay"){
-	   $('#priceOneDay').val(ticket.price);
-	   $('#stockOneDay').val(ticket.stock);
-	   $('#ticketDescOneDay').val(ticket.description);
-	 }
-	
-	 if(ticket.ticket_type == "TwoDay"){
-	   $('#priceTwoDay').val(ticket.price);
-	   $('#stockTwoDay').val(ticket.stock);
-	   $('#ticketDescTwoDay').val(ticket.description);
-	 }
-	
-	 if(ticket.ticket_type == "AllDay"){
-	   $('#priceAllDay').val(ticket.price);
-	   $('#stockAllDay').val(ticket.stock);
-	   $('#ticketDescAllDay').val(ticket.description);
-	 }
-	});
+   // 티켓 정보 표시
+   if(data.ticketList && data.ticketList.length > 0){
+	    var ticketHtml = '';
+
+	    ticketHtml += '<table class="table">';
+	    ticketHtml += '<thead>';
+	    ticketHtml += '<tr>';
+	    ticketHtml += '<th>티켓 종류</th>';
+	    ticketHtml += '<th>가격</th>';
+	    ticketHtml += '<th>재고</th>';
+	    ticketHtml += '<th>설명</th>';
+	    ticketHtml += '<th>삭제</th>';
+	    ticketHtml += '</tr>';
+	    ticketHtml += '</thead>';
+	    ticketHtml += '<tbody>';
+
+	    data.ticketList.forEach(function(ticket){
+
+	        ticketHtml += '<tr class="ticketRow" data-id="' + ticket.ticket_id + '">';
+	        ticketHtml += '<td><input type="text" class="ticket_type" value="' + ticket.ticket_type + '"></td>';
+	        ticketHtml += '<td><input type="number" class="ticket_price" value="' + ticket.price + '"></td>';
+	        ticketHtml += '<td><input type="number" class="ticket_stock" value="' + ticket.stock + '"></td>';
+	        ticketHtml += '<td><textarea class="ticket_desc" cols="24" rows="2">' + (ticket.description || '') + '</textarea></td>';
+	        
+	        ticketHtml += '<td>';
+			ticketHtml += '<button type="button" class="btn btn-danger btn-sm" onclick="removeTicketRow(this)">-</button>';
+			ticketHtml += '</td>';
+
+	        ticketHtml += '</tr>';
+
+	    });
+
+	    ticketHtml += '</tbody>';
+	    ticketHtml += '</table>';
+
+	    $('#ticketTable_edit').html(ticketHtml);
+	}
 
    $('#modal_festival_modify').modal("show");
   }
  });
 }
 
+// 축제 수정 처리를 위한 티켓 데이터 받기 
+function getTicketData(){
+
+    var ticketList = [];
+
+    $('#ticketTable_edit .ticketRow').each(function(){
+
+        var ticket = {
+        	ticket_id : $(this).data('id'), 
+            ticket_type : $(this).find('.ticket_type').val(),
+            price       : $(this).find('.ticket_price').val(),
+            stock       : $(this).find('.ticket_stock').val(),
+            description : $(this).find('.ticket_desc').val()
+        };
+
+        ticketList.push(ticket);
+    });
+
+    console.log(ticketList);
+
+    return ticketList;
+}
+
+/* 축제 수정 : 행 추가 함수 */
+function addTicketRow(){
+
+    var ticketTypes = [];
+
+    $('#ticketTable_edit .ticket_type').each(function(){
+
+        var type = $(this).val().trim();
+
+        if(type !== ''){
+            ticketTypes.push(type);
+        }
+    });
+
+    var newType = prompt("추가할 티켓 종류를 입력하세요");
+
+    if(newType == null || newType.trim() === ''){
+        return;
+    }
+
+    newType = newType.trim();
+
+    if(ticketTypes.includes(newType)){
+        alert("이미 존재하는 티켓 종류입니다.");
+        return;
+    }
+
+    var row = '';
+
+    row += '<tr class="ticketRow">';
+    row += '<td><input type="text" class="ticket_type" value="'+ newType +'"></td>';
+    row += '<td><input type="number" class="ticket_price"></td>';
+    row += '<td><input type="number" class="ticket_stock"></td>';
+    row += '<td><textarea class="ticket_desc"></textarea></td>';
+
+    row += '<td>';
+    row += '<button type="button" class="btn btn-danger btn-sm" onclick="removeTicketRow(this)">-</button>';
+    row += '</td>';
+
+    row += '</tr>';
+
+    $('#ticketTable_edit tbody').append(row);
+}
+
+/* 행 추가 시 중복되는 티켓 유형 방지 */
+function isDuplicateTicketType(){
+
+    var ticketTypes = [];
+    var duplicate = false;
+
+    $('#ticketTable_edit .ticketRow').each(function(){
+
+        var type = $(this).find('.ticket_type').val().trim();
+
+        if(type === '') return;
+
+        if(ticketTypes.includes(type)){
+
+            alert("같은 티켓 종류가 존재합니다: " + type);
+            duplicate = true;
+            return false;
+        }
+
+        ticketTypes.push(type);
+    });
+
+    return duplicate;
+}
+
+/* 축제 수정 : 행 삭제 함수 */
+function removeTicketRow(btn){
+
+    var row = $(btn).closest('tr');
+
+    if(confirm("이 티켓을 삭제하시겠습니까?")){
+        row.remove();
+    }
+}
+
 /* 축제 수정 처리 */ 
 function updateFestival(id){
+
+ if(isDuplicateTicketType()){
+        return;
+    }	
+
+ var ticketList = getTicketData(); 	
+
+ var festivalData = {
+	    festival_id : id,
+
+	    placeDTO : {
+	    	name : $('#inputName').val(),
+		    address : $('#inputAddress').val(),
+		    latitude : $('#inputLatitude').val(),
+		    longitude : $('#inputLongitude').val(),
+		    image_url : $('#inputImgAddress').val(),
+	    }, 
+	    
+	    description : $('#inputDescription').val(),
+	    start_date : $('#inputStartDate').val(),
+	    end_date : $('#inputEndDate').val(),
+
+	    ticketList : ticketList
+	};
+
  $.ajax({
 
   url : path + "/updateFestival.adfe",
   type : "post",
-
-  data : {
-   festival_id : id,
-    
-   name : $('#inputName').val(),
-   address : $('#inputAddress').val(),
-   latitude : $('#inputLatitude').val(),
-   longitude : $('#inputLongitude').val(),
-   image_url : $('#inputImgAddress').val(),
-   description : $('#inputDescription').val(),
-   start_date : $('#inputStartDate').val(),
-   end_date : $('#inputEndDate').val(),
-   
-   priceFree : $('#priceFree').val(),
-   stockFree : $('#stockFree').val(),
-   ticketDescFreeDay : $('#ticketDescFreeDay').val(),
-   
-   priceOneDay : $('#priceOneDay').val(),
-   stockOneDay : $('#stockOneDay').val(),
-   ticketDescOneDay : $('#ticketDescOneDay').val(),
-   
-   priceTwoDay : $('#priceTwoDay').val(),
-   stockTwoDay : $('#stockTwoDay').val(),
-   ticketDescTwoDay : $('#ticketDescTwoDay').val(),
-   
-   priceAllDay : $('#priceAllDay').val(),
-   stockAllDay : $('#stockAllDay').val(),
-   ticketDescAllDay : $('#ticketDescAllDay').val()
-  },
+  contentType : "application/json", // JSON 타입으로 변경
+  data : JSON.stringify(festivalData),	
 
   success : function(res){
   	console.log("response:", res);

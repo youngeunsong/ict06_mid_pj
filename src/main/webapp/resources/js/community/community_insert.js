@@ -170,11 +170,13 @@ function initSummernote() {
         placeholder: getCategoryPlaceholder(), // 카테고리별 초기 안내 문구
         toolbar: [
             ["style", ["style"]],
-            ["font", ["bold", "underline", "italic", "clear"]],
+            ["font", ["bold", "italic", "underline", "strikethrough", "clear"]],
+            ['fontsize', ['fontsize']],
             ["color", ["color"]],
             ["para", ["ul", "ol", "paragraph"]],
+            ['table', ['table']],
             ["insert", ["link", "picture"]],
-            ["view", ["codeview"]]
+            ["view", ["fullscreen", "codeview"]]
         ],
         callbacks: {
         	// 내용이 변경될 때마다 호출
@@ -240,7 +242,7 @@ function uploadSummernoteImage(file, editor) {
 /* 5) 화면의 제목 글자수 카운터 업데이트 (0 / 200) -------------------------------------------- */
 function countTitle() {
     const titleInput = document.getElementById("titleInput");
-    const titleCounter = document.get ElementById("titleCounter");
+    const titleCounter = document.getElementById("titleCounter");
     if (!titleInput || !titleCounter) return;
 
     titleCounter.textContent = titleInput.value.length + " / 200";
@@ -324,9 +326,6 @@ function hideError(id) {
     if (el) el.style.display = "none";
 }
 
-
-
-
 /* 선택된 파일들에 대한 미리보기 UI 생성 ------------------------------------------------------------------------- */
 function renderPreview() {
     const previewGrid = document.getElementById("previewGrid");
@@ -365,7 +364,7 @@ function renderPreview() {
                 });
             }
         };
-
+		console.log("파일 읽기 완료:", file.name);
         reader.readAsDataURL(file); // 이미지를 base64로 읽어와 미리보기 표시
     });
 }

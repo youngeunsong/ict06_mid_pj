@@ -39,6 +39,19 @@
 			<form action="${path}/festivalImportAction.adfe" method="get">
 			    페이지 번호 :
 			    <input type="number" name="pageNo" value="1" min="1">
+			    
+			    <!-- 축제 시작일: 무조건 오늘 이후로 설정 -->
+			    축제 시작일 : 
+			    <input type="date" id="fstvlStartDate" name="fstvlStartDate">
+				
+				<script>
+				    const today = new Date().toISOString().split('T')[0];
+				
+				    const start = document.getElementById("fstvlStartDate");
+				
+				    start.min = today;
+				    start.value = today;
+				</script>
 			
 			    가져올 개수 :
 			    <select name="numOfRows">
@@ -56,48 +69,6 @@
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
-		
-		<!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : DB에 새 축제 추가</div>
-		
-		<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-		<!-- #${'{'} : #과 { 표시 -->
-		<!-- &lt; : < 표시 -->
-		<!-- &gt; : > 표시 -->
-		<div>
-			<pre><code>
-				INSERT INTO PLACE (
-				    place_id,
-				    place_type,
-				    name,
-				    address,
-				    latitude,
-				    longitude,
-				    image_url
-				) VALUES (
-				    SEQ_PLACE.NEXTVAL,
-				    'FEST',
-				    #${'{'}name, jdbcType=VARCHAR},
-				    #${'{'}address, jdbcType=VARCHAR},
-				    #${'{'}latitude, jdbcType=NUMERIC},
-		    		#${'{'}longitude, jdbcType=NUMERIC},
-				    #${'{'}image_url, jdbcType=VARCHAR}
-				)
-				
-				INSERT INTO FESTIVAL (
-				    festival_id,
-				    description,
-				    start_date,
-				    end_date
-				) VALUES (
-				    SEQ_PLACE.CURRVAL,
-				    #${'{'}description, jdbcType=CLOB},
-				    #${'{'}start_date, jdbcType=DATE},
-				    #${'{'}end_date, jdbcType=DATE}
-				)
-			</code></pre>
-		</div>
-		<!-- 관련 SQL 끝 -->
 		
 	</div>
 	<!--end::div wrapper-->

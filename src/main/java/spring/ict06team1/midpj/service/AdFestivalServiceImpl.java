@@ -44,6 +44,9 @@ import spring.ict06team1.midpj.dto.FestivalTicketDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.util.FestivalApiClient;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class AdFestivalServiceImpl implements AdFestivalService{
@@ -378,7 +381,10 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	public String bringFestivalFromAPI(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		int page = Integer.parseInt(request.getParameter("pageNo"));
 		int numOfRows = Integer.parseInt(request.getParameter("numOfRows"));
-		String json = apiClient.callAPI(page, numOfRows);
+		String fstvlStartDate = request.getParameter("fstvlStartDate"); 
+		String formattedDate = LocalDate.parse(fstvlStartDate)
+		        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String json = apiClient.callAPI(page, numOfRows, formattedDate);
 		return json; 
 	}
 	

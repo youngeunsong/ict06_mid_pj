@@ -1,50 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
-
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
-
-<!-- Summernote 선언 및 충돌 방지 -->
-<link rel="stylesheet" href="${path}/resources/admin/plugins/summernote/summernote-lite.css">
-
-<!-- 1) 기존 설정 대피 (Backup) -->
-<script>
-    window.__oldDefine = window.define;
-    window.__oldModule = window.module;
-    window.__oldExports = window.exports;
-
-    window.define = undefined;
-    window.module = undefined;
-    window.exports = undefined;
-</script>
-
-<!-- 2) 라이브러리 로드 -->
-<script src="${path}/resources/admin/plugins/summernote/summernote-lite.js"></script>
-<script src="${path}/resources/admin/plugins/summernote/lang/summernote-ko-KR.js"></script>
-
-<!-- 3) 기존 설정 복구 (Restore) -->
-<script>
-    window.define = window.__oldDefine;
-    window.module = window.__oldModule;
-    window.exports = window.__oldExports;
-
-    /* 임시 변수 삭제 */
-    delete window.__oldDefine;
-    delete window.__oldModule;
-    delete window.__oldExports;
-
-    const CTX = "${path}";
-</script>
 
 <title>공지/이벤트 등록</title>
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed">
 <!--begin::div wrapper-->
 <div class="wrapper">
@@ -80,59 +49,62 @@
 							
 							<%--분류--%>
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">
-									분류 <span class="text-danger">*</span>
+								<label class="col-sm-2 col-form-label font-weight-bold">분류
+									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-4">
-									<select name="category" class="form-control" required>
-										<option value="">선택</option>
+									<select name="category" class="custom-select" style="cursor: pointer;" required>
+										<option value="" disabled selected hidden>분류를 선택하세요</option>
 										<option value="NOTICE" ${dto.category == 'NOTICE'}>공지사항</option>
 										<option value="EVENT" ${dto.category == 'EVENT'}>이벤트</option>
 									</select>
 								</div>
 							</div>
 							
-							<%-- 제목 --%>
+							<%--제목--%>
 							<div class="form-group row">
-							    <label class="col-sm-2 col-form-label font-weight-bold">제목<span class="text-danger">*</span></label>
-							    <div class="col-sm-10">
-							        <input type="text" name="title" id="titleInput" class="form-control" maxlength="200" required>
-							        <div class="char-counter text-muted text-right" id="titleCounter" style="font-size: 0.8rem;">0 / 200</div>
-							        <div class="err-msg text-danger" id="titleErr" style="display:none; font-size: 0.8rem;">제목을 입력해주세요.</div>
-							    </div>
+								<label class="col-sm-2 col-form-label font-weight-bold">제목
+									<span class="text-danger">*</span>
+								</label>
+								<div class="col-sm-10">
+									<input type="text" name="title" class="form-control"
+											placeholder="제목 입력" maxlength="200" required>
+								</div>
 							</div>
 							
 							<%--내용--%>
 							<div class="form-group row">
-								<label class="col-sm-2 col-form-label font-weight-bold">
-									내용<span class="text-danger">*</span>
+								<label class="col-sm-2 col-form-label font-weight-bold">내용
+									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-10">
-									<textarea id="content"
-									           name="content"
-									           class="form-control"
-									           rows="15"
-											   placeholder="내용 입력" required></textarea>
-		                            <div class="char-counter" id="contentCounter">0자</div>
-                            		<div class="err-msg" id="contentErr" style="display:none;">내용을 입력해주세요.</div>
+									<textarea id="content" name="content" class="form-control" rows="15"
+											placeholder="내용 입력" required></textarea>
 								</div>
 							</div>
 							
-							<%-- 썸네일 이미지 행 수정 --%>
+							<%--이미지--%>
 							<div class="form-group row">
-							    <label class="col-sm-2 col-form-label font-weight-bold">썸네일 이미지</label>
-							    <div class="col-sm-10">
-							        <div id="uploadArea" class="border rounded p-4 text-center mb-2" 
-							             style="border: 2px dashed #dee2e6 !important; cursor: pointer; background: #f8f9fa;">
-							            <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
-							            <p class="mb-0 text-muted small">파일을 마우스로 끌어오거나 클릭하여 등록하세요.</p>
-							            <p class="text-xs text-secondary">(JPG, PNG / 최대 10MB)</p>
-							            <input type="file" name="uploadFile" class="d-none" accept="image/*">
-							        </div>
-							        
-							        <div id="previewGrid" class="d-flex flex-wrap gap-3"></div>
-							    </div>
-							</div>
+								<label class="col-sm-2 col-form-label font-weight-bold">이미지 첨부
+									<span style="font-size:0.75rem; color:#adb5bd; display:block; font-weight:400;">
+										(최대 5장 · JPG, PNG · 10MB 이하)
+									</span>
+								</label>
+								<div class="col-sm-10">
+									<div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()"
+										style="border: 2px dashed #dee2e6; padding: 40px; text-align: center; cursor: pointer; border-radius: 8px; background: #f8f9fa;">
+											<i class="bi bi-cloud-upload" style="font-size:2.5rem; color:#adb5bd;"></i>
+											<div class="upload-text" style="margin-top: 10px; color: #495057;">
+                								이미지를 <strong>드래그&드롭</strong>하거나 클릭해서 업로드하세요
+            								</div>
+            								<div class="upload-hint" style="font-size:0.85rem; color:#adb5bd;">첫 번째 이미지가 대표 이미지로 사용됩니다</div>
+										</div>
+
+										<input type="file" id="fileInput" name="uploadFile" accept="image/jpeg, image/png" multiple style="display:none;">
+										<div class="preview-grid" id="previewGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 20px;">
+            							</div>
+									</div>
+								</div>
 							
 							<%--상단 고정--%>
 							<div class="form-group row">
@@ -168,7 +140,6 @@
 <%--end::wrapper--%>
 
 <script>const path = "${path}";</script>
-<script src="${path}/resources/admin/plugins/summernote/lang/summernote-ko-KR.min.js"></script>
 <script src="${path}/resources/js/admin/notice.js"></script>
 
 </body>

@@ -95,8 +95,10 @@
 						<c:if test="${not empty dto.image_url}">
 							<div class="form-group row">
 								<label class="col-sm-2 col-form-label font-weight-bold">이미지</label>
-								<div class="col-sm-10">
-									<img src="${dto.image_url}" class="img-fluid" style="max-height:300px;">
+								<div class="col-sm-10 d-flex flex-wrap gap-2">
+									<c:forEach var="img" items="${fn:split(dto.image_url, ',')}">
+										<img src="${img}" class="img-fluid" style="max-height:300px; margin-right:8px;">
+									</c:forEach>
 								</div>
 							</div>
 						</c:if>
@@ -105,8 +107,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 col-form-label font-weight-bold">내용</label>
 							<div class="col-sm-10">
-								<div class="border rounded p-3 bg-light" style="min-height:200px; white-space:pre-wrap;">
-								${dto.content}
+								<div class="border rounded p-3 bg-light" style="min-height:200px; white-space:pre-wrap;">${dto.content}
 								</div>
 							</div>
 						</div>

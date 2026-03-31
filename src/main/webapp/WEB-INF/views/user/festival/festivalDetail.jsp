@@ -507,7 +507,8 @@
               </div>
 
               <div class="text-center mt-3">
-                <button id="btnReserve" class="btn btn-success r-reserveBtn">
+                <button type="button" id="btnReserve" class="btn btn-success r-reserveBtn"
+				        onclick="location.href='${pageContext.request.contextPath}/festReservation.rv?place_id=${festival.placeDTO.place_id}'">
                   예약하기
                 </button>
               </div>
@@ -539,7 +540,6 @@
 </script>
 
 <script src="${pageContext.request.contextPath}/resources/js/festival/festivalDetail.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/user/festReservation.js"></script>
 
 <%@ include file="../../common/footer.jsp" %>
 </body>

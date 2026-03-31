@@ -31,6 +31,16 @@
 			<button class="btn btn-outline-secondary btn-sm" id="laterBtn">나중에</button>
 		</div>
 	</div>
+	
+	<!-- '나중에' 버튼 클릭 시 -->
+	<div id="surveyLater" class="alert alert-warning d-none d-flex justify-content-between align-items-center">
+		<div>
+			⏳ 설문이 대기 중입니다. 언제든지 다시 작성할 수 있습니다.
+		</div>
+		<div>
+			<button class="btn btn-success btn-sm" id="retryBtn">지금 작성하기</button>
+		</div>
+	</div>
 </div>
 <!-- end::설문 안내 카드 -->
 

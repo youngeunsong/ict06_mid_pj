@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function generateBaseSlots() {
       const slots = [];
 
-      for (let hour = 0; hour < 24; hour++) {
+      for (let hour = 9; hour < 21; hour++) {
         for (let min = 0; min < 60; min += 30) {
           const startHour = String(hour).padStart(2, "0");
           const startMin = String(min).padStart(2, "0");

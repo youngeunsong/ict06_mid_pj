@@ -187,7 +187,7 @@
 											</thead>
 											<tbody>
 												<c:forEach var="dto" items="${pendingList}">
-													<tr style="cursor:pointer;" onclick="location.href='${path}/getReservationList.ad?status=PENDING'">
+													<tr style="cursor:pointer;" onclick="location.href='${path}/reservationList.ad?status=PENDING'">
 														<td>${dto.reservation_id}</td>
 														<td>${dto.user_id}</td>
 														<td>${dto.placeDTO.name}</td>

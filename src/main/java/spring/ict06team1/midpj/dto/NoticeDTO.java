@@ -14,13 +14,15 @@ public class NoticeDTO {
 	private String is_top;
 	private Timestamp noticeRegDate;
 	private Timestamp noticeUpdateDate;
+	private ImageStoreDTO repImage; // 커뮤니티 이미지를 불러오기 위해 추가
 
 	public NoticeDTO() {
 		super();
 	}
 
 	public NoticeDTO(int notice_id, String admin_id, String category, String title, String content, String image_url,
-			int view_count, String is_top, Timestamp noticeRegDate, Timestamp noticeUpdateDate) {
+			int view_count, String is_top, Timestamp noticeRegDate, Timestamp noticeUpdateDate,
+			ImageStoreDTO repImage) {
 		super();
 		this.notice_id = notice_id;
 		this.admin_id = admin_id;
@@ -32,6 +34,7 @@ public class NoticeDTO {
 		this.is_top = is_top;
 		this.noticeRegDate = noticeRegDate;
 		this.noticeUpdateDate = noticeUpdateDate;
+		this.repImage = repImage;
 	}
 
 	public int getNotice_id() {
@@ -114,12 +117,20 @@ public class NoticeDTO {
 		this.noticeUpdateDate = noticeUpdateDate;
 	}
 
+	public ImageStoreDTO getRepImage() {
+		return repImage;
+	}
+
+	public void setRepImage(ImageStoreDTO repImage) {
+		this.repImage = repImage;
+	}
+
 	@Override
 	public String toString() {
 		return "NoticeDTO [notice_id=" + notice_id + ", admin_id=" + admin_id + ", category=" + category + ", title="
 				+ title + ", content=" + content + ", image_url=" + image_url + ", view_count=" + view_count
 				+ ", is_top=" + is_top + ", noticeRegDate=" + noticeRegDate + ", noticeUpdateDate=" + noticeUpdateDate
-				+ "]";
+				+ ", repImage=" + repImage + "]";
 	}
 
 }

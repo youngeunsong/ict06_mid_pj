@@ -105,6 +105,7 @@ VALUES ('admin1', 'admin1234', 'admin1@travel.com', '관리자1', '1985-01-01', 
 INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
 VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
 SELECT * FROM MEMBER;
+SELECT image_url FROM NOTICE WHERE notice_id = 107;
 
 --=====축제 티켓 샘플 데이터=====
 -- 1. 3번 축제 (3/7 ~ 3/16) 티켓
@@ -507,6 +508,8 @@ SELECT user_id, rating, content, created_at
 FROM REVIEW
 WHERE rating <= 2
 ORDER BY created_at DESC;
+SELECT * image_store WHERE notice_id=110;
+SELECT * FROM IMAGE_STORE;
 
 --포인트 적립 기준
 --(적립) 신규 회원 가입 시(2000포인트)

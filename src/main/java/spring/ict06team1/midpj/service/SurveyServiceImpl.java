@@ -127,7 +127,7 @@ public class SurveyServiceImpl implements SurveyService {
 	    	
 	    	// ===============================
 			// 추가: 김재원 2026-03-26
-			// 리뷰 참여 시 포인트 지급 
+			// 리뷰 참여 시 포인트 지급
 	    	// 6. 포인트 지급
             Map<String, Object> pointMap = new HashMap<>();
 	    	pointMap.put("userId", dto.getUser_id());

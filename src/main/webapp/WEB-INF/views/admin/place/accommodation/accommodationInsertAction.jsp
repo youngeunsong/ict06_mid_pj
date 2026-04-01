@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html>
@@ -8,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>숙소 등록 성공</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
@@ -42,7 +42,6 @@
 							}, 1000);
 				</script>
 			</c:when>
-
 			<c:otherwise>
 				<script type="text/javascript">
 					setTimeout(

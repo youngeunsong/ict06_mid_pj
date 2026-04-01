@@ -19,7 +19,7 @@
 		<section class="my-inquiry-section">
 			<div class="page-header">
 				<h2>
-					<i class="bi bi-flower1"></i> 1:1 문의 내역
+					<img src="${path}/resources/images/common/locationMarker.png" class="title-marker"> 1:1 문의 내역
 				</h2>
 			</div>
 

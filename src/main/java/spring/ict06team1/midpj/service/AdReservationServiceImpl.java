@@ -103,8 +103,13 @@ public class AdReservationServiceImpl implements AdReservationService {
 		dto.setRequest_note(requestNote);
 		if(visitTime != null && !visitTime.isEmpty())
 			dto.setVisit_time(visitTime);
-		if(guestCount != null && !guestCount.isEmpty())
-			dto.setGuest_count(Integer.parseInt(guestCount));
+		if(guestCount != null && !guestCount.trim().isEmpty()) {
+			try {
+				dto.setGuest_count(Integer.parseInt(guestCount.trim()));
+			} catch(NumberFormatException e) {
+				System.out.println("guest_count 파싱 실패: " + guestCount);
+			}
+		}
 		if(checkIn != null && !checkIn.isEmpty())
 			dto.setCheck_in(java.sql.Date.valueOf(checkIn));
 		if(checkOut != null && !checkOut.isEmpty())
@@ -152,7 +157,14 @@ public class AdReservationServiceImpl implements AdReservationService {
 		//6-1. 페이지 사이즈 지정
 		int pageSize = 5;
 		String pageParam = request.getParameter("pendingPage");
-		int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+		int currentPage = 1;
+		try {
+			if(pageParam != null && !pageParam.trim().isEmpty()) {
+				currentPage = Integer.parseInt(pageParam.trim());
+			}
+		} catch(NumberFormatException e) {
+			currentPage = 1;
+		}
 		
 		//6-2. 미처리 전체 건수 조회
 		int totalCount = adResDao.getPendingCount();

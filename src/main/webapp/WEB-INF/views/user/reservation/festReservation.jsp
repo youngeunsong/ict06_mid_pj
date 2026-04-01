@@ -284,11 +284,14 @@
 				
 				<div class="card shadow-sm border-0 p-4" style="border-radius: 20px;">
 				
+					<input type="hidden" name="place_id" value="${festival.placeDTO.place_id}">
+					<input type="hidden" name="place_type" value="FEST">
+					
 					<!-- 방문일 -->
 					<div class="mb-4">
 						<label class="form-label fw-bold">방문일 선택</label>
-						<input type="hidden" id="festStartDate" value="<fmt:formatDate value='${festival.start_date}' pattern='yyyy-MM-dd'/>">
-						<input type="hidden" id="festEndDate" value="<fmt:formatDate value='${festival.end_date}' pattern='yyyy-MM-dd'/>">
+						<input type="hidden" id="festStartDate" name="festStartDate" value="<fmt:formatDate value='${festival.start_date}' pattern='yyyy-MM-dd'/>">
+						<input type="hidden" id="festEndDate" name="festEndDate" value="<fmt:formatDate value='${festival.end_date}' pattern='yyyy-MM-dd'/>">
 						<input type="hidden" id="visit_date" name="visit_date">
 						<div id="flatpickr-container" style="display:flex; justify-content:center;"></div>
 						<div id="selected_date_display" class="text-center mt-2 fw-bold text-success"></div>
@@ -333,7 +336,7 @@
 					<div class="mb-4">
 						<label class="form-label fw-bold">인원 수</label>
 						<div class="input-group input-group-lg">
-							<input type="number" id="guest_count" class="form-control" value="1" min="1">
+							<input type="number" id="guest_count" name="guest_count" class="form-control" value="1" min="1">
 							<span class="input-group-text">명</span>
 						</div>
 					</div>
@@ -341,7 +344,7 @@
 					<!-- 요청사항 -->
 					<div class="mb-4">
 						<label class="form-label fw-bold">요청사항</label>
-						<textarea id="request_note" class="form-control" rows="3" placeholder="전달할 메시지를 적어주세요."></textarea>
+						<textarea id="request_note" name="request_note" class="form-control" rows="3" placeholder="전달할 메시지를 적어주세요."></textarea>
 					</div>
 					
 					<hr class="my-4">

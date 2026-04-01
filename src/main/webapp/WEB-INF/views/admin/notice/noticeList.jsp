@@ -127,7 +127,7 @@
 												<td>
 													<fmt:formatDate value="${dto.noticeRegDate}" pattern="yyyy-MM-dd" />
 												</td>
-												<td onclick="event.stopPropagation()">
+												<td onclick="event.stopPropagation()" style="white-space:nowrap;">
 													<a href="${path}/noticeModify.adnt?noticeId=${dto.notice_id}"
 														class="btn btn-xs btn-outline-secondary"
 														onclick="event.stopPropagation()">수정</a>

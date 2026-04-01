@@ -151,9 +151,7 @@
 							    </c:choose>
 							</tbody>
                             </table>
-                            <div class="pagination-right-wrapper border-top">
                                 <%@ include file="/WEB-INF/views/common/restaurant_pagination.jsp"%>
-                            </div>
                             <div class="add-btn-area">
                                 <button type="button" class="btn btn-res-primary px-4 py-2"
                                         onclick="location.href='${path}/restaurantInsert.adre?areaCode=${areaCode}&pageNum=${paging.pageNum}&category=${category}&keyword=${keyword}'">

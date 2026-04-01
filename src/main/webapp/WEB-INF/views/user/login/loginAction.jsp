@@ -19,7 +19,7 @@
                 // 추가 포인트 지급부분
              	// 신규 회원가입 포인트 지급 메시지 (한 번만)
                 <c:if test="${not empty sessionScope.joinPointGiven}">
-                    alert("🎉 신규 회원 가입으로 1,000 포인트가 적립되었습니다!");
+                    alert("🎉 신규 회원 가입으로 2,000 포인트가 적립되었습니다!");
                     <c:remove var="joinPointGiven" scope="session"/>
                 </c:if>;
                 //---------------------------------------------------------------------

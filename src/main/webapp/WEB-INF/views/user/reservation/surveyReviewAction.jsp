@@ -21,6 +21,7 @@
 			<c:when test="${result == 1}">
 				<script type="text/javascript">
 					alert("${msg}");
+					alert("🎉 설문조사와 리뷰참여로 500 포인트가 적립되었습니다!");
 					location.href = "${path}/viewReservations.do";
 				</script>
 			</c:when>

@@ -315,13 +315,83 @@ CREATE TABLE POINT_POLICY (
 	CONSTRAINT CHK_POINTPOLICY_POLICYKEY CHECK(POLICY_KEY IN('EARN_LOGIN','EARN_SURVEY','EARN_REVIEW','USE_BOOKING'))
 );
 SELECT * FROM POINT_POLICY;
---제약조건 리셋
-ALTER TABLE POINT_POLICY 
+
+--Ver.260331
+--변경사항
+--1) POINT_POLICY 테이블: EARN_LOGIN → EARN_JOIN 변경
+--2) POINT_POLICY 테이블: EARN_SURVEY + EARN_REVIEW → EARN_SURVEY&REVIEW 통합
+--3) POINT_POLICY 테이블: EARN_SURVEY&REVIEW amount 1000 → 500 변경
+--------------------------------------------------
+
+-- 0. POINT 테이블 FK 비활성화
+DECLARE
+    v_sql VARCHAR2(1000);
+BEGIN
+    FOR rec IN (
+        SELECT ac.owner, ac.constraint_name, ac.table_name
+        FROM all_constraints ac
+        JOIN all_constraints pk
+          ON ac.r_constraint_name = pk.constraint_name
+         AND ac.r_owner = pk.owner
+        WHERE ac.constraint_type = 'R'
+          AND ac.table_name = 'POINT'
+          AND pk.table_name = 'POINT_POLICY'
+    ) LOOP
+        v_sql := 'ALTER TABLE ' || rec.owner || '.' || rec.table_name ||
+                 ' DISABLE CONSTRAINT ' || rec.constraint_name;
+        EXECUTE IMMEDIATE v_sql;
+    END LOOP;
+END;
+
+ALTER TABLE POINT_POLICY
 DROP CONSTRAINT CHK_POINTPOLICY_POLICYKEY;
---제약조건 추가
-ALTER TABLE POINT_POLICY 
-ADD CONSTRAINT CHK_POINTPOLICY_POLICYKEY 
-CHECK(POLICY_KEY IN ('EARN_LOGIN','EARN_SURVEY','EARN_REVIEW','USE_BOOKING'));
+
+ -- 2. POINT_POLICY 데이터 정리
+UPDATE POINT_POLICY SET policy_key = 'EARN_JOIN'
+WHERE policy_key = 'EARN_LOGIN';
+
+UPDATE POINT_POLICY SET policy_key = 'EARN_SURVEY' || CHR(38) || 'REVIEW'
+WHERE policy_key = 'EARN_SURVEY';
+
+DELETE FROM POINT_POLICY
+WHERE policy_key = 'EARN_REVIEW';
+
+-- 3. AMOUNT, DESCRIPTION 수정
+UPDATE POINT_POLICY
+SET amount = 500,
+    description = '설문조사 및 리뷰 작성 시 500포인트 적립'
+WHERE policy_key = 'EARN_SURVEY' || CHR(38) || 'REVIEW';
+
+-- 4. POINT 데이터 업데이트
+UPDATE POINT SET policy_key = 'EARN_JOIN'
+WHERE policy_key = 'EARN_LOGIN';
+
+UPDATE POINT SET policy_key = 'EARN_SURVEY' || CHR(38) || 'REVIEW'
+WHERE policy_key IN ('EARN_SURVEY', 'EARN_REVIEW');
+
+ALTER TABLE POINT_POLICY
+ADD CONSTRAINT CHK_POINTPOLICY_POLICYKEY
+CHECK(POLICY_KEY IN ('EARN_JOIN','EARN_SURVEY&REVIEW','USE_BOOKING'));
+
+DECLARE
+    v_sql VARCHAR2(1000);  
+BEGIN
+    FOR rec IN (
+        SELECT ac.owner, ac.constraint_name, ac.table_name
+        FROM all_constraints ac
+        JOIN all_constraints pk
+          ON ac.r_constraint_name = pk.constraint_name
+         AND ac.r_owner = pk.owner
+        WHERE ac.constraint_type = 'R'       -- Foreign Key
+          AND ac.table_name = 'POINT'        -- FK 있는 테이블
+          AND pk.table_name = 'POINT_POLICY' -- 참조되는 테이블
+    ) LOOP
+        v_sql := 'ALTER TABLE ' || rec.owner || '.' || rec.table_name ||
+                 ' ENABLE CONSTRAINT ' || rec.constraint_name;
+        EXECUTE IMMEDIATE v_sql;
+    END LOOP;
+END;
+
 
 
 -- 16. POINT (포인트 내역)

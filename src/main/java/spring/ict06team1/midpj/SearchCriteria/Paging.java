@@ -185,10 +185,10 @@ public class Paging {
 			// System.out.println("endPage : " + endPage);
 			
 			// 이전
-			if(startPage > pageSize) prev = startPage - 10;
+			if(startPage > 1) prev = startPage - 10;
 			
 			// 다음
-			if(startPage < pageCount) next = startPage + 10;
+			if(endPage < pageCount) next = endPage + 1;
 			
 			// System.out.println("prev : " + prev);
 			// System.out.println("next : " + next);

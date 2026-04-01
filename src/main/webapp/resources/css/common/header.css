@@ -60,6 +60,34 @@ body {
     display: none !important;
 }
 
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand-logo:hover {
+    text-decoration: none;
+}
+
+.brand-symbol {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.brand-text-image {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+
 
 
 

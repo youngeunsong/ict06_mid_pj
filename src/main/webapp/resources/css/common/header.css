@@ -60,12 +60,40 @@ body {
     display: none !important;
 }
 
+
 /* ──────────────────────────────────────
    헤더 sticky 고정 및 공통 레이아웃
 ────────────────────────────────────── */
 .site-header {
     z-index: 1040;
     background: #fff;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand-logo:hover {
+    text-decoration: none;
+}
+
+.brand-symbol {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.brand-text-image {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 }
 
 /* navbar 높이 통일: 메인/서브 모두 동일한 min-height */

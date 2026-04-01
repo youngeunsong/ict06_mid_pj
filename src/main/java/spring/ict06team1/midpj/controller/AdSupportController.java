@@ -94,7 +94,7 @@ public class AdSupportController {
 
         logger.info("[url => /adFaqList.adsp]");
 
-        // 우리가 합의한 구조대로 서비스 호출 (request, response, model 다 보냄!)
+        // 서비스 호출 (request, response, model 다 보냄!)
         adsupportservice.getFaqList(request, response, model);
 
         return "admin/support/adFaqList";

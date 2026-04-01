@@ -76,7 +76,7 @@ public class AdMemberServiceImpl implements AdMemberService {
 		map.put("paging", paging);
 		
 		//전체 건수
-		int totalCount = adMemDao.getMemberCount(map);
+		int totalCount = adMemDao.getBannedCount(map);
 		paging.setTotalCount(totalCount);
 		
 		//목록

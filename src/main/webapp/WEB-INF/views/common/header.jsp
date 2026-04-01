@@ -23,9 +23,10 @@
 	  <div class="container px-lg-0">
 	
 	    <!-- 로고 -->
-	    <a class="navbar-brand font-weight-bold me-3" href="${path}/main.do">
-	      맛침내
-	    </a>
+		<a class="navbar-brand brand-logo me-3" href="${path}/main.do">
+		   <img src="${path}/resources/images/common/myLocation.png" alt="맛침내 심볼" class="brand-symbol">
+		   <img src="${path}/resources/images/common/matchimnae.png" alt="맛침내" class="brand-text-image">
+		</a>
 	
 	    <!-- 모바일 토글 -->
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">

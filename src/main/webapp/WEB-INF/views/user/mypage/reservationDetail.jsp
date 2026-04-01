@@ -22,7 +22,8 @@
 
 				<div class="page-header">
 					<h2>
-						<i class="bi bi-calendar-check"></i> 예약 상세
+						<img src="${path}/resources/images/common/locationMarker.png"
+							class="title-marker"> 예약 상세
 					</h2>
 				</div>
 

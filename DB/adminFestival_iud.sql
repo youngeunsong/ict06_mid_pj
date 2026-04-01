@@ -205,6 +205,12 @@ BEGIN
         enabled         => TRUE
     );
 END;
+
+-- 생성된 job 조회 : LAST_START_DATE 확인하여 매일 작동하는 지 확인
+SELECT JOB_NAME, STATE, LAST_START_DATE, NEXT_RUN_DATE 
+FROM USER_SCHEDULER_JOBS 
+WHERE JOB_NAME = 'UPDATE_FESTIVAL_STATUS_JOB';
+
 --------------------------------------------
 -- 테이블 리셋 필요 시 사용할 drop 문
 -- 1. 자식 테이블

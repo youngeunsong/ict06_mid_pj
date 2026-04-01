@@ -146,11 +146,27 @@
                     </div>
                 </div>
                 
-                <c:if test="${not empty dto.repImage and not empty dto.repImage.image_url}">
-				    <div class="post-cover">
-				        <img src="${dto.repImage.image_url}" alt="${dto.title}" class="post-cover-img">
-				    </div>
-				</c:if>
+                <!-- 다중 이미지 + 썸네일 구조 (Fallback 포함) -->
+                <c:choose>
+                    <c:when test="${not empty imageList}">
+                        <div class="post-cover">
+                            <img src="${imageList[0].image_url}" alt="${dto.title}" class="post-cover-img" id="mainImage">
+                        </div>
+                        <!-- 썸네일 영역 (2장 이상) -->
+                        <c:if test="${fn:length(imageList) > 1}">
+                            <div class="thumbnail-list mt-3 d-flex justify-content-center gap-2">
+                                <c:forEach var="image" items="${imageList}" begin="0" end="4">
+                                    <img src="${image.image_url}" class="thumb-img" alt="썸네일">
+                                </c:forEach>
+                            </div>
+                        </c:if>
+                    </c:when>
+                    <c:when test="${not empty dto.repImage and not empty dto.repImage.image_url}">
+                        <div class="post-cover">
+                            <img src="${dto.repImage.image_url}" alt="${dto.title}" class="post-cover-img" id="mainImage">
+                        </div>
+                    </c:when>
+                </c:choose>
 
                 <div class="post-body">
                     ${dto.content}

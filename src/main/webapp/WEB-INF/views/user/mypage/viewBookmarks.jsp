@@ -18,7 +18,7 @@
 
     <section class="my-favorite-section">
         <div class="page-header">
-            <h2><i class="bi bi-flower1"></i> 내 즐겨찾기</h2>
+            <h2><img src="${path}/resources/images/common/locationMarker.png" class="title-marker"> 내 즐겨찾기</h2>
         </div>
 
         <!-- 카테고리 필터 -->

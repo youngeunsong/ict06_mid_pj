@@ -97,8 +97,22 @@ public class ReservationServiceImpl implements ReservationService {
  		String placeType = request.getParameter("place_type");
  		
  		// 공통 요청값 DTO에 세팅
- 		dto.setPlace_id(Integer.parseInt(request.getParameter("place_id")));
- 		dto.setGuest_count(Integer.parseInt(request.getParameter("guest_count")));
+ 		String placeIdStr = request.getParameter("place_id");
+ 		String guestCountStr = request.getParameter("guest_count");
+ 		
+ 		System.out.println("place_id:" + placeIdStr);
+ 		System.out.println("guest_count:" + guestCountStr);
+ 		
+ 		if(placeIdStr == null || placeIdStr.trim().isEmpty()) {
+ 			throw new RuntimeException("place_id 없음");
+ 		}
+
+ 		if(guestCountStr == null || guestCountStr.trim().isEmpty()) {
+ 			throw new RuntimeException("guest_count 없음");
+ 		}
+ 		
+ 		dto.setPlace_id(Integer.parseInt(placeIdStr.trim()));
+ 		dto.setGuest_count(Integer.parseInt(guestCountStr.trim()));
  		dto.setRequest_note(request.getParameter("request_note"));
  		
  		// 로그인한 사용자 id 세팅
@@ -119,29 +133,76 @@ public class ReservationServiceImpl implements ReservationService {
  		//장소종류별 추가 요청값 세팅
  		//축제: ticket_id, visit_date
  		if("FEST".equals(placeType)) {
- 			dto.setTicket_id(Integer.parseInt(request.getParameter("ticket_id")));
- 			dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
+ 			String ticketIdStr = request.getParameter("ticket_id");
+ 			String visitDateStr = request.getParameter("visit_date");
+
+ 			if(visitDateStr == null || visitDateStr.trim().isEmpty()) {
+ 				throw new RuntimeException("방문일 없음");
+ 			}
  			
- 			int price = resDao.getTicketPrice(dto.getTicket_id());
- 			totalAmount = price * dto.getGuest_count();
- 			if(totalAmount <= 0)
+ 			dto.setCheck_in(Date.valueOf(visitDateStr));
+
+ 			if(ticketIdStr != null && !ticketIdStr.trim().isEmpty()) {
+ 				//티켓 있는 축제 -> 선택 필수
+ 				if(ticketIdStr == null || ticketIdStr.trim().isEmpty()) {
+ 					throw new RuntimeException("티켓 선택 필수");
+ 				}
+ 				
+ 				dto.setTicket_id(Integer.parseInt(ticketIdStr));
+ 				int price = resDao.getTicketPrice(dto.getTicket_id());
+ 				totalAmount = price * dto.getGuest_count();
+ 			}
+ 			else {
+ 				//무료 축제
+ 				totalAmount = 0;
+ 			}
+
+ 			if(totalAmount < 0)
  				throw new RuntimeException("결제 금액 오류");
  		}
  		//숙소: check_in, check_out
  		else if("ACC".equals(placeType)) {
- 			dto.setCheck_in(Date.valueOf(request.getParameter("check_in")));
- 			dto.setCheck_out(Date.valueOf(request.getParameter("check_out")));
+ 			String checkInStr = request.getParameter("check_in");
+ 			String checkOutStr = request.getParameter("check_out");
+ 			
+ 			if(checkInStr == null || checkInStr.trim().isEmpty()) {
+ 				throw new RuntimeException("체크인 날짜 없음");
+ 			}
+ 			if(checkOutStr == null || checkOutStr.trim().isEmpty()) {
+ 				throw new RuntimeException("체크아웃 날짜 없음");
+ 			}
+ 			
+ 			dto.setCheck_in(Date.valueOf(checkInStr));
+ 			dto.setCheck_out(Date.valueOf(checkOutStr));
+ 			
+ 			if(dto.getCheck_out().before(dto.getCheck_in())) {
+ 				throw new RuntimeException("체크아웃 날짜 오류");
+ 			}
 
  			int price = resDao.getAccommodationPrice(dto.getPlace_id());
  			long nights = (dto.getCheck_out().getTime() - dto.getCheck_in().getTime()) / (1000*60*60*24);
+ 			if(nights <= 0) {
+ 				throw new RuntimeException("숙박일수 오류");
+ 			}
+ 			
  			totalAmount = price * (int)nights;
  			if(totalAmount <= 0)
  				throw new RuntimeException("결제 금액 오류");
  		}
  		//맛집: visit_date, visit_time
  		else if("REST".equals(placeType)) {
- 		    dto.setCheck_in(Date.valueOf(request.getParameter("visit_date")));
- 		    dto.setVisit_time(request.getParameter("visit_time"));
+ 			String visitDateStr = request.getParameter("visit_date");
+ 			String visitTimeStr = request.getParameter("visit_time");
+ 			
+ 			if(visitDateStr == null || visitDateStr.trim().isEmpty()) {
+ 				throw new RuntimeException("방문일 없음");
+ 			}
+ 			if(visitTimeStr == null || visitTimeStr.trim().isEmpty()) {
+ 				throw new RuntimeException("방문시간 없음");
+ 			}
+
+ 			dto.setCheck_in(Date.valueOf(visitDateStr));
+ 		    dto.setVisit_time(visitTimeStr);
 
  		    // 맛집은 노쇼 방지 예약금: 인원수 * 1000원
  		    totalAmount = dto.getGuest_count() * 1000;
@@ -151,14 +212,13 @@ public class ReservationServiceImpl implements ReservationService {
  		    }
  		}
  		
- 		//예약 저장
  		if("FEST".equals(placeType)) {
  			resDao.insertFestReservation(dto);
  		}
  		else if("ACC".equals(placeType)) {
  			resDao.insertAccReservation(dto);
  		}
- 		if("REST".equals(placeType)) {
+ 		else if("REST".equals(placeType)) {
  			resDao.insertRestReservation(dto);
  		}
 
@@ -452,8 +512,6 @@ public class ReservationServiceImpl implements ReservationService {
 	    // 8. 성공 처리
 	    model.addAttribute("result", 1);
 	    model.addAttribute("msg", "리뷰와 설문이 정상 등록되었습니다.");
-	    
-	    
 	    
 	}
 }

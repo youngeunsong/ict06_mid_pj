@@ -61,5 +61,97 @@ body {
 }
 
 
+/* ──────────────────────────────────────
+   헤더 sticky 고정 및 공통 레이아웃
+────────────────────────────────────── */
+.site-header {
+    z-index: 1040;
+    background: #fff;
+}
 
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
 
+.brand-logo:hover {
+    text-decoration: none;
+}
+
+.brand-symbol {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.brand-text-image {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+/* navbar 높이 통일: 메인/서브 모두 동일한 min-height */
+.site-header .navbar {
+    min-height: 64px;
+}
+
+/* 전 페이지 공통 GNB 센터링 (메인/서브 통합) */
+@media (min-width: 992px) {
+    .gnb-nav-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* ──────────────────────────────────────
+   헤더 패널 검색창 제어 이펙트
+────────────────────────────────────── */
+#headerSearchToggleBtn {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+#headerSearchToggleBtn:hover {
+    transform: scale(1.15);
+}
+
+.header-search-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: all 0.25s ease-in-out;
+}
+.header-search-panel.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ──────────────────────────────────────
+   헤더 GNB 가독성 향상 및 우측 메뉴
+────────────────────────────────────── */
+.gnb-main-link {
+    font-size: 1.25rem !important; /* 목표치 20px */
+    font-weight: 700 !important;
+    margin: 0 8px; /* 글자가 커진 만큼 시각적 여백 확보 */
+}
+
+.header-user-link {
+    color: #555 !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 4px 8px;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
+}
+.header-user-link:hover { color: #000 !important; }
+.header-user-link:hover::after {
+    content: ''; position: absolute; left: 8px; right: 8px; bottom: -2px;
+    height: 2px; background-color: #000;
+}

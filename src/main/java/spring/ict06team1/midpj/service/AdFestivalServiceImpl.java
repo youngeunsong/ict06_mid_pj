@@ -388,6 +388,31 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		String json = apiClient.callAPI(page, numOfRows);
 		
 		// 설정한 시작일부터 진행되는 축제만 선별하기
+		JSONObject obj = new JSONObject(json);
+        JSONObject body = obj.getJSONObject("response")
+                             .getJSONObject("body");
+
+        JSONArray items = body.getJSONArray("items");
+
+        if(items.length() == 0) break;
+
+        for(int i=0; i<items.length(); i++) {
+
+            JSONObject item = items.getJSONObject(i);
+
+            String startDate = item.getString("fstvlStartDate");
+
+            // 날짜 비교
+            if(startDate.compareTo(targetDate) >= 0) {
+
+                FestivalDTO dto = new FestivalDTO();
+                dto.setName(item.getString("fstvlNm"));
+                dto.setStartDate(startDate);
+
+                result.add(dto);
+            }
+        }
+
 		
 		return json; 
 	}

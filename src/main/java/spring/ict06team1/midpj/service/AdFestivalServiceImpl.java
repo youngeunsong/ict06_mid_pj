@@ -384,7 +384,11 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		String fstvlStartDate = request.getParameter("fstvlStartDate"); 
 		String formattedDate = LocalDate.parse(fstvlStartDate)
 		        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		String json = apiClient.callAPI(page, numOfRows, formattedDate);
+		System.out.println("formattedDate : " + formattedDate);
+		String json = apiClient.callAPI(page, numOfRows);
+		
+		// 설정한 시작일부터 진행되는 축제만 선별하기
+		
 		return json; 
 	}
 	

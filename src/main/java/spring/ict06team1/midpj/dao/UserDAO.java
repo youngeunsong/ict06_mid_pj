@@ -72,6 +72,11 @@ public interface UserDAO {
     // 나의 예약 취소 처리
     public int cancelReservation(String reservation_id);
     
+	// 즐겨찾기 토글(버튼)
+	public int checkmyFavorite(Map<String, Object> map);
+	public int insertmyFavorite(Map<String, Object> map);
+	public int deletemyFavorite(Map<String, Object> map);
+    
     //------------------------------
     // 관리자 정보 수정
     public int updateAdmin(MemberDTO dto);

@@ -275,7 +275,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<table class="table table-bordered">
+					<table class="table">
 						<tbody>
 							<tr>
 								<th class="table-light" style="width:20%;">예약번호</th>
@@ -325,7 +325,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<table class="table table-bordered">
+					<table class="table">
 						<tbody>
 							<tr>
 								<th class="table-light" style="width:25%;">예약번호</th>

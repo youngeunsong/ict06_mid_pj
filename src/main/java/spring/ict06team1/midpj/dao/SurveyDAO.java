@@ -1,8 +1,6 @@
 package spring.ict06team1.midpj.dao;
 
 import java.util.List;
-import java.util.Map;
-
 import spring.ict06team1.midpj.dto.ReservationDTO;
 import spring.ict06team1.midpj.dto.ReviewDTO;
 import spring.ict06team1.midpj.dto.SurveyDTO;
@@ -33,13 +31,6 @@ public interface SurveyDAO {
     
     //리뷰 중복 체크
     int checkReviewExists(String reservation_id);
-
-    // ===============================
-	// 추가: 김재원 2026-03-26
-	// 설문 조사와 리뷰 참여 시 포인트 지급 
-	// 포인트 등록
-    public int insertPoint(Map<String, Object> map);
-    // ===============================
 
 	// 설문 작성 완료 여부 확인(예약목록 버튼 전환용)
 	int checkSurveyWritten(String reservation_id);

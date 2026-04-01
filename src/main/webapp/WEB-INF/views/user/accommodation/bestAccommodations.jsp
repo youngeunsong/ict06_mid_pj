@@ -20,6 +20,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="${path}/resources/css/common/ranking.css"/>	<!-- 랭킹용 공통 css -->
+  <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
 </head>
 
 <body>
@@ -31,14 +32,20 @@
       <%-- [페이지 제목 영역]
            랭킹 페이지의 목적과 기능을 사용자에게 안내하기 위해 사용
       --%>
-      <div class="rk-head">
+      <div class="main-tab-wrapper" style="display:flex; justify-content:center; margin-bottom:30px;">
+          <div class="nav-pill-group" onclick="location.href='${path}/accommodation.ac'" style="cursor:pointer;">
+              <div class="nav-pill-item best-link">내 주변</div>
+              <div class="nav-pill-item active">베스트 숙소</div>
+          </div>
+      </div>
+      <!-- <div class="rk-head">
         <h1 class="rk-title">
-        	<!-- 숙소 페이지에 어울리게 수정할 예정 -->
+        	숙소 페이지에 어울리게 수정할 예정
         	<i class="fa-solid fa-bed" style="color:var(--rk-brand);"></i>
           	숙소 랭킹
         </h1>
         <div class="rk-sub">실시간 인기, 지역별 TOP 숙소를 한눈에 확인해보세요.</div>
-      </div>
+      </div> -->
 
       <%-- [탭 선택 영역]
            실시간 / 지역 기준으로 랭킹 데이터를 전환하기 위한 UI

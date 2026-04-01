@@ -20,7 +20,7 @@
 		<section class="my-reservation-section">
 			<div class="page-header">
 				<h2>
-					<i class="bi bi-calendar-check"></i> 내 예약목록
+					<img src="${path}/resources/images/common/locationMarker.png" class="title-marker"> 내 예약목록
 				</h2>
 			</div>
 
@@ -256,11 +256,9 @@
 
 		<%@ include file="../../common/footer.jsp"%>
 	</div>
-
 	<script>
-		function filterReservation(status) {
-			location.href = '${path}/viewReservations.do?status=' + status;
-		}
+    const contextPath = '${path}';
 	</script>
+	<script src="${path}/resources/js/user/mypage/viewReservations.js"></script>
 </body>
 </html>

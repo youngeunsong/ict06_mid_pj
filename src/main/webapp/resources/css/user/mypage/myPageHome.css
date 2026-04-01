@@ -654,3 +654,14 @@ body {
 .custom_card .bookmark-btn {
     opacity: 1;
 }
+
+.mypage-character {
+    width: 70px;
+    margin: 0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+}
+
+.title-marker {
+    width: 20px;
+    margin-right: 8px;
+}

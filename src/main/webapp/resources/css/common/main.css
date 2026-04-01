@@ -33,31 +33,27 @@ body {
 /* ──────────────────────────────────────
    1. HERO CAROUSEL
 ────────────────────────────────────── */
+#heroCarousel {
+  background-color: #000;
+}
+
 #heroCarousel .carousel-item {
-  height: 420px;
+  height: 680px; /* PC 압도적 스케일업 */
+}
+
+/* 역동적인 배너 위 흰색 글자와 폼이 잘 보이도록 글로벌 어둡기 오버레이 추가 */
+#heroCarousel .carousel-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1;
 }
 
 #heroCarousel .carousel-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-#heroCarousel .carousel-caption {
-  bottom: 30px;
-  left: 5%;
-  text-align: left;
-  text-shadow: 0 2px 8px rgba(0,0,0,.5);
-}
-
-#heroCarousel .carousel-caption h5 {
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-#heroCarousel .carousel-caption p {
-  font-size: .95rem;
-  opacity: .9;
 }
 
 .hero-thumbs {
@@ -509,13 +505,13 @@ body {
 ────────────────────────────────────── */
 @media (max-width: 992px) {
   #heroCarousel .carousel-item {
-    height: 360px;
+    height: 480px;
   }
 }
 
 @media (max-width: 768px) {
   #heroCarousel .carousel-item {
-    height: 300px;
+    height: 420px;
   }
 
   .hero-thumbs {
@@ -537,4 +533,93 @@ body {
     min-height: 150px;
     max-height: 150px;
   }
+  
+  /* 모바일에서는 텍스트 폰트/폼 크기 방어 */
+  .hero-content-caption .hero-title { font-size: 2rem !important; }
+  .hero-content-caption .hero-subtitle { font-size: 1rem !important; margin-bottom: 0.5rem !important; }
+  
+  .main-search-input-group .input-group-text,
+  .main-search-input-group .form-control,
+  .main-search-input-group .btn {
+    font-size: 1rem !important;
+    padding-top: 0.8rem !important;
+    padding-bottom: 0.8rem !important;
+  }
+}
+
+/* ──────────────────────────────────────
+   10. MAIN HERO CONTENT & SEARCH BANNER
+────────────────────────────────────── */
+.hero-content-caption {
+  position: absolute;
+  top: 40%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 15;
+}
+.hero-content-caption .hero-subtitle {
+  font-size: 1.25rem;
+  letter-spacing: -0.3px;
+  margin-bottom: 0.8rem !important;
+}
+.hero-content-caption .hero-title {
+  letter-spacing: -1px;
+  font-size: 3.2rem; /* 큼직한 타이틀 메가톤급 스케일 */
+  font-weight: 800 !important;
+}
+.main-search-wrap {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 860px; /* 검색창 자체 베젤을 좌우로 길게 확장 */
+  z-index: 10;
+  padding: 0 16px;
+}
+
+/* 메인 전용 대형 폼 사이즈업 보정 (인라인 스타일 덮어쓰기 위해 important 사용) */
+.main-search-input-group .input-group-text,
+.main-search-input-group .form-control {
+  font-size: 1.25rem !important;
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+.main-search-input-group .btn {
+  font-size: 1.25rem !important;
+  padding-left: 2.5rem !important;
+  padding-right: 2.5rem !important;
+  font-weight: 700;
+}
+.main-search-form {
+  width: 100%;
+}
+.main-search-input-group {
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  border-radius: 50rem;
+  overflow: hidden;
+}
+.main-suggest-box {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  border-radius: 0.5rem;
+  margin-top: 8px;
+  background-color: #fff;
+  text-align: left;
+}
+.main-suggest-section {
+  padding: 1rem;
+}
+.main-suggest-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6c757d;
+  margin-bottom: 8px;
+  padding: 0 0.5rem;
 }

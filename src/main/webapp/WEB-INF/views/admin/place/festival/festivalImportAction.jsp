@@ -28,14 +28,14 @@
 		<c:if test="${successCnt > 0}">
 			<script type="text/javascript">
 				alert("신규 축제 등록 ${successCnt}건 성공!!"); 
-				window.location="${path}/festivalList.adfe"; 
+				window.location="${path}/festivalImport.adfe"; 
 			</script>
 		</c:if>		
 		
 		<c:if test="${successCnt <= 0}">
 			<script type="text/javascript">
-				alert("신규 축제 등록 실패!!"); 
-				window.location="${path}/festivalList.adfe"
+				alert("새로 추가할 축제가 없습니다."); 
+				window.location="${path}/festivalImport.adfe"
 			</script>
 		</c:if>
 

@@ -20,6 +20,9 @@ public interface CommunityDAO {
     // 게시글 1건 조회
 	public CommunityDTO boardDetail(int post_id);
 
+    // 게시글 내 다중 이미지 조회
+	public List<ImageStoreDTO> getCommunityImages(int post_id);
+
     // 조회수 증가
 	public void increaseViewCount(int post_id);
 	

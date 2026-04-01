@@ -13,7 +13,6 @@
 <script src="${path}/resources/js/admin/adInquiryDetail.js" defer></script>
 
 <style>
-    .table-label { background-color: #f4f6f9; width: 20%; font-weight: 600; }
     .content-box { min-height: 200px; white-space: pre-wrap; line-height: 1.6; vertical-align: top; }
     .reply-box { background-color: #fff; border: 1px solid #ced4da; border-radius: 4px; padding: 15px; width: 100%; height: 250px; }
     .section-header { border-left: 4px solid #007bff; padding-left: 10px; margin-bottom: 20px; font-weight: bold; }
@@ -49,33 +48,33 @@
                         <div class="card-body">
                             
                             <div class="section-header">문의 내용 확인</div>
-                            <table class="table table-bordered">
+                            <table class="table">
                                 <tbody>
                                     <tr>
-                                        <th class="table-label">문의 ID</th>
+                                        <th class="detail-th">문의 ID</th>
                                         <td class="text-primary"><strong>${dto.inquiry_id}</strong></td>
-                                        <th class="table-label">작성자 아이디</th>
+                                        <th class="detail-th">작성자 아이디</th>
                                         <td>${dto.user_id}</td>
                                     </tr>
                                     <tr>
-                                        <th class="table-label">문의 제목</th>
+                                        <th class="detail-th">문의 제목</th>
                                         <td colspan="3" style="font-weight: bold;">[${dto.category}] ${dto.title}</td>
                                     </tr>
                                     <tr>
-                                        <th class="table-label">문의 일시</th>
+                                        <th class="detail-th">문의 일시</th>
                                         <td colspan="3">
                                             <%-- 날짜 형식을 '년-월-일 시:분'으로 --%>
                                             <fmt:formatDate value="${dto.inquiryDate}" pattern="yyyy-MM-dd HH:mm"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th class="table-label">문의 내용</th>
+                                        <th class="detail-th">문의 내용</th>
                                         <td colspan="3" class="content-box">${dto.content}</td>
                                     </tr>
                                     <%-- 답변이 달린 경우에만 답변 날짜 --%>
                                     <c:if test="${not empty dto.answerDate}">
                                     <tr>
-                                        <th class="table-label">최종 답변 일시</th>
+                                        <th class="detail-th">최종 답변 일시</th>
                                         <td colspan="3" class="text-muted">
                                             <fmt:formatDate value="${dto.answerDate}" pattern="yyyy-MM-dd HH:mm"/>
                                         </td>

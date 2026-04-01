@@ -9,7 +9,6 @@ import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -151,7 +150,7 @@ public class UserServiceImpl implements UserService {
 	    
 	    // 추가-------------------------------------------
 	    // 포인트 DB에 저장
-	    // 6. 신규 회원가입 성공 시 포인트 지급 
+	    // 6. 신규 회원가입 성공 시 포인트 지급
 	    if(insertCnt == 1) {
 
 	        // 회원가입 포인트 지급

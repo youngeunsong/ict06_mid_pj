@@ -47,7 +47,7 @@
 							<h3 class="card-title">게시글 정보</h3>
 						</div>
 						<div class="card-body">
-							<table class="table table-bordered">
+							<table class="table">
 								<tr>
 									<th class="detail-th">번호</th>
 									<td>${dto.post_id}</td>
@@ -111,7 +111,7 @@
 							<h3 class="card-title">작성자 제재 관리</h3>
 						</div>
 						<div class="card-body">
-							<table class="table table-bordered">
+							<table class="table">
 								<tr>
 									<th class="detail-th">작성자 ID</th>
 									<td>${member.user_id}</td>

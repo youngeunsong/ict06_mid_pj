@@ -131,6 +131,21 @@
 	     WHERE c.post_id = #{post_id}
 	</select>
 
+    <!-- 게시글 다중 이미지 조회 -->
+    <select id="getCommunityImages" parameterType="int" resultType="spring.ict06team1.midpj.dto.ImageStoreDTO">
+	    SELECT image_id,
+	           target_id,
+	           target_type,
+	           image_url,
+	           is_representative,
+	           sort_order,
+	           created_at AS imgUploadDate
+	      FROM IMAGE_STORE
+	     WHERE target_type = 'COMMUNITY'
+	       AND target_id = #{post_id}
+	     ORDER BY is_representative DESC, sort_order ASC
+	</select>
+
     <!-- 조회수 증가 -->
     <update id="increaseViewCount" parameterType="int">
         UPDATE COMMUNITY

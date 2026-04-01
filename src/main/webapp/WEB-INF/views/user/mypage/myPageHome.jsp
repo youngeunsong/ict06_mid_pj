@@ -51,7 +51,8 @@
 					<%-- 프로필 정보 표시 섹션 --%>
 					<div class="profile_card p-4 text-center mb-4">
 						<div class="profile_img mb-3">
-							<i class="bi bi-person-fill fs-1"></i>
+							<img src="${path}/resources/images/common/myLocation.png"
+								class="mypage-character">
 						</div>
 						<p class="mb-1 small">반가워요!</p>
 						<h3 class="fw-bold h4 mb-3">${sessionScope.sessionID}님</h3>
@@ -127,7 +128,10 @@
 
 				<main class="col-lg-9">
 
-					<h4 class="fw-bold mb-4">나의 활동현황</h4>
+					<h4 class="fw-bold mb-4 d-flex align-items-center">
+						<img src="${path}/resources/images/common/locationMarker.png"
+							class="title-marker">나의 활동현황
+					</h4>
 					<div class="row g-3 mb-5 text-center">
 						<div class="col-md-4">
 							<div class="card activity_item p-4"
@@ -161,7 +165,10 @@
 						</div>
 					</div>
 
-					<h4 class="fw-bold mb-4">내 즐겨찾기 맛집 TOP3</h4>
+					<h4 class="fw-bold mb-4 d-flex align-items-center">
+						<img src="${path}/resources/images/common/locationMarker.png"
+							class="title-marker"> 내 즐겨찾기 맛집 TOP3
+					</h4>
 					<div class="row g-3 mb-5">
 						<c:choose>
 							<c:when test="${not empty topRestList}">
@@ -179,7 +186,7 @@
 													<i class="bi bi-bookmark-fill"></i>
 												</button>
 
-												<span class="rank_badge">BEST ${status.index + 1}</span>
+												<span class="rank_badge"> ${status.index + 1}위</span>
 											</div>
 
 											<div class="card-body p-3">
@@ -202,7 +209,10 @@
 						</c:choose>
 					</div>
 
-					<h4 class="fw-bold mb-4">내 즐겨찾기 숙소 TOP3</h4>
+					<h4 class="fw-bold mb-4 d-flex align-items-center">
+						<img src="${path}/resources/images/common/locationMarker.png"
+							class="title-marker">내 즐겨찾기 숙소 TOP3
+					</h4>
 					<div class="row g-3 mb-5">
 						<c:choose>
 							<c:when test="${not empty topAccList}">
@@ -220,7 +230,7 @@
 													<i class="bi bi-bookmark-fill"></i>
 												</button>
 
-												<span class="rank_badge">BEST ${status.index + 1}</span>
+												<span class="rank_badge"> ${status.index + 1}위</span>
 											</div>
 
 											<div class="card-body p-3">
@@ -243,7 +253,10 @@
 						</c:choose>
 					</div>
 
-					<h4 class="fw-bold mb-4">내 즐겨찾기 축제 TOP3</h4>
+					<h4 class="fw-bold mb-4 d-flex align-items-center">
+						<img src="${path}/resources/images/common/locationMarker.png"
+							class="title-marker">내 즐겨찾기 축제 TOP3
+					</h4>
 					<div class="row g-3">
 						<c:choose>
 							<c:when test="${not empty topFestList}">
@@ -261,7 +274,7 @@
 													<i class="bi bi-bookmark-fill"></i>
 												</button>
 
-												<span class="rank_badge">BEST ${status.index + 1}</span>
+												<span class="rank_badge"> ${status.index + 1}위</span>
 											</div>
 
 											<div class="card-body p-3">

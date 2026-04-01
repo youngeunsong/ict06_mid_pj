@@ -44,16 +44,6 @@
 	</div>
 	<!--end::App Wrapper-->
 
-	<!-- 관련 SQL -->
-	<div align="center">
-		SQL 쿼리 : 1:1 문의 목록, FAQ 문의 목록 조회
-		<pre>
-			<code>
-			<c:out value="
-			" />
-			</code>
-		</pre>
-	</div>
 </body>
 <!--end::Body-->
 </html>

@@ -134,20 +134,6 @@
         <footer class="main-footer">
             <strong>Copyright &copy; 2026</strong>
         </footer>
-        <!-- 관련 SQL 시작 -->
-		<div align="center">SQL 쿼리 : 1:1 문의 상세 조회</div>
-		
-			<!-- 작성 요령 : 몇몇 특수문자를 화면에 제대로 출력하기 위해 아래와 같이 사용 필요-->
-			<!-- #${'{'} : #과 { 표시 -->
-			<!-- &lt; : < 표시 -->
-			<!-- &gt; : > 표시 -->
-			<div>
-				<pre><code>
-				  SELECT * FROM INQUIRY 
-   				   WHERE inquiry_id = #${'{'}inquiry_id}				
-				</code></pre>
-			</div>
-		<!-- 관련 SQL 끝 -->
     </div>
 </body>
 </html>

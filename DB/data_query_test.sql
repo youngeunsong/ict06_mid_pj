@@ -105,6 +105,7 @@ VALUES ('admin1', 'admin1234', 'admin1@travel.com', '관리자1', '1985-01-01', 
 INSERT INTO MEMBER (user_id, password, email, name, birth_date, gender, phone, address, point_balance, role, status) 
 VALUES ('admin2', 'admin1234', 'admin2@travel.com', '관리자2', '1980-01-01', 'M', '010-0000-0000', '본사', 999999, 'ADMIN', 'ACTIVE');
 SELECT * FROM MEMBER;
+SELECT image_url FROM NOTICE WHERE notice_id = 107;
 
 --=====축제 티켓 샘플 데이터=====
 -- 1. 3번 축제 (3/7 ~ 3/16) 티켓
@@ -507,6 +508,8 @@ SELECT user_id, rating, content, created_at
 FROM REVIEW
 WHERE rating <= 2
 ORDER BY created_at DESC;
+SELECT * image_store WHERE notice_id=110;
+SELECT * FROM IMAGE_STORE;
 
 --포인트 적립 기준
 --(적립) 신규 회원 가입 시(2000포인트)
@@ -519,7 +522,7 @@ VALUES ('EARN_REVIEW', 500, '리뷰 작성 시 500포인트 적립');
 
 --(적립) 설문조사 작성(1000포인트/건)
 INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
-VALUES ('EARN_SURVEY', 1000, '리뷰 작성 시 1000포인트 적립');
+VALUES ('EARN_SURVEY', 1000, '설문조사 작성 시 1000포인트 적립');
 
 --(사용) 예약 결제(DEFAULT 값 0, 발생 시 값 입력하도록 세팅)
 INSERT INTO POINT_POLICY (POLICY_KEY, AMOUNT, DESCRIPTION)
@@ -536,7 +539,7 @@ SELECT * FROM POINT;
 -- 2) 개별 INSERT 실행 (각각 실행되면서 시퀀스가 1씩 올라갑니다)
 -- [시나리오 1] user01의 3일 연속 출석 체크
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
-VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-2);
+VALUES (SEQ_POINT.NEXTVAL,'user01', 'EARN_LOGIN', 100, SYSDATE-2);
 
 INSERT INTO POINT (POINT_ID, USER_ID, POLICY_KEY, AMOUNT, CREATED_AT)
 VALUES (SEQ_POINT.NEXTVAL, 'user01', 'EARN_LOGIN', 100, SYSDATE-1);

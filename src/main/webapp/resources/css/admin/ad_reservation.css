@@ -8,6 +8,13 @@
 	--text-main: #333;
 }
 
+select {
+    -webkit-appearance: auto !important;
+    -moz-appearance: auto !important;
+    appearance: auto !important;
+    cursor: pointer;
+}
+
 /* ========== 기본 ========== */
 /* ── 기본 body/배경 ── */
 .main-header .nav-link,
@@ -72,6 +79,7 @@ body {
 	white-space: nowrap !important;
 }
 
+
 .table tbody th {
 	background-color: var(--main-bg);
 	font-weight: 600;
@@ -79,11 +87,24 @@ body {
 	text-align: center;
 }
 
+.table .detail-th,
+.table tbody .detail-th {
+	background-color: #f0f0f0 !important;
+	color: #555 !important;
+	border-bottom: 1px solid #ececec !important;
+	border-top: none !important;
+	border-left: none !important;
+	border-right: none !important;
+}
+
 .detail-th {
-	background-color: var(--main-bg) !important;
+	background-color: #f0f0f0 !important
 	font-weight: 600 !important;
 	vertical-align: middle !important;
 	text-align: center !important;
+	color: #555 !important;
+	border: none !important;
+	border-bottom: 1px solid #ececec !important;
 }
 
 .table tbody td {
@@ -92,6 +113,8 @@ body {
 	font-size: 0.9rem;
 	vertical-align: middle;
 	text-align: center;
+	border: none !important;
+	border-bottom: 1px solid #ececec !important;
 }
 
 .table-hover tbody tr:hover {
@@ -161,14 +184,6 @@ body {
 	display: flex;
 	align-items: center !important;
 	gap: 12px;
-}
-
-.filter-left select,
-.input-group select {
-	-webkit-appearance: auto !important;
-	-moz-appearance: auto !important;
-	appearance: auto !important;
-	cursor: pointer;
 }
 
 .filter-left .input-group-append .btn {
@@ -347,6 +362,14 @@ body {
 	color: #fff;
 }
 
+/* ── btn-xs (Bootstrap5 미지원 보완) ── */
+.btn-xs {
+	padding: 1px 5px !important;
+	font-size: 0.75rem !important;
+	line-height: 1.5 !important;
+	border-radius: 3px !important;
+}
+
 .btn-edit:hover {
 	background-color: #00b86b;
 	border-color: #00b86b;
@@ -366,12 +389,6 @@ body {
 
 .list-group-item:hover {
 	background-color: #FEFBDA;
-}
-
-select.custom-select {
-	appearance: none;
-	-webkit-appearance: none;
-	background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") no-repeat right .75rem center/16px 12px !important;
 }
 
 /* ========== FullCalendar ========== */
@@ -430,17 +447,31 @@ select.custom-select {
 	background-color: var(--main-bg);
 }
 
-.modal-body table th {
-	background-color: var(--main-bg);
-	border-bottom: 2px solid var(--point);
-	color: #212529;
-	text-align: center;
-	vertical-align: middle;
+.modal-body select {
+	-webkit-appearance: auto !important;
+	-moz-appearance: auto !important;
+	appearance: auto !important;
 }
 
-.modal-body table td {
-	background-color: #fff;
-	vertical-align: middle;
+.modal-body table.table th,
+.modal-body table.table tbody th,
+.modal-body table.table thead th {
+	background-color: #f0f0f0 !important;
+	color: #444 !important;
+	font-weight: 600 !important;
+	font-size: 0.85rem !important;
+	text-align: center !important;
+	vertical-align: middle !important;
+	border: none !important;
+	border-bottom: 1px solid #ececec !important;
+}
+
+.modal-body table.table td {
+	background-color: #fff !important;
+	vertical-align: middle !important;
+	border: none !important;
+	border-bottom: 1px solid #ececec !important;
+	font-size: 0.85rem !important;
 }
 
 /* 미리보기 아이템 스타일 */
@@ -637,8 +668,10 @@ body.dark-mode .modal-body {
 }
 
 body.dark-mode .modal-body table th {
-	background-color: #3d4f63 !important;
+	background-color: #2f2f45 !important;
 	color: #e0e0e0 !important;
+	border: none !important;
+	border-bottom: 1px solid #3a3a50 !important;
 }
 
 body.dark-mode .modal-body table td {

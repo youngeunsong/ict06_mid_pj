@@ -84,9 +84,9 @@
 											<div class="content text-truncate"
 												style="flex-grow: 1; margin: 0 7px;">
 												<c:choose>
-													<c:when test="${p.policy_key == 'EARN_LOGIN'}">회원가입</c:when>
-													<c:when test="${p.policy_key == 'EARN_REVIEW'}">리뷰작성</c:when>
-													<c:when test="${p.policy_key == 'EARN_SURVEY'}">설문조사 </c:when>
+													<c:when test="${p.policy_key == 'EARN_JOIN'}">회원가입</c:when>
+													
+													<c:when test="${p.policy_key == 'EARN_SURVEY&REVIEW'}">설문조사&리뷰 참여</c:when>
 													<c:when test="${p.policy_key == 'USE_BOOKING'}">예약사용</c:when>
 													<c:otherwise>${p.policy_key}</c:otherwise>
 												</c:choose>

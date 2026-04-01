@@ -56,9 +56,16 @@
                 </c:choose>
 
                 <a href="${detailUrl}" class="bookmark-card-link">
-                    <div class="bookmark-card">
+                    <div class="bookmark-card" data-place-id="${place.place_id}">
                         <div class="bookmark-img-wrap">
-                            <c:choose>
+                        	            <!-- 북마크 버튼 -->
+								<button type="button" class="bookmark-btn"
+									onclick="toggleBookmark(event, this)"
+									data-place-id="${place.place_id}">
+									<i class="bi bi-bookmark-fill"></i>
+								</button>
+
+								<c:choose>
                                 <c:when test="${not empty place.image_url}">
                                     <img src="${place.image_url}" alt="${place.name}" class="bookmark-img">
                                 </c:when>
@@ -164,14 +171,11 @@
             </div>
         </c:if>
     </section>
-
     <%@ include file="../../common/footer.jsp"%>
 </div>
-
 <script>
-    function filterBookmark(category) {
-        location.href = '${path}/viewBookmarks.do?category=' + category;
-    }
+    const contextPath = '${path}';
 </script>
+<script src="${path}/resources/js/user/mypage/viewBookmarks.js"></script>
 </body>
 </html>

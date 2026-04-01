@@ -256,11 +256,9 @@
 
 		<%@ include file="../../common/footer.jsp"%>
 	</div>
-
 	<script>
-		function filterReservation(status) {
-			location.href = '${path}/viewReservations.do?status=' + status;
-		}
+    const contextPath = '${path}';
 	</script>
+	<script src="${path}/resources/js/user/mypage/viewReservations.js"></script>
 </body>
 </html>

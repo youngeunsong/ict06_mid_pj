@@ -100,10 +100,14 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 
-		if (password == null || password.length() < 8) {
-			model.addAttribute("insertCnt", -3); // 비밀번호가 너무 짧음
-			return;
-		}
+		// 서버측 비밀번호 유효성 검사 (영문, 숫자, 특수문자 조합 8자 이상)
+	    String pwdPattern = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+|<>?:{}]).{8,20}$";
+	    
+	    if (password == null || !password.matches(pwdPattern)) {
+	        System.out.println("중단: 비밀번호가 보안 정책에 맞지 않습니다.");
+	        model.addAttribute("insertCnt", -3); // 비밀번호 형식 오류 전송
+	        return;
+	    }
 
 		// 3. DTO 객체 생성 및 데이터 세팅
 		MemberDTO dto = new MemberDTO();
@@ -153,7 +157,7 @@ public class UserServiceImpl implements UserService {
 	        // 회원가입 포인트 지급
 	        Map<String, Object> pointMap = new HashMap<>();
 	        pointMap.put("userId", user_id);
-	        pointMap.put("policyKey", "EARN_LOGIN");           
+	        pointMap.put("policyKey", "EARN_JOIN");           
 	        pointMap.put("description", "회원가입 포인트 적립");
 
 	        int result = dao.insertPoint(pointMap);
@@ -727,6 +731,26 @@ public class UserServiceImpl implements UserService {
 	    } else {
 	        model.addAttribute("result", 0);
 	        model.addAttribute("msg", "예약 취소에 실패했습니다.");
+	    }
+	}
+	
+	// 즐겨찾기 토글 처리
+	@Override
+	public int togglemyFavorite(String userId, int placeId) {
+		System.out.println("UserServiceImpl - togglemyFavorite()");
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", userId);
+	    map.put("place_id", placeId);
+
+	    int checkCnt = dao.checkmyFavorite(map);
+
+	    if (checkCnt > 0) {
+	        dao.deletemyFavorite(map);
+	        return 0;   // 삭제
+	    } else {
+	        dao.insertmyFavorite(map);
+	        return 1;   // 추가
 	    }
 	}
 

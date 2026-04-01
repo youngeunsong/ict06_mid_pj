@@ -188,12 +188,15 @@ $(document).ready(function() {
     	        });
     	     	// 사용자 현재 위치를 마커로 표시 끝 ------------------
     	     	
-                refreshAll();
+                // refreshAll();
+    	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
             }, function() {
-                refreshAll();
+            	// refreshAll();
+    	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
             });
         } else {
-            refreshAll();
+        	// refreshAll();
+	        refreshAll(false); // 가까운 맛집 마커로 이동 잠금
         }
 
         kakao.maps.event.addListener(map, 'idle', function() {
@@ -472,7 +475,7 @@ function resetFilters() {
 
     unlockDistanceFilter();
 
-    currentSearchConfig = {
+    /* currentSearchConfig = {
         lat: currentSearchConfig.lat,
         lng: currentSearchConfig.lng,
         radius: 5.0,
@@ -482,11 +485,63 @@ function resetFilters() {
         province: "",
         district: "",
         pageNum: 1
-    };
+    }; */
     localStorage.removeItem("resSearchConfig");
-    saveToLocal();
+    
+    // saveToLocal();
     if (myCustomOverlay) myCustomOverlay.setMap(null);
-    refreshAll();
+    // refreshAll();  
+    
+    // ⭐ 현재 위치 다시 가져오기
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(pos) {
+
+            currentSearchConfig = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                radius: 5.0,
+                minRating: 0.0,
+                keyword: "",
+                category: "",
+                province: "",
+                district: "",
+                pageNum: 1
+            };
+
+            saveToLocal();
+
+            var newCenter = new kakao.maps.LatLng(
+                currentSearchConfig.lat,
+                currentSearchConfig.lng
+            );
+
+            map.setCenter(newCenter); // 내 현재 위치로 지도 중심 이동
+            refreshAll(false);   // ⭐ 첫 마커 자동 이동 방지
+
+        }, function() {
+
+            // 위치 못 가져오면 기본값
+            currentSearchConfig = {
+                lat: 37.5665,
+                lng: 126.9780,
+                radius: 5.0,
+                minRating: 0.0,
+                keyword: "",
+                category: "",
+                province: "",
+                district: "",
+                pageNum: 1
+            };
+
+            saveToLocal();
+            map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
+            refreshAll(false);
+        });
+
+    } else {
+        refreshAll(false);
+    }
 }
 
 function changePage(page) {

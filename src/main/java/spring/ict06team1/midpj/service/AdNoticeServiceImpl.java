@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,9 @@ import spring.ict06team1.midpj.dto.NoticeDTO;
 
 @Service
 public class AdNoticeServiceImpl implements AdNoticeService {
+
+	@Value("${upload.notice.path}")
+	private String uploadNoticePath;
 
 	@Autowired
 	private AdNoticeDAOImpl adNoDao;
@@ -116,13 +120,16 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 		}
 	}
 
-	//3. 이미지 파일 저장
+	// 3. 이미지 파일 저장
 	private String fileSaveService(MultipartFile file, HttpServletRequest request) {
 		if (file == null || file.isEmpty())
 			return null;
 
 		try {
-			String uploadPath = request.getSession().getServletContext().getRealPath("/resources/upload/notice/");
+			// 기존:
+			// request.getSession().getServletContext().getRealPath("/resources/upload/notice/");
+			// 변경: application.properties의 외부 경로(절대경로) 사용
+			String uploadPath = uploadNoticePath;
 
 			File folder = new File(uploadPath);
 			if (!folder.exists())
@@ -141,7 +148,8 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 			System.out.println("uploadPath = " + uploadPath);
 			System.out.println("파일 저장 완료 = " + target.exists());
 
-			return request.getContextPath() + "/resources/upload/notice/" + savedFileName;
+			// ContextPath 제외한 파일명만 반환하여 DB 저장 시 중복 방지
+			return savedFileName;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -233,7 +241,8 @@ public class AdNoticeServiceImpl implements AdNoticeService {
 			String savedFileName = fileSaveService(file, request);
 			System.out.println("[성공] 저장된 파일명: " + savedFileName);
 
-			String imagePath = request.getContextPath() + "/resources/upload/" + savedFileName;
+			// 외부 경로 매핑 URL (/upload_notice/) 반환
+			String imagePath = request.getContextPath() + "/upload_notice/" + savedFileName;
 			request.setAttribute("imageUrl", imagePath);
 		}
 		/*

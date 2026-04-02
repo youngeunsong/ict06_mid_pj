@@ -65,8 +65,12 @@ body {
    헤더 sticky 고정 및 공통 레이아웃
 ────────────────────────────────────── */
 .site-header {
-    z-index: 1040;
+    position: sticky !important;
+    top: 0;
+    z-index: 2000;
     background: #fff;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
 }
 
 .brand-logo {
@@ -96,17 +100,22 @@ body {
     display: block;
 }
 
-/* navbar 높이 통일: 메인/서브 모두 동일한 min-height */
+/* navbar 높이 통일: 메인/서브 모두 동일한 80px 고정 */
 .site-header .navbar {
-    min-height: 64px;
+    height: 80px;
+    min-height: 80px;
+    padding: 0;
 }
 
 /* 전 페이지 공통 GNB 센터링 (메인/서브 통합) */
 @media (min-width: 992px) {
     .gnb-nav-center {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center;
     }
 }
 

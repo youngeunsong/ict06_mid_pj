@@ -95,7 +95,7 @@ CATEGORY='EVENT' AND IS_TOP='N'
                                                     <div class="ongoing-event-thumb">
                                                         <c:choose>
                                                             <c:when test="${not empty dto.image_url}">
-                                                                <img src="${path}/resources/upload/${dto.image_url}" alt="${dto.title}">
+                                                                <img class="event-thumb-img" data-img="${dto.image_url}" alt="${dto.title}">
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <div class="no-image-box">
@@ -116,7 +116,7 @@ CATEGORY='EVENT' AND IS_TOP='N'
                                                         <div class="ongoing-event-title">${dto.title}</div>
 
                                                         <div class="ongoing-event-desc">
-                                                            <c:out value="${dto.content}" />
+                                                            ${dto.stripContent}
                                                         </div>
 
                                                         <div class="ongoing-event-meta">
@@ -176,7 +176,7 @@ CATEGORY='EVENT' AND IS_TOP='N'
                                         <div class="ended-event-thumb">
                                             <c:choose>
                                                 <c:when test="${not empty dto.image_url}">
-                                                    <img src="${path}/resources/upload/${dto.image_url}" alt="${dto.title}">
+                                                    <img class="event-thumb-img" data-img="${dto.image_url}" alt="${dto.title}">
                                                 </c:when>
                                                 <c:otherwise>
                                                     <div class="no-image-box">
@@ -264,5 +264,7 @@ CATEGORY='EVENT' AND IS_TOP='N'
 
     <%@ include file="../../common/footer.jsp" %>
 </div>
+<script>var APP_PATH = '${path}';</script>
+<script src="${path}/resources/js/community/event.js"></script>
 </body>
 </html>

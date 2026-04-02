@@ -60,6 +60,15 @@ public class CommunityDAOImpl implements CommunityDAO {
         return dto;
     }
 
+    // 게시글 내 다중 이미지 조회
+    @Override
+    public List<ImageStoreDTO> getCommunityImages(int post_id) {
+        System.out.println("[CommunityDAOImpl - getCommunityImages()]");
+        
+        CommunityDAO dao = sqlSession.getMapper(CommunityDAO.class);
+        return dao.getCommunityImages(post_id);
+    }
+
     // 조회수 증가
     @Override
     public void increaseViewCount(int post_id) {

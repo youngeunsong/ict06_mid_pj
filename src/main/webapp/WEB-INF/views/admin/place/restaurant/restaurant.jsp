@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>맛집 관리</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
 <link rel="stylesheet"
 	href="${path}/resources/css/admin/ad_restaurant.css">
@@ -153,9 +152,7 @@
 							    </c:choose>
 							</tbody>
                             </table>
-                            <div class="pagination-right-wrapper border-top">
                                 <%@ include file="/WEB-INF/views/common/restaurant_pagination.jsp"%>
-                            </div>
                             <div class="add-btn-area">
                                 <button type="button" class="btn btn-res-primary px-4 py-2"
                                         onclick="location.href='${path}/restaurantInsert.adre?areaCode=${areaCode}&pageNum=${paging.pageNum}&category=${category}&keyword=${keyword}'">

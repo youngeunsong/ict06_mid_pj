@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html>
@@ -10,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>숙소 등록 성공</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
@@ -33,7 +33,7 @@
 				<script type="text/javascript">
 					setTimeout(
 							function() {
-								alert("맛집등록 성공!!");
+								alert("숙소 등록 성공!!");
 				<%-- 키워드 유무에 따라 서블릿 주소 결정 --%>
 					<c:if test="${not empty keyword}">
 								window.location = "${path}/accommodationSearch.adac?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
@@ -44,12 +44,11 @@
 							}, 1000);
 				</script>
 			</c:when>
-
 			<c:otherwise>
 				<script type="text/javascript">
 					setTimeout(
 							function() {
-								alert("맛집등록 실패!!");
+								alert("숙소 등록 실패!!");
 				<%-- 실패 시 다시 등록 폼으로 돌아갈 때도 검색어 유지 --%>
 					window.location = "${path}/accommodationInsert.adac?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
 							}, 1000);

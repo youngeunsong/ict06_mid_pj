@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +6,8 @@
 
 <meta charset="UTF-8">
 <title>숙소 정보 수정</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services"></script>
 <link rel="stylesheet"
@@ -157,6 +157,9 @@
                 </div>
             </section>
         </div>
+        <footer class="main-footer">
+		    <strong>Copyright &copy; 2026</strong>
+		</footer>
     </div>
 <script>
 var geocoder;
@@ -233,7 +236,4 @@ function updateAddressGuide() {
 }
 </script>
 </body>
-<footer class="main-footer">
-    <strong>Copyright &copy; 2026</strong>
-</footer>
 </html>

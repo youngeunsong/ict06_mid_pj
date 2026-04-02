@@ -244,7 +244,7 @@
               <div class="r-infoValue"><c:out value="${accommodation.phone}" default="정보 없음"/></div>
             </div>
             <div class="r-infoItem">
-              <div class="r-infoName">지역 코드</div>
+              <div class="r-infoName">지역</div>
               <div class="r-infoValue"><c:out value="${accommodation.areaCode}" default="정보 없음"/></div>
             </div>
             <div class="r-infoItem">
@@ -334,7 +334,7 @@
               </div>
 
               <div class="r-lead mb-2">
-                <b class="text-dark">지역 코드</b> :
+                <b class="text-dark">지역</b> :
                 <c:out value="${accommodation.areaCode}" default="정보 없음"/>
               </div>
 
@@ -367,9 +367,6 @@
                   <div class="fw-bold text-dark mb-1">
                     <i class="fa-solid fa-location-dot" style="color:var(--r-brand);"></i>
                     ${accommodation.placeDTO.address}
-                  </div>
-                  <div>
-                    위도: ${accommodation.placeDTO.latitude} / 경도: ${accommodation.placeDTO.longitude}
                   </div>
                 </div>
 

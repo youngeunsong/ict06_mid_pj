@@ -97,9 +97,6 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="${path}/resources/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
-<!-- Summernote -->
-<script src="${path}/resources/admin/plugins/summernote/summernote-bs4.min.js"></script>
-
 <!-- overlayScrollbars -->
 <script src="${path}/resources/admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 

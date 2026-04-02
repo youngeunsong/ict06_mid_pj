@@ -31,6 +31,11 @@
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
 --------------------------------------------------
+--Ver.260331
+--변경사항
+--1) POINT_POLICY 테이블: EARN_LOGIN → EARN_JOIN 변경
+--2) POINT_POLICY 테이블: EARN_SURVEY + EARN_REVIEW → EARN_SURVEY&REVIEW 통합
+--3) POINT_POLICY 테이블: EARN_SURVEY&REVIEW amount 1000 → 500 변경
 --------------------------------------------------
 --DB 테이블 생성
 
@@ -628,6 +633,35 @@ BEGIN
     WHERE USER_ID = :NEW.user_id;
 END;
 /
+
+-- 스케쥴러 생성-------------------------------------
+-- v260401 : 축제 상태 자동 계산 스케쥴러. 매일 자정 작동하여 축제 상태 갱신. 
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name        => 'UPDATE_FESTIVAL_STATUS_JOB',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => '
+            BEGIN
+                UPDATE FESTIVAL
+                SET status =
+                    CASE
+                        WHEN end_date < TRUNC(SYSDATE) THEN ''ENDED''
+                        WHEN start_date > TRUNC(SYSDATE) THEN ''UPCOMING''
+                        ELSE ''ONGOING''
+                    END;
+                COMMIT;
+            END;
+        ',
+        start_date      => SYSDATE,
+        repeat_interval => 'FREQ=DAILY; BYHOUR=0; BYMINUTE=0; BYSECOND=0',
+        enabled         => TRUE
+    );
+END;
+
+-- 생성된 job 조회 : LAST_START_DATE 확인하여 매일 작동하는 지 확인
+SELECT JOB_NAME, STATE, LAST_START_DATE, NEXT_RUN_DATE 
+FROM USER_SCHEDULER_JOBS 
+WHERE JOB_NAME = 'UPDATE_FESTIVAL_STATUS_JOB';
 
 --------------------------------------------------
 -- 테이블 삭제 (참조 관계 역순)

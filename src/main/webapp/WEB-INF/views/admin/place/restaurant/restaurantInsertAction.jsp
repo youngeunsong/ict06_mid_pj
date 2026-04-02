@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html>
@@ -10,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>숙소 수정 성공</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
@@ -33,13 +33,13 @@
 				<script type="text/javascript">
 					setTimeout(
 							function() {
-								alert("맛집등록 성공!!");
+								alert("맛집 등록 성공!!");
 				<%-- 키워드 유무에 따라 서블릿 주소 결정 --%>
 					<c:if test="${not empty keyword}">
 								window.location = "${path}/restaurantSearch.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
 								</c:if>
 								<c:if test="${empty keyword}">
-								window.location = "${path}/restaurant.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
+								window.location = "${path}/restaurantList.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}";
 								</c:if>
 							}, 1000);
 				</script>
@@ -49,7 +49,7 @@
 				<script type="text/javascript">
 					setTimeout(
 							function() {
-								alert("맛집등록 실패!!");
+								alert("맛집 등록 실패!!");
 				<%-- 실패 시 다시 등록 폼으로 돌아갈 때도 검색어 유지 --%>
 					window.location = "${path}/restaurantInsert.adre?pageNum=${pageNum}&areaCode=${areaCode}&category=${category}&keyword=${keyword}";
 							}, 1000);
@@ -61,7 +61,6 @@
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
-
 	</div>
 	<!--end::div wrapper-->
 

@@ -300,3 +300,10 @@
 	line-height: 1;
 	color: #32CD32;
 }
+.title-marker {
+    width: 24px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 8px;
+    transform: translateY(-2px);
+}

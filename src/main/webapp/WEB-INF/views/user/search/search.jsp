@@ -189,7 +189,7 @@
 			
 			    <div class="dropdown">
 			      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="sortLabel" data-bs-toggle="dropdown">
-			        인기순
+			        조회순
 			      </button>
 			      <ul class="dropdown-menu">
 			        <li><button class="dropdown-item" onclick="changeSort('popular')">조회순</button></li>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
+
 <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html>
@@ -10,6 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>숙소 수정 성공</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
@@ -61,7 +62,6 @@
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>
-
 	</div>
 	<!--end::div wrapper-->
 

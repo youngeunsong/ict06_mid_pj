@@ -204,3 +204,11 @@
 	cursor: default;
 	opacity: 0.3;
 }
+
+.title-marker {
+    width: 24px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 8px;
+    transform: translateY(-2px);
+}

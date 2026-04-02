@@ -11,6 +11,8 @@
  * v260330: 
  * 		다양한 티켓 유형 대응할 수 있게 수정. 
  * 		축제 수정 시 기존 티켓 유형 삭제 및 추가 가능하게 수정
+ * v260401: 
+ * 		오늘 이후 개최되는 축제 정보만 가져오게 수정 (parseFestivalJson)
  */
 
 package spring.ict06team1.midpj.service;
@@ -384,7 +386,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 		String fstvlStartDate = request.getParameter("fstvlStartDate"); 
 		String formattedDate = LocalDate.parse(fstvlStartDate)
 		        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		String json = apiClient.callAPI(page, numOfRows, formattedDate);
+		System.out.println("formattedDate : " + formattedDate);
+		String json = apiClient.callAPI(page, numOfRows);
 		return json; 
 	}
 	
@@ -436,6 +439,8 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	                .path("response")
 	                .path("body")
 	                .path("items");
+	        
+	        Date today = new Date(System.currentTimeMillis());
 
 	        for(JsonNode item : items){
 
@@ -476,7 +481,7 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 
 	            // NULL 보정
 	            if(startDate == null && endDate == null){
-	                Date today = new Date(System.currentTimeMillis());
+//	                Date today = new Date(System.currentTimeMillis());
 	                startDate = today;
 	                endDate = today;
 	            }
@@ -492,6 +497,11 @@ public class AdFestivalServiceImpl implements AdFestivalService{
 	                Date temp = startDate;
 	                startDate = endDate;
 	                endDate = temp;
+	            }
+	            
+	            // ⭐ 오늘 이후 축제만 추가
+	            if(startDate.before(today)){
+	                continue;
 	            }
 
 	            dto.setStart_date(startDate);

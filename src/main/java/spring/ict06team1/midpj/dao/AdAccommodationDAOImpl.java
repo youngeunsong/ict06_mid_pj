@@ -135,7 +135,7 @@ public class AdAccommodationDAOImpl implements AdAccommodationDAO {
 	// 중복 데이터 체크
 	@Override
 	public int checkDuplicate(String place_id) {
-		System.out.println("[AdminDAOImpl - checkDuplicate()]");
+		System.out.println("[AdAccommodationDAOImpl - checkDuplicate()]");
         int checkCount = sqlSession.selectOne("spring.ict06team1.midpj.dao.AdAccommodationDAO.checkDuplicate", place_id);
 		return checkCount;
 	}
@@ -143,7 +143,7 @@ public class AdAccommodationDAOImpl implements AdAccommodationDAO {
 	// 다수 이미지 저장하기
 	@Override
 	public int insertImageStore(Map<String, Object> imgMap) {
-		System.out.println("[AdminDAOImpl - insertImageStore()]");
+		System.out.println("[AdAccommodationDAOImpl - insertImageStore()]");
 		int insertCnt = sqlSession.insert("spring.ict06team1.midpj.dao.AdAccommodationDAO.insertImageStore", imgMap);
 		return insertCnt;
 	}

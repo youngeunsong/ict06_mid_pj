@@ -1,9 +1,11 @@
 <!-- 
  * @author 송영은
  * 최초작성일: 2026-03-23
- * 최종수정일: 2026-03-26
+ * 최종수정일: 2026-04-02
  * 참고 코드: bestRestaurants.jsp의 css, restaurant.jsp
 지도를 이용해 내 위치 주변 축제 위주로 조회   
+ * 수정 사항
+ v260402: 반경 필터 오류 수정. 일정 반경 이상이면 all로 처리.
 -->
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -165,7 +167,8 @@ function updateDistanceUI(radius) {
     else if(radius == 5.0) { percent = 25; label = "5k"; }
     else if(radius == 10.0) { percent = 50; label = "10k"; }
     else if(radius == 50.0) { percent = 75; label = "50k"; }
-    else if(radius == 100.0) { percent = 100; label = "All"; }
+    else if (radius >= 100.0) { percent = 100; label = "All"; }
+    // else if(radius == 100.0) { percent = 100; label = "All"; }
 
     $('#activeLine').css('width', percent + '%');
     $('.dist-node').removeClass('active');

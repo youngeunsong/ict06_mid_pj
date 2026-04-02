@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>지역기반 숙소 데이터 수집</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
 <script type="text/javascript">
 $(function(){
 	$('#btn').click(function(){
@@ -103,7 +105,6 @@ $(function(){
 			<hr>
 			</div>
 			</div>
-
 		<footer class="main-footer text-center py-3">
 			<strong>Copyright &copy; 2026</strong>
 		</footer>

@@ -4,6 +4,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
 <fmt:setTimeZone value="Asia/Seoul"/>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">

@@ -65,7 +65,6 @@
 
         <%-- 지역 선택 (지역 탭에서만 사용) --%>
         <select id="regionSelect" class="form-select" style="width:160px; display:none;">
-          <option value="all">전체 지역</option>
           <option value="서울특별시">서울</option>
           <option value="인천광역시">인천</option>
           <option value="부산광역시">부산</option>
@@ -74,7 +73,6 @@
           <option value="광주광역시">광주</option>
           <option value="울산광역시">울산</option>
           <option value="제주특별자치도">제주</option>
-          <option value="그외">그외</option>
         </select>
 
       </div>

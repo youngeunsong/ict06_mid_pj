@@ -67,7 +67,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 		// 2. 핵심 로직: province가 존재하면 radius를 null로 설정
 		// (만약 MyBatis 등에서 null 체크를 한다면 유용합니다)
 		if (province != null && !province.isEmpty()) {
-			countMap.put("radius", 400);
+			countMap.put("radius", 600);
 		} else {
 			countMap.put("radius", radius);
 		}
@@ -107,7 +107,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 		String district = request.getParameter("district");
 		double radius = Double.parseDouble(request.getParameter("radius"));
 		if (province != null && !province.isEmpty()) {
-			listMap.put("radius", 400);
+			listMap.put("radius", 600);
 		} else {
 			listMap.put("radius", radius);
 		}

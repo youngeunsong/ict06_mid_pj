@@ -454,7 +454,7 @@
               </div>
 
               <div class="r-lead">
-                <b class="text-dark">지역 코드</b> :
+                <b class="text-dark">지역</b> :
                 <c:out value="${restaurant.areaCode}" default="정보 없음"/>
               </div>
             </section>
@@ -482,9 +482,6 @@
                   <div class="fw-bold text-dark mb-1">
                     <i class="fa-solid fa-location-dot" style="color:var(--r-brand);"></i>
                     ${restaurant.placeDTO.address}
-                  </div>
-                  <div>
-                    위도: ${restaurant.placeDTO.latitude} / 경도: ${restaurant.placeDTO.longitude}
                   </div>
                 </div>
 

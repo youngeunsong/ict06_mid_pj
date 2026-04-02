@@ -28,7 +28,7 @@ function getFestListCnt() {
 function updateSortLabel() {
     const sortLabel = document.querySelector('#viewFilterPage #sortLabel');
     if (sortLabel) {
-        sortLabel.textContent = (currentSort === 'latest' ? '최신순' : '인기순');
+        sortLabel.textContent = (currentSort === 'latest' ? '최신순' : '조회순');
     }
 }
 

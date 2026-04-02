@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 <!-- 관리자용 setting 별도로 함. 주의! -->
 <!DOCTYPE html>
 <html>
@@ -8,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>숙소 수정 성공</title>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<!--begin::div wrapper-->
@@ -48,7 +48,7 @@
 			<script type="text/javascript">
 				setTimeout(
 						function() {
-							alert("맛집수정 실패!!");
+							alert("맛집 수정 실패!!");
 			<%-- 실패 시 다시 수정 폼으로 돌아갈 때도 파라미터 유지 --%>
 				window.location = "${path}/restaurantModify.adre?place_id=${pDto.place_id}&pageNum=${hiddenPageNum}&areaCode=${areaCode1}&category=${category1}&keyword=${keyword}";
 						}, 1000);

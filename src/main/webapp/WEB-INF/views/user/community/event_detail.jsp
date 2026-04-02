@@ -36,7 +36,7 @@
 	window.kakaoShareData = {
 	    title: '${noticeDTO.title}',
 	    description: '맛침내 커뮤니티 이벤트 게시판',
-	    imageUrl: '${not empty noticeDTO.image_url ? noticeDTO.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
+	    imageUrl: '${not empty noticeDTO.repImage and not empty noticeDTO.repImage.image_url ? noticeDTO.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
 	    webUrl: '${shareUrl}',
 	    mobileWebUrl: '${shareUrl}'
 	};

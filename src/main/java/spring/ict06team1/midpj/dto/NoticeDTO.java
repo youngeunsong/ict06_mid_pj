@@ -133,4 +133,8 @@ public class NoticeDTO {
 				+ ", repImage=" + repImage + "]";
 	}
 
+	
+	
+	
+	
 }

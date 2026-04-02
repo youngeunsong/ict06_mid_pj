@@ -150,7 +150,6 @@
       50%{ transform:translateY(5px) rotate(-4deg); }
     }
 
-    /* 심볼 부분 전용 클릭 영역 */
     .egg-hitbox{
       position:absolute;
       left:50%;
@@ -166,33 +165,30 @@
       border-radius:28px;
     }
 
-    /* 심볼 위 말풍선 */
     .egg-bubble{
-	  position:absolute;
-	  left:50%;
-	  top:50%;
-	  transform:translateX(-50%) translateY(8px);
-	  min-width:300px;
-	  max-width:480px;
-	  padding:14px 20px;
-	  border-radius:24px;
-	  background:#ffffff;
-	  border:3px solid #11a4cf;
-	  color:var(--e-main-dark);
-	  font-size:20px;
-	  font-weight:800;
-	  line-height:1.45;
-	  text-align:center;
-	  box-shadow:0 14px 24px rgba(78, 139, 95, .16);
-	  z-index:6;
-	  opacity:0;
-	  pointer-events:none;
-	
-	  margin-left:-170px;
-	  margin-top:-128px;
-	
-	  transition:opacity .25s ease, transform .25s ease;
-	}
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translateX(-50%) translateY(8px);
+      min-width:300px;
+      max-width:480px;
+      padding:14px 20px;
+      border-radius:24px;
+      background:#ffffff;
+      border:3px solid #11a4cf;
+      color:var(--e-main-dark);
+      font-size:20px;
+      font-weight:800;
+      line-height:1.45;
+      text-align:center;
+      box-shadow:0 14px 24px rgba(78, 139, 95, .16);
+      z-index:10;
+      opacity:0;
+      pointer-events:none;
+      margin-left:-170px;
+      margin-top:-128px;
+      transition:opacity .25s ease, transform .25s ease;
+    }
 
     .egg-bubble.show{
       opacity:1;
@@ -200,17 +196,17 @@
     }
 
     .egg-bubble::after{
-	  content:"";
-	  position:absolute;
-	  left:95px;
-	  bottom:-14px;
-	  width:24px;
-	  height:24px;
-	  background:#ffffff;
-	  border-right:3px solid #11a4cf;
-	  border-bottom:3px solid #11a4cf;
-	  transform:rotate(45deg);
-	}
+      content:"";
+      position:absolute;
+      left:95px;
+      bottom:-14px;
+      width:24px;
+      height:24px;
+      background:#ffffff;
+      border-right:3px solid #11a4cf;
+      border-bottom:3px solid #11a4cf;
+      transform:rotate(45deg);
+    }
 
     .action-row{
       position:relative;
@@ -281,153 +277,131 @@
     .bg2{ right:42px; top:52px; transform:rotate(-45deg) scale(1.1); }
     .bg3{ right:140px; top:24px; transform:rotate(-45deg) scale(.85); }
 
-    @media (max-width: 991px){
-      .error-card{
-        padding:24px 18px 22px;
-        border-radius:32px;
-      }
+    /* ===== 별 찾기 이벤트 ===== */
+    .map-trigger{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      width:32px;
+      height:25px;
+      margin-left:160px;
+      margin-top:58px;
+      z-index:8;
+      cursor:pointer;
+      border-radius:50%;
+      background:transparent;
+    }
 
-      .error-card::before{
-        inset:10px;
-        border-radius:24px;
-      }
+    .star-play-area{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      width:840px;
+      height:500px;
+      margin-left:0;
+      margin-top:-6px;
+      z-index:6;
+      pointer-events:none;
+      overflow:hidden;
+    }
 
-      .error-body{
-        min-height:470px;
-      }
+    .star-play-area.active{
+      pointer-events:auto;
+    }
 
-      .mascot-zone{
-        min-height:470px;
-      }
+    .star-collector{
+      position:absolute;
+      right:38px;
+      bottom:16px;
+      width:124px;
+      padding:10px 10px 8px;
+      border-radius:18px;
+      background:rgba(255,255,255,.96);
+      border:2px solid #cfe8cf;
+      box-shadow:0 10px 20px rgba(78, 139, 95, .12);
+      z-index:9;
+      display:none;
+    }
 
-      .mascot-shadow{
-        width:400px;
-        height:50px;
-        bottom:44px;
-      }
+    .star-collector.show{
+      display:block;
+    }
 
-      .mascot-img{
-        width:640px;
-      }
+    .collector-title{
+      display:none;
+    }
 
-      .q1{ top:58px; margin-left:-268px; font-size:66px; }
-      .q2{ top:12px; margin-left:102px; font-size:64px; }
-      .q3{ top:60px; margin-left:286px; font-size:62px; }
-      .q4{ top:164px; margin-left:196px; font-size:52px; }
+    .collector-count{
+      font-size:12px;
+      font-weight:800;
+      color:#6b8b74;
+      text-align:center;
+      margin-top:6px;
+    }
 
-      .sweat{
-        width:20px;
-        height:34px;
-      }
+    .collector-slots{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:6px;
+    }
 
-      .s1{ top:240px; margin-left:-286px; }
-      .s2{ top:388px; margin-left:-252px; }
-      .s3{ top:232px; margin-left:286px; }
-      .s4{ top:378px; margin-left:306px; }
+    .collector-slot{
+      width:30px;
+      height:30px;
+      border-radius:10px;
+      background:#f5faf4;
+      border:2px dashed #d8edd8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto;
+      font-size:16px;
+      transition:.2s ease;
+    }
 
-      .egg-hitbox{
-        width:170px;
-        height:180px;
-        margin-left:-142px;
-        margin-top:62px;
-      }
+    .collector-slot.filled{
+      border-style:solid;
+      background:#ffffff;
+      transform:scale(1.05);
+    }
 
-      .egg-bubble{
-        min-width:240px;
-        max-width:360px;
-        font-size:18px;
-        margin-left:-66px;
-        margin-top:-98px;
-      }
+    .event-star{
+      position:absolute;
+      width:38px;
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      line-height:1;
+      cursor:pointer;
+      user-select:none;
+      opacity:0;
+      transform:scale(.6);
+      animation:starPop .22s ease forwards, starFloat 1.2s ease-in-out infinite;
+      filter:drop-shadow(0 0 8px rgba(255,255,255,.85));
+    }
 
-      .egg-bubble::after{
-        left:105px;
-      }
+    .event-star.collected{
+      pointer-events:none;
+      animation:none;
+      opacity:0 !important;
+      transform:scale(.2) !important;
+      transition:.15s ease;
+    }
 
-      .action-row{
-        margin-top:-2px;
+    @keyframes starPop{
+      to{
+        opacity:1;
+        transform:scale(1);
       }
     }
 
-    @media (max-width: 575px){
-      .error-wrap{
-        width:94%;
-        padding:22px 0;
-      }
-
-      .error-card{
-        padding:18px 12px 18px;
-      }
-
-      .error-body{
-        min-height:310px;
-      }
-
-      .mascot-zone{
-        min-height:310px;
-        padding-top:6px;
-      }
-
-      .mascot-shadow{
-        width:220px;
-        height:34px;
-        bottom:28px;
-      }
-
-      .mascot-img{
-        width:340px;
-      }
-
-      .q1{ top:44px; margin-left:-140px; font-size:42px; }
-      .q2{ top:10px; margin-left:52px; font-size:40px; }
-      .q3{ top:42px; margin-left:150px; font-size:40px; }
-      .q4{ top:106px; margin-left:102px; font-size:32px; }
-
-      .sweat{
-        width:14px;
-        height:24px;
-        border-width:3px;
-      }
-
-      .s1{ top:154px; margin-left:-156px; }
-      .s2{ top:246px; margin-left:-136px; }
-      .s3{ top:150px; margin-left:152px; }
-      .s4{ top:236px; margin-left:164px; }
-
-      .egg-hitbox{
-        width:94px;
-        height:102px;
-        margin-left:-74px;
-        margin-top:34px;
-        border-radius:18px;
-      }
-
-      .egg-bubble{
-        min-width:190px;
-        max-width:250px;
-        padding:10px 14px;
-        font-size:15px;
-        border-radius:16px;
-        margin-left:-42px;
-        margin-top:-74px;
-      }
-
-      .egg-bubble::after{
-        left:74px;
-        width:14px;
-        height:14px;
-        bottom:-9px;
-      }
-
-      .error-btn{
-        min-width:140px;
-        height:48px;
-        font-size:16px;
-      }
-
-      .action-row{
-        margin-top:0;
-      }
+    @keyframes starFloat{
+      0%,100%{ transform:translateY(0) scale(1); }
+      50%{ transform:translateY(-6px) scale(1.04); }
     }
   </style>
 </head>
@@ -455,6 +429,23 @@
           <div id="eggBubble" class="egg-bubble"></div>
           <div id="eggHitbox" class="egg-hitbox" aria-label="숨겨진 심볼 클릭 영역"></div>
 
+          <div id="mapTrigger" class="map-trigger" aria-label="별 찾기 시작"></div>
+
+          <div id="starPlayArea" class="star-play-area"></div>
+
+          <div id="starCollector" class="star-collector">
+            <div class="collector-title">숨겨진 별 찾기</div>
+            <div class="collector-slots" id="collectorSlots">
+              <div class="collector-slot"></div>
+              <div class="collector-slot"></div>
+              <div class="collector-slot"></div>
+              <div class="collector-slot"></div>
+              <div class="collector-slot"></div>
+              <div class="collector-slot"></div>
+            </div>
+            <div class="collector-count" id="collectorCount">0 / 6</div>
+          </div>
+
           <img
             class="mascot-img"
             src="${path}/resources/images/common/error-symbol.png"
@@ -473,10 +464,30 @@
     (function () {
       const hitbox = document.getElementById("eggHitbox");
       const bubble = document.getElementById("eggBubble");
+
+      const mapTrigger = document.getElementById("mapTrigger");
+      const starPlayArea = document.getElementById("starPlayArea");
+      const starCollector = document.getElementById("starCollector");
+      const collectorSlots = document.querySelectorAll(".collector-slot");
+      const collectorCount = document.getElementById("collectorCount");
+
       let clickCount = 0;
       let hideTimer = null;
 
-      function showBubble(message) {
+      let starEventMode = false;
+      let collectedCount = 0;
+      let collectedFlags = [false, false, false, false, false, false];
+
+      const starColors = [
+        "#8a2be2",
+        "#ffd84d",
+        "#000080",
+        "#FF1493",
+        "#00BFFF",
+        "#A7FC00"
+      ];
+
+      function showBubble(message, duration) {
         bubble.textContent = message;
         bubble.classList.add("show");
 
@@ -486,10 +497,151 @@
 
         hideTimer = setTimeout(function () {
           bubble.classList.remove("show");
-        }, 2400);
+        }, duration || 2400);
+      }
+
+      function updateCollector() {
+        collectorCount.textContent = collectedCount + " / 6";
+      }
+
+      function resetCollector() {
+        collectorSlots.forEach(function (slot) {
+          slot.textContent = "";
+          slot.style.color = "";
+          slot.classList.remove("filled");
+        });
+
+        collectedCount = 0;
+        collectedFlags = [false, false, false, false, false, false];
+        updateCollector();
+      }
+
+      function fillCollectorSlot(index, color) {
+        const slot = collectorSlots[index];
+        if (!slot) return;
+
+        slot.textContent = "★";
+        slot.style.color = color;
+        slot.classList.add("filled");
+      }
+
+      function randomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function getSpawnRange() {
+        return {
+          minX: 80,
+          maxX: 770,
+          minY: 28,
+          maxY: 360
+        };
+      }
+
+      function createStar(index, color) {
+        if (!starEventMode) return;
+        if (collectedFlags[index]) return;
+
+        const range = getSpawnRange();
+
+        const star = document.createElement("div");
+        star.className = "event-star";
+        star.textContent = "★";
+        star.style.color = color;
+        star.style.left = randomBetween(range.minX, range.maxX) + "px";
+        star.style.top = randomBetween(range.minY, range.maxY) + "px";
+
+        let removed = false;
+
+        function removeStarAndRespawn() {
+          if (removed) return;
+          removed = true;
+
+          if (star.parentNode) {
+            star.remove();
+          }
+
+          if (starEventMode && !collectedFlags[index]) {
+            setTimeout(function () {
+              createStar(index, color);
+            }, 300);
+          }
+        }
+
+        star.addEventListener("click", function () {
+          if (removed) return;
+          if (collectedFlags[index]) return;
+
+          removed = true;
+          collectedFlags[index] = true;
+
+          fillCollectorSlot(collectedCount, color);
+          collectedCount++;
+          updateCollector();
+
+          star.classList.add("collected");
+
+          setTimeout(function () {
+            if (star.parentNode) {
+              star.remove();
+            }
+          }, 150);
+
+          if (collectedCount === 6) {
+            finishStarEvent();
+          }
+        });
+
+        starPlayArea.appendChild(star);
+
+        setTimeout(function () {
+          if (!collectedFlags[index]) {
+            removeStarAndRespawn();
+          }
+        }, 1000);
+      }
+
+      function spawnStars() {
+        starColors.forEach(function (color, index) {
+          setTimeout(function () {
+            createStar(index, color);
+          }, index * 180);
+        });
+      }
+
+      function startStarEvent() {
+        if (starEventMode) {
+          showBubble("이미 뭔가 반짝이고 있어요!", 1600);
+          return;
+        }
+
+        starEventMode = true;
+        starPlayArea.innerHTML = "";
+        resetCollector();
+
+        hitbox.style.pointerEvents = "none";
+        starCollector.classList.add("show");
+        starPlayArea.classList.add("active");
+
+        showBubble("어? 뭔가 반짝였어요!", 2000);
+
+        setTimeout(function () {
+          spawnStars();
+        }, 350);
+      }
+
+      function finishStarEvent() {
+        showBubble("와! 별을 모두 찾았어요!", 2400);
+
+        setTimeout(function () {
+          starEventMode = false;
+          hitbox.style.pointerEvents = "auto";
+        }, 300);
       }
 
       hitbox.addEventListener("click", function () {
+        if (starEventMode) return;
+
         clickCount++;
 
         if (clickCount === 5) {
@@ -498,6 +650,10 @@
           showBubble("앗, 찾았다! ... 앗... 아직 아니에요..");
           clickCount = 0;
         }
+      });
+
+      mapTrigger.addEventListener("click", function () {
+        startStarEvent();
       });
     })();
   </script>

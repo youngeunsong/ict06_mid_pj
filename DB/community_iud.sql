@@ -155,6 +155,8 @@ SET image_url = 'https://substackcdn.com/image/fetch/$s_!KsAZ!,w_1456,c_limit,f_
 WHERE TARGET_ID = 20
 
 
+
+
 -- 게시글 삭제
 UPDATE COMMUNITY
    SET status = 'HIDDEN',
@@ -471,14 +473,24 @@ SELECT COUNT(*)
 --    OR content LIKE '%' || '공지' || '%'
 --     )       
        
-   
-SELECT *
-FROM NOTICE n 
-WHERE category = 'EVENT'
 
+-- 이벤트 썸네일 확인 쿼리
+SELECT
+    NOTICE_ID,
+    TITLE,
+    IMAGE_URL,
+    TRIM(REGEXP_SUBSTR(IMAGE_URL, '[^,]+', 1, 1)) AS FIRST_IMAGE
+FROM NOTICE
+WHERE NOTICE_ID = 81
+  AND CATEGORY = 'EVENT';
+
+-- 이벤트 썸네일 업데이트 쿼리
 UPDATE NOTICE
-   SET IMAGE_URL = 'https://postfiles.pstatic.net/MjAyNjAzMjdfMjQz/MDAxNzc0NjAyNjc5ODM4.TI9As9b7ftfgig6K_72xk_7DJia6X7DErY9QVxl-T-sg.dyeIbwY1XRbZMqhGVhx8gCVZrclBJCSvnO2VhQYKbNQg.PNG/Gemini_Generated_Image_il0chmil0chmil0c.png?type=w966'
- WHERE notice_id = 34;
+SET IMAGE_URL = 'https://example.com/new-thumb.png'
+WHERE NOTICE_ID = 81
+  AND CATEGORY = 'EVENT';
+
+
 
  -- 이벤트 상단 고정
  SELECT notice_id,
@@ -518,6 +530,11 @@ FROM NOTICE
 WHERE category = 'NOTICE'
 GROUP BY category, is_top
 ORDER BY is_top;
+
+SELECT *
+FROM NOTICE
+WHERE category = 'EVENT'
+AND is_top = 'Y'
 
 SELECT COUNT(*)
 FROM NOTICE

@@ -71,15 +71,13 @@
           <div class="rk-chipWrap" id="recommendChipWrap">
             <button type="button" class="rk-chip active" data-category="ALL">전체</button>
             <button type="button" class="rk-chip" data-category="한식">한식</button>
-            <button type="button" class="rk-chip" data-category="카페/디저트">카페</button>
-            <button type="button" class="rk-chip" data-category="일식">일식</button>
+            <button type="button" class="rk-chip" data-category="식음료">식음료</button>
             <button type="button" class="rk-chip" data-category="양식">양식</button>
+            <button type="button" class="rk-chip" data-category="일식">일식</button>
 
             <%-- 처음에는 숨겨두고 "필터 더보기" 클릭 시 노출 --%>
             <button type="button" class="rk-chip extra-filter d-none" data-category="중식">중식</button>
-            <button type="button" class="rk-chip extra-filter d-none" data-category="술집">술집</button>
-            <button type="button" class="rk-chip extra-filter d-none" data-category="카페/디저트">디저트</button>
-            <button type="button" class="rk-chip extra-filter d-none" data-category="분식">분식</button>
+            <button type="button" class="rk-chip extra-filter d-none" data-category="이색음식">이색음식</button>
           </div>
 
           <div class="mt-2">
@@ -96,9 +94,14 @@
         <select id="regionSelect" class="form-select" style="width:160px; display:none;">
           <option value="all">전체 지역</option>
           <option value="서울">서울</option>
+          <option value="경기">경기</option>
           <option value="인천">인천</option>
-          <option value="부산">부산</option>
           <option value="대전">대전</option>
+          <option value="대구">대구</option>
+          <option value="울산">울산</option>
+          <option value="광주">광주</option>
+          <option value="부산">부산</option>
+          <option value="제주">제주</option>
         </select>
 
       </div>

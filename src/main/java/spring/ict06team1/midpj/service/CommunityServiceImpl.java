@@ -116,8 +116,12 @@ public class CommunityServiceImpl implements CommunityService {
 	    
 	    // 댓글 목록 조회
 	    List<CommunityCommentDTO> commentList = commentDao.getCommentList(post_id);
+	    
+	    // 다중 이미지 조회
+	    List<ImageStoreDTO> imageList = dao.getCommunityImages(post_id);
 
 	    model.addAttribute("dto", dto); //게시글 1건
+	    model.addAttribute("imageList", imageList); //이미지 목록
 	    model.addAttribute("commentList", commentList); //댓글 목록
 	}
 

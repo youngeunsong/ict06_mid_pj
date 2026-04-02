@@ -197,10 +197,10 @@ function editFestival(id){
 	    data.ticketList.forEach(function(ticket){
 
 	        ticketHtml += '<tr class="ticketRow" data-id="' + ticket.ticket_id + '">';
-	        ticketHtml += '<td><input type="text" class="ticket_type" value="' + ticket.ticket_type + '"></td>';
-	        ticketHtml += '<td><input type="number" class="ticket_price" value="' + ticket.price + '"></td>';
-	        ticketHtml += '<td><input type="number" class="ticket_stock" value="' + ticket.stock + '"></td>';
-	        ticketHtml += '<td><textarea class="ticket_desc" cols="24" rows="2">' + (ticket.description || '') + '</textarea></td>';
+	        ticketHtml += '<td><input type="text" class="form-control ticket_type" value="' + ticket.ticket_type + '"></td>';
+	        ticketHtml += '<td><input type="number" class="form-control ticket_price" value="' + ticket.price + '"></td>';
+	        ticketHtml += '<td><input type="number" class="form-control ticket_stock" value="' + ticket.stock + '"></td>';
+	        ticketHtml += '<td><textarea class="form-control ticket_desc" rows="2">' + (ticket.description || '') + '</textarea></td>';
 	        
 	        ticketHtml += '<td>';
 			ticketHtml += '<button type="button" class="btn btn-danger btn-sm" onclick="removeTicketRow(this)">-</button>';
@@ -314,20 +314,20 @@ function addTicketRow(){
     row += '<tr class="ticketRow">';
 
     row += '<td>';
-    row += '<input type="text" class="ticket_type" value="'+ newType +'">';
-    row += '<input type="hidden" class="ticket_id" value="0">';
+    row += '<input type="text" class="form-control ticket_type" value="'+ newType +'">';
+    row += '<input type="hidden" class="form-control ticket_id" value="0">';
     row += '</td>';
 
     row += '<td>';
-    row += '<input type="number" class="ticket_price" value="0">';
+    row += '<input type="number" class="form-control ticket_price" value="0">';
     row += '</td>';
 
     row += '<td>';
-    row += '<input type="number" class="ticket_stock" value="0">';
+    row += '<input type="number" class="form-control ticket_stock" value="0">';
     row += '</td>';
 
     row += '<td>';
-    row += '<textarea class="ticket_desc" rows="2"></textarea>';
+    row += '<textarea class="form-control ticket_desc" rows="2"></textarea>';
     row += '</td>';
 
     row += '<td>';

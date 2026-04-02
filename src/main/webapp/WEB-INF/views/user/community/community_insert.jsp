@@ -20,9 +20,10 @@
 <link rel="stylesheet" href="${path}/resources/css/user/community/community.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/community_insert.css">
 
-<!-- Summernote -->
+<!-- Summernote 선언 및 충돌 방지 -->
 <link rel="stylesheet" href="${path}/resources/admin/plugins/summernote/summernote-lite.css">
 
+<!-- 1) 기존 설정 대피 (Backup) -->
 <script>
     window.__oldDefine = window.define;
     window.__oldModule = window.module;
@@ -33,14 +34,17 @@
     window.exports = undefined;
 </script>
 
+<!-- 2) 라이브러리 로드 -->
 <script src="${path}/resources/admin/plugins/summernote/summernote-lite.js"></script>
 <script src="${path}/resources/admin/plugins/summernote/lang/summernote-ko-KR.js"></script>
 
+<!-- 3) 기존 설정 복구 (Restore) -->
 <script>
     window.define = window.__oldDefine;
     window.module = window.__oldModule;
     window.exports = window.__oldExports;
 
+    /* 임시 변수 삭제 */
     delete window.__oldDefine;
     delete window.__oldModule;
     delete window.__oldExports;
@@ -59,6 +63,7 @@
     <div class="page-body">
         <div class="container">
 
+			<!-- 경로 -->
             <div class="breadcrumb-area">
                 <a href="${path}/community_free.co">커뮤니티</a>
                 <i class="bi bi-chevron-right" style="font-size:.65rem;"></i>
@@ -102,6 +107,7 @@
                             </div>
                         </div>
 
+						<!-- 제목 -->
                         <div>
                             <div class="field-label">
                                 제목 <span class="required">*</span>
@@ -115,7 +121,8 @@
                             <div class="char-counter" id="titleCounter">0 / 200</div>
                             <div class="err-msg" id="titleErr" style="display:none;">제목을 입력해주세요.</div>
                         </div>
-
+						
+						<!-- 내용 -->
                         <div>
                             <div class="field-label">
                                 내용 <span class="required">*</span>
@@ -126,11 +133,12 @@
                             <div class="char-counter" id="contentCounter">0자</div>
                             <div class="err-msg" id="contentErr" style="display:none;">내용을 입력해주세요.</div>
                         </div>
-
+						
+						<!-- 썸네일 -->
                         <div>
                             <div class="field-label">
                                 <i class="bi bi-images" style="color:#adb5bd; margin-right:5px;"></i>
-                                대표 이미지 첨부
+                                썸네일 이미지 첨부
                                 <span style="font-size:.7rem; color:#adb5bd; font-weight:400; margin-left:8px;">
                                     (최대 5장 · JPG, PNG · 장당 10MB 이하)
                                 </span>

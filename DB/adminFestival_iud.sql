@@ -113,6 +113,9 @@ DELETE FROM FESTIVAL_TICKET
 DELETE FROM FESTIVAL
  WHERE festival_id = 1007;
 
+-- 3) 장소 삭제
+DELETE FROM FESTIVAL
+ WHERE festival_id = 3552237;
 -----------------------------------------
 -- 시연을 위해 이미지가 존재하는 축제의 평점 올리는 테스트 데이터 생성
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
@@ -194,7 +197,7 @@ BEGIN
     );
 END;
 
--- 기존 스케쥴 제거
+-- 기존 스케쥴러 제거
 BEGIN
     DBMS_SCHEDULER.DROP_SCHEDULE(
         schedule_name => 'system.UPDATE_FESTIVAL_STATUS_SCH',

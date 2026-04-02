@@ -328,7 +328,7 @@
             id="btnFavorite"
             class="btn btn-outline-secondary rounded-pill px-3 fw-bold ${isFavorite ? 'is-on' : ''}"
             type="button">
-          <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
+          <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 북마크
         </button>
       </div>
     </div>
@@ -603,12 +603,12 @@
 
           <div class="card shadow-sm border-0" style="border-radius:18px;">
             <div class="card-body">
-              <div class="fw-bold fs-5 mb-2">이 음식점 저장하기</div>
+              <div class="fw-bold fs-5 mb-2">이 음식점 북마크하기</div>
               <button id="btnFavoriteSide"
                         class="btn btn-outline-secondary w-100 fw-bold ${isFavorite ? 'is-on' : ''}"
                         type="button"
                         style="border-radius:14px;">
-                <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 저장
+                <i class="${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart me-1"></i> 북마크
               </button>
             </div>
           </div>

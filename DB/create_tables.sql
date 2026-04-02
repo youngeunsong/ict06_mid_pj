@@ -31,6 +31,11 @@
 --1) Restaurant 테이블: restDate, areaCode 필드 추가
 --2) Inquiry 테이블: status 필드 CHECK 제약조건에 'PROGRESS' 추가
 --------------------------------------------------
+--Ver.260331
+--변경사항
+--1) POINT_POLICY 테이블: EARN_LOGIN → EARN_JOIN 변경
+--2) POINT_POLICY 테이블: EARN_SURVEY + EARN_REVIEW → EARN_SURVEY&REVIEW 통합
+--3) POINT_POLICY 테이블: EARN_SURVEY&REVIEW amount 1000 → 500 변경
 --------------------------------------------------
 --DB 테이블 생성
 

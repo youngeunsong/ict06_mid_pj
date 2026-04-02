@@ -43,7 +43,7 @@
                                 <div class="dist-node" data-label="5k"  onclick="setDistance(5.0,   25,  this)"></div>
                                 <div class="dist-node" data-label="10k" onclick="setDistance(10.0,  50,  this)"></div>
                                 <div class="dist-node" data-label="50k" onclick="setDistance(50.0,  75,  this)"></div>
-                                <div class="dist-node" data-label="All" onclick="setDistance(400.0, 500, this)"></div>
+                                <div class="dist-node" data-label="All" onclick="setDistance(600.0, 100, this)"></div>
                             </div>
                         </div>
                     </div>
@@ -58,13 +58,13 @@
                         <select id="provinceSelect" onchange="updateRegionOptions()">
                             <option value="">지역 선택</option>
                             <option value="서울">서울</option>
+                            <option value="경기">경기</option>
                             <option value="인천">인천</option>
                             <option value="대전">대전</option>
                             <option value="대구">대구</option>
+                            <option value="울산">울산</option>
                             <option value="광주">광주</option>
                             <option value="부산">부산</option>
-                            <option value="울산">울산</option>
-                            <option value="경기">경기</option>
                             <option value="제주">제주</option>
                         </select>
 
@@ -139,9 +139,9 @@ function saveToLocal() {
 // 반경 잠금 — 플래그 true + All 고정
 function lockDistanceFilter() {
     isDistanceLocked = true;
-    currentSearchConfig.radius = 400.0;
+    currentSearchConfig.radius = 600.0;
     saveToLocal();
-    updateDistanceUI(400.0);
+    updateDistanceUI(600.0);
     $(".distance-filter").css({"opacity": "0.5", "pointer-events": "none"});
 }
 
@@ -253,7 +253,7 @@ function updateDistanceUI(radius) {
     else if (radius == 5.0)                      { percent = 25;  label = "5k";  }
     else if (radius == 10.0)                     { percent = 50;  label = "10k"; }
     else if (radius == 50.0)                     { percent = 75;  label = "50k"; }
-    else if (radius == 100.0 || radius == 400.0) { percent = 100; label = "All"; }
+    else if (radius >= 100.0) { percent = 100; label = "All"; }
 
     $('#activeLine').css('width', percent + '%');
     $('.dist-node').removeClass('active');
@@ -481,18 +481,6 @@ function resetFilters() {
     $("#districtSelect").empty().append('<option value="">전체</option>');
 
     unlockDistanceFilter();
-
-    /* currentSearchConfig = {
-        lat: currentSearchConfig.lat,
-        lng: currentSearchConfig.lng,
-        radius: 5.0,
-        minRating: 0.0,
-        keyword: "",
-        category: "",
-        province: "",
-        district: "",
-        pageNum: 1
-    }; */
     localStorage.removeItem("accSearchConfig");
     
     // saveToLocal();

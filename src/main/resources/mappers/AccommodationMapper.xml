@@ -14,6 +14,7 @@
         <result property="price" column="price"/>
         <result property="status" column="status"/>
         <result property="areaCode" column="areacode"/>
+        <result property="category" column="category"/>
 
         <association property="placeDTO" javaType="spring.ict06team1.midpj.dto.PlaceDTO">
             <id property="place_id" column="place_id"/>
@@ -60,7 +61,8 @@
         a.phone,
         a.price,
         a.status,
-        a.areacode
+        a.areacode,
+        a.category
     FROM place p
     JOIN accommodation a
       ON p.place_id = a.accommodation_id
@@ -84,7 +86,8 @@
         a.phone,
         a.price,
         a.status,
-        a.areacode
+        a.areacode,
+        a.category
 </select>
 
     <!-- 조회수 증가 -->

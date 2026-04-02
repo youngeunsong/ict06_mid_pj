@@ -191,7 +191,7 @@ public class AccommodationController {
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("reviewNextOffset", reviews.size());
 		model.addAttribute("isFavorite", isFavorite);
-
+		
 		return "user/accommodation/accommodationDetail";
 	}
 	

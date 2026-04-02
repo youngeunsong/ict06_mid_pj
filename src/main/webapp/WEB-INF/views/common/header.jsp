@@ -37,7 +37,6 @@
 	    <div class="collapse navbar-collapse" id="topNav">
 	      
 
-	
 	      <!-- 메뉴: 중앙 검색폼이 있을 땐 우측으로 밀고, 메인에서는 브라우저 화면 정중앙(gnb-nav-main)에 고정 -->
 	      <ul class="navbar-nav gnb-nav-center mb-2 mb-lg-0 gap-lg-3">
 	        <li class="nav-item"><a class="nav-link fw-bold gnb-main-link" href="${path}/restaurant.rs">맛집</a></li>

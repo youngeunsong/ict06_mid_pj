@@ -37,6 +37,9 @@
 --2) POINT_POLICY 테이블: EARN_SURVEY + EARN_REVIEW → EARN_SURVEY&REVIEW 통합
 --3) POINT_POLICY 테이블: EARN_SURVEY&REVIEW amount 1000 → 500 변경
 --------------------------------------------------
+-- Ver.260402
+-- 축제 상태 자동 계산 스케쥴러. 매일 자정 작동하여 축제 상태 갱신.
+--------------------------------------------------
 --DB 테이블 생성
 
 -- 1. 회원
@@ -634,29 +637,92 @@ BEGIN
 END;
 /
 
--- 스케쥴러 생성-------------------------------------
--- v260401 : 축제 상태 자동 계산 스케쥴러. 매일 자정 작동하여 축제 상태 갱신. 
+-- 축제용 스케쥴러 생성-------------------------------------
+-- system 계정에서 스케쥴러와 잡을 잘못 만들었다면 제거는 system 계정에서 실시
+-- 스케쥴러 잡 제거 (/ 전까지 블록 잡고 실행)
 BEGIN
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name        => 'UPDATE_FESTIVAL_STATUS_JOB',
-        job_type        => 'PLSQL_BLOCK',
-        job_action      => '
+    DBMS_SCHEDULER.DROP_JOB(
+        job_name => 'system.UPDATE_FESTIVAL_STATUS_JOB',
+        force => TRUE
+    );
+END;
+
+-- 기존 스케쥴러 제거
+BEGIN
+    DBMS_SCHEDULER.DROP_SCHEDULE(
+        schedule_name => 'system.UPDATE_FESTIVAL_STATUS_SCH',
+        force => TRUE
+    );
+END;
+
+-- 아래부턴 ICT06_TEAM1_MIDPJ 계정에서 실행
+-- 스케줄러 생성
+BEGIN
+    DBMS_SCHEDULER.CREATE_SCHEDULE
+    (
+        schedule_name   => 'UPDATE_FESTIVAL_STATUS_SCH',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=DAILY;BYHOUR=13;BYMINUTE=0;BYSECOND=0',
+        comments        => '매일 13:00 실행'
+    );
+END;
+/
+
+-- 잡 수정 필요 시 먼저 삭제
+BEGIN
+    DBMS_SCHEDULER.DROP_JOB('UPDATE_FESTIVAL_STATUS_JOB', TRUE);
+END;
+/
+
+-- 실행될 스케쥴 잡 생성
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB
+    (
+        job_name      => 'UPDATE_FESTIVAL_STATUS_JOB',
+        job_type      => 'PLSQL_BLOCK',
+        job_action    => '
             BEGIN
                 UPDATE FESTIVAL
                 SET status =
                     CASE
-                        WHEN end_date < TRUNC(SYSDATE) THEN ''ENDED''
-                        WHEN start_date > TRUNC(SYSDATE) THEN ''UPCOMING''
+                        WHEN TRUNC(end_date) < TRUNC(SYSDATE) THEN ''ENDED''
+                        WHEN TRUNC(start_date) > TRUNC(SYSDATE) THEN ''UPCOMING''
                         ELSE ''ONGOING''
                     END;
-                COMMIT;
+				COMMIT;
             END;
         ',
-        start_date      => SYSDATE,
-        repeat_interval => 'FREQ=DAILY; BYHOUR=0; BYMINUTE=0; BYSECOND=0',
-        enabled         => TRUE
+        schedule_name => 'UPDATE_FESTIVAL_STATUS_SCH',
+        enabled       => TRUE,
+        comments      => '축제 상태 자동 갱신'
     );
 END;
+/
+
+-- 정상 작동하는 잡인지 시간 기다리지 말고 직접 실행
+BEGIN
+    DBMS_SCHEDULER.RUN_JOB(
+		job_name => 'UPDATE_FESTIVAL_STATUS_JOB', 
+		use_current_session => TRUE
+    );
+END;
+/
+
+-- 축제 상태 데이터 확인 : 0개가 나오면 정상 작동.
+SELECT festival_id,
+       start_date,
+       end_date,
+       status,
+       TRUNC(start_date),
+       TRUNC(end_date),
+       TRUNC(SYSDATE)
+FROM FESTIVAL
+WHERE status !=
+      CASE
+          WHEN TRUNC(end_date) < TRUNC(SYSDATE) THEN 'ENDED'
+          WHEN TRUNC(start_date) > TRUNC(SYSDATE) THEN 'UPCOMING'
+          ELSE 'ONGOING'
+      END;
 
 -- 생성된 job 조회 : LAST_START_DATE 확인하여 매일 작동하는 지 확인
 SELECT JOB_NAME, STATE, LAST_START_DATE, NEXT_RUN_DATE 

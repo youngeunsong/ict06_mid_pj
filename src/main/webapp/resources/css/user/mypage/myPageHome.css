@@ -612,15 +612,6 @@ body {
 .profile_card .btn.btn-light {
 	margin-top: -50px; /* 기본 간격보다 줄임 */
 }
-/* 마이페이지 카드 hover 대응 */
-.custom_card:hover .bookmark-btn {
-    opacity: 1;
-}
-
-/* 마이페이지는 항상 보이게 (추천) */
-.custom_card .bookmark-btn {
-    opacity: 1;
-}
 
 .bookmark-btn {
     position: absolute;
@@ -639,6 +630,18 @@ body {
     z-index: 20;
     padding: 0;
     box-shadow: 0 2px 6px rgba(0,0,0,.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: all 0.25s ease;
+}
+
+/* 카드 hover 시 북마크 버튼 노출 */
+.bookmark-card:hover .bookmark-btn,
+.custom_card:hover .bookmark-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .bookmark-btn i {
@@ -647,13 +650,6 @@ body {
     font-size: 18px;
 }
 
-.custom_card:hover .bookmark-btn {
-    opacity: 1;
-}
-
-.custom_card .bookmark-btn {
-    opacity: 1;
-}
 
 .mypage-character {
     width: 70px;

@@ -288,6 +288,16 @@
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
 	padding: 0;
 	transition: transform 0.2s ease, background 0.2s ease;
+	opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: all 0.25s ease;
+}
+/* 카드 hover 시 북마크 버튼 노출 */
+.bookmark-card:hover .bookmark-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .bookmark-btn:hover {

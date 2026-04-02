@@ -140,7 +140,7 @@
 									<i class="bi bi-heart text-success fs-4"></i> <span
 										class="badge rounded-pill bg-primary count_badge">${bookmarkCount}</span>
 								</div>
-								<span class="fw-bold">즐겨찾기</span>
+								<span class="fw-bold">북마크</span>
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -167,7 +167,7 @@
 
 					<h4 class="fw-bold mb-4 d-flex align-items-center">
 						<img src="${path}/resources/images/common/locationMarker.png"
-							class="title-marker"> 내 즐겨찾기 맛집 TOP3
+							class="title-marker"> 내 북마크 맛집 TOP3
 					</h4>
 					<div class="row g-3 mb-5">
 						<c:choose>
@@ -203,7 +203,7 @@
 								<div class="col-12">
 									<div
 										class="card border-0 shadow-sm p-4 rounded-4 text-center text-muted">
-										즐겨찾기한 맛집이 없습니다.</div>
+										북마크한 맛집이 없습니다.</div>
 								</div>
 							</c:otherwise>
 						</c:choose>
@@ -211,7 +211,7 @@
 
 					<h4 class="fw-bold mb-4 d-flex align-items-center">
 						<img src="${path}/resources/images/common/locationMarker.png"
-							class="title-marker">내 즐겨찾기 숙소 TOP3
+							class="title-marker">내 북마크 숙소 TOP3
 					</h4>
 					<div class="row g-3 mb-5">
 						<c:choose>
@@ -247,7 +247,7 @@
 								<div class="col-12">
 									<div
 										class="card border-0 shadow-sm p-4 rounded-4 text-center text-muted">
-										즐겨찾기한 숙소가 없습니다.</div>
+										북마크한 숙소가 없습니다.</div>
 								</div>
 							</c:otherwise>
 						</c:choose>
@@ -255,7 +255,7 @@
 
 					<h4 class="fw-bold mb-4 d-flex align-items-center">
 						<img src="${path}/resources/images/common/locationMarker.png"
-							class="title-marker">내 즐겨찾기 축제 TOP3
+							class="title-marker">내 북마크 축제 TOP3
 					</h4>
 					<div class="row g-3">
 						<c:choose>
@@ -291,7 +291,7 @@
 								<div class="col-12">
 									<div
 										class="card border-0 shadow-sm p-4 rounded-4 text-center text-muted">
-										즐겨찾기한 축제가 없습니다.</div>
+										북마크한 축제가 없습니다.</div>
 								</div>
 							</c:otherwise>
 						</c:choose>

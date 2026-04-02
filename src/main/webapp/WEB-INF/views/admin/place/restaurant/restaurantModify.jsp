@@ -4,6 +4,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
 <meta charset="UTF-8">
 <title>맛집 정보 수정</title>
 <link rel="stylesheet"

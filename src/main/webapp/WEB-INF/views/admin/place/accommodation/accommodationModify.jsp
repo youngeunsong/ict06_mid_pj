@@ -4,6 +4,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
 <meta charset="UTF-8">
 <title>숙소 정보 수정</title>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

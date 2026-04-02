@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <fmt:setTimeZone value="Asia/Seoul"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">

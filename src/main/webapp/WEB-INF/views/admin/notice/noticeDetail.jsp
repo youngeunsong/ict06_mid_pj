@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/common/adminSetting.jsp"%>
+<%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

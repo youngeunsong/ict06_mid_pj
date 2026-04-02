@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
+
 <meta charset="UTF-8">
 <title>숙소 정보 등록</title>
 <%@ include file="/WEB-INF/views/common/adminSetting.jsp" %>

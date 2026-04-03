@@ -49,6 +49,7 @@ public class FestivalApiClient {
 //        urlBuilder.append("&" + URLEncoder.encode("instt_code","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*제공기관코드*/
 //        urlBuilder.append("&" + URLEncoder.encode("instt_nm","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /*제공기관기관명*/
         try {
+        	System.out.println("API URL: " + urlBuilder.toString());
         	URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             
@@ -79,7 +80,7 @@ public class FestivalApiClient {
         }
         catch (SocketException e) {
         	System.out.println("API 연결 끊김");
-            return null;
+            return "";
         }
     }
 

@@ -240,7 +240,7 @@
 	                <h5 class="modal-title">
 	                    <i class="bi bi-info-circle mr-2"></i>축제 상세 정보
 	                </h5>
-	                <button type="button" class="close text-white" data-dismiss="modal">
+	                <button type="button" class="close text-white" data-dismiss="modal" onclick="closeDetailModal()">
 	                    <span>&times;</span>
 	                </button>
 	            </div>
@@ -306,7 +306,7 @@
                        	삭제
                     </button>
 	
-	                <button class="btn btn-secondary" data-dismiss="modal">
+	                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeDetailModal()">
 	                	닫기
 	                </button>
 	            </div>
@@ -404,7 +404,7 @@
 	     	수정 저장
 	    </button>
 	
-	    <button class="btn btn-secondary" data-dismiss="modal">
+	    <button class="btn btn-secondary" data-dismiss="modal" onclick="closeModifyModal()">
 	     	취소
 	    </button>
 	   </div>

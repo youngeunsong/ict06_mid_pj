@@ -29,6 +29,11 @@ import spring.ict06team1.midpj.dao.AdRestaurantDAO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 import spring.ict06team1.midpj.dto.RestaurantDTO;
 
+/*
+ * 작성자: 김재원, 송영은
+ * 변경사항
+ * v260403: 이미지 업로드 실제 경로 관리를 용이하게 하기 위해 application.properties에서 등록한 경로 가져오기. 
+ */
 @Service
 public class AdRestaurantServiceImpl implements AdRestaurantService {
 	

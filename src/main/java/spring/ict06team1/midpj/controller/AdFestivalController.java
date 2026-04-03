@@ -127,6 +127,17 @@ private static final Logger logger = LoggerFactory.getLogger(AdPlaceController.c
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+		
+		// ⭐ json null 체크
+	    if(json == null || json.isEmpty()) {
+
+	        logger.error("API 호출 실패 - json null");
+	        model.addAttribute("successCnt", 0);
+	        model.addAttribute("errorMsg", "API 호출 실패");
+
+	        return "admin/place/festival/festivalImportAction";
+	    }
+	    
 		adFestService.insertFestivalsFromApi(json, request, response, model);
 	    return "admin/place/festival/festivalImportAction";
 	}

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +34,9 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 	
 	@Autowired
 	private AdRestaurantDAO adResDao;
+	
+	@Value("${upload.restaurant.path}")
+	private String uploadRestPath; // 설치 컴퓨터 환경에 맞게 작동할 수 있게 추가. 
 
 	//맛집 등록 조회
 	@Override
@@ -148,11 +152,14 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		System.out.println("file : "+ file);
 	
 		// input 경로- 폴더먼저 생성 후
+		// 변경: application.properties의 외부 경로(절대경로) 사용
+//		String saveDir = uploadRestPath; 
 		String saveDir = request.getSession().getServletContext().getRealPath("/resources/images/admin/restaurant/");//이거는 이 url을 읽는거다
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
+		String realDir = uploadRestPath; 
+//		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)
@@ -319,7 +326,8 @@ public class AdRestaurantServiceImpl implements AdRestaurantService {
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
+		String realDir = uploadRestPath; 
+//		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\restaurant\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)

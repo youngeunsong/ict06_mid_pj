@@ -26,6 +26,9 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/resources/upload/**" location="/resources/upload/" />
+	
+	<!-- 외부 업로드 경로 매핑 (톰캣 재배포 유실 방지) -->
+	<resources mapping="/upload_notice/**" location="file:///C:/DEV06/workspace_git_ict06/ict06_mid_pj/upload/notice/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

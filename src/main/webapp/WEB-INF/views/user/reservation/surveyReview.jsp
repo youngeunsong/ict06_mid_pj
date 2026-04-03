@@ -25,8 +25,8 @@
 		<section class="survey-review-section">
 
 			<!-- =========================
-			     페이지 헤더
-			     ========================= -->
+              페이지 헤더
+              ========================= -->
 			<div class="page-header">
 				<h2>
 					<i class="bi bi-chat-square-heart"></i> 설문 · 리뷰 작성
@@ -34,30 +34,30 @@
 			</div>
 
 			<!-- =========================
-			     예약 / 장소 안내 영역
-			     dto가 있으면 dto 우선 사용
-			     없으면 param 값으로 최소 표시
-			     ========================= -->
+              예약 / 장소 안내 영역
+              dto가 있으면 dto 우선 사용
+              없으면 param 값으로 최소 표시
+              ========================= -->
 			<div class="info-card">
 				<div class="place-name">
 					<c:choose>
 						<c:when test="${not empty dto.placeDTO.name}">
-							${dto.placeDTO.name}
-						</c:when>
+                     ${dto.placeDTO.name}
+                  </c:when>
 						<c:otherwise>
-							이용하신 장소
-						</c:otherwise>
+                     이용하신 장소
+                  </c:otherwise>
 					</c:choose>
 				</div>
 
 				<p class="info-text">
 					예약번호 : <strong> <c:choose>
 							<c:when test="${not empty dto.reservation_id}">
-								${dto.reservation_id}
-							</c:when>
+                        ${dto.reservation_id}
+                     </c:when>
 							<c:otherwise>
-								${param.reservation_id}
-							</c:otherwise>
+                        ${param.reservation_id}
+                     </c:otherwise>
 						</c:choose>
 					</strong> <br> 이용하신 장소에 대한 리뷰와, 맛침내 서비스에 대한 설문을 함께 작성해주세요. 작성해주신 내용은
 					서비스 개선과 더 나은 경험 제공에 큰 도움이 됩니다.
@@ -65,8 +65,8 @@
 			</div>
 
 			<!-- =========================
-			     설문 + 리뷰 작성 폼
-			     ========================= -->
+              설문 + 리뷰 작성 폼
+              ========================= -->
 			<form id="surveyForm" action="${path}/surveyReviewAction.rv"
 				method="post">
 
@@ -94,10 +94,10 @@
 					name="place_id" value="${hiddenPlaceId}">
 
 				<!-- =========================
-				     페이지 전용 hidden
-				     ※ name도 page_... 로 통일
-				     ※ 서비스에서 request.getParameter("page_...") 로 받기
-				     ========================= -->
+                 페이지 전용 hidden
+                 ※ name도 page_... 로 통일
+                 ※ 서비스에서 request.getParameter("page_...") 로 받기
+                 ========================= -->
 				<input type="hidden" name="page_satisfaction_score"
 					id="page_satisfaction_score"> <input type="hidden"
 					name="page_info_reliability_score" id="page_info_reliability_score">
@@ -105,8 +105,8 @@
 				<input type="hidden" name="page_rating" id="page_rating">
 
 				<!-- =========================
-				     설문 카드
-				     ========================= -->
+                 설문 카드
+                 ========================= -->
 				<div class="form-card">
 					<h3>
 						<i class="bi bi-ui-checks-grid"></i> 맛침내 서비스 이용 설문
@@ -162,13 +162,14 @@
 								<button type="button" class="score-item" data-value="${i}">${i}</button>
 							</c:forEach>
 						</div>
-						<div class="form-hint">맛침내 서비스를 다시 이용하거나, 주변에 추천할 의향을 기준으로 선택해주세요.</div>
+						<div class="form-hint">맛침내 서비스를 다시 이용하거나, 주변에 추천할 의향을 기준으로
+							선택해주세요.</div>
 					</div>
 				</div>
 
 				<!-- =========================
-				     리뷰 카드
-				     ========================= -->
+                 리뷰 카드
+                 ========================= -->
 				<div class="form-card">
 					<h3>
 						<i class="bi bi-star"></i> 리뷰 작성
@@ -187,15 +188,16 @@
 
 					<!-- 리뷰 내용 -->
 					<div class="form-group review-last-group">
-						<label for="content" class="form-label">이용하신 장소에 대한 경험을 자유롭게 작성해주세요.</label>
+						<label for="content" class="form-label">이용하신 장소에 대한 경험을
+							자유롭게 작성해주세요.</label>
 						<textarea id="content" name="content" class="form-control-custom"
 							placeholder="이용 경험을 자유롭게 남겨주세요. 다른 사용자에게도 큰 도움이 됩니다."></textarea>
 					</div>
 				</div>
 
 				<!-- =========================
-				     하단 버튼
-				     ========================= -->
+                 하단 버튼
+                 ========================= -->
 				<div class="button-area">
 					<button type="button" class="btn-line"
 						onclick="location.href='${path}/viewReservations.do'">

@@ -28,7 +28,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
-
+<link rel="stylesheet" href="${path}/resources/css/admin/ad_accommodation.css">
 <title>축제 관리</title>
 </head>
 <!--end::Head-->
@@ -197,18 +197,16 @@
 								
 								<%-- 페이징 --%>
 								<!-- TODO: 페이징 부분이 컨텐츠 영역의 정중앙에 오게 수정 -->
-								<div class="py-3 border-top">
-									<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
-								</div>
+								<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 								
-								<div align="left">
+								<div class="add-btn-area" align="left">
 									<!-- 새 축제 추가 버튼 -->
-									<button type="button" class="btn btn-block btn-success" style="width:10%;" onclick="location.href='${path}/createFestival.adfe'">
+									<button type="button" class="btn btn-res-primary px-4 py-2" onclick="location.href='${path}/createFestival.adfe'">
 										새 축제 추가
 									</button>
 									<!-- 오픈 API에서 데이터 가져오기 -->										
 									<button onclick="location.href='${path}/festivalImport.adfe'" class="btn btn-block btn-warning" style="width:30%;">
-										오픈 API로 축제 데이터 가져오기(주의)
+										오픈 API로 축제 데이터 가져오기
 									</button>
 								</div>
 							</div>

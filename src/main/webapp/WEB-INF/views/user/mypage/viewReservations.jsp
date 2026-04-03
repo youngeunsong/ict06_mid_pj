@@ -194,7 +194,7 @@
 											</div>
 										</c:if>
 
-										<div class="payment-text">
+										<%-- <div class="payment-text">
 											결제번호 :
 											<c:choose>
 												<c:when test="${not empty res.payment_id}">
@@ -202,7 +202,7 @@
 												</c:when>
 												<c:otherwise>-</c:otherwise>
 											</c:choose>
-										</div>
+										</div> --%>
 									</div>
 
 								</div>

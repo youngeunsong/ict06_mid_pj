@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1:1문의 답변 처리 결과(관리자)</title>

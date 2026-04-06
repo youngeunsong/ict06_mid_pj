@@ -71,7 +71,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         countMap.put("category", category);
         
         if (province != null && !province.isEmpty()) {
-			countMap.put("radius", 400);
+			countMap.put("radius", 600);
 		} else {
 			countMap.put("radius", radius);
 		}
@@ -112,7 +112,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		String district = request.getParameter("district");
 		double radius = Double.parseDouble(request.getParameter("radius"));
 		if (province != null && !province.isEmpty()) {
-			listMap.put("radius", 400);
+			listMap.put("radius", 600);
 		} else {
 			listMap.put("radius", radius);
 		}

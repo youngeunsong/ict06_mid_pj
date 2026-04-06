@@ -16,6 +16,20 @@ public class NoticeDTO {
 	private Timestamp noticeUpdateDate;
 	private ImageStoreDTO repImage; // 커뮤니티 이미지를 불러오기 위해 추가
 
+	// [보강] Summernote 본문 요약 (태그 제거, 공백 정리, 100자 제한)
+	public String getStripContent() {
+		if (content == null || content.isEmpty()) return "";
+		String stripped = content.replaceAll("<[^>]*>", ""); // 태그 제거
+		stripped = stripped.replaceAll("&nbsp;", " ");       // 특수공백 치환
+		stripped = stripped.replaceAll("\\s+", " ");        // 연속공백 정리
+		stripped = stripped.trim();
+		
+		if (stripped.length() > 100) {
+			return stripped.substring(0, 100) + "...";
+		}
+		return stripped;
+	}
+
 	public NoticeDTO() {
 		super();
 	}
@@ -133,4 +147,8 @@ public class NoticeDTO {
 				+ ", repImage=" + repImage + "]";
 	}
 
+	
+	
+	
+	
 }

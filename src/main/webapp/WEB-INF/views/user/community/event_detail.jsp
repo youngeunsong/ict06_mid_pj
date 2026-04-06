@@ -34,12 +34,13 @@
 
 <script>
 	window.kakaoShareData = {
-	    title: '${noticeDTO.title}',
+	    title: '맛침내 커뮤니티', // 실제 제목은 event.js에서 DOM의 .event-title 텍스트를 읽어 업데이트함 (따옴표 오류 방지)
 	    description: '맛침내 커뮤니티 이벤트 게시판',
-	    imageUrl: '${not empty noticeDTO.image_url ? noticeDTO.repImage.image_url : "https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"}',
+	    imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png',
 	    webUrl: '${shareUrl}',
 	    mobileWebUrl: '${shareUrl}'
 	};
+	/* 실제 imageUrl은 event.js DOMContentLoaded에서 image_url 기준으로 덮어씀 */
 </script>
 
 <script src="${path}/resources/js/common/kakaoShare.js"></script>
@@ -77,7 +78,7 @@
                 <c:choose>
                     <c:when test="${not empty noticeDTO.image_url}">
                         <div class="event-hero">
-                            <img src="${path}/resources/upload/${noticeDTO.image_url}" alt="${noticeDTO.title}">
+                            <img class="event-hero-img" data-img="${noticeDTO.image_url}" alt="${noticeDTO.title}">
                             <c:if test="${noticeDTO.is_top eq 'Y'}">
                                 <div class="hero-pin-badge">진행중</div>
                             </c:if>
@@ -124,6 +125,7 @@
                 </div>
 
                 <div class="event-body">
+                    <%-- Summernote HTML 원본을 그대로 렌더링 --%>
                     ${noticeDTO.content}
                 </div>
 
@@ -149,5 +151,7 @@
 
     <%@ include file="../../common/footer.jsp" %>
 </div>
+<script>var APP_PATH = '${path}';</script>
+<script src="${path}/resources/js/community/event.js"></script>
 </body>
 </html>

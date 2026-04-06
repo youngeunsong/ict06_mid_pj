@@ -65,6 +65,8 @@
 	};
 </script>
 <% } %>
+		<!-- isMain 변수를 request 범위로 세팅하여 헤더에서 검색바 렌더링을 제어 -->
+		<c:set var="isMain" value="true" scope="request" />
 		<!-- header -->
 		<%@ include file="header.jsp"%>
 
@@ -79,56 +81,55 @@
 				<div class="carousel-inner">
 					<!-- 배너1 -->
 					<div class="carousel-item active">
-						<img
-							src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1400&q=80"
-							alt="도쿄" />
-						<div class="carousel-caption">
-							<h5>도쿄의 빛나는 야경</h5>
-							<p>일본의 심장, 도쿄에서 특별한 밤을</p>
+						<img src="${path}/resources/upload/1.jpg" alt="전통" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 전통과 즐거움이 어우러진 순간</p>
+							<h2 class="hero-title fw-bold">다양한 축제를 경험하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너2 -->
 					<div class="carousel-item">
-						<img
-							src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400&q=80"
-							alt="사막" />
-						<div class="carousel-caption">
-							<h5>황금빛 사막의 노을</h5>
-							<p>대자연이 선사하는 감동의 풍경</p>
+						<img src="${path}/resources/upload/2.jpg" alt="자연" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 나를 위한 자연의 아름다운 경치</p>
+							<h2 class="hero-title fw-bold">힐링이 되는 숙소를 경험하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너3 -->
 					<div class="carousel-item">
-						<img
-							src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80"
-							alt="설산" />
-						<div class="carousel-caption">
-							<h5>웅장한 설산의 경치</h5>
-							<p>하늘과 맞닿은 그곳으로</p>
+						<img src="${path}/resources/upload/4.jpg" alt="레스토랑" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 눈과 입이 모두 즐거운 경험</p>
+							<h2 class="hero-title fw-bold">소중한 사람과 함께 공유하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너4 -->
 					<div class="carousel-item">
-						<img
-							src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&q=80"
-							alt="산" />
-						<div class="carousel-caption">
-							<h5>초록 숲의 힐링 여행</h5>
-							<p>자연 속에서 찾는 완전한 휴식</p>
+						<img src="${path}/resources/upload/6.jpg" alt="카페" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 소소하지만 특별한 경험</p>
+							<h2 class="hero-title fw-bold">여유로운 한 끼를 만나보세요</h2>
 						</div>
 					</div>
-
+					
 					<!-- 배너5 -->
 					<div class="carousel-item">
-						<img
-							src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1400&q=80"
-							alt="바다" />
-						<div class="carousel-caption">
-							<h5>에메랄드빛 해변</h5>
-							<p>눈부신 바다가 기다리는 그곳</p>
+						<img src="${path}/resources/upload/7.jpg" alt="숙소" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 오늘의 피로를 내려놓는 순간</p>
+							<h2 class="hero-title fw-bold">편안한 숙소를 경험하세요</h2>
+						</div>
+					</div>
+					
+					<!-- 배너6 -->
+					<div class="carousel-item">
+						<img src="${path}/resources/upload/8.jpg" alt="자유" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 자유롭고 떠들석한 이 순간</p>
+							<h2 class="hero-title fw-bold">지금, 축제를 즐겨보세요</h2>
 						</div>
 					</div>
 				</div>
@@ -142,26 +143,32 @@
 					data-bs-target="#heroCarousel" data-bs-slide="next">
 					<span class="carousel-control-next-icon"></span>
 				</button>
-
-				<!-- [메인배너] 미리보기 이미지 -->
-				<div class="hero-thumbs d-none d-md-flex">
-					<img class="hero-thumb active"
-						src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=200&q=60"
-						data-bs-target="#heroCarousel" data-bs-slide-to="0" />
-					<img class="hero-thumb"
-						src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=60"
-						data-bs-target="#heroCarousel" data-bs-slide-to="1" />
-					<img class="hero-thumb"
-						src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=60"
-						data-bs-target="#heroCarousel" data-bs-slide-to="2" />
-					<img class="hero-thumb"
-						src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=60"
-						data-bs-target="#heroCarousel" data-bs-slide-to="3" />
-					<img class="hero-thumb"
-						src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=200&q=60"
-						data-bs-target="#heroCarousel" data-bs-slide-to="4" />
-				</div>
 			</div>
+            
+            <!-- 메인 배너 내 통합 검색창 (텍스트는 각 슬라이드로 분리, 폼은 단일 1세트 공통 유지) -->
+            <div class="main-search-wrap">
+                <form class="main-search-form search-module" role="search" action="${path}/search.do" method="get">
+                    <div class="input-group input-group-lg main-search-input-group">
+                        <span class="input-group-text bg-white border-0 ps-4"></span>
+                        <input class="search-keyword-input form-control border-0 bg-white" type="search" name="keyword" autocomplete="off"
+                               placeholder="방문하실 목적지, 숙소, 축제를 검색해보세요" aria-label="Search" style="padding: 1.25rem 1rem; font-size: 1.15rem;">
+                        <button class="btn btn-primary px-5 fw-bold fs-5" type="submit">검색</button>               
+                    </div>
+                    
+                    <!-- 자동완성 + 최근 검색어 박스 (.search-* 클래스 기반 단일 구조) -->
+                    <div class="search-suggest-box main-suggest-box d-none">
+                        <div class="search-recent-area main-suggest-section d-none">
+                            <div class="main-suggest-title">최근 검색어</div>
+                            <ul class="search-recent-list suggest-list list-unstyled mb-0 px-2"></ul>
+                        </div>
+                
+                        <div class="search-auto-area main-suggest-section d-none">
+                            <div class="main-suggest-title">추천 검색어</div>
+                            <ul class="search-auto-list suggest-list list-unstyled mb-0 px-2"></ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
 		</section>
 		<!-- 메인 배너E -->
 

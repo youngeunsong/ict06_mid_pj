@@ -155,6 +155,8 @@ SET image_url = 'https://substackcdn.com/image/fetch/$s_!KsAZ!,w_1456,c_limit,f_
 WHERE TARGET_ID = 20
 
 
+
+
 -- 게시글 삭제
 UPDATE COMMUNITY
    SET status = 'HIDDEN',
@@ -247,16 +249,90 @@ SET like_count = CASE
                  END
 WHERE post_id = 57;
 
+----------------------------
 
-SELECT LIKE_COUNT
-FROM COMMUNITY
-WHERE POST_ID = 55;
-
-SELECT LIKE_ID 
-     , USER_ID 
+SELECT *
 FROM COMMUNITY_LIKE
-WHERE POST_ID = 55;
 
+-- 자유게시판 게시글에 대한 기존 좋아요 이력 초기화
+DELETE FROM COMMUNITY_LIKE
+WHERE post_id IN (
+    SELECT post_id
+    FROM COMMUNITY
+    WHERE category IN ('맛집수다', '숙소수다', '축제수다', '정보공유', '동행구해요')
+);
+
+-- 기존 게시글에 좋아요 이력 넣기
+INSERT INTO COMMUNITY_LIKE (like_id, user_id, post_id, created_at)
+SELECT SEQ_COMMUNITY_LIKE.NEXTVAL,
+       u.user_id,
+       c.post_id,
+       SYSTIMESTAMP - NUMTODSINTERVAL(MOD(c.post_id * 3 + u.seq_no, 240), 'HOUR')
+FROM (
+    SELECT 'user123'  AS user_id,  1 AS seq_no FROM dual UNION ALL
+    SELECT 'user10'   AS user_id,  2 AS seq_no FROM dual UNION ALL
+    SELECT 'admin'    AS user_id,  3 AS seq_no FROM dual UNION ALL
+    SELECT 'user01'   AS user_id,  4 AS seq_no FROM dual UNION ALL
+    SELECT 'user02'   AS user_id,  5 AS seq_no FROM dual UNION ALL
+    SELECT 'user03'   AS user_id,  6 AS seq_no FROM dual UNION ALL
+    SELECT 'user04'   AS user_id,  7 AS seq_no FROM dual UNION ALL
+    SELECT 'user05'   AS user_id,  8 AS seq_no FROM dual UNION ALL
+    SELECT 'user06'   AS user_id,  9 AS seq_no FROM dual UNION ALL
+    SELECT 'user07'   AS user_id, 10 AS seq_no FROM dual UNION ALL
+    SELECT 'user08'   AS user_id, 11 AS seq_no FROM dual UNION ALL
+    SELECT 'user09'   AS user_id, 12 AS seq_no FROM dual UNION ALL
+    SELECT 'juna1111' AS user_id, 13 AS seq_no FROM dual UNION ALL
+    SELECT 'admin1'   AS user_id, 14 AS seq_no FROM dual UNION ALL
+    SELECT 'admin2'   AS user_id, 15 AS seq_no FROM dual UNION ALL
+    SELECT 'user611'  AS user_id, 16 AS seq_no FROM dual UNION ALL
+    SELECT 'unick123' AS user_id, 17 AS seq_no FROM dual
+) u
+CROSS JOIN (
+    SELECT post_id, category, user_id
+    FROM COMMUNITY
+    WHERE category IN ('맛집수다', '숙소수다', '축제수다', '정보공유', '동행구해요')
+      AND status = 'DISPLAY'
+) c
+WHERE u.user_id <> c.user_id
+  AND (
+        (MOD(c.post_id, 5) = 0 AND u.seq_no IN (1, 3, 5, 7, 9, 11, 13, 15))
+     OR (MOD(c.post_id, 5) = 1 AND u.seq_no IN (2, 4, 6))
+     OR (MOD(c.post_id, 5) = 2 AND u.seq_no IN (1, 2, 8, 10, 12))
+     OR (MOD(c.post_id, 5) = 3 AND u.seq_no IN (3, 6, 9, 14, 16, 17))
+     OR (MOD(c.post_id, 5) = 4 AND u.seq_no IN (4, 5))
+      );
+
+COMMIT;
+
+-- COMMUNITY.like_count 실제 값으로 동기화
+UPDATE COMMUNITY c
+SET like_count = (
+    SELECT COUNT(*)
+    FROM COMMUNITY_LIKE cl
+    WHERE cl.post_id = c.post_id
+)
+WHERE c.category IN ('맛집수다', '숙소수다', '축제수다', '정보공유', '동행구해요');
+
+COMMIT;
+
+-- 결과 확인
+SELECT post_id, category, title, user_id, like_count
+FROM COMMUNITY
+WHERE category IN ('맛집수다', '숙소수다', '축제수다', '정보공유', '동행구해요')
+  AND status = 'DISPLAY'
+ORDER BY like_count DESC, post_id DESC;
+
+SELECT post_id, COUNT(*) AS like_cnt
+FROM COMMUNITY_LIKE
+GROUP BY post_id
+ORDER BY like_cnt DESC, post_id DESC;
+
+SELECT cl.post_id, c.title, cl.user_id, cl.created_at
+FROM COMMUNITY_LIKE cl
+JOIN COMMUNITY c
+  ON c.post_id = cl.post_id
+WHERE c.category IN ('맛집수다', '숙소수다', '축제수다', '정보공유', '동행구해요')
+ORDER BY cl.post_id, cl.user_id;
 
 
 
@@ -397,10 +473,24 @@ SELECT COUNT(*)
 --    OR content LIKE '%' || '공지' || '%'
 --     )       
        
-   
-SELECT *
-FROM NOTICE n 
-WHERE category = 'EVENT'
+
+-- 이벤트 썸네일 확인 쿼리
+SELECT
+    NOTICE_ID,
+    TITLE,
+    IMAGE_URL,
+    TRIM(REGEXP_SUBSTR(IMAGE_URL, '[^,]+', 1, 1)) AS FIRST_IMAGE
+FROM NOTICE
+WHERE NOTICE_ID = 81
+  AND CATEGORY = 'EVENT';
+
+-- 이벤트 썸네일 업데이트 쿼리
+UPDATE NOTICE
+SET IMAGE_URL = 'https://example.com/new-thumb.png'
+WHERE NOTICE_ID = 81
+  AND CATEGORY = 'EVENT';
+
+
 
  -- 이벤트 상단 고정
  SELECT notice_id,
@@ -440,6 +530,11 @@ FROM NOTICE
 WHERE category = 'NOTICE'
 GROUP BY category, is_top
 ORDER BY is_top;
+
+SELECT *
+FROM NOTICE
+WHERE category = 'EVENT'
+AND is_top = 'Y'
 
 SELECT COUNT(*)
 FROM NOTICE

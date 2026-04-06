@@ -1,4 +1,6 @@
 -- 관리자용 축제 메뉴 사용을 위한 쿼리 모음
+-- v260402 : 축제 상태 자동 계산 스케쥴러 
+
 -- 축제 목록 조회 (페이징용) 
 SELECT *
   FROM PLACE p
@@ -111,6 +113,9 @@ DELETE FROM FESTIVAL_TICKET
 DELETE FROM FESTIVAL
  WHERE festival_id = 1007;
 
+-- 3) 장소 삭제
+DELETE FROM FESTIVAL
+ WHERE festival_id = 3552237;
 -----------------------------------------
 -- 시연을 위해 이미지가 존재하는 축제의 평점 올리는 테스트 데이터 생성
 INSERT INTO REVIEW (review_id, user_id, place_id, rating, content)
@@ -180,6 +185,112 @@ INCREMENT BY 1;
 
 -- SEQ_TICKET의 최댓값 확인
 SELECT SEQ_TICKET.NEXTVAL FROM DUAL;
+
+--------------------------------------------
+-- v260402 : 축제 상태 자동 계산 스케쥴러 
+-- system 계정에서 스케쥴러와 잡을 잘못 만들었다면 제거는 system 계정에서 실시
+-- 스케쥴러 잡 제거 (/ 전까지 블록 잡고 실행)
+BEGIN
+    DBMS_SCHEDULER.DROP_JOB(
+        job_name => 'system.UPDATE_FESTIVAL_STATUS_JOB',
+        force => TRUE
+    );
+END;
+
+-- 기존 스케쥴러 제거
+BEGIN
+    DBMS_SCHEDULER.DROP_SCHEDULE(
+        schedule_name => 'system.UPDATE_FESTIVAL_STATUS_SCH',
+        force => TRUE
+    );
+END;
+
+-- 아래부턴 ICT06_TEAM1_MIDPJ 계정에서 실행
+-- 스케줄러 생성
+BEGIN
+    DBMS_SCHEDULER.CREATE_SCHEDULE
+    (
+        schedule_name   => 'UPDATE_FESTIVAL_STATUS_SCH',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=DAILY;BYHOUR=13;BYMINUTE=0;BYSECOND=0',
+        comments        => '매일 13:00 실행'
+    );
+END;
+/
+
+-- 잡 수정 필요 시 삭제
+BEGIN
+    DBMS_SCHEDULER.DROP_JOB('UPDATE_FESTIVAL_STATUS_JOB', TRUE);
+END;
+/
+
+-- 실행될 스케쥴 잡 생성
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB
+    (
+        job_name      => 'UPDATE_FESTIVAL_STATUS_JOB',
+        job_type      => 'PLSQL_BLOCK',
+        job_action    => '
+            BEGIN
+                UPDATE FESTIVAL
+                SET status =
+                    CASE
+                        WHEN TRUNC(end_date) < TRUNC(SYSDATE) THEN ''ENDED''
+                        WHEN TRUNC(start_date) > TRUNC(SYSDATE) THEN ''UPCOMING''
+                        ELSE ''ONGOING''
+                    END;
+				COMMIT;
+            END;
+        ',
+        schedule_name => 'UPDATE_FESTIVAL_STATUS_SCH',
+        enabled       => TRUE,
+        comments      => '축제 상태 자동 갱신'
+    );
+END;
+/
+
+-- 스케줄러 잡 확인
+SELECT job_name, enabled, state
+FROM user_scheduler_jobs;
+
+-- 정상 작동하는 잡인지 시간 기다리지 말고 직접 실행
+BEGIN
+    DBMS_SCHEDULER.RUN_JOB(
+		job_name => 'UPDATE_FESTIVAL_STATUS_JOB', 
+		use_current_session => TRUE
+    );
+END;
+/
+
+-- 수동으로 update 문 확인
+--UPDATE FESTIVAL
+--SET status =
+--    CASE
+--        WHEN TRUNC(end_date) < TRUNC(SYSDATE) THEN 'ENDED'
+--        WHEN TRUNC(start_date) > TRUNC(SYSDATE) THEN 'UPCOMING'
+--        ELSE 'ONGOING'
+--    END;
+
+-- 데이터 확인
+SELECT festival_id,
+       start_date,
+       end_date,
+       status,
+       TRUNC(start_date),
+       TRUNC(end_date),
+       TRUNC(SYSDATE)
+FROM FESTIVAL
+WHERE status !=
+      CASE
+          WHEN TRUNC(end_date) < TRUNC(SYSDATE) THEN 'ENDED'
+          WHEN TRUNC(start_date) > TRUNC(SYSDATE) THEN 'UPCOMING'
+          ELSE 'ONGOING'
+      END;
+
+-- 생성된 job 조회 : LAST_START_DATE 확인하여 매일 작동하는 지 확인
+SELECT JOB_NAME, STATE, LAST_START_DATE, NEXT_RUN_DATE 
+FROM USER_SCHEDULER_JOBS 
+WHERE JOB_NAME = 'UPDATE_FESTIVAL_STATUS_JOB';
 
 --------------------------------------------
 -- 테이블 리셋 필요 시 사용할 drop 문

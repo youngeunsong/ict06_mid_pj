@@ -148,7 +148,7 @@ function renderFaqList(list) {
                         
                         <div class="d-flex align-items-center">
                             <span class="text-muted small me-3" style="font-size: 0.8rem;">
-                                <i class="fa-regular fa-eye me-1"></i> ${views}
+                             <i class="fa-regular fa-eye me-1"></i> ${views}
                             </span>
                             <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
                         </div>
@@ -281,19 +281,19 @@ $(document).on("click", "#btnSendReport", function() {
         type: "POST",
         data: formData,
         success: function(res) {
-		    if (res.trim() === "success") { // trim() 추가로 공백 방지
-		        alert("성공적으로 접수되었습니다.");
-		        
-		        // 모달 닫기 및 초기화 로직
-		        $('#reportModal').modal('hide');
-		        $('#reportForm')[0].reset();
-		        
-		        // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
-		        location.href = "faqMain.sp?user_id=" + sessionUserId;
-		    } else {
-		        alert("접수 실패. 다시 시도해주세요.");
-		    }
-		},
+            if (res.trim() === "success") { // trim() 추가로 공백 방지
+                alert("성공적으로 접수되었습니다.");
+                
+                // 모달 닫기 및 초기화 로직
+                $('#reportModal').modal('hide');
+                $('#reportForm')[0].reset();
+                
+                // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
+                location.href = "faqMain.sp?user_id=" + sessionUserId;
+            } else {
+                alert("접수 실패. 다시 시도해주세요.");
+            }
+        },
         error: function() {
             alert("서버 통신 중 오류가 발생했습니다.");
         }

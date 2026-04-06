@@ -5,7 +5,7 @@
 <head>
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp" %>
 <fmt:setTimeZone value="Asia/Seoul"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> -->
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_reservation.css">
 <meta charset="UTF-8">
 <title>FAQ 마스터 관리</title>
@@ -42,6 +42,9 @@
         margin: 10px;
         border: 1px inset #eee;
     }
+    
+    /* 카테고리용 뱃지*/
+    .badge-outline-secondary { background-color: #01D281; color: white; } 
 </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -170,10 +173,9 @@
                 </div>
             </div>
         </section>
-        <!-- ================= FOOTER ================= -->
-        <footer class="main-footer"><strong>Copyright &copy; 2026</strong></footer>
-       
     </div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="main-footer"><strong>Copyright &copy; 2026</strong></footer>
 </div>
 
 <script type="text/javascript">

@@ -14,7 +14,7 @@
     .table-hover tbody tr:hover { background-color: #f1fff9; }
     .text-truncate-custom { max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 	.badge-info { background-color: #007bff; color: white; } /* 답변중 파란색 */
-	.badge-success { background-color: #01D281; color: white; } /* 답변완료 초록색 */
+	.badge-success, .badge-outline-secondary { background-color: #01D281; color: white; } /* 답변완료 초록색 */
 	.badge-warning { background-color: #ffc107; color: #212529; } /* 대기중 노란색 */
     
     /* 화살표 뒤집기 (공통 pagination.jsp) */

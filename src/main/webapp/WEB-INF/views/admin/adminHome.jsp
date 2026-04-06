@@ -25,9 +25,11 @@
 <script>const path = "${path}";</script>
 </head>
 <!--begin::Body-->
-<body class="hold-transition sidebar-mini layout-fixed">
+<!-- <body class="hold-transition sidebar-mini layout-fixed"> -->
+<body class="hold-transition sidebar-mini">
 <!--begin::div wrapper-->
-<div class="wrapper">
+<!-- <div class="wrapper"> -->
+<div class="wrapper d-flex flex-column min-vh-100">
 	<!-- Preloader -->
 	<div
 		class="preloader flex-column justify-content-center align-items-center">
@@ -42,7 +44,8 @@
 	<%@ include file="/WEB-INF/views/common/adminSidebar.jsp"%>
 
 	<!-- ================= CONTENT ================= -->
-	<div class="content-wrapper">
+	<!-- <div class="content-wrapper"> -->
+	<div class="content-wrapper flex-grow-1">
 		<section class="content pt-3">
 			<div class="container-fluid">
 				<!-- ===== 기간 조회 필터S ===== -->
@@ -396,7 +399,8 @@
 	</div>
 
 	<!-- ================= FOOTER ================= -->
-	<footer class="main-footer">
+	<!-- <footer class="main-footer"> -->
+	<footer class="main-footer text-center">
 		<strong>Copyright &copy; 2026</strong>
 	</footer>
 </div>

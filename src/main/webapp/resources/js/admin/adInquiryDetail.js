@@ -53,7 +53,10 @@ function saveReply(contextPath, statusValue) {
                         : "답변 등록이 완료되었습니다. (현재 상태: 답변완료)";
             alert(msg);
             
-            location.reload(); 
+            // location.reload(); 
+            
+            // 목록 페이지로 이동
+            window.location.href = cleanPath + 'adInquiryList.adsp';
         } else {
             alert("DB 저장 중 오류가 발생했습니다.");
         }

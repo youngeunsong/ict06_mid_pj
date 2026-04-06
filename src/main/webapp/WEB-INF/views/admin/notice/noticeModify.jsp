@@ -108,7 +108,20 @@
 										<c:if test="${not empty dto.image_url}">
 											<c:forEach var="img" items="${fn:split(dto.image_url, ',')}">
 												<div class="preview-item existing" data-imgname="${img}">
-													<img src="${img}">
+													<%-- <img src="${img}"> --%>
+													<c:choose>
+									                    <%-- 인터넷 이미지 --%>
+									                    <c:when test="${fn:startsWith(img, 'http')}">
+									                        <img src="${img}">
+									                    </c:when>
+									
+									                    <%-- 서버 업로드 이미지 --%>
+									                    <c:otherwise>
+									                        <img src="${path}/upload_notice/${img}">
+									                    </c:otherwise>
+									
+									                </c:choose>
+													
 													<span class="remove-btn" onclick="removeExistingFile(this, '${img}')">
 														<i class="bi bi-x"></i>
 													</span>

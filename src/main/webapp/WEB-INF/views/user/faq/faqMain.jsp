@@ -209,9 +209,9 @@
 							    </div>
 							    
 							    <div class="d-flex align-items-center">
-							        <span class="text-muted small me-3" style="font-size: 0.8rem;">
+							        <%-- <span class="text-muted small me-3" style="font-size: 0.8rem;">
 							            <i class="fa-regular fa-eye me-1"></i> ${faq.view_count}
-							        </span>
+							        </span> --%>
 							        <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
 							    </div>
 							</div>

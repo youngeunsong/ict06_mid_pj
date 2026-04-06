@@ -43,14 +43,8 @@
         border: 1px inset #eee;
     }
     
-    /* 카테고리용 뱃지
-    .badge-outline-secondary {
-    	background-color: #01D281'; 
-    	color:white; 
-    	padding: 4px 8px; 
-    	border-radius: 4px; 
-    	font-size: 0.8rem;
-    } */
+    /* 카테고리용 뱃지*/
+    .badge-outline-secondary { background-color: #01D281; color: white; } 
 </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -179,10 +173,9 @@
                 </div>
             </div>
         </section>
-        <!-- ================= FOOTER ================= -->
-        <footer class="main-footer"><strong>Copyright &copy; 2026</strong></footer>
-       
     </div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="main-footer"><strong>Copyright &copy; 2026</strong></footer>
 </div>
 
 <script type="text/javascript">

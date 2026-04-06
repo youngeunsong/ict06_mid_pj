@@ -28,9 +28,10 @@
 	<resources mapping="/resources/upload/**" location="/resources/upload/" />
 	
 	<!-- 외부 업로드 경로 매핑 (톰캣 재배포 유실 방지) -->
-	<resources mapping="/upload_notice/**" location="file:///C:/DEV06/workspace_git/ex05_member/ict06_mid_pj/upload/notice/" />
-	<resources mapping="/upload_restaurant/**" location="file:///C:/DEV06/workspace_git/ex05_member/ict06_mid_pj/src/main/webapp/resources/images/admin/restaurant/" />
-	<resources mapping="/upload_accommodation/**" location="file:///C:/DEV06/workspace_git/ex05_member/ict06_mid_pj/src/main/webapp/resources/images/admin/accommodation/" />
+	<resources mapping="/upload_community/**" location="file:///D:/DEV06/workspace_git_ict06/ict06_mid_pj/upload/community/" />
+	<resources mapping="/upload_notice/**" location="file:///D:/DEV06/workspace_git_ict06/ict06_mid_pj/upload/notice/" />
+	<resources mapping="/upload_restaurant/**" location="file:///D:/DEV06/workspace_git_ict06/ict06_mid_pj/src/main/webapp/resources/images/admin/restaurant/" />
+	<resources mapping="/upload_accommodation/**" location="file:///D:/DEV06/workspace_git_ict06/ict06_mid_pj/src/main/webapp/resources/images/admin/accommodation/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

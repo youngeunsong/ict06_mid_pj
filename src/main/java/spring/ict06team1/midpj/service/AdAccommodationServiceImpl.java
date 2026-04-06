@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
@@ -26,11 +27,20 @@ import spring.ict06team1.midpj.dao.AdAccommodationDAO;
 import spring.ict06team1.midpj.dto.AccommodationDTO;
 import spring.ict06team1.midpj.dto.PlaceDTO;
 
+/*
+ * 작성자: 김재원, 송영은
+ * 변경사항
+ * v260403: 이미지 업로드 실제 경로 관리를 용이하게 하기 위해 application.properties에서 등록한 경로 가져오기. 
+ */
+
 @Service
 public class AdAccommodationServiceImpl implements AdAccommodationService {
 	
 	@Autowired
 	private AdAccommodationDAO adAccDao;
+	
+	@Value("${upload.accommodation.path}")
+	private String uploadAccPath; 
 	
 	//숙소 등록 조회
 	@Override
@@ -78,62 +88,62 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 		String pageNum = request.getParameter("pageNum");
 		
 		// \\d+: 숫자(\d)가 하나 이상(+) 반복된다는 뜻
-				if (request.getParameter("keyword") != null && request.getParameter("keyword").matches("\\d+")) {
-				    // 숫자인 경우 (0~9로만 구성됨)
-				    int keyword = Integer.parseInt(request.getParameter("keyword"));
-				    System.out.println("keyword"+keyword);
-				    
-				    // 페이징 객체 생성
-				    Paging paging = new Paging(pageNum);
-				    
-					// 지역코드 담을 map 생성
-				    Map<String, Object> map = new HashMap<String, Object>();
-				    map.put("intKeyword", keyword);
-				    
-					// 전체 건수 조회
-				    int total = adAccDao.placeCnt(map); 
-				    System.out.println("total : " + total);
-				    paging.setTotalCount(total);
-				    map.put("start", paging.getStartRow());
-				    map.put("end", paging.getEndRow());
-				    
-				    // List 타입을 Map으로 선택과 목록 조회
-				    List<Map<String, Object>> list = adAccDao.getAccommodationSearchInt(map);
-				    System.out.println("list=>"+list);
-				    model.addAttribute("list",list);
-				    model.addAttribute("keyword",keyword);
-				    model.addAttribute("paging", paging);
-				    model.addAttribute("areaCode",areaCode);
-				    model.addAttribute("totalCount", total);
-				    model.addAttribute("pageNum", pageNum);
-				} else {
-				    // 문자가 포함되어 있거나 null인 경우
-					String keyword = request.getParameter("keyword");
-					System.out.println("keyword"+keyword);
-					
-					// 페이징 객체 생성
-				    Paging paging = new Paging(pageNum);
-				    
-					// 지역코드 담을 map 생성
-				    Map<String, Object> map = new HashMap<String, Object>();
-				    map.put("strKeyword", keyword);
-				    
-					// 전체 건수 조회
-				    int total = adAccDao.placeCnt(map); 
-				    System.out.println("total : " + total);
-				    paging.setTotalCount(total);
-				    map.put("start", paging.getStartRow());
-				    map.put("end", paging.getEndRow());
-				    //둘이상 조회될수있기에 list로 담는다
-					List<Map<String, Object>> list = adAccDao.getAccommodationSearchString(map);
-				    System.out.println("list =>"+list);
-				    model.addAttribute("list",list);
-				    model.addAttribute("keyword",keyword);
-				    model.addAttribute("paging", paging);
-				    model.addAttribute("areaCode",areaCode);
-				    model.addAttribute("totalCount", total);
-				    model.addAttribute("pageNum", pageNum);
-				}
+		if (request.getParameter("keyword") != null && request.getParameter("keyword").matches("\\d+")) {
+		    // 숫자인 경우 (0~9로만 구성됨)
+		    int keyword = Integer.parseInt(request.getParameter("keyword"));
+		    System.out.println("keyword"+keyword);
+		    
+		    // 페이징 객체 생성
+		    Paging paging = new Paging(pageNum);
+		    
+			// 지역코드 담을 map 생성
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("intKeyword", keyword);
+		    
+			// 전체 건수 조회
+		    int total = adAccDao.placeCnt(map); 
+		    System.out.println("total : " + total);
+		    paging.setTotalCount(total);
+		    map.put("start", paging.getStartRow());
+		    map.put("end", paging.getEndRow());
+		    
+		    // List 타입을 Map으로 선택과 목록 조회
+		    List<Map<String, Object>> list = adAccDao.getAccommodationSearchInt(map);
+		    System.out.println("list=>"+list);
+		    model.addAttribute("list",list);
+		    model.addAttribute("keyword",keyword);
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("areaCode",areaCode);
+		    model.addAttribute("totalCount", total);
+		    model.addAttribute("pageNum", pageNum);
+		} else {
+		    // 문자가 포함되어 있거나 null인 경우
+			String keyword = request.getParameter("keyword");
+			System.out.println("keyword"+keyword);
+			
+			// 페이징 객체 생성
+		    Paging paging = new Paging(pageNum);
+		    
+			// 지역코드 담을 map 생성
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("strKeyword", keyword);
+		    
+			// 전체 건수 조회
+		    int total = adAccDao.placeCnt(map); 
+		    System.out.println("total : " + total);
+		    paging.setTotalCount(total);
+		    map.put("start", paging.getStartRow());
+		    map.put("end", paging.getEndRow());
+		    //둘이상 조회될수있기에 list로 담는다
+			List<Map<String, Object>> list = adAccDao.getAccommodationSearchString(map);
+		    System.out.println("list =>"+list);
+		    model.addAttribute("list",list);
+		    model.addAttribute("keyword",keyword);
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("areaCode",areaCode);
+		    model.addAttribute("totalCount", total);
+		    model.addAttribute("pageNum", pageNum);
+		}
 	}
 	
 	// 숙소 정보 등록
@@ -151,7 +161,8 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\accommodation\\";
+		String realDir = uploadAccPath; 
+//		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\accommodation\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)
@@ -317,7 +328,8 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 		System.out.println("saveDir : "+saveDir);
 		
 		// 서버 내 파일이 물리적으로 저장될 경로
-		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\accommodation\\";
+		String realDir = uploadAccPath; 
+//		String realDir = "D:\\DV06\\workspace_git_ict06\\ict06_mid_pj\\src\\main\\webapp\\resources\\images\\admin\\accommodation\\";
 		System.out.println("realDir : "+realDir);
 		
 		// 파일 입출력을 위한 스트림 객체 선언 (사용 후 반드시 close 처리 필요)

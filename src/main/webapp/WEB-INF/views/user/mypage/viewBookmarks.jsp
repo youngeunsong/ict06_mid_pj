@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>마이페이지 - 즐겨찾기</title>
+<title>마이페이지 - 북마크</title>
 
 <%@ include file="/WEB-INF/views/common/bootstrapSettings.jsp"%>
 <link rel="stylesheet" href="${path}/resources/css/user/login.css">
@@ -18,7 +18,7 @@
 
     <section class="my-favorite-section">
         <div class="page-header">
-            <h2><img src="${path}/resources/images/common/locationMarker.png" class="title-marker"> 내 즐겨찾기</h2>
+            <h2><img src="${path}/resources/images/common/locationMarker.png" class="title-marker"> 내 북마크</h2>
         </div>
 
         <!-- 카테고리 필터 -->
@@ -36,7 +36,7 @@
                     onclick="filterBookmark('ACC')">숙소</button>
         </div>
 
-        <!-- 즐겨찾기 카드 목록 -->
+        <!-- 북마크 카드 목록 -->
         <div class="bookmark-grid">
             <c:forEach var="place" items="${list}">
 
@@ -126,7 +126,7 @@
                 <div class="no-data">
                     <i class="bi bi-heart"></i>
                     <p>
-                        아직 즐겨찾기에 담은 장소가 없네요.<br>
+                        아직 북마크에 담은 장소가 없네요.<br>
                         당신만의 특별한 장소를 찾아보세요!
                     </p>
                     <a href="${path}/main.do" class="btn btn-sig">홈 화면으로 가기</a>

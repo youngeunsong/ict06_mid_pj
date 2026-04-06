@@ -81,37 +81,55 @@
 				<div class="carousel-inner">
 					<!-- 배너1 -->
 					<div class="carousel-item active">
-						<img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1400&q=80" alt="도쿄" />
+						<img src="${path}/resources/upload/1.jpg" alt="전통" />
 						<div class="carousel-caption hero-content-caption">
-							<p class="hero-subtitle mb-2 fw-semibold opacity-75">일본의 심장, 도쿄에서 특별한 밤을</p>
-							<h2 class="hero-title fw-bold">도쿄의 빛나는 야경</h2>
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 전통과 즐거움이 어우러진 순간</p>
+							<h2 class="hero-title fw-bold">다양한 축제를 경험하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너2 -->
 					<div class="carousel-item">
-						<img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80" alt="설산" />
+						<img src="${path}/resources/upload/2.jpg" alt="자연" />
 						<div class="carousel-caption hero-content-caption">
-							<p class="hero-subtitle mb-2 fw-semibold opacity-75">하늘과 맞닿은 그곳으로</p>
-							<h2 class="hero-title fw-bold">웅장한 설산의 경치</h2>
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 나를 위한 자연의 아름다운 경치</p>
+							<h2 class="hero-title fw-bold">힐링이 되는 숙소를 경험하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너3 -->
 					<div class="carousel-item">
-						<img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&q=80" alt="산" />
+						<img src="${path}/resources/upload/4.jpg" alt="레스토랑" />
 						<div class="carousel-caption hero-content-caption">
-							<p class="hero-subtitle mb-2 fw-semibold opacity-75">자연 속에서 찾는 완전한 휴식</p>
-							<h2 class="hero-title fw-bold">초록 숲의 힐링 여행</h2>
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 눈과 입이 모두 즐거운 경험</p>
+							<h2 class="hero-title fw-bold">소중한 사람과 함께 공유하세요</h2>
 						</div>
 					</div>
 
 					<!-- 배너4 -->
 					<div class="carousel-item">
-						<img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1400&q=80" alt="바다" />
+						<img src="${path}/resources/upload/6.jpg" alt="카페" />
 						<div class="carousel-caption hero-content-caption">
-							<p class="hero-subtitle mb-2 fw-semibold opacity-75">눈부신 바다가 기다리는 그곳</p>
-							<h2 class="hero-title fw-bold">에메랄드빛 해변</h2>
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 소소하지만 특별한 경험</p>
+							<h2 class="hero-title fw-bold">여유로운 한 끼를 만나보세요</h2>
+						</div>
+					</div>
+					
+					<!-- 배너5 -->
+					<div class="carousel-item">
+						<img src="${path}/resources/upload/7.jpg" alt="숙소" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 오늘의 피로를 내려놓는 순간</p>
+							<h2 class="hero-title fw-bold">편안한 숙소를 경험하세요</h2>
+						</div>
+					</div>
+					
+					<!-- 배너6 -->
+					<div class="carousel-item">
+						<img src="${path}/resources/upload/8.jpg" alt="자유" />
+						<div class="carousel-caption hero-content-caption">
+							<p class="hero-subtitle mb-2 fw-semibold opacity-75"> 자유롭고 떠들석한 이 순간</p>
+							<h2 class="hero-title fw-bold">지금, 축제를 즐겨보세요</h2>
 						</div>
 					</div>
 				</div>

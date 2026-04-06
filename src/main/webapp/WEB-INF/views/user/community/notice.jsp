@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/notice.css">
 
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="wrap">

@@ -124,13 +124,6 @@ function changeCategory(category, obj) {
 /**
  * 4. FAQ 리스트 렌더링 (맛침내 그린 테마 반영)
  */
-
-/*
-수정 사항: viewCount 안 보이게 처리
-<span class="text-muted small me-3" style="font-size: 0.8rem;">
- <i class="fa-regular fa-eye me-1"></i> ${views}
-</span>
-*/
 function renderFaqList(list) {
     let html = "";
     let keyword = $("#keyword").val().trim();
@@ -154,6 +147,9 @@ function renderFaqList(list) {
                         </div>
                         
                         <div class="d-flex align-items-center">
+                            <span class="text-muted small me-3" style="font-size: 0.8rem;">
+                             <i class="fa-regular fa-eye me-1"></i> ${views}
+                            </span>
                             <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
                         </div>
                     </div>

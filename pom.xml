@@ -243,5 +243,12 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        <!-- API 키 별도로 관리하기 위해 설정 -->
+        <resources>
+	      <resource>
+	        <directory>src/main/resources</directory>
+	      </resource>
+	    </resources>
     </build>
 </project>

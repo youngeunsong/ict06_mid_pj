@@ -2,6 +2,9 @@
  * FAQ 전용 스크립트 (최종 수정본)
  * @author 조민수
  * @since 2026-03-24
+ * 최종 수정일: 2026-04-06
+ * 수정 사항
+ * v260406: navbar의 위치를 자동으로 계산하여 faq 용 검색바의 위치 자동 보정 기능 
  */
 
 let searchTimer; // 실시간 검색 부하 방지용 타이머
@@ -148,7 +151,7 @@ function renderFaqList(list) {
                         
                         <div class="d-flex align-items-center">
                             <span class="text-muted small me-3" style="font-size: 0.8rem;">
-                                <i class="fa-regular fa-eye me-1"></i> ${views}
+                             <i class="fa-regular fa-eye me-1"></i> ${views}
                             </span>
                             <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
                         </div>
@@ -247,6 +250,24 @@ $(document).ready(function() {
     }
 });
 
+// 추가: navbar의 높이 자동 계산하여 faq 검색바의 위치 자동 조정 
+$(document).ready(function () {
+
+    function updateStickyTop() {
+
+        let headerHeight = $(".site-header").outerHeight();
+
+        $(".sticky-search-wrap").css("top", headerHeight + "px");
+    }
+
+    updateStickyTop();
+
+    $(window).resize(function () {
+        updateStickyTop();
+    });
+
+});
+
 /**
  * 7. 불편사항 신고 모달 (AJAX 전송)
  */
@@ -281,19 +302,19 @@ $(document).on("click", "#btnSendReport", function() {
         type: "POST",
         data: formData,
         success: function(res) {
-		    if (res.trim() === "success") { // trim() 추가로 공백 방지
-		        alert("성공적으로 접수되었습니다.");
-		        
-		        // 모달 닫기 및 초기화 로직
-		        $('#reportModal').modal('hide');
-		        $('#reportForm')[0].reset();
-		        
-		        // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
-		        location.href = "faqMain.sp?user_id=" + sessionUserId;
-		    } else {
-		        alert("접수 실패. 다시 시도해주세요.");
-		    }
-		},
+            if (res.trim() === "success") { // trim() 추가로 공백 방지
+                alert("성공적으로 접수되었습니다.");
+                
+                // 모달 닫기 및 초기화 로직
+                $('#reportModal').modal('hide');
+                $('#reportForm')[0].reset();
+                
+                // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
+                location.href = "faqMain.sp?user_id=" + sessionUserId;
+            } else {
+                alert("접수 실패. 다시 시도해주세요.");
+            }
+        },
         error: function() {
             alert("서버 통신 중 오류가 발생했습니다.");
         }

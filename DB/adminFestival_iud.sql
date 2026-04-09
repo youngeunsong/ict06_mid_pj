@@ -387,3 +387,31 @@ ALTER TABLE FAQ DROP COLUMN order_no;
 
 -- 컬럼명 변경
 ALTER TABLE FAQ RENAME COLUMN order_no_new TO order_no;
+
+--------------------------
+
+-- v260406 : 1대1 문의 내역 중 로그인 안 하고 작성된 데이터 삭제
+SELECT * 
+  FROM INQUIRY
+ WHERE USER_ID IS NULL; 
+
+DELETE FROM INQUIRY 
+ WHERE USER_ID IS NULL; 
+
+SELECT * 
+  FROM INQUIRY
+ WHERE CATEGORY IS NULL; 
+
+DELETE FROM INQUIRY 
+ WHERE CATEGORY IS NULL; 
+
+-- image_id 최댓값 확인
+SELECT max(image_id)
+  FROM IMAGE_STORE; 
+
+-- SEQ_IMAGE 값 재조정
+SELECT seq_image.nextval FROM dual; 
+DROP SEQUENCE SEQ_IMAGE;
+
+CREATE SEQUENCE SEQ_IMAGE START WITH 4089 INCREMENT BY 1;
+

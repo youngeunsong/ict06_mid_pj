@@ -63,7 +63,8 @@
                             </div>
                             <div class="col-md-2 mb-4">
                                 <label class="font-weight-bold">정렬 순서</label>
-                                <input type="number" name="order_no" class="form-control" value="1" min="1">
+                                <!-- <input type="number" name="order_no" class="form-control" value="1" min="1"> -->
+                                <input type="number" name="order_no" class="form-control" value="0" min="0">
                             </div>
                             <div class="col-md-6 mb-4">
                                 <label class="font-weight-bold">노출 상태</label>

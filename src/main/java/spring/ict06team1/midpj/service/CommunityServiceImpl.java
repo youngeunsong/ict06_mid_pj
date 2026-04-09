@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -32,6 +33,9 @@ public class CommunityServiceImpl implements CommunityService {
 	
 	@Autowired
 	private CommunityCommentDAO commentDao;
+	
+	@Value("${upload.community.path}")
+	private String communityUploadPath;
 
     /* ==========================================
     	자유게시판 목록(자유게시판 목록 or 자유게시판 검색 목록)
@@ -227,8 +231,9 @@ public class CommunityServiceImpl implements CommunityService {
 	    List<MultipartFile> files = request.getFiles("files");
 
 	    if (files != null && !files.isEmpty()) {
-	        ServletContext context = request.getSession().getServletContext();
-	        String uploadPath = context.getRealPath("/resources/upload/community/");
+	        // ServletContext context = request.getSession().getServletContext();
+	        // String uploadPath = context.getRealPath("/resources/upload/community/");
+	        String uploadPath = communityUploadPath;
 	        
 	        //커뮤니티 자유게시판 이미지 저장 경록 확인용
 	        System.out.println("==================================================");
@@ -258,11 +263,14 @@ public class CommunityServiceImpl implements CommunityService {
 	            System.out.println("contentType      = " + contentType);
 	            System.out.println("fileSize         = " + fileSize);
 
-	            if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
+	            if (!"image/jpeg".equals(contentType) && 
+	            		!"image/png".equals(contentType) &&
+	            		! "image/jpg".equals(contentType)) {
 	                System.out.println("허용되지 않은 파일 형식이라 저장 건너뜀");
 	                continue;
 	            }
-
+	            
+	            // 10MB 제한
 	            if (fileSize > 10 * 1024 * 1024) {
 	                System.out.println("10MB 초과 파일이라 저장 건너뜀");
 	                continue;
@@ -285,7 +293,11 @@ public class CommunityServiceImpl implements CommunityService {
 	                continue;
 	            }
 
-	            String imageUrl = request.getContextPath() + "/resources/upload/community/" + saveFileName;
+	            // DB 저장 url 
+//	            String imageUrl = request.getContextPath() + "/resources/upload/community/" + saveFileName;
+	            String imageUrl = request.getContextPath()
+	                    + "/upload_community/"
+	                    + saveFileName; 
 	            System.out.println("DB 저장 imageUrl = " + imageUrl);
 
 	            ImageStoreDTO imageDto = new ImageStoreDTO();
@@ -377,8 +389,9 @@ public class CommunityServiceImpl implements CommunityService {
 	    dao.deleteCommunityImagesByPostId(post_id);
 
 	    // 새 이미지 저장
-	    ServletContext context = request.getSession().getServletContext();
-	    String uploadPath = context.getRealPath("/resources/upload/community/");
+//	    ServletContext context = request.getSession().getServletContext();
+//	    String uploadPath = context.getRealPath("/resources/upload/community/");
+	    String uploadPath = communityUploadPath;
 
 	    File uploadDir = new File(uploadPath);
 	    if (!uploadDir.exists()) {
@@ -395,7 +408,9 @@ public class CommunityServiceImpl implements CommunityService {
 	        String contentType = file.getContentType();
 	        long fileSize = file.getSize();
 
-	        if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
+	        if (!"image/jpeg".equals(contentType) &&
+                !"image/png".equals(contentType) &&
+                !"image/jpg".equals(contentType)) {
 	            continue;
 	        }
 
@@ -415,7 +430,10 @@ public class CommunityServiceImpl implements CommunityService {
 	            continue;
 	        }
 
-	        String imageUrl = request.getContextPath() + "/resources/upload/community/" + saveFileName;
+	        // String imageUrl = request.getContextPath() + "/resources/upload/community/" + saveFileName;
+	        String imageUrl = request.getContextPath()
+	                + "/upload_community/"
+	                + saveFileName;
 
 	        ImageStoreDTO imageDto = new ImageStoreDTO();
 	        imageDto.setTarget_id(post_id);

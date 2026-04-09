@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /*
@@ -22,9 +23,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FestivalApiClient {
-
-    private static final String SERVICE_KEY = "d7db7b7765d36202abf82894066af507d09c4e72ba858c461e82332456e5a105"; // TODO: API용 키. 추후 깃허브 메인에 올리기 전에 이 라인을 다른 방식으로 처리할 것.
-    
+	
+	// 전국문화축제표준데이터 오픈 API의 서비스키 불러오기
+	@Value("${festival.key}")
+	private String SERVICE_KEY;
+	
     public String callAPI(int pageNo, int numOfRows) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("https://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + URLEncoder.encode(SERVICE_KEY, "UTF-8")); /*Service Key*/

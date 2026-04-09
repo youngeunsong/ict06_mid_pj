@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,12 +33,17 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantService service;
+    
+    // KAKAO MAP API 키 불러오기
+ 	@Value("${kakao.map.key}")
+ 	private String kakaoMapApiKey;
 
     // 맛집 페이지로 이동
     @RequestMapping("/restaurant.rs")
     public String restaurant(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
         logger.info("<<< url => restaurant.rs>>>");
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // jsp에 API 키 전달
         return "user/restaurant/restaurant";
     }
     

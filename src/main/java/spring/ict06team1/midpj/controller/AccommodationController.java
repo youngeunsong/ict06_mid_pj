@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,10 +41,15 @@ public class AccommodationController {
 	@Autowired
 	private AccommodationServiceImpl service;
 	
+	// KAKAO MAP API 키 불러오기
+	@Value("${kakao.map.key}")
+	private String kakaoMapApiKey;
+	
 	@RequestMapping("/accommodation.ac")	
 	public String accommodation(Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => accommodation.ac>>>");
+		model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // jsp에 API 키 전달
 		return "user/accommodation/accommodation";
 	}
 	

@@ -8,7 +8,9 @@
 <title>맛집어때 - 지도 탐색</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
+
+<!-- 컨트롤러에서 API 키 전달받기 -->
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=services&autoload=false"></script>
 </head>
 <body>
 <div class="wrap">

@@ -42,6 +42,10 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	@Value("${upload.accommodation.path}")
 	private String uploadAccPath; 
 	
+	// 국문관광정보데이터 API 키 불러오기
+	@Value("${tour.key}")
+	private String tourApiKey;
+	
 	//숙소 등록 조회
 	@Override
 	public void getAccommodation_list(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -472,8 +476,8 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	    int successCountPlace = 0; // 장소 정보 저장 성공 횟수
 	    
 	    // 공공데이터포털 API 서비스 키
-	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
-
+	    String serviceKey = tourApiKey; 
+	    
 	    // 외부 API 호출을 위한 RestTemplate과 JSON 파싱을 위한 ObjectMapper 생성
 	    RestTemplate restTemplate = new RestTemplate();
 	    ObjectMapper mapper = new ObjectMapper();
@@ -614,7 +618,7 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	@Override
 	public void registerDetail(String contentId, AccommodationDTO aDto) {
 		// 1. 공공데이터 API 호출을 위한 인증키(Service Key) 설정
-	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
+		String serviceKey = tourApiKey; 
 	    
 	    // 2. Spring에서 제공하는 HTTP 통신 객체 RestTemplate 생성
 	    RestTemplate restTemplate = new RestTemplate();
@@ -687,8 +691,9 @@ public class AdAccommodationServiceImpl implements AdAccommodationService {
 	// 여러 이미지 저장하기 (최대 4장 제한)
 	@Override
 	public void testRegisterImages(String contentId) {
-	    String serviceKey = "526ab31ed6f40d4a2fded084267086cc0cab748473a9be6448f06b8d14cc9c23";
-	    RestTemplate restTemplate = new RestTemplate();
+		// 공공데이터 API 호출을 위한 인증키(Service Key) 설정
+	    String serviceKey = tourApiKey; 
+		RestTemplate restTemplate = new RestTemplate();
 	    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
 	    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
 	    restTemplate.setUriTemplateHandler(factory);

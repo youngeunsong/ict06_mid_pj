@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +43,8 @@ public class FestivalController {
 	@Autowired
 	private FestivalServiceImpl service;
 	
-	@Value("${KAKAO-MAP-KEY}")
+	// KAKAO MAP API 키 불러오기
+	@Value("${kakao.map.key}")
 	private String kakaoMapApiKey;
 	
 	// [festival] ----------------------------------------------------------------------------------------
@@ -50,7 +52,8 @@ public class FestivalController {
 	public String festival(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url => /festival.fe >>>");
-		model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); 
+		model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // jsp에 API 키 전달
+//		System.out.println("kakaoMapApiKey : "+ kakaoMapApiKey);
 		
 		return "user/festival/festival";
 	}

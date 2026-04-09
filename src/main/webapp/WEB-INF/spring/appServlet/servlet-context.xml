@@ -9,8 +9,11 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
-	<!-- application.properties 읽기 -->
-	<context:property-placeholder location="classpath:application.properties"/>
+	<!-- API Key 파일, application.properties 읽기 -->
+	<context:property-placeholder 
+    location="
+        classpath:application.properties,
+        file:///C:/DEV06/기타/secret/api.properties"/>
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />

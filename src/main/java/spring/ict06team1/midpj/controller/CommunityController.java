@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,10 @@ public class CommunityController {
 
     @Autowired
     private NoticeService noticeService;
+    
+    // 카카오톡 공유하기 API 키 불러오기
+ 	@Value("${kakao.share.key}")
+ 	private String kakaoShareApiKey;
 
 	/* ================================================== 
 	   커뮤니티 홈 + 자유게시판
@@ -58,6 +63,7 @@ public class CommunityController {
         logger.info("<<< url => /community_detail.co >>>");
         
         communityService.getBoardDetail(request, model);
+        model.addAttribute("kakaoShareApiKey", kakaoShareApiKey);
 
         return "user/community/community_detail";
     }

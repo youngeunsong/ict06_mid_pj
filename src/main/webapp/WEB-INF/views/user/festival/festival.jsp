@@ -24,11 +24,9 @@
 <link rel="stylesheet" href="${path}/resources/css/user/festival/festival.css"/>
 <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
 
-<script>
-	const KAKAO_KEY = "${kakaoMapApiKey}";
-</script>
-
+<!-- 컨트롤러에서 API 키 전달받기 -->
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=services&autoload=false"></script>
+
 <!-- [JS에서 사용할 공통 path 설정] -->
 <c:set var="path" value="${pageContext.request.contextPath}" />
 

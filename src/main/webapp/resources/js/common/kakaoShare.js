@@ -2,6 +2,8 @@
 
 window.addEventListener('load', function () {
     const shareBtn = document.getElementById('kakaoShareBtn');
+    var kakaoShareApiKey = document.getElementById('kakaoShareApiKey').value; // API 키 수집
+    
     if (!shareBtn) return;
 
     if (typeof Kakao === 'undefined') {
@@ -10,7 +12,8 @@ window.addEventListener('load', function () {
     }
 
     if (!Kakao.isInitialized()) {
-        Kakao.init('cf80e14ee6369fffa6d4124ab3dd803d');
+        // Kakao.init('cf80e14ee6369fffa6d4124ab3dd803d');
+        Kakao.init(kakaoShareApiKey);
     }
 
     shareBtn.addEventListener('click', function (event) {

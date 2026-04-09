@@ -50,6 +50,8 @@
 </head>
 <body>
 <div class="wrap">
+	<!-- 컨트롤러에서 API 키 받아오기 -->
+	<input type="hidden" id="kakaoShareApiKey" th:value="${kakaoShareApiKey}" />
 
 	<c:if test="${param.msg == 'delete'}">
 	    <script>

@@ -63,7 +63,7 @@ public class CommunityController {
         logger.info("<<< url => /community_detail.co >>>");
         
         communityService.getBoardDetail(request, model);
-        model.addAttribute("kakaoShareApiKey", kakaoShareApiKey);
+        model.addAttribute("kakaoShareApiKey", kakaoShareApiKey); // Api 키 전달
 
         return "user/community/community_detail";
     }
@@ -269,6 +269,8 @@ public class CommunityController {
 		// 구분할 tab 수집
 	    model.addAttribute("tab", "event");
 	    noticeService.getNoticeDetail(request, model);
+	    
+	    model.addAttribute("kakaoShareApiKey", kakaoShareApiKey); // Api 키 전달
 	    
 	    return "user/community/event_detail";
 	}

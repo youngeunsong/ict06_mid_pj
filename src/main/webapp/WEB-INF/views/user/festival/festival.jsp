@@ -24,7 +24,11 @@
 <link rel="stylesheet" href="${path}/resources/css/user/festival/festival.css"/>
 <link rel="stylesheet" href="${path}/resources/css/user/restaurant/restaurant.css">
 
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bc41a35c5a5b0162c873953a6d550c47&libraries=services&autoload=false"></script>
+<script>
+	const KAKAO_KEY = "${kakaoMapApiKey}";
+</script>
+
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=services&autoload=false"></script>
 <!-- [JS에서 사용할 공통 path 설정] -->
 <c:set var="path" value="${pageContext.request.contextPath}" />
 

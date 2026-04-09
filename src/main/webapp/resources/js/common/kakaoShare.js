@@ -2,7 +2,6 @@
 
 window.addEventListener('load', function () {
     const shareBtn = document.getElementById('kakaoShareBtn');
-    var kakaoShareApiKey = document.getElementById('kakaoShareApiKey').value; // API 키 수집
     
     if (!shareBtn) return;
 
@@ -12,8 +11,7 @@ window.addEventListener('load', function () {
     }
 
     if (!Kakao.isInitialized()) {
-        // Kakao.init('cf80e14ee6369fffa6d4124ab3dd803d');
-        Kakao.init(kakaoShareApiKey);
+        Kakao.init(kakaoShareApiKey); // 컨트롤러에서 보낸 카카오 공유 API의 키 가져오기
     }
 
     shareBtn.addEventListener('click', function (event) {

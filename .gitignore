@@ -35,5 +35,9 @@ target/
 .settings/
 .idea/
 
-# API KEY 설정 파일 제외
-src/main/resources/application-API-KEY.properties
+# API KEY 설정 파일 제외 & 설치환경 따라 경로 바꿀 필요 있는 파일
+application-API-KEY.properties
+application.properties
+servlet-context.xml
+root-context.xml
+

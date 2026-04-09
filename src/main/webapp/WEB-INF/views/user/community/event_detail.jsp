@@ -25,6 +25,11 @@
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/event.css">
 
+<!-- 컨트롤러에서 카카오 공유 API 키 가져오기  -->
+<script type="text/javascript">
+	var kakaoShareApiKey = "${kakaoShareApiKey}";
+</script>
+
 <!-- 카카오 공유 API -->
 <c:set var="shareUrl"
        value="${pageContext.request.scheme}://${pageContext.request.serverName}${path}/community_event_detail.co?notice_id=${noticeDTO.notice_id}" />

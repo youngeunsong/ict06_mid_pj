@@ -27,6 +27,11 @@
 
 <script src="${path}/resources/js/community/community_detail.js" defer></script>
 
+<!-- 컨트롤러에서 카카오 공유 API 키 가져오기  -->
+<script type="text/javascript">
+	var kakaoShareApiKey = "${kakaoShareApiKey}";
+</script>
+
 <!-- 카카오 공유 API -->
 <c:set var="shareUrl"
        value="${pageContext.request.scheme}://${pageContext.request.serverName}${path}/community_detail.co?post_id=${dto.post_id}" />
@@ -50,9 +55,6 @@
 </head>
 <body>
 <div class="wrap">
-	<!-- 컨트롤러에서 API 키 받아오기 -->
-	<input type="hidden" id="kakaoShareApiKey" th:value="${kakaoShareApiKey}" />
-
 	<c:if test="${param.msg == 'delete'}">
 	    <script>
 	        alert("게시글이 삭제되었습니다.");

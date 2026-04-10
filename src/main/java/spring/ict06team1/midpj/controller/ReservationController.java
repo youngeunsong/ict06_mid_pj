@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,12 @@ public class ReservationController {
 	private FestivalService festService;
 	@Autowired
 	private UserDAO userDao;
+	
+	// Naver Pay API 키 불러오기
+	@Value("${naver.pay.client.id}")
+	private String naverPayClientId;
+	@Value("${naver.pay.chain.id}")
+	private String naverPayChainId; 
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
@@ -143,8 +150,8 @@ public class ReservationController {
 			}
 		}
 
-		model.addAttribute("naverPayClientId", "HN3GGCMDdTgGUfl0kFCo");
-		model.addAttribute("naverPayChainId", "TUxwbzJsVVJ4b2x");
+		model.addAttribute("naverPayClientId", naverPayClientId); // 불러온 API 키 대입
+		model.addAttribute("naverPayChainId", naverPayChainId); // 불러온 API 키 대입
 
 		return "user/reservation/reservationConfirm";
 	}

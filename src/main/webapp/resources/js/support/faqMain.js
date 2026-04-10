@@ -2,6 +2,9 @@
  * FAQ 전용 스크립트 (최종 수정본)
  * @author 조민수
  * @since 2026-03-24
+ * 최종 수정일: 2026-04-06
+ * 수정 사항
+ * v260406: navbar의 위치를 자동으로 계산하여 faq 용 검색바의 위치 자동 보정 기능 
  */
 
 let searchTimer; // 실시간 검색 부하 방지용 타이머
@@ -249,6 +252,24 @@ $(document).ready(function() {
         let tempVal = $searchInput.val();
         $searchInput.val('').val(tempVal);
     }
+});
+
+// 추가: navbar의 높이 자동 계산하여 faq 검색바의 위치 자동 조정 
+$(document).ready(function () {
+
+    function updateStickyTop() {
+
+        let headerHeight = $(".site-header").outerHeight();
+
+        $(".sticky-search-wrap").css("top", headerHeight + "px");
+    }
+
+    updateStickyTop();
+
+    $(window).resize(function () {
+        updateStickyTop();
+    });
+
 });
 
 /**

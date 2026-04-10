@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
-    /* [1] 헤더 전체 컨테이너 고정 */
+    /* [1] 헤더 전체 컨테이너 고정 
+    	수정:  top: 0; 속성 제거
+    */
     .sticky-search-wrap {
         position: sticky;
-        top: 0; 
         z-index: 1020;
         background-color: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(8px);

@@ -22,16 +22,16 @@ public interface AdDashboardDAO {
     // 금일 KPI
 	public Map<String, Object> getTodayKpiSummary(Map<String, Object> map);
 
-    // 기간 KPI
+    // 기간별 KPI 카드
 	public Map<String, Object> getPeriodKpiSummary(Map<String, Object> map);
 
-    // 만족도 시계열
+    // 만족도 차트용 데이터
 	public List<Map<String, Object>> getSatisfactionTrend(Map<String, Object> map);
 
-    // NPS 분포
+    // NPS 분포 도넛차트용 데이터
 	public List<Map<String, Object>> getNpsDistribution(Map<String, Object> map);
 
-    // 만족도 통계
+    // 만족도 통계값 조회
 	public List<Map<String, Object>> getSatisfactionStats(Map<String, Object> map);
 
     // 워드클라우드용 서술형 원문

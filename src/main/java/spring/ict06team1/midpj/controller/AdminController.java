@@ -27,10 +27,11 @@ public class AdminController {
 	@Autowired
 	private UserServiceImpl userService;
 	
+	// 대시보드에서 사용되는 DB에서 조회한 운영 데이터 전용 service
 	@Autowired
 	private AdDashboardService adDashService;
 	
-	// 0. ADMIN HOME / 대시보드
+	// 0. ADMIN HOME / 관리자 홈 메인 대시보드
 	@RequestMapping("/adminHome.ad")
 	public String adminHome(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
@@ -41,8 +42,7 @@ public class AdminController {
 		return "admin/adminHome";
 	}
 	
-	// 1. 금일 사용자 만족도 표
-	// 현 페이지 미사용 / 추후 작업 중 필요 시 사용하기 위해 유지
+	// 1. 금일 사용자 만족도 표 (미사용)
 	@RequestMapping("/todaySurveyStatus.ad")
 	public String todaySurveyStatus(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("[url => /todaySurveyStatus.ad]");
@@ -58,7 +58,7 @@ public class AdminController {
 	public String generateWordCloud(HttpServletRequest request) {
 		logger.info("[url => /admin/wordcloud.ad]");
 		
-		String text = request.getParameter("text");
+		String text = request.getParameter("text"); // adHome.js에서 가져온 값 text
 		System.out.println("controller text => " + text);
 		return adDashService.generateWordCloud(text);
 	}

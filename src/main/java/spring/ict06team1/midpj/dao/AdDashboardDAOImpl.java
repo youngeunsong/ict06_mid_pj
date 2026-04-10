@@ -28,7 +28,7 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 	@Autowired
     private SqlSession sqlSession;
 
-	// 금일 KPI
+	// 금일 KPI 카드
 	@Override
 	public Map<String, Object> getTodayKpiSummary(Map<String, Object> map) {
 		System.out.println("[AdDashboardDAOImpl - getTodayKpiSummary()]");
@@ -39,7 +39,7 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		return todayKpiSummary;
 	}
 
-	// 기간 KPI
+	// 기간별 KPI 카드
 	@Override
 	public Map<String, Object> getPeriodKpiSummary(Map<String, Object> map) {
 		System.out.println("[AdDashboardDAOImpl - getPeriodKpiSummary()]");
@@ -50,7 +50,7 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		return periodKpiSummary;
 	}
 
-	// 만족도 시계열
+	// 만족도 차트용 데이터
 	@Override
 	public List<Map<String, Object>> getSatisfactionTrend(Map<String, Object> map) {
 		System.out.println("[AdDashboardDAOImpl - getSatisfactionTrend()]");
@@ -61,7 +61,7 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		return satisfactionTrend;
 	}
 
-	// NPS 분포
+	// NPS 분포 도넛차트용 데이터
 	@Override
 	public List<Map<String, Object>> getNpsDistribution(Map<String, Object> map) {
 		System.out.println("[AdDashboardDAOImpl - getNpsDistribution()]");
@@ -73,7 +73,7 @@ public class AdDashboardDAOImpl implements AdDashboardDAO {
 		return npsDistribution;
 	}
 
-	// 만족도 통계
+	// 만족도 통계값 조회
 	@Override
 	public List<Map<String, Object>> getSatisfactionStats(Map<String, Object> map) {
 		System.out.println("[AdDashboardDAOImpl - getSatisfactionStats()]");

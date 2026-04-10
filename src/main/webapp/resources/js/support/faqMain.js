@@ -55,13 +55,14 @@ function searchFaq() {
     // [분기 1] FAQ 메인도 상세도 아닐 때만 메인으로 이동
     if (!isFaqPage && !isDetailPage) {
         if (keyword !== "") {
+        	// FAQ 메인 페이지로 검색어를 들고 이동 (GET 방식)
             location.href = contextPath + "/faqMain.sp?keyword=" + encodeURIComponent(keyword);
         }
         return; 
     }
 
     // [분기 2] Ajax 검색 실행
-    if (keyword !== "") {
+    if (keyword !== "") { // 검색창입력시
         $.ajax({
             url: contextPath + "/searchFaqAjax.sp", 
             type: "GET",
@@ -86,6 +87,7 @@ function searchFaq() {
         // 검색어를 다 지웠을 때
         if (isFaqPage) {
             let $activeTag = $(".tag.active");
+            // 선택된 태그가 '전체'면 빈 값을, 아니면 카테고리 이름을 가져옵니다. (삼항 연산자)
             let currentCategory = ($activeTag.text() === '전체') ? '' : $activeTag.text();
             loadFaqList(currentCategory); 
         } else if (isDetailPage) {
@@ -226,7 +228,9 @@ $(window).on("scroll", function() {
 
 // 초기 로드 시 URL 파라미터에 검색어가 있다면 자동 실행 및 커서 제어
 $(document).ready(function() {
+   	// 윈도우 주소창 ? 뒤에 붙은 추출할준비
     const urlParams = new URLSearchParams(window.location.search);
+    
     const keyword = urlParams.get('keyword');
     const $searchInput = $("#keyword"); // 검색창 선택
 
@@ -237,7 +241,7 @@ $(document).ready(function() {
         // 2. 검색 실행 (기존 함수 호출)
         searchFaq();
 
-        // 3. ⭐ 커서 및 포커스 제어 (핵심!)
+        // 3. 커서 및 포커스 제어 (핵심!)
         $searchInput.focus(); // 일단 포커스를 줌
         
         // 커서를 글자 맨 뒤로 보내기 위한 트릭

@@ -36,4 +36,9 @@ target/
 .idea/
 
 # API KEY 설정 파일 제외
-src/main/resources/application-API-KEY.properties
+application-API-KEY.properties
+
+# 이미지 업로드 경로 관련 파일 제외
+application.properties
+root-context.xml
+servlet-context.xml

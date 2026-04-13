@@ -92,38 +92,44 @@
     </select>
 
     <!-- ==============================
-         2. 기간별 KPI 카드
+         2. 기간 KPI 카드
          startDate, endDate 사용
     ============================== -->
     <select id="getPeriodKpiSummary" parameterType="map" resultType="map">
         SELECT
+        	<!-- 신규 회원 -->
             (SELECT COUNT(*)
                FROM MEMBER
               WHERE created_at &gt;= #{startDate}
                 AND created_at &lt; #{endDate}) AS "newMemberCount",
-
+			
+			<!-- 맛집 등록 -->
             (SELECT COUNT(*)
                FROM PLACE
               WHERE place_type = 'REST'
                 AND created_at &gt;= #{startDate}
                 AND created_at &lt; #{endDate}) AS "newRestaurantCount",
 
+			<!-- 예약 현황 -->
             (SELECT COUNT(*)
                FROM RESERVATION
               WHERE created_at &gt;= #{startDate}
                 AND created_at &lt; #{endDate}) AS "reservationCount",
 
+			<!-- 댓글 갯수 -->
             (SELECT COUNT(*)
                FROM COMMUNITY_COMMENT
               WHERE created_at &gt;= #{startDate}
                 AND created_at &lt; #{endDate}) AS "commentCount",
 
+			<!-- 결제 완료 -->
             (SELECT COUNT(*)
                FROM PAYMENT
               WHERE payment_status = 'COMPLETED'
                 AND created_at &gt;= #{startDate}
                 AND created_at &lt; #{endDate}) AS "paymentCount",
 
+			<!-- 만족도 조사 참여자 -->
             (SELECT COUNT(*)
                FROM SURVEY
               WHERE created_at &gt;= #{startDate}

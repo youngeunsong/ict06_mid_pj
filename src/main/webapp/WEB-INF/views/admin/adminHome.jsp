@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="${path}/resources/css/admin/ad_home.css">
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script> <!-- E차트 라이브러리 선언 -->
 <script src="${path}/resources/js/admin/adHome.js" defer></script>
 <script>const path = "${path}";</script>
 </head>
@@ -67,15 +67,17 @@
 						<form action="${path}/adminHome.ad" method="get"
 							class="row g-3 align-items-end">
 							<div class="col-lg-4 col-md-6">
-								<label for="startDate" class="form-label">시작일</label> <input
+								<label for="startDate" class="form-label">시작일</label>
+								<input
 									type="date" id="startDate" name="startDate"
 									value="${startDate}" class="form-control">
 							</div>
 
 							<div class="col-lg-4 col-md-6">
-								<label for="endDate" class="form-label">종료일</label> <input
-									type="date" id="endDate" name="endDate" value="${endDate}"
-									class="form-control">
+								<label for="endDate" class="form-label">종료일</label>
+								<input
+									type="date" id="endDate" name="endDate"
+									value="${endDate}" class="form-control">
 							</div>
 
 							<div class="col-lg-4 col-md-12">
@@ -87,6 +89,7 @@
 				<!-- ===== 기간 조회 필터E ===== -->
 
 				<!-- ===== 기간별 트래픽 분석S ===== -->
+				<!-- 기간 별 트레픽 추이(adHome.js) -->
 				<div class="row g-4 mb-4">
 					<div class="col-lg-8 col-md-12">
 						<div class="card dashboard-card h-100">
@@ -95,6 +98,7 @@
 								<h5 class="mb-0">기간별 트래픽 추이</h5>
 								<small class="text-muted">${startDate} ~ ${endDate}</small>
 							</div>
+							
 							<div class="card-body">
 								<div id="trafficTrendChart"></div>
 							</div>
@@ -214,6 +218,8 @@
 							<div class="card-header">
 								<h5 class="mb-0">최근 만족도</h5>
 							</div>
+							
+							<!-- 최근만족도(adHome.js) -->
 							<div class="card-body">
 								<div id="trendChart"></div>
 							</div>
@@ -225,6 +231,8 @@
 							<div class="card-header">
 								<h5 class="mb-0">NPS 평점 분포</h5>
 							</div>
+							
+							<!-- NPS 평점 분포(adHome.js) -->
 							<div class="card-body">
 								<div id="npsChart"></div>
 							</div>
@@ -383,9 +391,12 @@
 							<div class="card-header">
 								<h5 class="mb-0">사용자 만족도 워드클라우드</h5>
 							</div>
+							
 							<div class="card-body">
+								<!-- 워드클라우드 출력 영역 -->
 								<div id="wordcloudBox" class="wordcloud-box"></div>
 					
+								<!-- 주관식 응답을 숨겨둠 -->
 								<c:forEach var="word" items="${subjectiveAnswers}">
 								    <input type="hidden" class="subjective-word-source" value="<c:out value='${word}' />" />
 								</c:forEach>
@@ -406,8 +417,10 @@
 </div>
 
 <!-- 서버 데이터를 JS로 넘기기 위해 jsp에 유지 -->
+<!-- adminHomeData : 기간별 트래픽 추이 데이터/ 최근 만족도 차트용 데이터/ NPS 평점 분포 차트용 데이터 -->
 <script>
    window.adminHomeData = {
+	   /* 만족도 차트 */
        trendList: [
            <c:forEach var="trend" items="${trendList}" varStatus="st">
                {
@@ -418,6 +431,7 @@
                }<c:if test="${!st.last}">,</c:if>
            </c:forEach>
        ],
+       /* NPS 분포 */
        npsDistribution: [
            <c:forEach var="nps" items="${npsDistribution}" varStatus="st">
                {
@@ -426,6 +440,7 @@
                }<c:if test="${!st.last}">,</c:if>
            </c:forEach>
        ],
+       /* GA 기간별 트래픽 추이 */
        trafficTrendList: [
     	    <c:forEach var="row" items="${trafficTrendList}" varStatus="st">
     	    {
@@ -435,6 +450,7 @@
     	    }<c:if test="${!st.last}">,</c:if>
     	    </c:forEach>
     	],
+    	/* 오늘 날짜 */
        today: '${today}'
    };
 </script>

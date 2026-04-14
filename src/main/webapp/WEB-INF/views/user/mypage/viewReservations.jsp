@@ -193,6 +193,8 @@
 													class="meta-value">${res.request_note}</span>
 											</div>
 										</c:if>
+<<<<<<< HEAD
+=======
 
 										<%-- <div class="payment-text">
 											결제번호 :
@@ -203,6 +205,7 @@
 												<c:otherwise>-</c:otherwise>
 											</c:choose>
 										</div> --%>
+>>>>>>> dev
 									</div>
 
 								</div>

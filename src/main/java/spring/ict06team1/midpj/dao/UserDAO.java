@@ -37,12 +37,12 @@ public interface UserDAO {
     // 6. 회원 정보 수정
     public int updateUser(MemberDTO dto);
     
-    // 7. 즐겨찾기 목록 조회
+    // 7. 북마크 목록 조회
     public List<PlaceDTO> getFavoriteList(Map<String, Object> map);
-    // 즐겨찾기 목록 카운트
+    // 북마크 목록 카운트
     public int getFavoriteListCount(Map<String, Object> map);
     
-    // 마이페이지 홈 즐겨찾기 카테고리별 탑3
+    // 마이페이지 홈 북마크 카테고리별 탑3
     public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map);
     
     // 마에피이지 홈 캘린더 예약 목록
@@ -72,7 +72,7 @@ public interface UserDAO {
     // 나의 예약 취소 처리
     public int cancelReservation(String reservation_id);
     
-	// 즐겨찾기 토글(버튼)
+	// 북마크 토글(버튼)
 	public int checkmyFavorite(Map<String, Object> map);
 	public int insertmyFavorite(Map<String, Object> map);
 	public int deletemyFavorite(Map<String, Object> map);

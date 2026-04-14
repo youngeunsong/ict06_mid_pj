@@ -432,7 +432,7 @@ public class UserServiceImpl implements UserService {
 		return updateCnt;
 	}
 
-	// 7. 나의 즐겨찾기 목록 조회
+	// 7. 나의 북마크 목록 조회
 	@Override
 	public void viewBookmarksAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
@@ -444,7 +444,7 @@ public class UserServiceImpl implements UserService {
 		// 2. 필터값(category) 받기
 		String category = request.getParameter("category");
 
-		// 3. 기본값 처리
+		// 3. 카테고리 기본값 처리
 		if (category == null || category.trim().equals("")) {
 			category = "all";
 		}
@@ -452,11 +452,11 @@ public class UserServiceImpl implements UserService {
 		// 4. 페이지 번호 받기
 		String pageNum = request.getParameter("pageNum");
 
-		// 5. 페이징 객체 생성
+		// 5. 페이징 객체 생성 ( 페이지당 8개씩 )
 		Paging paging = new Paging(pageNum);
 		paging.setPageSize(8); // 한 페이지당 카드 8개
 
-		// 6. DAO 전달용 map
+		// 6. DAO 전달용 map ( 사용자 아이디와 카테고리 조건을 함께 전달하기위해 map )
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", sessionID);
 		map.put("category", category);
@@ -467,14 +467,14 @@ public class UserServiceImpl implements UserService {
 		// 8. 페이징 계산
 		paging.setTotalCount(count);
 
-		// 9. startRow, endRow 추가
+		// 9. startRow, endRow 추가 (페이지에서 보여줄 데이터 범위를 start, end로 계산해 map 추가)
 		map.put("start", paging.getStartRow());
 		map.put("end", paging.getEndRow());
 
-		// 10. 목록 조회
+		// 10. 북마크 목록 조회
 		List<PlaceDTO> list = dao.getFavoriteList(map);
 
-		// 11. jsp 전달
+		// 11. model에 담아 jsp 전달
 		model.addAttribute("list", list);
 		model.addAttribute("paging", paging);
 		model.addAttribute("category", category);
@@ -486,33 +486,38 @@ public class UserServiceImpl implements UserService {
 			throws ServletException, IOException {
 		System.out.println("UserServiceImpl - myPageHomeAction()");
 
+		// 세션 아이디 가져오기 -> 세션아이디 기준으로 조회 시작
 		String sessionID = (String) request.getSession().getAttribute("sessionID");
 
-		// 회원정보 조회
+		// 회원정보 조회 , 정보를 필요한 부분에 사용할 준비
 		MemberDTO dto = dao.getUserDetail(sessionID);
 
-		// 각 활동 수 조회
+		// 활동현황 영역에 보여줄 숫자들을 각각 조회
 		int bookmarkCount = dao.getFavoriteCount(sessionID);
 		int inquiryCount = dao.getInquiryCount(sessionID);
 		int reservationCount = dao.getReservationCount(sessionID);
 
+		// 각 활동 데이터를 jsp에서 출력할 수 있도록 model에 담아 전달
 		model.addAttribute("bookmarkCount", bookmarkCount);
 		model.addAttribute("inquiryCount", inquiryCount);
 		model.addAttribute("reservationCount", reservationCount);
 
-		// 마이페이지 캘린더 예약 목록 조회
+		// 예약 캘린더에 들어갈 예약목록을 조회
+		// 목록은 jsp에서 fullCalendar가 읽을 수 있는 이벤트 형태로 변환
 		List<Map<String, Object>> calendarList = dao.getMyCalendarReservations(sessionID);
 		model.addAttribute("calendarList", calendarList);
+		
 		System.out.println("calendarList : " + calendarList);
 
 		// =================================================
 		// 마이페이지 홈 하단 카테고리별 top3
 
 		// 공통 파라미터 map 생성
+		// 북마크 top3는 같은 로직을 반복하므로 공통 map 재사용
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", sessionID);
 
-		// 맛집 TOP3 (REST)
+		// 맛집 TOP3 (REST) - 북마크 중 상위 3개 조회
 		map.put("category", "REST");
 		List<PlaceDTO> topRestList = dao.getFavoriteTop3ByCategory(map);
 
@@ -615,8 +620,11 @@ public class UserServiceImpl implements UserService {
 			throws ServletException, IOException {
 		System.out.println("UserServiceImpl - viewMyReservationsAction()");
 
+		// 세션 아이디 꺼냄
 		String sessionID = (String) request.getSession().getAttribute("sessionID");
+		// 페이지 번호 받음
 		String pageNum = request.getParameter("pageNum");
+		// 예약 상태 필터값 받음 (all, RESERVED, COMPLETED, CANCELLED, NOSHOW)
 		String status = request.getParameter("status");
 
 		// 상태값 기본 처리
@@ -624,40 +632,49 @@ public class UserServiceImpl implements UserService {
 			status = "all";
 		}
 
+		// 페이징 객체 생성, 한페이지 5개
 		Paging paging = new Paging(pageNum);
 		paging.setPageSize(5); // 카드형이라 5개
 
+		// 사용자 아이디와 상태 필터 조건을 함께 전달하기 위해 map에 담음
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", sessionID);
 		map.put("status", status);
 
+		// 예약 전체 개수 조회, 총 페이지수 계산
 		int totalCount = dao.selectMyReservationCount(map);
+		// 시작행, 끝행 ,층 페이지 수 계산
 		paging.setTotalCount(totalCount);
 
+		// 현재 페이지에서 보여줄 데이터 범위 계산해 map 추가
 		map.put("start", paging.getStartRow());
 		map.put("end", paging.getEndRow());
 
+		// 예약 목록 조회
 		List<ReservationDTO> list = dao.selectMyReservationList(map);
-
-		model.addAttribute("list", list);
-		model.addAttribute("paging", paging);
-		model.addAttribute("reservationCount", totalCount);
-		model.addAttribute("status", status);
 
 		System.out.println("예약 총 개수: " + totalCount);
 		System.out.println("start: " + paging.getStartRow());
 		System.out.println("end: " + paging.getEndRow());
 		System.out.println("status : " + status);
 
-		// 리뷰 작성 여부 체크
+		// 리뷰 작성 여부를 확인하기 위한 map 생성
+		// JSP에서 예약별로 리뷰 완료, 리뷰 작성 버튼을 다르게 보여주기 위해 사용
 		Map<String, Integer> reviewCheckMap = new HashMap<String, Integer>();
 
 		for (ReservationDTO dto : list) {
+			// 현재 예약번호 기준 설문리뷰 작성 여부 확인
 			int reviewCnt = surveyDAO.checkSurveyWritten(dto.getReservation_id());
+			// 예약번호를 key로 하고, 리뷰 작성 여부를 value로 저장
+			// JSP에서 reviewCheckMap[예약번호] 형식으로 꺼내 씀
 			reviewCheckMap.put(dto.getReservation_id(), reviewCnt);
 		}
 
 		// JSP로 전달
+		model.addAttribute("list", list);
+		model.addAttribute("paging", paging);
+		model.addAttribute("reservationCount", totalCount);
+		model.addAttribute("status", status);
 		model.addAttribute("reviewCheckMap", reviewCheckMap);
 	}
 
@@ -733,7 +750,7 @@ public class UserServiceImpl implements UserService {
 	    }
 	}
 	
-	// 즐겨찾기 토글 처리
+	// 북마크 토글 처리
 	@Override
 	public int togglemyFavorite(String userId, int placeId) {
 		System.out.println("UserServiceImpl - togglemyFavorite()");

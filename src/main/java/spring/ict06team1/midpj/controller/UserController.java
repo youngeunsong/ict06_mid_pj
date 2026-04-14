@@ -192,12 +192,15 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => myPageHome.do>>>");
 		
+		// 세션에서 로그인한 사용자 아이디 조회
 		String sessionID = (String)request.getSession().getAttribute("sessionID");
 		
+		// 식별 후 비로그인이면 로그인페이지 이동
 		if(sessionID == null) {
 			return "redirect:/login.do";
 		}
 		
+		// 데이터 처리 서비스로 넘김
 		service.myPageHomeAction(request, response, model);
 		
 		return "user/mypage/myPageHome";
@@ -218,7 +221,7 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => modifyDetailPage.do>>>");
 		
-		service.modifyDetailPage(request, response, model); // 현재 오류 발생. 2주차에 수정 필요 
+		service.modifyDetailPage(request, response, model); 
 		
 		// 서비스가 model에 담아준 결과값 꺼내기 / asMap() => Model의 스프링 바구니를 자바의 Map형식으로 변환해 값을 꺼내쓰기위한 메서드
 		int selectCnt = (Integer)model.asMap().get("selectCnt");
@@ -249,7 +252,7 @@ public class UserController {
 		return "user/mypage/modifyUserAction";
 	}
 	
-	// [마이페이지] 즐겨찾기 조회-> 맛집/숙소/축제 페이지로 이동
+	// [마이페이지] 북마크 조회-> 맛집/숙소/축제 페이지로 이동
 	@RequestMapping("/viewBookmarks.do")	
 	public String viewBookmarks(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
@@ -262,6 +265,7 @@ public class UserController {
 			return "redirect:/login.do";
 		}
 		
+		// 실제 목록 조회, 필터, 페이징 계산은 서비스 계층 처리
 		service.viewBookmarksAction(request, response, model);
 		
 		return "user/mypage/viewBookmarks";
@@ -273,12 +277,14 @@ public class UserController {
 			throws ServletException, IOException {
 		logger.info("<<< url => viewReservations.do>>>");
 		
+		// 세션 사용자 아이디 확인
 		String sessionID = (String) request.getSession().getAttribute("sessionID");
 
 	    if (sessionID == null) {
 	        return "redirect:/login.do";
 	    }
-
+	    
+	    // 목록 조회, 필터, 페이징 계산 데이터 처리 서비스 계층 넘김
 	    service.viewMyReservationsAction(request, response, model);
 	    
 		return "user/mypage/viewReservations";
@@ -350,11 +356,12 @@ public class UserController {
 		}
 		
 		service.inquiryDetailAction(request, response, model);
+	
 		
 		return "user/mypage/inquiryDetail";
 	}
 	
-	// [마이페이지] 즐겨찾기 토글 처리
+	// [마이페이지] 북마크 토글 처리
 	@RequestMapping("/togglemyFavorite.do")
 	@ResponseBody
 	public String togglemyFavorite(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -373,8 +380,8 @@ public class UserController {
 	    int place_id = Integer.parseInt(request.getParameter("place_id"));
 
 	    // 4. 서비스 호출 후 결과값 받기
-	    //    1 = 즐겨찾기 추가 성공
-	    //    0 = 즐겨찾기 삭제 성공
+	    //    1 = 북마크 추가 성공
+	    //    0 = 북마크 삭제 성공
 	    int result = service.togglemyFavorite(sessionID, place_id);
 
 	    // 5. AJAX로 결과값 그대로 반환

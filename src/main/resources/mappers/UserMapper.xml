@@ -76,6 +76,7 @@
 	</update>
 
 	<!-- 상세페이지 조회 -->
+	<!-- 세션에서 넘어온 user_id를 기준으로 해당 회원 한 명의 정보를 조회 -->
 	<select id="getUserDetail" parameterType="String"
 		resultType="spring.ict06team1.midpj.dto.MemberDTO">
 		SELECT * FROM MEMBER
@@ -96,7 +97,7 @@
 		WHERE user_id = #{user_id, jdbcType=VARCHAR}
 	</update>
 
-	<!-- 마이페이지 홈(활동현황)즐겨찾기 카운트 -->
+	<!-- 마이페이지 홈(활동현황)북마크 카운트 -->
 	<select id="getFavoriteCount" parameterType="String"
 		resultType="int">
 		SELECT COUNT(*)
@@ -118,10 +119,11 @@
 		WHERE user_id = #{user_id}
 	</select>
 
-	<!-- 마이페이지 홈 - 즐겨찾기 카테고리별 탑3 -->
+	<!-- 마이페이지 홈 - 북마크 카테고리별 탑3 -->
 	<select id="getFavoriteTop3ByCategory" parameterType="map"
 		resultType="spring.ict06team1.midpj.dto.PlaceDTO">
-
+		<!-- 북마크한 장소와 장소 정보를 join해서 -->
+		<!-- 해당 카테고리에서 조회수 기준 상위 3개만 추출 -->
 		SELECT *
 		FROM (
 		SELECT
@@ -146,6 +148,8 @@
 	<!-- 마이페이지 홈 캘린더 예약 목록 조회 -->
 	<select id="getMyCalendarReservations" parameterType="String"
 		resultType="hashmap">
+		<!-- 예약과 장소 정보를 join해서 캘린더에 필요한 형태로 변환 -->
+		<!-- 시작일, 장소명, 장소 타입, 상태를 함께 가져옴 -->
 		SELECT
 		<!-- 예약 고유번호 (예약상세 이동용) -->
 		r.reservation_id AS reservationId
@@ -171,9 +175,11 @@
 		, r.created_at DESC
 	</select>
 
-	<!-- 나의 즐겨찾기 목록 조회 -->
+	<!-- 나의 북마크 목록 조회 -->
 	<select id="getFavoriteList" parameterType="map"
 		resultType="spring.ict06team1.midpj.dto.PlaceDTO">
+		<!-- 화면에 필요한 장소 기본 정보와
+			 평점, 리뷰 수까지 함께 가져오도록 구성 -->
 		SELECT
 		PLACE_ID
 		, PLACE_TYPE
@@ -188,6 +194,8 @@
 		, review_count
 		FROM (
 		SELECT
+		<!-- 즐겨찾기 등록 최신순으로 번호를 매겨
+			 페이지 범위(start~end)를 자르기 위한 준비 -->
 		ROW_NUMBER() OVER(ORDER BY f.CREATED_AT DESC) AS rn
 		, p.PLACE_ID
 		, p.PLACE_TYPE
@@ -198,32 +206,43 @@
 		, p.LATITUDE
 		, p.LONGITUDE
 		, p.CREATED_AT AS placeRegDate
+		<!-- 각 장소의 평균 평점을 서브쿼리로 계산 -->
 		, (SELECT NVL(ROUND(AVG(rv.RATING), 1), 0)
 		FROM REVIEW rv
 		WHERE rv.PLACE_ID = p.PLACE_ID
 		AND rv.STATUS = 'DISPLAY') AS avg_rating
+		<!-- 각 장소의 리뷰 수를 서브쿼리로 계산 -->
 		, (SELECT COUNT(rv.REVIEW_ID)
 		FROM REVIEW rv
 		WHERE rv.PLACE_ID = p.PLACE_ID
 		AND rv.STATUS = 'DISPLAY') AS review_count
+		<!-- 사용자가 즐겨찾기한 장소 정보를 가져오기 위해
+			 PLACE와 FAVORITE를 JOIN -->
 		FROM PLACE p
 		JOIN FAVORITE f
 		ON p.PLACE_ID = f.PLACE_ID
+		<!-- 현재 로그인한 사용자의 즐겨찾기만 조회 -->
 		WHERE f.USER_ID = #{user_id}
 		<if test="category != null and category != 'all'">
 			AND p.PLACE_TYPE = #{category}
 		</if>
 		)
+		<!-- 계산된 rn을 기준으로 현재 페이지 범위만 잘라서 조회 -->
 		WHERE rn BETWEEN #{start} AND #{end}
 	</select>
-	<!-- 즐겨찾기 목록 카운트 -->
+	
+	<!-- 북마크 목록 카운트 -->
 	<select id="getFavoriteListCount" parameterType="map"
 		resultType="int">
+		<!-- 현재 사용자 기준 북마크 전체 개수를 먼저 계산해야
+			 페이지 수와 마지막 페이지를 알 수 있음 -->
 		SELECT COUNT(*)
 		FROM FAVORITE f
 		JOIN PLACE p
 		ON f.PLACE_ID = p.PLACE_ID
 		WHERE f.USER_ID = #{user_id}
+		<!-- 목록 조회와 동일 , 카테고리 필터가 선택된 경우
+			 개수 계산에도 같은 조건을 적용해야 페이지 수 맞음 -->
 		<if test="category != null and category != 'all'">
 			AND p.PLACE_TYPE = #{category}
 		</if>
@@ -423,7 +442,7 @@
 		AND r.USER_ID = #{user_id}
 	</select>
 
-	<!-- 즐겨찾기 존재 여부 확인 -->
+	<!-- 북마크 존재 여부 확인 -->
 	<select id="checkmyFavorite" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM FAVORITE
@@ -431,7 +450,7 @@
 		AND PLACE_ID = #{place_id}
 	</select>
 
-	<!-- 즐겨찾기 추가 -->
+	<!-- 북마크 추가 -->
 	<insert id="insertmyFavorite" parameterType="map">
 		INSERT INTO FAVORITE (
 		FAVORITE_ID,
@@ -448,7 +467,7 @@
 		)
 	</insert>
 
-	<!-- 즐겨찾기 삭제 -->
+	<!-- 북마크 삭제 -->
 	<delete id="deletemyFavorite" parameterType="map">
 		DELETE FROM FAVORITE
 		WHERE USER_ID = #{user_id}

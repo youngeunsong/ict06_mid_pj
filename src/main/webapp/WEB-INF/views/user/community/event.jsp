@@ -26,6 +26,8 @@ CATEGORY='EVENT' AND IS_TOP='N'
 <link rel="stylesheet" href="${path}/resources/css/user/community/community-common.css">
 <link rel="stylesheet" href="${path}/resources/css/user/community/event.css">
 
+<script src="https://kit.fontawesome.com/648e5e962b.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
 <div class="wrap">

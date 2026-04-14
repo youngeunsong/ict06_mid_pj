@@ -356,6 +356,7 @@ public class UserController {
 		}
 		
 		service.inquiryDetailAction(request, response, model);
+	
 		
 		return "user/mypage/inquiryDetail";
 	}

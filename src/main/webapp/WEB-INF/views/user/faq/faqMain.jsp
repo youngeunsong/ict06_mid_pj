@@ -173,6 +173,7 @@
     <div class="container my-5">
         <div class="row g-x-5"> 
             <div class="col-lg-9"> 
+                <!-- 해당 카테고리 질문만 필터링 -->
                 <div class="faq-category-container mb-3"> 
                     <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
                         <div class="d-flex flex-wrap gap-2">
@@ -197,7 +198,7 @@
                         </h6>
                     </div>
                 </div>
-                
+                <!-- 서버에서 가져온 FAQ 목록을 반복 출력 -->
                 <div id="faqListArea">
                     <c:forEach var="faq" items="${faqList}">
                         <div class="faq-item border-bottom">
@@ -211,7 +212,7 @@
 							    <div class="d-flex align-items-center">
 							        <span class="text-muted small me-3" style="font-size: 0.8rem;">
 							            <i class="fa-regular fa-eye me-1"></i> ${faq.view_count}
-							        </span>
+							        </span> 
 							        <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
 							    </div>
 							</div>

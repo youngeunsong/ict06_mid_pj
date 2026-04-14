@@ -54,6 +54,7 @@ public class AdDashboardServiceImpl implements AdDashboardService {
     @Autowired
     private AdDashboardDAO dao;
 
+    // 구글애널릭틱스 서비스 선언
     @Autowired
     private GoogleAnalyticsService googleAnalyticsService;
     
@@ -63,35 +64,8 @@ public class AdDashboardServiceImpl implements AdDashboardService {
 
     // 가장 안전한 한글 폰트 경로
     private static final String WORDCLOUD_FONT_PATH = "C:/Windows/Fonts/malgun.ttf";
-
-    /*
-     * [변수 역할 정리]
-     *
-     * 1) todayKpi
-     * - JSP에 최종 전달되는 오늘용 KPI Map
-     * - DB 집계값 + GA 집계값을 합친 최종 결과
-     *
-     * 2) periodKpi
-     * - JSP에 최종 전달되는 기간용 KPI Map
-     * - DB 집계값 + GA 집계값을 합친 최종 결과
-     *
-     * 3) todayGa
-     * - GA API에서 "오늘 트래픽"만 따로 받아온 임시 Map
-     * - todayKpi에 합치기 전 중간 저장용
-     *
-     * 4) periodGa
-     * - GA API에서 "선택 기간 트래픽"만 따로 받아온 임시 Map
-     * - periodKpi에 합치기 전 중간 저장용
-     *
-     * 5) todayMap / periodMap
-     * - DAO / Mapper에 전달할 조회 조건 Map
-     * - todayMap   : 오늘 00:00:00 ~ 내일 00:00:00
-     * - periodMap  : 선택 시작일 00:00:00 ~ 선택 종료일 + 1일 00:00:00
-     *
-     * [최종 흐름]
-     * DB today summary  + GA today summary   = todayKpi
-     * DB period summary + GA period summary  = periodKpi
-     */
+    
+    // 관리자 홈 메인 대시보드 ()
     @Override
     public void getAdminHomeDashboard(HttpServletRequest request, HttpServletResponse response, Model model) {
         System.out.println("[AdDashboardServiceImpl - getAdminHomeDashboard()]");
@@ -100,53 +74,50 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
 
+        // 날짜형 변수 선언
         LocalDate today = LocalDate.now();
         LocalDate startDate;
         LocalDate endDate;
 
-        if (startDateStr == null || startDateStr.trim().isEmpty()
-                || endDateStr == null || endDateStr.trim().isEmpty()) {
-            startDate = today.minusMonths(1).plusDays(1);
+        // 기본값으로 '최근 1개월' 설정
+        if (startDateStr == null || startDateStr.trim().isEmpty() || endDateStr == null || endDateStr.trim().isEmpty()) {
+            startDate = today.minusMonths(1).plusDays(1); // 현재 날짜에서 한 달을 뺀 날짜 + 1일
             endDate = today;
         } else {
-            startDate = LocalDate.parse(startDateStr);
+        	// String => 날짜 객체로 변환
+            startDate = LocalDate.parse(startDateStr); 
             endDate = LocalDate.parse(endDateStr);
         }
 
-        // 2. 조회 범위를 Timestamp로 변환
-        // - todayStart / todayEnd   : 금일 KPI 전용
-        // - periodStart / periodEnd : 기간 KPI / 차트 전용
+        // 00:00:00 시각을 붙여서 DB용 날짜 타입인 Timestamp로 변환
+        // 금일 KPI 전용
         Timestamp todayStart = Timestamp.valueOf(today.atStartOfDay());
         Timestamp todayEnd = Timestamp.valueOf(today.plusDays(1).atStartOfDay()); // "해당 날짜 23:59:59" 대신 "다음날 00:00:00 미만" 개념
 
+        // 기간 KPI / 차트 전용
         Timestamp periodStart = Timestamp.valueOf(startDate.atStartOfDay());
         Timestamp periodEnd = Timestamp.valueOf(endDate.plusDays(1).atStartOfDay());
 
-        // - todayMap = 금일 KPI는 
-        // - periodMap = 기간 KPI / 차트 / 워드클라우드
-        Map<String, Object> todayMap = new HashMap<String, Object>();
-        Map<String, Object> periodMap = new HashMap<String, Object>();
-
+        // 금일 KPI 전용 MAP
+        Map<String, Object> todayMap = new HashMap<String, Object>(); 
         todayMap.put("startDate", todayStart);
         todayMap.put("endDate", todayEnd);
-
+        
+        // 기간 KPI / 차트 / 워드클라우드 MAP
+        Map<String, Object> periodMap = new HashMap<String, Object>(); 
         periodMap.put("startDate", periodStart);
         periodMap.put("endDate", periodEnd);
 
-        /* 4. DB 전용 KPI 요약 조회
-           - todayKpi  : 금일 DB 요약
-           - periodKpi : 기간 DB 요약
-
-           [DB 전용] - 6개
-           신규 회원 수/ 맛집 등록 수/ 예약 수/ 댓글 수/ 결제 수/ 만족도조사 참여자 수 */
-        Map<String, Object> todayKpi = dao.getTodayKpiSummary(todayMap);
-        Map<String, Object> periodKpi = dao.getPeriodKpiSummary(periodMap);
+        //DB 전용 - DB요약(신규 회원 수/ 맛집 등록 수/ 예약 수/ 댓글 수/ 결제 수/ 만족도조사 참여자 수)
+        Map<String, Object> todayKpi = dao.getTodayKpiSummary(todayMap); // 금일 DB 요약 - 금일 KPI 카드
+        Map<String, Object> periodKpi = dao.getPeriodKpiSummary(periodMap); // 기간 DB 요약 - 기간별 KPI 카드
 
         // null 방어 : DAO 결과가 null이어도 이후 put()에서 NPE 나지 않도록 보정
         if (todayKpi == null) todayKpi = new HashMap<String, Object>();
         if (periodKpi == null) periodKpi = new HashMap<String, Object>();
 
-        // 5. DB KPI 초기화 (기본값 0 설정)
+        // DB KPI 초기화(NullPointerException 방지용)
+        // putDefault : Map에 찾으려는 값이 없거나 비어있다면, 0(또는 기본값) 삽입
         putDefault(todayKpi, "newMemberCount", 0);
         putDefault(todayKpi, "newRestaurantCount", 0);
         putDefault(todayKpi, "reservationCount", 0);
@@ -161,35 +132,27 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         putDefault(periodKpi, "paymentCount", 0);
         putDefault(periodKpi, "surveyParticipantCount", 0);
 
-        /* 6. 기간 기준 차트 / 통계 / 보조 데이터 조회
+        // DB 전용 - 기간 기준
+        List<Map<String, Object>> trendList = dao.getSatisfactionTrend(periodMap); // 만족도 차트용 데이터
+        List<Map<String, Object>> npsDistribution = dao.getNpsDistribution(periodMap); // NPS 분포 도넛차트용 데이터
+        List<Map<String, Object>> statsList = dao.getSatisfactionStats(periodMap); // 만족도 통계값 조회
 
-        [DB 전용] - 6개
-        만족도 시계열/ NPS 분포/ 만족도 핵심 통계/ 워드클라우드용 서술형 응답/ 미답변 문의 최근 10건 / 만족도 조사 결과 표 (서술형 응답 제외) */
-        List<Map<String, Object>> trendList = dao.getSatisfactionTrend(periodMap);
-        List<Map<String, Object>> npsDistribution = dao.getNpsDistribution(periodMap);
-        List<Map<String, Object>> statsList = dao.getSatisfactionStats(periodMap);
+        List<String> subjectiveAnswers = dao.getSubjectiveSurveyAnswers(periodMap); // 워드클라우드용 서술형 원문
+        List<InquiryDTO> pendingInquiryList = dao.getPendingInquiryTop10(); // 미답변 문의 최근 10건
 
-        List<String> subjectiveAnswers = dao.getSubjectiveSurveyAnswers(periodMap);
-        List<InquiryDTO> pendingInquiryList = dao.getPendingInquiryTop10(); // 1:1문의 미처리
+        // GA4 전용 - 금일/기간(방문자 수/ 페이지뷰)
+        Map<String, Object> todayGa = googleAnalyticsService.getTodayTrafficSummary(); // 금일 트래픽
+        Map<String, Object> periodGa = googleAnalyticsService.getPeriodTrafficSummary(startDate, endDate); // 기간 트래픽
 
-        /* 7. GA 전용 트래픽 데이터 조회
-           - visitorCount : 방문자 수(activeUsers)
-           - viewCount    : 페이지뷰(screenPageViews)
-
-           [GA 전용]
-           todayGa  : 오늘 트래픽 / periodGa : 선택 기간 트래픽 */
-        Map<String, Object> todayGa = googleAnalyticsService.getTodayTrafficSummary();
-        Map<String, Object> periodGa = googleAnalyticsService.getPeriodTrafficSummary(startDate, endDate);
-
-        System.out.println("GA API 오늘 트래픽(todayGa) => " + todayGa);
+        System.out.println("GA API 금일 트래픽(todayGa) => " + todayGa);
         System.out.println("GA API 기간 트래픽(periodGa) => " + periodGa);
 
-        // 8. 최종 KPI Map에 GA 값 merge
-        // - DB KPI Map + GA 트래픽 값을 합쳐서 JSP에 전달
-        // =========================================================
+        // 최종 KPI Map에 GA 값 merge
+        // 금일 기준 => DB KPI Map + GA 트래픽 값을 합쳐서 JSP에 전달
         todayKpi.put("visitorCount", todayGa.get("visitorCount"));
         todayKpi.put("viewCount", todayGa.get("viewCount"));
 
+        // 기간 기준 => DB KPI Map + GA 트래픽 값을 합쳐서 JSP에 전달
         periodKpi.put("visitorCount", periodGa.get("visitorCount"));
         periodKpi.put("viewCount", periodGa.get("viewCount"));
 
@@ -197,30 +160,28 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         System.out.println("최종 기간 KPI(periodKpi) => " + periodKpi);
 
         // =========================================================
-        // 9. JSP 전달
-        // =========================================================
-        model.addAttribute("todayKpi", todayKpi);
-        model.addAttribute("periodKpi", periodKpi);
-        model.addAttribute("trendList", trendList);
-        model.addAttribute("npsDistribution", npsDistribution);
-        model.addAttribute("statsList", statsList);
-        model.addAttribute("subjectiveAnswers", subjectiveAnswers);
-        model.addAttribute("pendingInquiryList", pendingInquiryList); // 1:1문의 미처리
-        model.addAttribute("startDate", startDate.toString());
-        model.addAttribute("endDate", endDate.toString());
-        model.addAttribute("today", today.toString());
+        // JSP 전달
+        model.addAttribute("todayKpi", todayKpi);   // 금일 DB + GA 트래픽 - 금일 KPI 카드
+        model.addAttribute("periodKpi", periodKpi); // 기간 DB + GA 트래픽 - 기간 KPI 카드
         
-        // =========================================================
-        // 8-1. GA 기간별 트래픽 추이 조회
-        // - 관리자 홈 line chart 용
-        // - 일자별 방문자 수 / 페이지뷰
-        // =========================================================
+        model.addAttribute("trendList", trendList);              // 만족도 차트
+        model.addAttribute("npsDistribution", npsDistribution);  // NPS 분포
+        model.addAttribute("statsList", statsList);              // 만족도 통계
+        
+        model.addAttribute("subjectiveAnswers", subjectiveAnswers);   // 워드클라우드용 서술형 원문
+        model.addAttribute("pendingInquiryList", pendingInquiryList); // 미답변 문의 최근 10건
+        
+        model.addAttribute("startDate", startDate.toString()); // 시작일
+        model.addAttribute("endDate", endDate.toString());     // 종료일
+        model.addAttribute("today", today.toString());         // 오늘 날짜
+        
+        
+        // ===================================================================================================
+        // 기간별 트래픽 추이(시계열 그래프) - 일자별 방문자 수 / 페이지뷰
         List<Map<String, Object>> trafficTrendList = googleAnalyticsService.getTrafficTrend(startDate, endDate);
-     	System.out.println("GA trafficTrendList => " + trafficTrendList);
-     	
      	model.addAttribute("trafficTrendList", trafficTrendList);
      	
-     	// 10. 기간 내 사용자 만족도 조사 표 조회 위한 함수 호출
+     	// 기간 내 사용자 만족도 조사 표 조회 - 함수 호출
      	getSatisfactionList(periodMap, request, response, model); 
     }
     
@@ -300,24 +261,8 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         model.addAttribute("paging", paging);
     }
 
-    /*
-     * 최소 기본값 0을 채워두는 안전장치 메서드
-     *
-     * [필요한 이유]
-     * - DAO / Mapper 결과 Map에 특정 key가 없을 수 있음
-     * - 값이 null이면 JSP에서 공백처럼 보일 수 있음
-     * - 화면단에서 숫자 KPI는 0으로 보이는 편이 더 안전함
-     *
-     * [방어 대상]
-     * - map 자체가 null
-     * - key가 null
-     * - key가 빈 문자열
-     * - map 안의 해당 key 값이 null
-     *
-     * [동작]
-     * - 기존 값이 있으면 유지
-     * - 값이 없거나 null이면 defaultValue 삽입
-     */
+    // DB KPI 초기화(NullPointerException 방지용)
+    // putDefault : Map에 찾으려는 값이 없거나 비어있다면, 0(또는 기본값) 삽입
     private void putDefault(Map<String, Object> map, String key, Object defaultValue) {
         if (map == null || key == null || key.trim().isEmpty()) {
             return;
@@ -330,15 +275,17 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         }
     }
     
-    // 워드클라우드
+    // 워드클라우드 생성
     @Override
     public String generateWordCloud(String text) {
-
+    	
         try {
+        	// js에서 보내준 주관식 응답 전체 통 문자열 값이 있는지 확인
             if (text == null || text.trim().isEmpty()) {
                 return "";
             }
-
+            
+            // 통 문자열 내 문자열 정리
             String normalizedText = text
                     .replace("\r", " ")
                     .replace("\n", " ")
@@ -346,48 +293,59 @@ public class AdDashboardServiceImpl implements AdDashboardService {
                     .replaceAll("\\s+", " ")
                     .trim();
 
+            // 값이 없다면 ""으로 보낸다
             if (normalizedText.isEmpty()) {
                 return "";
             }
 
+            // 최대 2000자로 길이 제한
             if (normalizedText.length() > 2000) {
                 normalizedText = normalizedText.substring(0, 2000);
             }
 
+            // WordFrequency : 워드클라우드 라이브러리(Kumo)에서 제공하는 DTO 같은 것 ..?
+            // 예외 처리 후 lIST에 담기
             List<WordFrequency> wordFrequencies = buildWordFrequencies(normalizedText);
 
+            // 값이 없다면 돌아가라
             if (wordFrequencies.isEmpty()) {
                 return "";
             }
 
+            //java.io.File = 컴퓨터의 하드디스크 등의 정보에 접근하는 도구
             java.io.File fontFile = new java.io.File(WORDCLOUD_FONT_PATH);
+            
+            // 값이 없다면 나오는 오류 메시지
             if (!fontFile.exists()) {
                 System.out.println("워드클라우드 폰트 파일 없음 => " + WORDCLOUD_FONT_PATH);
                 return "";
             }
 
-            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(Font.PLAIN, 28f);
+            // 외부 폰트 가져와서 내가 원하는 크기와 스타일로 변경하는 코드
+            // 하하... 이거 기억하자 하하...
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(Font.PLAIN, 28f); // 폰트스타일(PLAIN)과 사이즈(28F) 지정
 
+            // GraphicsEnvironment = 컴퓨터 그래픽 시스템 상황실?? 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(font);
+            ge.registerFont(font); // 그래픽 시스템에 불러온 폰트 추가
 
+            // 워드클라우드 객체 생성
             WordCloud wordCloud = new WordCloud(
-                    new Dimension(WORDCLOUD_WIDTH, WORDCLOUD_HEIGHT),
-                    CollisionMode.PIXEL_PERFECT
+                    new Dimension(WORDCLOUD_WIDTH, WORDCLOUD_HEIGHT), // 이미지 크기 설정
+                    CollisionMode.PIXEL_PERFECT // 단어끼리 겹치지 않도록 더 정밀하게 배치
             );
 
-            wordCloud.setPadding(5);
+            wordCloud.setPadding(5); // 단어 사이 간격
             wordCloud.setBackgroundColor(new Color(248, 249, 250)); // 연한 회색 배경
-            wordCloud.setBackground(new RectangleBackground(
+            wordCloud.setBackground(new RectangleBackground( // 배경 모양 설정
                     new Dimension(WORDCLOUD_WIDTH, WORDCLOUD_HEIGHT)
             ));
-
-            wordCloud.setKumoFont(new KumoFont(font));
+            wordCloud.setKumoFont(new KumoFont(font)); // 폰트 적용
             
-            // 세로/회전 단어 삭제 = 전부 가로 방향
+            // 회전 제거 = 전부 가로 방향
             wordCloud.setAngleGenerator(new AngleGenerator(0));
             
-            // 형태 위주로 안정감 있게
+            // 글자 크기 단계 설정
             wordCloud.setFontScalar(new StepFontScalar(96, 72, 52, 36, 24));
 
             // 색상 수를 줄여서 통일감 있게
@@ -397,19 +355,27 @@ public class AdDashboardServiceImpl implements AdDashboardService {
                     new Color(95, 99, 104)     // 중성 그레이
             ));
 
+            // 워드클라우드 드디어 빌드
             wordCloud.build(wordFrequencies);
 
+            // 1번) 컴퓨터 메모리에 이미지 테이터를 비트맵 형식으로 보관
             BufferedImage image = wordCloud.getBufferedImage();
 
+            // 2번) ByteArrayOutputStream : 파일로 저장하지 않고,바로 네트워크로 전송할 시 사용되는 도구
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            
+            // 2번에 1번 가공해서 넣기 => 원재료(image)를 PNG로 가공해서 baos에 담기 
             ImageIO.write(image, "png", baos);
 
+            // 1번을 하나씩 꺼내서 byte[] 배열에 넣기
             byte[] imageBytes = baos.toByteArray();
+            // Base64 변환 => 이미지를 텍스트 형태(문자열)로 바꿔서 HTML <img src="..."> 태그로 만들기
             String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
             System.out.println("Kumo wordcloud byte size => " + imageBytes.length);
             System.out.println("Kumo wordcloud word count => " + wordFrequencies.size());
 
+            // 디코딩을 하기 위해 말머리 붙이기 : data:image/png;base64
             return "data:image/png;base64," + base64Image;
 
         } catch (Exception e) {
@@ -418,17 +384,17 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         }
     }
     
-    // 워드클라우드 예외처리
+    // 워드클라우드 예외처리 : generateWordCloud에서 사용
     private List<WordFrequency> buildWordFrequencies(String text) {
         Map<String, Integer> freqMap = new HashMap<String, Integer>();
 
-        String[] tokens = text.split("\\s+");
+        String[] tokens = text.split("\\s+"); // 공백을 기준으로 잘라 String 배열에 넣기
         for (String token : tokens) {
             String word = token == null ? "" : token.trim();
-
+            
             if (word.isEmpty()) continue;
 
-            // 길이 제한
+            // 길이 제한 (2보다 크고 8보다 작은)
             if (word.length() < 2) continue;
             if (word.length() > 8) continue;
 
@@ -443,13 +409,15 @@ public class AdDashboardServiceImpl implements AdDashboardService {
             if (word.length() > 8) continue;
             if (isStopWord(word)) continue;
 
+            // 중요) word(단어), freqMap.getOrDefault(word, 0) + 1 = word 안에서 단어가 몇번 발견되었는지 출력
+            // +1은 찾은 단어 포함 갯수를 구하기 위해서
             freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
         }
 
         // 2회 이상 나온 단어만 사용
         List<Map.Entry<String, Integer>> entries = new ArrayList<Map.Entry<String, Integer>>();
-        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
-            if (entry.getValue() >= 2) {
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) { // Entry = key : value
+            if (entry.getValue() >= 2) { // value 가 2 이상일 경우
                 entries.add(entry);
             }
         }
@@ -457,12 +425,12 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         // 빈도수 내림차순 정렬
         entries.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
 
-        // 상위 50개만 사용
+        // 상위 70개만 사용
         List<WordFrequency> result = new ArrayList<WordFrequency>();
         
-        // 단어 수
+        // 단어 수 => Math.min : 더 작은 값을 선택
         int limit = Math.min(entries.size(), 70);
-
+ 
         for (int i = 0; i < limit; i++) {
             Map.Entry<String, Integer> entry = entries.get(i);
             result.add(new WordFrequency(entry.getKey(), entry.getValue()));
@@ -471,7 +439,7 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         return result;
     }
     
-    // 워드클라우드 단어 정규화 메서드
+    // 워드클라우드 단어 정규화 메서드 : buildWordFrequencies에서 사용
     private String normalizeWord(String word) {
         if (word == null) return "";
 
@@ -501,7 +469,7 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         return result.trim();
     }
     
-    //워드클라우드 불용어를 더 많이 추가
+    //워드클라우드 불용어를 더 많이 추가 : buildWordFrequencies에서 사용
     private boolean isStopWord(String word) {
         if (word == null) return true;
 
@@ -571,6 +539,7 @@ public class AdDashboardServiceImpl implements AdDashboardService {
         }
     }
     
+    // 글자 크기 단계 설정 : buildWordFrequencies에서 사용
     private static class StepFontScalar implements com.kennycason.kumo.font.scale.FontScalar {
         private final int[] steps;
 

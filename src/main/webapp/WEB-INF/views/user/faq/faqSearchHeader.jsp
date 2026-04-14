@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
-    /* [1] 헤더 전체 컨테이너 고정 */
+    /* [1] 헤더 전체 컨테이너 고정 
+    	수정:  top: 0; 속성 제거
+    */
     .sticky-search-wrap {
         position: sticky;
-        top: 0; 
         z-index: 1020;
         background-color: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(8px);
@@ -16,7 +17,7 @@
         
     }
 
-    /* [2] ⭐ 제목 폰트 완전 통일 (가장 중요) */
+    /* [2] ⭐ 제목 폰트 완전 통일 (중앙 정렬 및 굵기) */
 	.sticky-search-wrap h2#header-title-area {
 	    font-weight: 800 !important;
 	    color: #2c3e50 !important;
@@ -53,7 +54,7 @@
         display: flex !important;
         flex-wrap: nowrap !important;
     }
-
+	/* [3-1] 검색창(Input) 디자인 */
     .sticky-search-wrap .input-group #keyword {
         font-size: 1rem !important;
         padding: 12px 20px !important;
@@ -62,13 +63,13 @@
         border-right: none !important; /* 버튼과 연결 부위 */
         height: 50px !important;
     }
-
+	/* 검색창 클릭(Focus) 시 효과 */
     .sticky-search-wrap .input-group #keyword:focus {
         border-color: #3CB371 !important;
         box-shadow: 0 0 0 0.2rem rgba(60, 179, 113, 0.2) !important;
         outline: none !important;
     }
-
+	/* [3-2] 검색 버튼 디자인 */
     .sticky-search-wrap .input-group .btn-primary {
 	    font-size: 1rem !important;
 	    font-weight: 600 !important;
@@ -79,7 +80,7 @@
 	    height: 50px !important;
 	    color: #fff !important;
 	    white-space: nowrap !important;
-	
+		
 	    display: flex !important;
 	    align-items: center !important;     /* 세로 중앙 정렬 */
 	    justify-content: center !important;  /* 가로 중앙 정렬 */

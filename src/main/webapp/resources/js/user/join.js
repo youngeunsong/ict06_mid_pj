@@ -17,6 +17,7 @@ function nextStep(step) {
         const userPwd = document.inputform.password.value; // [수정] user_password -> password
         const rePwd = document.inputform.re_password.value;
         
+        // // 정규표현식: 아이디(영문/숫자 6~20자), 비밀번호(영문+숫자+특수문자 조합 8~20자)
         const idRegExp = /^[a-zA-Z0-9]{6,20}$/; 
         const pwdRegExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+|<>?:{}]).{8,20}$/;
 
@@ -28,10 +29,10 @@ function nextStep(step) {
         }
 
         // 2) 아이디 중복 확인 여부 체크
-        if (hiddenId === "0") {
+        if (hiddenId === "0") { // 	'hiddenUserId' 값이 0이면 버튼에 흔들리는 효과(Shake) 부여
             const overlapBtn = document.querySelector('.btn_overlap');
             if (overlapBtn) {
-                overlapBtn.classList.add('apply-shake');
+                overlapBtn.classList.add('apply-shake'); // 시각적 경고 효과
                 alert("아이디 중복확인이 필요합니다.");
                 setTimeout(() => overlapBtn.classList.remove('apply-shake'), 1000);
                 overlapBtn.focus();
@@ -53,13 +54,13 @@ function nextStep(step) {
             return;
         }
 
-        // 검사 통과 시 화면 전환
+        // 검사 통과 시 화면 전환, 1단계 숨기고 2단계 노출, 인디케이터 강조 변경
         step1.style.display = "none";
         step2.style.display = "block";
         dot1.style.color = "#ccc";
         dot1.style.fontWeight = "normal";
-        dot2.style.color = "#f91a32";
-        dot2.style.fontWeight = "bold";
+        dot2.style.color = "#f91a32";	// 현재 단계 강조
+        dot2.style.fontWeight = "bold";	// 현재 단계 강조
 
     } else {
         // [Step 2 -> Step 1로 돌아갈 때]
@@ -78,12 +79,13 @@ function confirmId() {
     const idMessage = document.getElementById("idMessage");
     const idRegExp = /^[a-zA-Z0-9]{6,20}$/; 
 
+	// 입력값이 없는 경우 사전 차단
     if (!userId) {
         alert("아이디를 입력하세요.");
         document.getElementById("user_id").focus();
         return;
     }
-
+	// 관리자 사칭 방지 (프론트엔드 1차 필터링)
     if (userId.toLowerCase().includes("admin")) { 
         alert("아이디에 'admin' 키워드를 포함할 수 없습니다.");
         document.getElementById("user_id").value = "";
@@ -100,6 +102,7 @@ function confirmId() {
         return; 
     }
 
+	// 서버로 AJAX 요청 전송 (XMLHttpRequest 객체 사용)
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/midpj/idCheck.do?user_id=" + userId, true);
     xhr.onreadystatechange = function() {

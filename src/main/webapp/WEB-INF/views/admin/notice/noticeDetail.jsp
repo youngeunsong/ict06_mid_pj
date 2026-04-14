@@ -86,10 +86,28 @@
 									<c:if test="${not empty dto.image_url}">
 										<tr>
 											<th class="detail-th">이미지</th>
-											<td colspan="5"><c:forEach var="img"
+											<td colspan="5">
+												<c:forEach var="img"
 													items="${fn:split(dto.image_url, ',')}">
-													<img src="${img}" class="img-fluid"
-														style="max-height: 300px; margin-right: 8px;">
+													<%-- <img src="${img}" class="img-fluid"
+														style="max-height: 300px; margin-right: 8px;"> --%>
+														<c:choose>
+										                    <%-- 인터넷 이미지 --%>
+										                    <c:when test="${fn:startsWith(img, 'http')}">
+										                        <img src="${img}" 
+										                             class="img-fluid"
+										                             style="max-height:300px; margin-right:8px;">
+										                    </c:when>
+										
+										                    <%-- 서버 업로드 이미지 --%>
+										                    <c:otherwise>
+										                        <img src="${path}/upload_notice/${img}" 
+										                             class="img-fluid"
+										                             style="max-height:300px; margin-right:8px;">
+										                    </c:otherwise>
+										
+										                </c:choose>
+																								
 												</c:forEach></td>
 										</tr>
 									</c:if>

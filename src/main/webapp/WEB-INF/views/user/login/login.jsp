@@ -24,8 +24,7 @@
          <div id="contents">
            <div class="login_form_area">
 			    <h2>로그인</h2>
-			    <p>고객님의 소중한 하루를 책임지는 맛침내입니다.
-			    환영합니다!</p>
+			    <p>고객님의 소중한 하루를 책임지는 맛침내입니다 환영합니다!</p>
 			
 			    <form name="loginform" action="${path}/loginAction.do" method="post" onsubmit="return loginCheck()">
 					

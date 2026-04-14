@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('miniCalendar'), // 캘린더 영역
         {
             initialView: 'dayGridMonth', // 월간뷰
-            height: 480, // 높이
+            height: 500, // 높이
 
             // 상단 버튼 구성
             headerToolbar: {

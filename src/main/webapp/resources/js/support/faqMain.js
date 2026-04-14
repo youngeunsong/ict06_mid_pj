@@ -2,6 +2,9 @@
  * FAQ 전용 스크립트 (최종 수정본)
  * @author 조민수
  * @since 2026-03-24
+ * 최종 수정일: 2026-04-06
+ * 수정 사항
+ * v260406: navbar의 위치를 자동으로 계산하여 faq 용 검색바의 위치 자동 보정 기능 
  */
 
 let searchTimer; // 실시간 검색 부하 방지용 타이머
@@ -55,13 +58,14 @@ function searchFaq() {
     // [분기 1] FAQ 메인도 상세도 아닐 때만 메인으로 이동
     if (!isFaqPage && !isDetailPage) {
         if (keyword !== "") {
+        	// FAQ 메인 페이지로 검색어를 들고 이동 (GET 방식)
             location.href = contextPath + "/faqMain.sp?keyword=" + encodeURIComponent(keyword);
         }
         return; 
     }
 
     // [분기 2] Ajax 검색 실행
-    if (keyword !== "") {
+    if (keyword !== "") { // 검색창입력시
         $.ajax({
             url: contextPath + "/searchFaqAjax.sp", 
             type: "GET",
@@ -86,6 +90,7 @@ function searchFaq() {
         // 검색어를 다 지웠을 때
         if (isFaqPage) {
             let $activeTag = $(".tag.active");
+            // 선택된 태그가 '전체'면 빈 값을, 아니면 카테고리 이름을 가져옵니다. (삼항 연산자)
             let currentCategory = ($activeTag.text() === '전체') ? '' : $activeTag.text();
             loadFaqList(currentCategory); 
         } else if (isDetailPage) {
@@ -148,7 +153,7 @@ function renderFaqList(list) {
                         
                         <div class="d-flex align-items-center">
                             <span class="text-muted small me-3" style="font-size: 0.8rem;">
-                                <i class="fa-regular fa-eye me-1"></i> ${views}
+                             <i class="fa-regular fa-eye me-1"></i> ${views}
                             </span>
                             <i class="fa-solid fa-chevron-down text-secondary transition-icon"></i>
                         </div>
@@ -226,7 +231,9 @@ $(window).on("scroll", function() {
 
 // 초기 로드 시 URL 파라미터에 검색어가 있다면 자동 실행 및 커서 제어
 $(document).ready(function() {
+   	// 윈도우 주소창 ? 뒤에 붙은 추출할준비
     const urlParams = new URLSearchParams(window.location.search);
+    
     const keyword = urlParams.get('keyword');
     const $searchInput = $("#keyword"); // 검색창 선택
 
@@ -237,7 +244,7 @@ $(document).ready(function() {
         // 2. 검색 실행 (기존 함수 호출)
         searchFaq();
 
-        // 3. ⭐ 커서 및 포커스 제어 (핵심!)
+        // 3. 커서 및 포커스 제어 (핵심!)
         $searchInput.focus(); // 일단 포커스를 줌
         
         // 커서를 글자 맨 뒤로 보내기 위한 트릭
@@ -245,6 +252,24 @@ $(document).ready(function() {
         let tempVal = $searchInput.val();
         $searchInput.val('').val(tempVal);
     }
+});
+
+// 추가: navbar의 높이 자동 계산하여 faq 검색바의 위치 자동 조정 
+$(document).ready(function () {
+
+    function updateStickyTop() {
+
+        let headerHeight = $(".site-header").outerHeight();
+
+        $(".sticky-search-wrap").css("top", headerHeight + "px");
+    }
+
+    updateStickyTop();
+
+    $(window).resize(function () {
+        updateStickyTop();
+    });
+
 });
 
 /**
@@ -281,19 +306,19 @@ $(document).on("click", "#btnSendReport", function() {
         type: "POST",
         data: formData,
         success: function(res) {
-		    if (res.trim() === "success") { // trim() 추가로 공백 방지
-		        alert("성공적으로 접수되었습니다.");
-		        
-		        // 모달 닫기 및 초기화 로직
-		        $('#reportModal').modal('hide');
-		        $('#reportForm')[0].reset();
-		        
-		        // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
-		        location.href = "faqMain.sp?user_id=" + sessionUserId;
-		    } else {
-		        alert("접수 실패. 다시 시도해주세요.");
-		    }
-		},
+            if (res.trim() === "success") { // trim() 추가로 공백 방지
+                alert("성공적으로 접수되었습니다.");
+                
+                // 모달 닫기 및 초기화 로직
+                $('#reportModal').modal('hide');
+                $('#reportForm')[0].reset();
+                
+                // JSP에서 선언한 JS 변수를 사용 (400 에러 해결)
+                location.href = "faqMain.sp?user_id=" + sessionUserId;
+            } else {
+                alert("접수 실패. 다시 시도해주세요.");
+            }
+        },
         error: function() {
             alert("서버 통신 중 오류가 발생했습니다.");
         }

@@ -103,7 +103,7 @@ public class UserDAOImpl implements UserDAO {
 		return updateCnt;
 	}
 
-	// 7. 나의 즐겨찾기 목록 조회
+	// 7. 나의 북마크 목록 조회
 	@Override
 	public List<PlaceDTO> getFavoriteList(Map<String, Object> map) {
 		System.out.println("UserDAOImpl - getFavoriteList()");
@@ -112,7 +112,7 @@ public class UserDAOImpl implements UserDAO {
 		
 		return list;
 	}
-	// 즐겨찾기 목록 카운트
+	// 북마크 목록 카운트
 	@Override
 	public int getFavoriteListCount(Map<String, Object> map) {
 		System.out.println("UserDAOImpl - getFavoriteListCount()");
@@ -122,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
 	    return count;
 	}
 	
-	// 마이페이지 홈 즐겨찾기 카테고리별 탑3
+	// 마이페이지 홈 북마크 카테고리별 탑3
 	@Override
 	public List<PlaceDTO> getFavoriteTop3ByCategory(Map<String, Object> map) {
 		System.out.println("UserDAOImpl - getFavoriteTop3ByCategory()");
@@ -237,7 +237,7 @@ public class UserDAOImpl implements UserDAO {
 	    return dto;
 	}
 	
-	// 즐겨찾기(버튼) 존재 여부 확인
+	// 북마크(버튼) 존재 여부 확인
 	@Override
 	public int checkmyFavorite(Map<String, Object> map) {
 	    System.out.println("UserDAOImpl - checkmyFavorite()");
@@ -247,7 +247,7 @@ public class UserDAOImpl implements UserDAO {
 	    return checkCnt;
 	}
 
-	// 즐겨찾기(버튼) 추가
+	// 북마크(버튼) 추가
 	@Override
 	public int insertmyFavorite(Map<String, Object> map) {
 	    System.out.println("UserDAOImpl - insertmyFavorite()");
@@ -257,7 +257,7 @@ public class UserDAOImpl implements UserDAO {
 	    return insertCnt;
 	}
 
-	// 즐겨찾기(버튼) 삭제
+	// 북마크(버튼) 삭제
 	@Override
 	public int deletemyFavorite(Map<String, Object> map) {
 	    System.out.println("UserDAOImpl - deletemyFavorite()");
